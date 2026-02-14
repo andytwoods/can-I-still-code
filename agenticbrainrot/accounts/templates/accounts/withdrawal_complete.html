@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Withdrawn — AgenticBrainrot{% endblock title %}
+
+{% block content %}
+<div class="columns is-centered">
+  <div class="column is-6">
+    <h1 class="title">Withdrawal Complete</h1>
+    <div class="content">
+      <p>You have successfully withdrawn from the study.</p>
+      <p>Your data remains in anonymised form. If you would like your data to be deleted, you can request that below.</p>
+    </div>
+
+    {% if not participant.deletion_requested_at %}
+      <a href="{% url 'accounts:request_deletion' %}" class="button is-warning">
+        Request Data Deletion
+      </a>
+    {% else %}
+      <div class="notification is-info">
+        Your data deletion request has been submitted and is pending processing.
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}

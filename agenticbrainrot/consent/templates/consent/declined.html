@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Consent Declined — AgenticBrainrot{% endblock title %}
+
+{% block content %}
+  <div class="columns is-centered">
+    <div class="column is-6 has-text-centered">
+      <h1 class="title">No problem</h1>
+      <div class="content">
+        <p>
+          You have chosen not to give consent at this time.
+          You are welcome to return and give consent whenever you are ready.
+        </p>
+        <p>
+          Without consent, you will not be able to participate in coding sessions
+          or access study features.
+        </p>
+      </div>
+      <a href="{% url 'consent:give_consent' %}" class="button is-primary">
+        Return to Consent Page
+      </a>
+    </div>
+  </div>
+{% endblock content %}

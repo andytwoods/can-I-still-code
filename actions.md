@@ -42,11 +42,11 @@ The project guidelines say "use built-ins before third-party." The dependencies 
   - Note: Django's `JSONField` and `CheckConstraint` work on both SQLite (3.38+) and PostgreSQL, so the split is safe.
 - **Pages app + base template architecture:**
   - Create the `pages` app.
-  - Create `pages/templates/pages/base.html` with: Bulma CSS (via CDN), htmx (via CDN), skip-to-content link, semantic HTML structure (`<nav>`, `<main>`, `<footer>`), `{% block content %}`, CSRF token, `{% block extra_js %}`.
+  - Create `pages/templates/base.html` with: Bulma CSS (via CDN), htmx (via CDN), skip-to-content link, semantic HTML structure (`<nav>`, `<main>`, `<footer>`), `{% block content %}`, CSRF token, `{% block extra_js %}`.
   - Create `pages/templates/pages/navbar.html` (included in base): responsive Bulma navbar with login/logout links, user display name. Include a placeholder `{% block hijack_banner %}` for the hijack warning bar (populated in Action 0.4).
   - Create `pages/templates/pages/footer.html` (included in base).
   - Create `pages/templates/pages/messages.html` — Django messages display using Bulma notification classes.
-  - All other apps extend `pages/base.html` (per guidelines).
+  - All other apps extend `base.html` (per guidelines).
 - Add a simple health-check view at `/` that renders "Hello world" to confirm everything works.
 - **Verify:** `uv run python manage.py runserver` starts, `/` returns 200, `uv run python manage.py migrate` runs cleanly on SQLite. Navbar renders. Messages display.
 
@@ -84,7 +84,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Install `django-hijack`. Add to `INSTALLED_APPS` and `MIDDLEWARE`.
 - Configure permissions: only superusers and staff with explicit `hijack` permission can impersonate.
 - Enable the admin integration: add a "Hijack" button on the user list and user detail pages in Django admin.
-- Add the hijack notification banner to `pages/templates/pages/base.html` — a visible warning bar (e.g. bright yellow) shown during hijacked sessions so it's never mistaken for a real user session. Include the "Release" button to end impersonation.
+- Add the hijack notification banner to `pages/templates/base.html` — a visible warning bar (e.g. bright yellow) shown during hijacked sessions so it's never mistaken for a real user session. Include the "Release" button to end impersonation.
 - Configure hijack URL includes in `urls.py`.
 - **Verify:** Superuser can hijack a regular user from the admin. Banner appears during hijacked session. "Release" returns to admin. Non-superuser staff without permission cannot hijack.
 
@@ -250,14 +250,14 @@ STUDY = {
 
 ## Phase 3: Profile Intake
 
-### Action 3.1 — Seed Default Survey Questions
+### Action 3.1 — Seed Default Survey Questions ✅
 **Depends on:** 1.3
 **Description:** Create a data migration or management command that seeds the 24 default profile questions, 3 post-challenge questions, and the post-session habit questions.
 - Use `SurveyQuestion` model with correct `context`, `question_type`, `choices`, scales, categories, and display_order.
 - Make the command idempotent (skip if questions already exist).
 - **Verify:** Run the command. Admin shows all questions with correct contexts and ordering.
 
-### Action 3.2 — Dynamic Survey Form Builder
+### Action 3.2 — Dynamic Survey Form Builder ✅
 **Depends on:** 1.3, 0.2
 **Description:** Create a helper function that dynamically builds a Django `Form` class from a queryset of `SurveyQuestion` objects. Rendered via crispy-forms + crispy-bulma (per guidelines).
 - Create `surveys/forms.py` with a `build_survey_form(questions_qs)` function that returns a `Form` class. Field mapping:
@@ -272,7 +272,7 @@ STUDY = {
 - Accessible: crispy-forms generates proper `<label>` and `aria-describedby` for help text. Scale widget needs a custom crispy layout or widget override to show min/mid/max labels.
 - **Verify:** Build a form from a queryset containing one of each question type. Render it in a throwaway view — all five types display with correct Bulma styling. Submit with invalid data — Django validation catches it. Submit with valid data — `form.cleaned_data` contains the right types.
 
-### Action 3.3 — Profile Intake View (HTMX Per-Category Steps)
+### Action 3.3 — Profile Intake View (HTMX Per-Category Steps) ✅
 **Depends on:** 2.2, 3.1, 3.2
 **Description:** Build the intake questionnaire as a multi-step HTMX flow, one category at a time.
 - **Same-endpoint pattern (per guidelines):** a single URL `/profile/intake/`. The view groups active `SurveyQuestion` entries with `context="profile"` by `category`, ordered by `display_order`.
@@ -283,7 +283,7 @@ STUDY = {
 - **Post-challenge and post-session questions** (2–5 questions each) are already rendered as HTMX partials within the session page — they are short enough to show all at once within their partial, no per-question stepping needed.
 - **Verify:** Intake flow steps through each category via HTMX swaps. Each step saves immediately. Progress indicator updates. Closing mid-flow preserves completed categories. Re-visiting pre-fills answers. Editing creates superseding responses.
 
-### Action 3.4 — Participant Withdrawal and Data Deletion
+### Action 3.4 — Participant Withdrawal and Data Deletion ✅
 **Depends on:** 1.1, 1.2, 1.6, 3.3
 **Description:** Build the user-facing withdrawal and data deletion controls on the profile/settings page.
 - Add a **"Withdraw from study"** section on the profile page with a clearly labelled button.
@@ -302,7 +302,7 @@ STUDY = {
 
 ## Phase 4: Challenge Infrastructure
 
-### Action 4.1 — Challenge Data Import
+### Action 4.1 — Challenge Data Import ✅
 **Depends on:** 1.4
 **Description:** Create a management command to import challenges from Exercism and/or APPS dataset.
 - Parse Exercism Python track exercises: extract slug, description, test cases, and generate skeleton code (function signature with `pass` body).
@@ -313,7 +313,7 @@ STUDY = {
 - Make the command idempotent (skip existing by `external_id`).
 - **Verify:** Run the command. Admin shows challenges with correct tiers, descriptions, skeleton code, and test cases.
 
-### Action 4.2 — Pyodide Integration (Code Editor Page)
+### Action 4.2 — Pyodide Integration (Code Editor Page) ✅
 **Depends on:** 0.1
 **Description:** Build the in-browser Python execution engine.
 - Create a standalone HTML page / Django template that:
@@ -328,7 +328,7 @@ STUDY = {
 - Capture idle detection: track tab focus loss >30s and keystroke gaps >2min.
 - **Verify:** Can type Python code, run it, see output. Test cases run and show pass/fail. Timing and telemetry values are captured in JS (console.log for now).
 
-### Action 4.3 — Challenge Selection Algorithm
+### Action 4.3 — Challenge Selection Algorithm ✅
 **Depends on:** 1.4, 1.5
 **Description:** Implement the server-side challenge selection logic.
 - Given a participant, query all active challenges.

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block title %}Start Session — AgenticBrainrot{% endblock title %}
+
+{% block content %}
+<div class="columns is-centered">
+  <div class="column is-8">
+    <h1 class="title">Start a Coding Session</h1>
+
+    <div class="box">
+      <h2 class="subtitle">Session Environment Guidelines</h2>
+      <div class="content">
+        <ul>
+          <li>Work independently — do not use AI tools, search engines, or external help.</li>
+          <li>Find a quiet place where you can focus without interruptions.</li>
+          <li>You will be presented with up to 10 coding challenges of increasing difficulty.</li>
+          <li>You can skip any challenge or stop the session at any time.</li>
+          <li>Your code will run in the browser — no setup needed.</li>
+          <li>A timer will track how long you spend on each challenge (you can hide it if you prefer).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="mobile-warning" class="notification is-warning" style="display: none;">
+      <strong>Mobile/Tablet Warning:</strong>
+      This study works best on a desktop or laptop with a physical keyboard.
+      You can continue on this device, but your experience may be affected
+      and timing data may be less reliable.
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="field mt-4">
+        <div class="control">
+          <button type="submit" class="button is-primary is-medium">
+            Start Session
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var radios = document.querySelectorAll('input[name="device_type"]');
+  var warning = document.getElementById("mobile-warning");
+  radios.forEach(function(radio) {
+    radio.addEventListener("change", function() {
+      if (this.value === "phone" || this.value === "tablet") {
+        warning.style.display = "block";
+      } else {
+        warning.style.display = "none";
+      }
+    });
+  });
+});
+</script>
+{% endblock extra_js %}

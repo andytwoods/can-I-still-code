@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Request Data Deletion — AgenticBrainrot{% endblock title %}
+
+{% block content %}
+<div class="columns is-centered">
+  <div class="column is-6">
+    <h1 class="title">Request Data Deletion</h1>
+
+    {% if participant.deletion_requested_at %}
+      <div class="notification is-info">
+        Your deletion request was submitted on {{ participant.deletion_requested_at|date:"d M Y" }}.
+        A study administrator will process it shortly.
+      </div>
+    {% else %}
+      <div class="content">
+        <div class="notification is-danger is-light">
+          <p><strong>This action cannot be undone.</strong></p>
+          <p>Requesting deletion will permanently remove:</p>
+          <ul>
+            <li>Your survey responses</li>
+            <li>Your submitted code</li>
+            <li>Your optional consent records</li>
+            <li>Your profile information</li>
+          </ul>
+          <p>Anonymised timing and accuracy data will be retained for research purposes.
+             Your consent record will be kept as part of the audit trail.</p>
+        </div>
+      </div>
+
+      <div id="deletion-action">
+        <form method="post"
+              action="{% url 'accounts:request_deletion' %}"
+              hx-post="{% url 'accounts:request_deletion' %}"
+              hx-target="#deletion-action"
+              hx-swap="innerHTML">
+          {% csrf_token %}
+          <button type="submit" class="button is-danger">
+            Confirm Deletion Request
+          </button>
+          <a href="{% url 'home' %}" class="button is-light ml-2">Cancel</a>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}

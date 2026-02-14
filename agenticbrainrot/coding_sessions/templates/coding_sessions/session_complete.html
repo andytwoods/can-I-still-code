@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Session Complete — AgenticBrainrot{% endblock title %}
+
+{% block content %}
+<div class="columns is-centered">
+  <div class="column is-6 has-text-centered">
+    <h1 class="title">Session Complete</h1>
+    <div class="content">
+      <p>You have completed all challenges in this session.</p>
+      <p>Thank you for participating!</p>
+      <a href="{% url 'home' %}" class="button is-primary mt-4">Back to Home</a>
+    </div>
+  </div>
+</div>
+{% endblock content %}

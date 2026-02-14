@@ -1,0 +1,11 @@
+<div class="notification is-success">
+  <p><strong>Withdrawal complete.</strong></p>
+  <p>You have been withdrawn from the study.</p>
+  {% if not participant.deletion_requested_at %}
+    <p class="mt-3">
+      <a href="{% url 'accounts:request_deletion' %}" class="button is-warning is-small">
+        Request Data Deletion
+      </a>
+    </p>
+  {% endif %}
+</div>

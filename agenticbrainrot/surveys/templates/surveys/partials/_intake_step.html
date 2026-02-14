@@ -1,0 +1,44 @@
+{% load crispy_forms_tags %}
+
+<div id="intake-step">
+  <progress class="progress is-primary" value="{{ step|add:1 }}" max="{{ total_steps }}">
+    Step {{ step|add:1 }} of {{ total_steps }}
+  </progress>
+  <p class="has-text-grey mb-4">
+    Step {{ step|add:1 }} of {{ total_steps }} — <strong>{{ category }}</strong>
+  </p>
+
+  <form method="post"
+        action="{% url 'surveys:profile_intake' %}"
+        hx-post="{% url 'surveys:profile_intake' %}"
+        hx-target="#intake-container"
+        hx-swap="innerHTML">
+    {% csrf_token %}
+    <input type="hidden" name="step" value="{{ step }}">
+
+    {{ form|crispy }}
+
+    <div class="field is-grouped mt-5">
+      {% if step > 0 %}
+        <div class="control">
+          <button type="button"
+                  class="button is-light"
+                  hx-get="{% url 'surveys:profile_intake' %}?step={{ step|add:'-1' }}"
+                  hx-target="#intake-container"
+                  hx-swap="innerHTML">
+            Previous
+          </button>
+        </div>
+      {% endif %}
+      <div class="control">
+        <button type="submit" class="button is-primary">
+          {% if step|add:1 == total_steps %}
+            Complete Profile
+          {% else %}
+            Next
+          {% endif %}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

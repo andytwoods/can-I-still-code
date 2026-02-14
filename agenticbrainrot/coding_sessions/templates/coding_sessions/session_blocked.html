@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Session Unavailable — AgenticBrainrot{% endblock title %}
+
+{% block content %}
+<div class="columns is-centered">
+  <div class="column is-6 has-text-centered">
+    <h1 class="title">Session Unavailable</h1>
+    <div class="content">
+      {% if reason == "cooldown" %}
+        <p>You recently completed a session. You can start your next session on:</p>
+        <p class="is-size-4 has-text-weight-bold">
+          {{ next_eligible|date:"j F Y, H:i" }}
+        </p>
+        <p>This 28-day interval helps us measure skill changes over time.</p>
+      {% elif reason == "no_challenges" %}
+        <p>You've completed most of our challenges! We're adding new ones regularly.</p>
+        <p>Please check back later for new challenges.</p>
+      {% else %}
+        <p>{{ reason }}</p>
+      {% endif %}
+      <a href="{% url 'home' %}" class="button is-primary mt-4">Back to Home</a>
+    </div>
+  </div>
+</div>
+{% endblock content %}

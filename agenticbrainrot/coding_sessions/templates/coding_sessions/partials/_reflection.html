@@ -1,0 +1,34 @@
+{% load crispy_forms_filters %}
+
+<div class="box">
+  <h3 class="title is-5">Reflection — {{ challenge.title }}</h3>
+
+  {% if attempt.skipped %}
+    <p class="mb-3">You skipped this challenge.</p>
+  {% else %}
+    <p class="mb-3">
+      You passed {{ attempt.tests_passed }} of {{ attempt.tests_total }} tests.
+    </p>
+  {% endif %}
+
+  <form hx-post="{% url 'coding_sessions:session_view' session.pk %}"
+        hx-target="#session-container"
+        hx-swap="innerHTML">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="submit_reflection">
+    <input type="hidden" name="attempt_id" value="{{ attempt.pk }}">
+
+    {{ form|crispy }}
+
+    <div class="buttons mt-4">
+      <button type="submit" class="button is-primary">Submit Reflection</button>
+      <button type="button" class="button is-light"
+              hx-post="{% url 'coding_sessions:session_view' session.pk %}"
+              hx-target="#session-container"
+              hx-swap="innerHTML"
+              hx-vals='{"action": "skip_reflection"}'>
+        Skip
+      </button>
+    </div>
+  </form>
+</div>

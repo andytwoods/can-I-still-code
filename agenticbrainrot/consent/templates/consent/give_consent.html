@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load markdown_tags %}
+
+{% block title %}Consent — AgenticBrainrot{% endblock title %}
+
+{% block content %}
+  <div class="columns is-centered">
+    <div class="column is-8">
+      <h1 class="title">{{ document.title }} <span class="tag is-info">v{{ document.version }}</span></h1>
+
+      <div class="content box">
+        {{ document.body|render_markdown }}
+      </div>
+
+      <hr />
+
+      <form method="post">
+        {% csrf_token %}
+
+        <h2 class="subtitle">Your Consent</h2>
+
+        <div class="field">
+          <label class="checkbox">
+            <input type="checkbox"
+                   name="consent"
+                   id="id_consent"
+                   required />
+            {{ form.consent.label }}
+          </label>
+          {% if form.consent.errors %}
+            <p class="help is-danger">{{ form.consent.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <h2 class="subtitle mt-5">Optional Choices</h2>
+        <p class="mb-4">These are entirely optional and do not affect your participation.</p>
+
+        <div class="field">
+          <label class="checkbox">
+            <input type="checkbox"
+                   name="reminder_emails"
+                   id="id_reminder_emails" />
+            {{ form.reminder_emails.label }}
+          </label>
+        </div>
+
+        <div class="field">
+          <label class="checkbox">
+            <input type="checkbox"
+                   name="think_aloud_audio"
+                   id="id_think_aloud_audio" />
+            {{ form.think_aloud_audio.label }}
+          </label>
+        </div>
+
+        <div class="field">
+          <label class="checkbox">
+            <input type="checkbox"
+                   name="transcript_sharing"
+                   id="id_transcript_sharing" />
+            {{ form.transcript_sharing.label }}
+          </label>
+        </div>
+
+        <div class="field is-grouped mt-5">
+          <div class="control">
+            <button type="submit" class="button is-primary is-medium">Give Consent</button>
+          </div>
+          <div class="control">
+            <a href="{% url 'consent:declined' %}" class="button is-light is-medium">Decline</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock content %}

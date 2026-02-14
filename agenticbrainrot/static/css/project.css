@@ -1,5 +1,46 @@
 /* These styles are generated from project.scss. */
 
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#main-content {
+  flex: 1 0 auto;
+}
+
+.footer {
+  flex-shrink: 0;
+}
+
+/* Theme switcher animations */
+#theme-switcher .icon i {
+  transition: transform 0.5s ease, opacity 0.3s ease;
+}
+
+#theme-switcher:active .icon i {
+  transform: scale(0.8) rotate(45deg);
+}
+
+.theme-animate-in {
+  animation: theme-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes theme-in {
+  from {
+    transform: rotate(-180deg) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(0) scale(1);
+    opacity: 1;
+  }
+}
+
 .alert-debug {
   color: black;
   background-color: white;

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Challenge — AgenticBrainrot{% endblock title %}
+
+{% block content %}
+<div class="columns">
+  <div class="column is-12">
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item" id="progress-indicator">
+          <span class="tag is-info is-medium">
+            Challenge {{ position }} of {{ total_challenges }}
+          </span>
+        </div>
+      </div>
+      <div class="level-right">
+        <div class="level-item">
+          <span id="timer-display" class="tag is-dark is-medium">00:00</span>
+        </div>
+        <div class="level-item">
+          <a href="#"
+             class="has-text-grey-light is-size-7"
+             hx-post="{% url 'coding_sessions:session_view' session.pk %}"
+             hx-target="#session-container"
+             hx-vals='{"action": "stop"}'
+             hx-confirm="Are you sure you want to stop this session? Your progress will be saved.">
+            Stop session
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div id="pyodide-status" class="notification is-info is-light">
+      Loading Python environment...
+    </div>
+
+    <div id="session-container">
+      {% include "coding_sessions/partials/_challenge_display.html" %}
+    </div>
+  </div>
+</div>
+
+<!-- Test cases data for JS -->
+<script id="test-cases-data" type="application/json">{{ test_cases_json|safe }}</script>
+
+<!-- Hidden telemetry inputs -->
+<input type="hidden" id="pyodide-load-ms" name="pyodide_load_ms" value="">
+<input type="hidden" id="editor-ready" name="editor_ready" value="">
+{% endblock content %}
+
+{% block extra_js %}
+  <script defer src="{% static 'js/code-editor.js' %}"></script>
+{% endblock extra_js %}

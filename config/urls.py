@@ -7,10 +7,14 @@ from django.views import defaults as default_views
 
 from agenticbrainrot.pages.views import AboutView
 from agenticbrainrot.pages.views import HomeView
+from agenticbrainrot.pages.views import PrivacyView
+from agenticbrainrot.pages.views import TermsView
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path("about/", AboutView.as_view(), name="about"),
+    path("privacy/", PrivacyView.as_view(), name="privacy"),
+    path("terms/", TermsView.as_view(), name="terms"),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
@@ -18,6 +22,15 @@ urlpatterns = [
     path("allauth/", include("allauth.urls")),
     # Consent
     path("consent/", include("agenticbrainrot.consent.urls", namespace="consent")),
+    # Surveys (profile intake)
+    path("", include("agenticbrainrot.surveys.urls", namespace="surveys")),
+    # Coding sessions
+    path(
+        "",
+        include("agenticbrainrot.coding_sessions.urls", namespace="coding_sessions"),
+    ),
+    # Challenges
+    path("challenges/", include("agenticbrainrot.challenges.urls", namespace="challenges")),
     # Hijack
     path("hijack/", include("hijack.urls")),
     # Media files

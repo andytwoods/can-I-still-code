@@ -1,0 +1,85 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <script>
+      // Apply theme before page renders to avoid flash
+      (function() {
+        const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}AgenticBrainrot{% endblock title %}
+    </title>
+    <meta name="description" content="AgenticBrainrot Research Study" />
+    <meta name="author" content="Andy T Woods" />
+    <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
+    {% block css %}
+      <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
+      <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+      <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+    {% endblock css %}
+    {% block javascript %}
+      <script defer src="https://unpkg.com/htmx.org@2.0.4"></script>
+      <script defer src="{% static 'js/project.js' %}"></script>
+    {% endblock javascript %}
+  </head>
+  <body class="{% block bodyclass %}{% endblock bodyclass %}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <a class="skip-link is-sr-only" href="#main-content">Skip to content</a>
+
+    {% if request.session.is_hijacked_user %}
+      <div class="notification is-warning has-text-centered" style="margin-bottom: 0; border-radius: 0;">
+        You are impersonating <strong>{{ request.user.email }}</strong>.
+        <a href="{% url 'hijack:release' %}">Release</a>
+      </div>
+    {% endif %}
+
+    {% include "pages/partials/_navbar.html" %}
+
+    <main id="main-content">
+      <section class="section">
+        <div class="container">
+          {% include "pages/partials/_messages.html" %}
+          {% block main %}
+            {% block content %}
+            {% endblock content %}
+          {% endblock main %}
+        </div>
+      </section>
+    </main>
+
+    {% include "pages/partials/_footer.html" %}
+
+    {% block extra_js %}{% endblock extra_js %}
+    {% block inline_javascript %}{% endblock inline_javascript %}
+
+    <script>
+      // Bulma navbar burger toggle
+      document.addEventListener('DOMContentLoaded', () => {
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+        $navbarBurgers.forEach(el => {
+          el.addEventListener('click', () => {
+            const target = el.dataset.target;
+            const $target = document.getElementById(target);
+            el.classList.toggle('is-active');
+            $target.classList.toggle('is-active');
+          });
+        });
+
+        // Dismiss Bulma notifications
+        (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+          const $notification = $delete.parentNode;
+          $delete.addEventListener('click', () => {
+            $notification.parentNode.removeChild($notification);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

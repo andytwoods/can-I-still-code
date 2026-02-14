@@ -73,8 +73,8 @@ You are an expert in Python, Django, and scalable web apps. Write secure, mainta
 
 ## Templates
 - **App-local templates only.** Every app's templates live in `<app>/templates/<app>/`, never in a global `templates/` directory.
-  - Base templates (`base.html`, `navbar.html`, etc.) live in the `pages` app: `pages/templates/pages/base.html`.
-  - All other apps extend `pages/base.html`.
+  - Base templates (`base.html`, `navbar.html`, etc.) live in the `pages` app: `pages/templates/base.html`.
+  - All other apps extend `base.html`.
   - Example: `challenges/templates/challenges/challenge_detail.html`
 - **HTMX partials** live in a `partials/` subdirectory within the app's template directory.
   - Prefix partial filenames with `_` (e.g. `_challenge_detail.html`).

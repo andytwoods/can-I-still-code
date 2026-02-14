@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile Intake — AgenticBrainrot{% endblock title %}
+
+{% block content %}
+<div class="columns is-centered">
+  <div class="column is-8">
+    <h1 class="title">Profile Questionnaire</h1>
+    <p class="subtitle">
+      Help us understand your coding background. Your answers are confidential
+      and used only for research purposes.
+    </p>
+
+    <div id="intake-container">
+      {% include "surveys/partials/_intake_step.html" %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

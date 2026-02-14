@@ -1,0 +1,30 @@
+<div class="field">
+  <input type="range"
+         name="{{ widget.name }}"
+         id="{{ widget.attrs.id }}"
+         {% if widget.value != None %}value="{{ widget.value }}"{% endif %}
+         min="{{ widget.scale_min }}"
+         max="{{ widget.scale_max }}"
+         step="1"
+         class="slider is-fullwidth"
+         oninput="document.getElementById('{{ widget.attrs.id }}_display').textContent = this.value"
+         aria-valuemin="{{ widget.scale_min }}"
+         aria-valuemax="{{ widget.scale_max }}"
+         {% if widget.value != None %}aria-valuenow="{{ widget.value }}"{% endif %}>
+  <div class="columns is-mobile">
+    <div class="column has-text-left">
+      <span class="is-size-7">{{ widget.min_label }}</span>
+    </div>
+    {% if widget.mid_label %}
+    <div class="column has-text-centered">
+      <span class="is-size-7">{{ widget.mid_label }}</span>
+    </div>
+    {% endif %}
+    <div class="column has-text-right">
+      <span class="is-size-7">{{ widget.max_label }}</span>
+    </div>
+  </div>
+  <p class="has-text-centered">
+    Selected: <strong id="{{ widget.attrs.id }}_display">{% if widget.value != None %}{{ widget.value }}{% else %}-{% endif %}</strong>
+  </p>
+</div>

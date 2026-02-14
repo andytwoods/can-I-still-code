@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Withdraw from Study — AgenticBrainrot{% endblock title %}
+
+{% block content %}
+<div class="columns is-centered">
+  <div class="column is-6">
+    <h1 class="title">Withdraw from Study</h1>
+
+    {% if participant.withdrawn_at %}
+      <div class="notification is-info">
+        You have already withdrawn from the study.
+      </div>
+    {% else %}
+      <div class="content">
+        <div class="notification is-warning">
+          <p><strong>Please read carefully before withdrawing:</strong></p>
+          <ul>
+            <li>Withdrawal will prevent you from starting future sessions.</li>
+            <li>Your data will be retained in anonymised form unless you request deletion.</li>
+            <li>You can re-enrol later if you change your mind.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="withdrawal-action">
+        <form method="post"
+              action="{% url 'accounts:withdraw' %}"
+              hx-post="{% url 'accounts:withdraw' %}"
+              hx-target="#withdrawal-action"
+              hx-swap="innerHTML">
+          {% csrf_token %}
+          <button type="submit" class="button is-danger">
+            Confirm Withdrawal
+          </button>
+          <a href="{% url 'home' %}" class="button is-light ml-2">Cancel</a>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}
