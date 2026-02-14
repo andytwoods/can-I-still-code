@@ -1,7 +1,7 @@
 import pytest
 
-from agenticbrainrot.users.models import User
-from agenticbrainrot.users.tests.factories import UserFactory
+from agenticbrainrot.accounts.models import User
+from agenticbrainrot.accounts.tests.factories import UserFactory
 
 
 @pytest.fixture(autouse=True)

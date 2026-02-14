@@ -6,13 +6,12 @@
                       {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
                       {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
                       {% if attrs.type %}type="{{ attrs.type }}"{% endif %}
-                      class="btn
-{% if 'success' in attrs.tags %}btn-success
-{% elif 'warning' in attrs.tags %}btn-warning
-{% elif 'secondary' in attrs.tags %}btn-secondary
-{% elif 'danger' in attrs.tags %}btn-danger
-{% elif 'primary' in attrs.tags %}btn-primary
-{% else %}btn-primary
+                      class="button
+{% if 'success' in attrs.tags %}is-success
+{% elif 'warning' in attrs.tags %}is-warning
+{% elif 'danger' in attrs.tags %}is-danger
+{% elif 'primary' in attrs.tags %}is-primary
+{% else %}is-primary
 {% endif %}"
 >
   {% slot %}

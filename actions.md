@@ -29,7 +29,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 
 ## Phase 0: Project Scaffolding
 
-### Action 0.1 — Django Project Setup
+### Action 0.1 — Django Project Setup ✅
 **Depends on:** nothing
 **Description:** Initialise the Django project with environment-based settings and core dependencies.
 - Run `django-admin startproject config .` (or equivalent).
@@ -50,7 +50,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Add a simple health-check view at `/` that renders "Hello world" to confirm everything works.
 - **Verify:** `uv run python manage.py runserver` starts, `/` returns 200, `uv run python manage.py migrate` runs cleanly on SQLite. Navbar renders. Messages display.
 
-### Action 0.2 — Dependency and Tooling Baseline (uv)
+### Action 0.2 — Dependency and Tooling Baseline (uv) ✅
 **Depends on:** nothing (can run in parallel with 0.1)
 **Description:** Establish the dependency management, quality gates, and development workflow using `uv`.
 - Define all dependencies in `pyproject.toml` (not `requirements.txt`). Core deps: Django, django-allauth, django-huey, django-crispy-forms, crispy-bulma, django-environ (or python-dotenv), pyarrow. Dev deps: ruff, mypy, pytest, pytest-django, django-stubs.
@@ -68,7 +68,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
   - `uv run pytest` for tests
 - **Verify:** `uv sync` installs all deps. `uv run ruff check .` passes on the empty project. `uv run pytest` discovers and runs (zero tests is OK). A deliberate bare `except:` triggers a Ruff error.
 
-### Action 0.3 — Authentication (django-allauth)
+### Action 0.3 — Authentication (django-allauth) ✅
 **Depends on:** 0.1, 0.2
 **Description:** Set up django-allauth with Google and GitHub social login, plus email/password fallback.
 - Install and configure django-allauth in settings (add to `INSTALLED_APPS`, `AUTHENTICATION_BACKENDS`, `MIDDLEWARE`).
@@ -78,7 +78,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Override allauth templates to use Bulma styling and extend `base.html`.
 - **Verify:** Registration, login, logout work via email/password. Social login config is present (full testing requires provider credentials). Email verification flow works (can use console email backend for local dev).
 
-### Action 0.4 — Admin Impersonation (django-hijack)
+### Action 0.4 — Admin Impersonation (django-hijack) ✅
 **Depends on:** 0.3
 **Description:** Set up django-hijack so admins can impersonate any user for debugging and support.
 - Install `django-hijack`. Add to `INSTALLED_APPS` and `MIDDLEWARE`.
@@ -88,7 +88,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Configure hijack URL includes in `urls.py`.
 - **Verify:** Superuser can hijack a regular user from the admin. Banner appears during hijacked session. "Release" returns to admin. Non-superuser staff without permission cannot hijack.
 
-### Action 0.5 — Django App Structure
+### Action 0.5 — Django App Structure ✅
 **Depends on:** 0.1
 **Description:** Create the Django apps that will house the models. Keep apps focused and minimal.
 - `accounts` — Participant model, profile views.
@@ -101,7 +101,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Register all apps in `INSTALLED_APPS`.
 - **Verify:** `uv run python manage.py check` passes. No models yet — just the app directories and empty files.
 
-### Action 0.6 — Security Baseline (CSP, Rate Limiting, Markdown Sanitisation)
+### Action 0.6 — Security Baseline (CSP, Rate Limiting, Markdown Sanitisation) ✅
 **Depends on:** 0.1
 **Description:** Set up security infrastructure that affects template structure and middleware early.
 - **Content Security Policy (CSP):**
@@ -140,7 +140,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 
 ## Phase 1: Core Models
 
-### Action 1.1 — Participant Model
+### Action 1.1 — Participant Model ✅
 **Depends on:** 0.3, 0.5
 **Description:** Create the `Participant` model linked to Django's `User`.
 - Fields: `user` (OneToOneField → User), `has_active_consent` (BooleanField, default False), `profile_completed` (BooleanField, default False), `profile_updated_at` (DateTimeField, nullable), `withdrawn_at` (DateTimeField, nullable — set on withdrawal), `deletion_requested_at` (DateTimeField, nullable — set when participant requests data deletion), `deleted_at` (DateTimeField, nullable — set when staff processes the deletion request, confirms compliance).
@@ -149,7 +149,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Run `makemigrations` and `migrate`.
 - **Verify:** Creating a user in the shell also creates a Participant. Admin shows Participant inline.
 
-### Action 1.2 — Consent Models
+### Action 1.2 — Consent Models ✅
 **Depends on:** 1.1
 **Description:** Create the consent system models.
 - `ConsentDocument`: version, title, body (TextField, markdown), is_active, published_at, created_at, updated_at.
@@ -161,7 +161,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Run `makemigrations` and `migrate`.
 - **Verify:** Can create a ConsentDocument in admin, create a ConsentRecord in the shell, query active consent for a participant.
 
-### Action 1.3 — Unified Survey System Models
+### Action 1.3 — Unified Survey System Models ✅
 **Depends on:** 0.5
 **Description:** Create the `SurveyQuestion` and `SurveyResponse` models.
 - `SurveyQuestion`: text, help_text, question_type (choices: text/number/single_choice/multi_choice/scale), choices (JSONField, nullable), scale_min, scale_max, min_label, max_label, mid_label, context (choices: profile/post_challenge/post_session), category (nullable), is_required, is_active, display_order, created_at, updated_at.
@@ -174,7 +174,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Write tests covering all six invalid FK combinations (e.g., profile+session, post_challenge+no attempt, both FKs set) plus the three valid cases.
 - **Verify:** Can create questions in admin, create responses in the shell, filter questions by context. Invalid FK combinations are rejected at both DB and model level.
 
-### Action 1.4 — Challenge and CodeSession Models
+### Action 1.4 — Challenge and CodeSession Models ✅
 **Depends on:** 1.1
 **Description:** Create the challenge and session models.
 - `Challenge`: external_id (CharField, unique — versioned, e.g. `exercism-two-fer-v1`), title, description (TextField, markdown), skeleton_code (TextField), test_cases (JSONField), test_cases_hash (CharField — SHA-256 of test_cases JSON, auto-computed in `save()`), difficulty (IntegerField, 1–5 for tiers), tags (JSONField), is_active (bool), created_at, updated_at. **Never hard-delete or mutate challenges once used** — to fix test cases, deactivate the old challenge and create a new row with a versioned `external_id`. Override `Model.delete()` to raise `ProtectedError` and use `on_delete=PROTECT` on FKs pointing to Challenge.
@@ -194,7 +194,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Run `makemigrations` and `migrate`.
 - **Verify:** Can create challenges in admin, create sessions and attempts in the shell. Duplicate `(session, challenge)` attempt is rejected. Duplicate `attempt_uuid` is rejected. Negative timing values are rejected at DB level. Cross-user attempt is rejected. Unassigned challenge attempt is rejected. Out-of-order submission is rejected.
 
-### Action 1.5 — Study Settings (settings dict)
+### Action 1.5 — Study Settings (settings dict) ✅
 **Depends on:** nothing
 **Description:** Define study parameters as a plain dict in `base.py`. No model, no migration, no caching — change the value and restart.
 ```python
@@ -211,7 +211,7 @@ STUDY = {
 - **Embargo start date:** not stored in settings — derived at query time as `CodeSession.objects.filter(status="completed").order_by("completed_at").values_list("completed_at", flat=True).first()`. Only checked on the dataset download page (cheap query, one row).
 - **Verify:** `uv run python manage.py check` passes. Deliberately invalid tier distribution (wrong sum) fails the check with a clear message.
 
-### Action 1.6 — Audit Event Model
+### Action 1.6 — Audit Event Model ✅
 **Depends on:** 0.5
 **Description:** Create a lightweight, append-only audit trail for user-facing critical events. This complements `django-simple-history` (which tracks research instrument changes) by recording **what happened to whom and when** for debugging and ethics reporting.
 - `AuditEvent`: `event_type` (CharField, choices — see below), `participant` (FK, nullable — null for system events like export runs), `actor` (FK → User, nullable — the user who triggered the event; null for automated tasks), `timestamp` (DateTimeField, auto_now_add), `metadata` (JSONField, default dict — event-specific details, e.g. consent document version, session ID, export path).
@@ -226,7 +226,7 @@ STUDY = {
 
 ## Phase 2: Consent Flow
 
-### Action 2.1 — Consent Gate Middleware / Decorator
+### Action 2.1 — Consent Gate Middleware / Decorator ✅
 **Depends on:** 1.2
 **Description:** Implement the consent gate so logged-in users without active consent are redirected to the consent page.
 - Create a middleware or view decorator that checks `participant.has_active_consent`. If False, redirect to `/consent/`.
@@ -234,7 +234,7 @@ STUDY = {
 - If the active `ConsentDocument` version is newer than the participant's latest `ConsentRecord`, treat consent as stale (redirect to re-consent).
 - **Verify:** New user logs in → redirected to consent page. After consenting → can access the rest of the app. Updating the ConsentDocument version → existing user redirected on next visit.
 
-### Action 2.2 — Consent Page View and Template
+### Action 2.2 — Consent Page View and Template ✅
 **Depends on:** 2.1
 **Description:** Build the consent form page.
 - View fetches the active `ConsentDocument` and renders its body (markdown → HTML).

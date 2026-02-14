@@ -1,4 +1,4 @@
-# ruff: noqa: ERA001, E501
+# ruff: noqa: E501
 """Base settings to build other settings files upon."""
 
 
@@ -20,40 +20,22 @@ if READ_DOT_ENV_FILE:
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = env.bool("DJANGO_DEBUG", False)
-# Local time zone. Choices are
-# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-# though not all of them may be available with every OS.
-# In Windows, this must be set to your system time zone.
-TIME_ZONE = "GMT"
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
-LANGUAGE_CODE = "en-us"
-# https://docs.djangoproject.com/en/dev/ref/settings/#languages
-# from django.utils.translation import gettext_lazy as _
-# LANGUAGES = [
-#     ('en', _('English')),
-#     ('fr-fr', _('French')),
-#     ('pt-br', _('Portuguese')),
-# ]
+LANGUAGE_CODE = "en-gb"
 # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
-USE_I18N = True
+USE_I18N = False
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
 USE_TZ = True
-# https://docs.djangoproject.com/en/dev/ref/settings/#locale-paths
-LOCALE_PATHS = [str(BASE_DIR / "locale")]
+# https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
+TIME_ZONE = "UTC"
 
 # DATABASES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
-
-DATABASES = {
-    "default": env.db(
-        "DATABASE_URL",
-        default="postgres:///agenticbrainrot",
-    ),
-}
-DATABASES["default"]["ATOMIC_REQUESTS"] = True
+# Overridden in local.py and production.py
+DATABASES = {}
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -73,22 +55,30 @@ DJANGO_APPS = [
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
-    "crispy_bootstrap5",
+    "crispy_bulma",
     "allauth",
     "allauth.account",
     "allauth.mfa",
     "allauth.socialaccount",
+    "csp",
+    "hijack",
+    "simple_history",
+    "django_recaptcha",
 ]
 
 LOCAL_APPS = [
-    "agenticbrainrot.users",
-    # Your stuff: custom apps go here
+    "agenticbrainrot.accounts",
+    "agenticbrainrot.pages",
+    "agenticbrainrot.consent",
+    "agenticbrainrot.surveys",
+    "agenticbrainrot.challenges",
+    "agenticbrainrot.coding_sessions",
+    "agenticbrainrot.dashboard",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -106,9 +96,9 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
-AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "accounts.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
-LOGIN_REDIRECT_URL = "users:redirect"
+LOGIN_REDIRECT_URL = "accounts:redirect"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
 
@@ -139,13 +129,15 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "hijack.middleware.HijackUserMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
+    "agenticbrainrot.consent.middleware.ConsentGateMiddleware",
 ]
 
 # STATIC
@@ -186,12 +178,11 @@ TEMPLATES = [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
-                "django.template.context_processors.i18n",
                 "django.template.context_processors.media",
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "agenticbrainrot.users.context_processors.allauth_settings",
+                "agenticbrainrot.accounts.context_processors.allauth_settings",
             ],
         },
     },
@@ -201,8 +192,8 @@ TEMPLATES = [
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 # http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bulma"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bulma"
 
 # FIXTURES
 # ------------------------------------------------------------------------------
@@ -217,6 +208,8 @@ SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#x-frame-options
 X_FRAME_OPTIONS = "DENY"
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 # EMAIL
 # ------------------------------------------------------------------------------
@@ -263,9 +256,6 @@ LOGGING = {
     "root": {"level": "INFO", "handlers": ["console"]},
 }
 
-REDIS_URL = env("REDIS_URL", default="redis://localhost:6379/0")
-REDIS_SSL = REDIS_URL.startswith("rediss://")
-
 
 # django-allauth
 # ------------------------------------------------------------------------------
@@ -279,14 +269,43 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://docs.allauth.org/en/latest/account/configuration.html
-ACCOUNT_ADAPTER = "agenticbrainrot.users.adapters.AccountAdapter"
+ACCOUNT_ADAPTER = "agenticbrainrot.accounts.adapters.AccountAdapter"
 # https://docs.allauth.org/en/latest/account/forms.html
-ACCOUNT_FORMS = {"signup": "agenticbrainrot.users.forms.UserSignupForm"}
+ACCOUNT_FORMS = {"signup": "agenticbrainrot.accounts.forms.UserSignupForm"}
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
-SOCIALACCOUNT_ADAPTER = "agenticbrainrot.users.adapters.SocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "agenticbrainrot.accounts.adapters.SocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
-SOCIALACCOUNT_FORMS = {"signup": "agenticbrainrot.users.forms.UserSocialSignupForm"}
+SOCIALACCOUNT_FORMS = {"signup": "agenticbrainrot.accounts.forms.UserSocialSignupForm"}
 
-
-# Your stuff...
+# django-hijack
 # ------------------------------------------------------------------------------
+HIJACK_PERMISSION_CHECK = "hijack.permissions.superusers_and_staff"
+
+# django-csp
+# ------------------------------------------------------------------------------
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": ["'self'"],
+        "script-src": ["'self'", "https://unpkg.com"],
+        "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+        "img-src": ["'self'", "data:"],
+        "font-src": ["'self'", "https://cdn.jsdelivr.net"],
+        "connect-src": ["'self'"],
+        "frame-ancestors": ["'none'"],
+    },
+}
+
+# django-recaptcha
+# ------------------------------------------------------------------------------
+RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBLIC_KEY", default="")
+RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVATE_KEY", default="")
+
+# STUDY
+# ------------------------------------------------------------------------------
+STUDY = {
+    "TIER_DISTRIBUTION": {"1": 3, "2": 3, "3": 2, "4": 1, "5": 1},
+    "CHALLENGES_PER_SESSION": 10,
+    "SESSION_COOLDOWN_DAYS": 28,
+    "SESSION_TIMEOUT_HOURS": 4,
+    "MIN_GROUP_SIZE_FOR_AGGREGATES": 10,
+}
