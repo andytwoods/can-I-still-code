@@ -52,7 +52,7 @@ Before each session starts, a brief reminder is shown:
 >
 > *This isn't a test you can fail. Consistent conditions just help us (and you) track genuine change over time.*
 
-- Before starting, the participant is asked: **"What device are you using right now?"** with options: Desktop / Laptop / Tablet / Phone. This is stored on the `Session` record as `device_type`. Self-report avoids user-agent fingerprinting and is more reliable than UA parsing (which misidentifies devices regularly).
+- Before starting, the participant is asked: **"What device are you using right now?"** with options: Desktop / Laptop / Tablet / Phone. This is stored on the `CodeSession` record as `device_type`. Self-report avoids user-agent fingerprinting and is more reliable than UA parsing (which misidentifies devices regularly).
 - The participant must tick a checkbox acknowledging they've read the guidelines before starting (lightweight — not a multi-page consent flow each time).
 - This is a **guideline, not enforced** — we can't control their environment, but the reminder primes good behaviour.
 - Optionally, after the session, ask: *"Were you able to work without distractions?"* (Yes / Mostly / No) — this becomes a covariate we can include in the analysis to account for noisy sessions.
@@ -92,8 +92,8 @@ Time-per-challenge is a key outcome variable. We record it with precision:
 - **Pyodide worker crash:** if the worker dies, the UI shows an error and offers "Retry" (reload worker) or "Skip this challenge". The timer continues (it's JS-side, not in the worker). A `technical_issues` flag is set on the attempt.
 
 #### Pyodide Performance Tracking
-- **`pyodide_load_ms`** is recorded on the `Session` model: time in milliseconds from worker creation to Pyodide reporting ready. This is a covariate for timing analysis (slow load may correlate with self-reported device type and affect participant experience).
-- **`editor_ready`** (BooleanField on Session): set to True once CodeMirror and Pyodide are both initialised. If False at session end, something went wrong and the session's timing data may be unreliable.
+- **`pyodide_load_ms`** is recorded on the `CodeSession` model: time in milliseconds from worker creation to Pyodide reporting ready. This is a covariate for timing analysis (slow load may correlate with self-reported device type and affect participant experience).
+- **`editor_ready`** (BooleanField on CodeSession): set to True once CodeMirror and Pyodide are both initialised. If False at session end, something went wrong and the session's timing data may be unreliable.
 
 ### 5.1b Think-Aloud Protocol (Optional)
 
@@ -219,7 +219,7 @@ All challenge sources use **permissive open-source licences** (MIT or CC BY-NC-S
 3. From the remaining pool, randomly sample up to 10 challenges using the **tier distribution**: 3 Tier 1, 3 Tier 2, 2 Tier 3, 1 Tier 4, 1 Tier 5 — tunable via admin settings.
 4. If a tier's pool is exhausted for that participant (e.g. they've seen all Tier 1 problems), fill the remaining slots from adjacent tiers.
 5. Sort the selected challenges in **ascending difficulty order** so participants build confidence before hitting harder problems.
-6. The selected set is locked at session start via `SessionChallenge` rows (see data model §9), so it doesn't change if the participant pauses mid-session.
+6. The selected set is locked at session start via `CodeSessionChallenge` rows (see data model §9), so it doesn't change if the participant pauses mid-session.
 
 #### Pool Exhaustion
 - With ~200 problems and 10 per session, a participant can complete ~20 sessions before exhausting the pool.
@@ -363,7 +363,7 @@ OptionalConsentRecord
 ### 7.5 Consent Audit PII Retention Policy
 - `ConsentRecord.ip_address` and `ConsentRecord.user_agent` are stored for **ethics audit compliance** (proof of informed consent).
 - **Retention period:** IP addresses and user agent strings on consent records are retained for **24 months** after the consent was given, then purged by a Huey periodic task (set to `null`/blank). The `consented_at` timestamp and the fact of consent are retained indefinitely.
-- **Session model stores no user agent, browser, OS, timezone, or screen width** — device type is self-reported, eliminating fingerprinting risk entirely.
+- **CodeSession model stores no user agent, browser, OS, timezone, or screen width** — device type is self-reported, eliminating fingerprinting risk entirely.
 - These fields are **never included in anonymised dataset exports** — see §12.4 anonymisation rules.
 - Export pipeline tests must scan for both email-like patterns (`*@*.*`) and IP-like patterns (`\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}`) in all exported files to catch accidental PII leaks.
 
@@ -403,7 +403,7 @@ SurveyResponse
   - value (TextField — stores the response; JSON for multi-choice, string for everything else)
   - answered_at (datetime)
   - -- Context FKs (nullable — exactly one is set depending on question.context):
-  - session (FK -> Session, nullable)              -- set for post_session questions
+  - session (FK -> CodeSession, nullable)              -- set for post_session questions
   - challenge_attempt (FK -> ChallengeAttempt, nullable)  -- set for post_challenge questions
   - supersedes (FK -> self, nullable)              -- for profile questions that get updated
 ```
@@ -434,7 +434,7 @@ Tests must cover all six invalid combinations (e.g., profile row with session se
 |---------|-----------|-----------|-------------------|
 | `profile` | Registration intake + profile page | Participant only | Age, gender, years coding, LeetCode familiarity |
 | `post_challenge` | After each challenge attempt | ChallengeAttempt | "How difficult?", "Harder since vibe coding?" |
-| `post_session` | End of session (replaces old CodingHabitSurvey) | Session | Vibe coding %, hours/week, tools used, distractions |
+| `post_session` | End of session (replaces old CodingHabitSurvey) | CodeSession | Vibe coding %, hours/week, tools used, distractions |
 
 #### Benefits of Consolidation
 - **One admin interface** to manage all questions across all contexts.
@@ -522,7 +522,7 @@ Participant
   - deletion_requested_at (datetime, nullable — set when participant requests data deletion)
   - deleted_at (datetime, nullable — set when staff processes the deletion; confirms compliance)
 
-Session
+CodeSession
   - participant (FK)
   - status (CharField, choices: "in_progress" / "completed" / "abandoned" — see state machine below)
   - started_at (datetime)
@@ -534,8 +534,8 @@ Session
   - pyodide_load_ms (PositiveIntegerField, nullable — Pyodide init time in ms, for timing analysis covariate)
   - editor_ready (BooleanField, default False — True once CodeMirror + Pyodide both initialised)
 
-SessionChallenge (join table — replaces the old JSONField approach for referential integrity)
-  - session (FK -> Session)
+CodeSessionChallenge (join table — replaces the old JSONField approach for referential integrity)
+  - session (FK -> CodeSession)
   - challenge (FK -> Challenge)
   - position (PositiveIntegerField — ordering within the session, ascending difficulty)
   - Meta: unique_together = (session, challenge); ordering = ["position"]
@@ -543,7 +543,7 @@ SessionChallenge (join table — replaces the old JSONField approach for referen
 -- NOTE: CodingHabitSurvey is no longer a separate model.
 -- Post-session habit questions (vibe coding %, hours/week, tools used, etc.)
 -- are now SurveyQuestion entries with context="post_session", and responses
--- are SurveyResponse rows linked to the Session FK. See §8.2.
+-- are SurveyResponse rows linked to the CodeSession FK. See §8.2.
 
 Challenge
   - external_id (e.g. Exercism slug, APPS problem ID)
@@ -554,7 +554,7 @@ Challenge
   - test_cases_hash (CharField — SHA-256 hash of test_cases JSON, auto-computed on save)
   - difficulty (Easy / Medium / Hard or numeric score)
   - tags (e.g. arrays, recursion, DP)
-  - is_active (bool — **never hard-delete challenges**; deactivate instead to preserve referential integrity with SessionChallenge and ChallengeAttempt)
+  - is_active (bool — **never hard-delete challenges**; deactivate instead to preserve referential integrity with CodeSessionChallenge and ChallengeAttempt)
 
   **Challenge versioning policy:** challenges are **never mutated** once they have been used in a session. If a bug is found in test cases or description:
   1. Deactivate the existing challenge (`is_active=False`).
@@ -608,7 +608,7 @@ Sessions have three states: `in_progress`, `completed`, `abandoned`.
 - **`completed`**: the participant finished the post-session survey. `completed_at` is set. This is the state that counts for the 28-day rule.
 - **`abandoned`**: a background task (Huey periodic task, running hourly) marks any `in_progress` session older than 4 hours as `abandoned` and sets `abandoned_at`. A participant can also have their in-progress session auto-abandoned when they next log in if it's stale.
 - **Abandoned sessions are NOT counted for the 28-day rule** — only `completed` sessions count. This means if someone's session was abandoned (e.g. browser crash), they can start a new session without waiting 28 days.
-- **Resumable sessions:** when a participant navigates to the session start page and has an `in_progress` session that's less than 4 hours old, they are redirected back to their current session rather than starting a new one. After 4 hours, the session is abandoned and they can start fresh.
+- **Resumable sessions:** when a participant navigates to the session start page and has an `in_progress` session that's less than 4 hours old, they are redirected back to their current session rather than starting a new one — **regardless of which device or browser they are on**. This is the simplest rule and prevents data duplication (one participant, one active session at a time). The session page works on any device since state is server-side. After 4 hours, the session is abandoned and they can start fresh.
 - **Data from abandoned sessions is retained** for analysis (challenge attempts already submitted are valid data), but the session is flagged so analysts can filter it if needed.
 
 #### ChallengeAttempt Idempotency
@@ -737,7 +737,7 @@ Community discussion and study design input are handled via **external services*
 ### 12.3 The 12-Month Embargo
 
 #### Embargo Start Date
-- The embargo clock starts from the **first completed session by any participant** (i.e. the earliest `Session.completed_at` in the database).
+- The embargo clock starts from the **first completed session by any participant** (i.e. the earliest `CodeSession.completed_at` in the database).
 - This date is stored as a site-wide setting: `EMBARGO_START_DATE` (set automatically on first session completion, or manually via admin if needed).
 - The embargo lifts exactly 12 calendar months after this date.
 
@@ -769,7 +769,7 @@ Community discussion and study design input are handled via **external services*
 #### Anonymisation Rules
 - **Participant ID mapping:** each `Participant.pk` is replaced with a stable opaque ID (deterministic UUID derived from a per-deployment secret + participant pk via HMAC-SHA256). The same participant always gets the same opaque ID across exports, so longitudinal joins work, but the mapping is irreversible without the secret.
 - **Stripped fields:** email, username, IP address, raw user agent strings (both consent and session-level), any free-text that could contain PII (think-aloud transcripts are only included if the participant has `transcript_sharing` optional consent).
-- **Retained device covariate:** only `device_type` is exported (self-reported: desktop/laptop/tablet/phone). No browser, OS, timezone, screen width, or user agent data is exported — these were removed from the Session model to eliminate quasi-identifier risk entirely.
+- **Retained device covariate:** only `device_type` is exported (self-reported: desktop/laptop/tablet/phone). No browser, OS, timezone, screen width, or user agent data is exported — these were removed from the CodeSession model to eliminate quasi-identifier risk entirely.
 - **Coarsened fields:** age → age band (e.g. 18–24, 25–34), geographic location → region/continent only, timestamps → date only (no time component).
 - **Excluded participants:** those with `withdrawn_at` or `deletion_requested_at` set, and all staff/superusers, are omitted entirely from exports **and** from aggregate public stats (front-page charts, API endpoints). Admin testing must never pollute the research dataset or public-facing numbers.
 
@@ -946,7 +946,7 @@ As a public citizen-science project, accessibility is both an ethical requiremen
   - After withdrawing, a **"Request data deletion"** button becomes available.
   - Sets `Participant.deletion_requested_at`. A staff notification is triggered (email or admin flag).
   - **What gets deleted:** all `SurveyResponse` rows, all `ChallengeAttempt` submitted code, all `ThinkAloudRecording` audio files, all `OptionalConsentRecord` rows, profile fields (set to null/blank).
-  - **What is retained (anonymised):** `ChallengeAttempt` timing and accuracy data (with opaque participant ID), `Session` records (timestamps only), `ConsentRecord` audit log (required for ethics compliance). These are already anonymised — no PII remains.
+  - **What is retained (anonymised):** `ChallengeAttempt` timing and accuracy data (with opaque participant ID), `CodeSession` records (timestamps only), `ConsentRecord` audit log (required for ethics compliance). These are already anonymised — no PII remains.
   - Deletion is processed within 30 days (allows staff review for edge cases).
   - Already-released anonymised dataset snapshots cannot be recalled, but future exports exclude withdrawn/deleted participants.
 - **Consent documents are admin-editable** — corrections or updates to the consent text can be made at any time. Participants are re-consented to new versions before continuing.

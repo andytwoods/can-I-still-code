@@ -21,7 +21,6 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 | `markdown` + `bleach` (or `nh3`) | No built-in markdown rendering or sanitisation | Consent docs and challenge descriptions are admin-authored markdown. Unsanitised markdown → XSS. |
 | `pyarrow` | No built-in Parquet support | Dataset export to Parquet for research reproducibility. |
 | `python-json-logger` | Django's logging is plain text | Structured JSON logs are needed for production log aggregation. |
-| `django-solo` (or equivalent) | No built-in singleton model | `StudyConfig` needs exactly one row. Prevents accidental duplicates. |
 
 **Django built-ins used where sufficient:** caching (cache framework), permissions/groups, logging (configured via `LOGGING` dict), sessions, CSRF, ORM constraints, admin, signals.
 
@@ -94,7 +93,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - `consent` — ConsentDocument, ConsentRecord, OptionalConsentRecord.
 - `surveys` — SurveyQuestion, SurveyResponse (the unified question system).
 - `challenges` — Challenge, ChallengeAttempt, session logic.
-- `sessions` — Session model, session orchestration views.
+- `sessions` — CodeSession model, session orchestration views.
 - `dashboard` — Personal results, front-page aggregate views.
 - `pages` — Static/semi-static pages (landing, about, sponsors, contact, get-involved).
 - Register all apps in `INSTALLED_APPS`.
@@ -105,12 +104,13 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 **Description:** Set up security infrastructure that affects template structure and middleware early.
 - **Content Security Policy (CSP):**
   - Install `django-csp`. Configure in `base.py`.
-  - `script-src`: `'self'`, Pyodide CDN origin, chart library CDN origin (Chart.js or Plotly.js). No `'unsafe-inline'` — use nonces via `{% csp_nonce %}` for inline scripts.
+  - `script-src`: `'self'`, Pyodide CDN origin, chart library CDN origin (Chart.js or Plotly.js). **No `'unsafe-inline'`**.
   - `worker-src`: `'self'`, `blob:` (Pyodide Web Worker).
   - `connect-src`: `'self'` (for HTMX and API fetches).
   - `style-src`: `'self'`, Bulma CDN origin, `'unsafe-inline'` (Bulma requires this for some utilities).
   - `img-src`: `'self'`, `data:` (for chart exports).
   - Document CSP origins in a comment block in settings so future CDN changes are easy.
+  - **JS architecture rule (enforced by CSP):** All JavaScript lives in static files under `<app>/static/<app>/js/`. No `<script>` tags in templates or partials — HTMX behaviour uses `hx-*` attributes only (these are HTML attributes, not inline JS, so CSP is not affected). For the small amount of page-specific initialisation (e.g. Pyodide setup, chart rendering), use `<script src="{% static '...' %}">` in `{% block extra_js %}`. If a truly unavoidable inline script is needed, use `{% csp_nonce %}` — but treat this as an exception that requires justification, not a default pattern.
 - **Rate limiting:**
   - Install `django-ratelimit`.
   - Apply rate limits to abuse-prone endpoints: allauth login/register (5/minute per IP), consent POST (10/minute per user), session start (3/minute per user), attempt submission (10/minute per user).
@@ -163,17 +163,17 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Write tests covering all six invalid FK combinations (e.g., profile+session, post_challenge+no attempt, both FKs set) plus the three valid cases.
 - **Verify:** Can create questions in admin, create responses in the shell, filter questions by context. Invalid FK combinations are rejected at both DB and model level.
 
-### Action 1.4 — Challenge and Session Models
+### Action 1.4 — Challenge and CodeSession Models
 **Depends on:** 1.1
 **Description:** Create the challenge and session models.
 - `Challenge`: external_id (CharField, unique — versioned, e.g. `exercism-two-fer-v1`), title, description (TextField, markdown), skeleton_code (TextField), test_cases (JSONField), test_cases_hash (CharField — SHA-256 of test_cases JSON, auto-computed in `save()`), difficulty (IntegerField, 1–5 for tiers), tags (JSONField), is_active (bool), created_at, updated_at. **Never hard-delete or mutate challenges once used** — to fix test cases, deactivate the old challenge and create a new row with a versioned `external_id`. Override `Model.delete()` to raise `ProtectedError` and use `on_delete=PROTECT` on FKs pointing to Challenge.
-- `Session`: participant (FK), status (CharField, choices: `in_progress`/`completed`/`abandoned`, default `in_progress`), started_at, completed_at (nullable), abandoned_at (nullable), challenges_attempted (IntegerField, default 0), distraction_free (CharField(max_length=10, choices: "yes"/"mostly"/"no", nullable)), device_type (CharField, choices: "desktop"/"laptop"/"tablet"/"phone", nullable — **self-reported** by participant at session start), pyodide_load_ms (PositiveIntegerField, nullable — Pyodide init time, sent from client), editor_ready (BooleanField, default False — set True once CodeMirror + Pyodide are both initialised, sent from client).
-- `SessionChallenge` (join table): session (FK), challenge (FK), position (PositiveIntegerField). `unique_together = (session, challenge)`, `ordering = ["position"]`. This replaces a JSONField to guarantee referential integrity — if a Challenge is referenced by any SessionChallenge or ChallengeAttempt, the DB prevents deletion.
+- `CodeSession`: participant (FK), status (CharField, choices: `in_progress`/`completed`/`abandoned`, default `in_progress`), started_at, completed_at (nullable), abandoned_at (nullable), challenges_attempted (IntegerField, default 0), distraction_free (CharField(max_length=10, choices: "yes"/"mostly"/"no", nullable)), device_type (CharField, choices: "desktop"/"laptop"/"tablet"/"phone", nullable — **self-reported** by participant at session start), pyodide_load_ms (PositiveIntegerField, nullable — Pyodide init time, sent from client), editor_ready (BooleanField, default False — set True once CodeMirror + Pyodide are both initialised, sent from client).
+- `CodeSessionChallenge` (join table): session (FK), challenge (FK), position (PositiveIntegerField). `unique_together = (session, challenge)`, `ordering = ["position"]`. This replaces a JSONField to guarantee referential integrity — if a Challenge is referenced by any CodeSessionChallenge or ChallengeAttempt, the DB prevents deletion.
 - `ChallengeAttempt`: participant (FK), challenge (FK), session (FK), attempt_uuid (UUIDField, unique — client-generated idempotency key), submitted_code (TextField), tests_passed (IntegerField), tests_total (IntegerField), time_taken_seconds (FloatField), active_time_seconds (FloatField), idle_time_seconds (FloatField), started_at, submitted_at, skipped (BooleanField), think_aloud_active (BooleanField, default False), technical_issues (BooleanField, default False — set if Pyodide crashed/reloaded during this attempt), paste_count (IntegerField, default 0), paste_total_chars (IntegerField, default 0), keystroke_count (IntegerField, default 0), tab_blur_count (IntegerField, default 0). `unique_together = (session, challenge)` — exactly one attempt per challenge per session.
 - Add `__str__` to all models.
 - Register in Django admin.
 - Add indexes on: `ChallengeAttempt.participant`, `ChallengeAttempt.session`, `Challenge.difficulty`, `Challenge.is_active`.
-- Add `CheckConstraint` on Session: `completed_at` must be set when `status="completed"`, `abandoned_at` must be set when `status="abandoned"`.
+- Add `CheckConstraint` on CodeSession: `completed_at` must be set when `status="completed"`, `abandoned_at` must be set when `status="abandoned"`.
 - Run `makemigrations` and `migrate`.
 - **Verify:** Can create challenges in admin, create sessions and attempts in the shell. Duplicate `(session, challenge)` attempt is rejected. Duplicate `attempt_uuid` is rejected.
 
@@ -285,7 +285,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 **Description:** Implement the server-side challenge selection logic.
 - Given a participant, query all active challenges.
 - Exclude challenges the participant has already been shown (via `ChallengeAttempt` records, including skipped).
-- Sample randomly per tier distribution: 3 T1, 3 T2, 2 T3, 1 T4, 1 T5. Store this distribution in a `StudyConfig` singleton model (use `django-solo` or a simple model with `objects.get_or_create`): `tier_distribution` (JSONField, e.g. `{"1": 3, "2": 3, "3": 2, "4": 1, "5": 1}`), `embargo_start_date` (DateField, nullable — auto-set on first session completion), and other site-wide study parameters. Register in admin with a clear "Study Configuration" section.
+- Sample randomly per tier distribution: 3 T1, 3 T2, 2 T3, 1 T4, 1 T5. Store this distribution in a `StudyConfig` singleton model (implement as a plain Django model with `objects.get_or_create(pk=1)` — no third-party needed): `tier_distribution` (JSONField, e.g. `{"1": 3, "2": 3, "3": 2, "4": 1, "5": 1}`), `embargo_start_date` (DateField, nullable — auto-set on first session completion), and other site-wide study parameters. Register in admin with a clear "Study Configuration" section.
 - If a tier is exhausted, fill from adjacent tiers.
 - Sort selected challenges by ascending difficulty.
 - Return the ordered list of challenge IDs.
@@ -300,12 +300,12 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 **Depends on:** 2.1, 3.3, 4.3
 **Description:** Build the "start session" page and enforce the 28-day rule.
 - Check: participant has active consent, profile completed, not withdrawn, and >= 28 days since last **completed** session (status="completed"; abandoned sessions do NOT count).
-- **Resumable sessions:** if the participant has an `in_progress` session that's less than 4 hours old, redirect them back to it instead of showing the start page.
+- **Resumable sessions:** if the participant has an `in_progress` session that's less than 4 hours old, redirect them back to it instead of showing the start page — **regardless of device/browser**. One participant, one active session at a time. No "abandon and restart" option; they must wait for the 4-hour auto-abandonment or complete the session.
 - If an `in_progress` session exists but is older than 4 hours, mark it as `abandoned` (set `status="abandoned"`, `abandoned_at=now()`), then proceed as normal.
 - If not eligible (28-day rule): show a message explaining when they can next participate (with countdown).
 - If eligible: show the session environment guidelines (§4.2) with acknowledgement checkbox and a **"What device are you using?"** radio group (Desktop / Laptop / Tablet / Phone).
-- On POST (acknowledged): create a `Session` record with `device_type` from the form. `pyodide_load_ms` and `editor_ready` are updated later by the client via JS callbacks once the editor initialises. Run the challenge selection algorithm (Action 4.3), create `SessionChallenge` rows linking the selected challenges in position order, redirect to the first challenge.
-- **Verify:** 28-day enforcement works (test with recent session). Withdrawn participant is blocked. Environment guidelines displayed. Device type saved. Session created with correct `SessionChallenge` entries.
+- On POST (acknowledged): create a `CodeSession` record with `device_type` from the form. `pyodide_load_ms` and `editor_ready` are updated later by the client via JS callbacks once the editor initialises. Run the challenge selection algorithm (Action 4.3), create `CodeSessionChallenge` rows linking the selected challenges in position order, redirect to the first challenge.
+- **Verify:** 28-day enforcement works (test with recent session). Withdrawn participant is blocked. Environment guidelines displayed. Device type saved. CodeSession created with correct `CodeSessionChallenge` entries.
 
 ### Action 5.2 — Challenge Attempt View (Single-Page Session with HTMX)
 **Depends on:** 4.2, 5.1
@@ -333,8 +333,8 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 **Description:** Build the post-session habit survey as an HTMX partial.
 - Server returns `partials/_post_session_survey.html` containing active `SurveyQuestion` entries with `context="post_session"`, rendered via the reusable question renderer.
 - Include the optional distraction question: "Were you able to work without distractions?" (Yes / Mostly / No).
-- On submit: HTMX POST to the same session URL. Server creates `SurveyResponse` entries linked to the `Session`. Mark `Session.completed_at`. Update `Session.challenges_attempted`. Return a redirect header (`HX-Redirect`) to the personal results dashboard.
-- **Verify:** Post-session survey appears via HTMX swap after ending a session. Responses saved. Session marked complete. Redirects to results page.
+- On submit: HTMX POST to the same session URL. Server creates `SurveyResponse` entries linked to the `CodeSession`. Mark `CodeSession.completed_at`. Update `CodeSession.challenges_attempted`. Return a redirect header (`HX-Redirect`) to the personal results dashboard.
+- **Verify:** Post-session survey appears via HTMX swap after ending a session. Responses saved. CodeSession marked complete. Redirects to results page.
 
 ---
 
@@ -378,7 +378,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 **Depends on:** 1.1, 1.2, 1.3, 1.4
 **Description:** Enhance the Django admin for study management.
 - Participant admin: show consent status, profile completion, session count, last session date.
-- Session admin: list with participant, date, challenges attempted, completion status.
+- CodeSession admin: list with participant, date, challenges attempted, completion status.
 - ChallengeAttempt admin: show participant, challenge, accuracy, time, integrity fields (paste_count etc).
 - SurveyQuestion admin: filter by context, is_active. Drag-to-reorder if feasible (django-admin-sortable2), otherwise display_order field.
 - ConsentDocument admin: show version, is_active, published_at. Warn if creating a new active version (existing participants will need re-consent).
@@ -403,16 +403,16 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 ### Action 7.3 — Abandoned Session Cleanup (Huey)
 **Depends on:** 1.4
 **Description:** Create a Huey periodic task to mark stale sessions as abandoned.
-- Runs hourly. Finds all `Session` records where `status="in_progress"` and `started_at` is more than 4 hours ago.
+- Runs hourly. Finds all `CodeSession` records where `status="in_progress"` and `started_at` is more than 4 hours ago.
 - Sets `status="abandoned"`, `abandoned_at=now()`.
 - Business logic in `helpers/task_helpers.py`, Huey task in `tasks.py` (per guidelines).
-- **Verify:** Create a session with `started_at` 5 hours ago. Run the task. Session status is now `abandoned`. A session started 1 hour ago is untouched.
+- **Verify:** Create a session with `started_at` 5 hours ago. Run the task. CodeSession status is now `abandoned`. A CodeSession started 1 hour ago is untouched.
 
 ### Action 7.4 — PII Retention Cleanup (Huey)
 **Depends on:** 1.2, 1.4
 **Description:** Create a Huey periodic task that purges retained PII after the 24-month retention period (see §7.5 of plan).
 - Runs weekly. Finds `ConsentRecord` rows where `consented_at` is more than 24 months ago and `ip_address` is not null/blank. Sets `ip_address = None`, `user_agent = ""`.
-- Session model no longer stores any PII (device type is self-reported, no UA/browser/OS/timezone/screen data), so no session-level cleanup is needed.
+- CodeSession model no longer stores any PII (device type is self-reported, no UA/browser/OS/timezone/screen data), so no session-level cleanup is needed.
 - Business logic in `helpers/task_helpers.py`, Huey task in `tasks.py` (per guidelines).
 - **Verify:** Create a consent record dated 25 months ago with an IP. Run the task. IP is now null, user_agent is blank. A record from 6 months ago is untouched.
 
@@ -427,7 +427,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
   - Exclude think-aloud transcripts unless participant has `transcript_sharing` optional consent.
   - Exclude withdrawn participants (filter by withdrawal timestamp).
   - Exclude admin/staff users.
-- **Export tables** (one CSV + one Parquet per table): Participants (anonymised), Sessions, SessionChallenges, ChallengeAttempts, Challenges, SurveyQuestions, SurveyResponses (with opaque participant ID).
+- **Export tables** (one CSV + one Parquet per table): Participants (anonymised), CodeSessions, CodeSessionChallenges, ChallengeAttempts, Challenges, SurveyQuestions, SurveyResponses (with opaque participant ID).
 - **Auto-generate `codebook.csv`**: for each exported file, list every column with: file name, column name, data type, description, allowed values (for choice fields).
 - **Write `manifest.json`**: dataset version (`vYYYY-MM-DD`), row counts per file, SHA-256 checksum per file, export timestamp, git commit hash (via `subprocess`).
 - Output directory: `exports/vYYYY-MM-DD/`. Command accepts `--output-dir` override.
@@ -437,7 +437,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 ### Action 7.6 — Dataset Download View and Embargo Enforcement
 **Depends on:** 7.5, 1.4
 **Description:** Build the gated dataset download view and embargo enforcement.
-- Add a site-wide setting `EMBARGO_START_DATE` (DateField). Auto-set on first `Session` completion (use a post-save signal or check in the session completion view). Also editable via admin.
+- Add a site-wide setting `EMBARGO_START_DATE` (DateField). Auto-set on first `CodeSession` completion (use a post-save signal or check in the session completion view). Also editable via admin.
 - Create a `DatasetAccessGrant` model: user (FK, nullable — for registered researchers), email (for external requests), granted_by (FK → staff user), granted_at, reason (TextField). Register in admin.
 - Create a dataset download page at `/data/` showing: embargo status (active/lifted), embargo start date, expected lift date, available dataset versions (list of `exports/v*/manifest.json`).
 - Download links (e.g. `/data/download/v2027-03-15/`) are served via a Django view (not static files):
