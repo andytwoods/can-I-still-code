@@ -18,8 +18,9 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 | `django-ratelimit` | No built-in rate limiting | Auth and submission endpoints are abuse targets. Django's cache framework alone doesn't provide decorator-level rate limiting. |
 | `django-simple-history` | Django admin log is append-only, no field diffs | Consent documents and survey questions are research instruments — auditable change history is an ethics requirement. |
 | `django-recaptcha` / `django-turnstile` | No built-in CAPTCHA | Registration-only. Lightweight bot friction for a public-facing study. |
-| `markdown` + `bleach` (or `nh3`) | No built-in markdown rendering or sanitisation | Consent docs and challenge descriptions are admin-authored markdown. Unsanitised markdown → XSS. |
+| `markdown` | No built-in markdown rendering | Consent docs and challenge descriptions are admin-authored markdown. `markdown` converts to HTML; output is marked `|safe` in templates (admin-trusted content). |
 | `pyarrow` | No built-in Parquet support | Dataset export to Parquet for research reproducibility. |
+| `whitenoise` | Django's static serving is dev-only | Production static file serving with compressed, cache-busted (hashed) filenames. Needed for stable CSP `'self'` paths. Avoids separate nginx config. |
 | `python-json-logger` | Django's logging is plain text | Structured JSON logs are needed for production log aggregation. |
 
 **Django built-ins used where sufficient:** caching (cache framework), permissions/groups, logging (configured via `LOGGING` dict), sessions, CSRF, ORM constraints, admin, signals.
@@ -33,6 +34,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 **Description:** Initialise the Django project with environment-based settings and core dependencies.
 - Run `django-admin startproject config .` (or equivalent).
 - Configure `settings.py`: split into `base.py`, `local.py`, `production.py`. Use env vars for `SECRET_KEY`, `DATABASE_URL`, `DEBUG`, `ALLOWED_HOSTS`.
+- Set `LANGUAGE_CODE = "en-gb"` and `USE_I18N = False` in `base.py`. The app is **English-only** — no internationalisation, no translation infrastructure, no `{% trans %}` tags. All UI text is plain English strings in templates.
 - **Database config (per guidelines):**
   - `base.py`: no database defined (or a minimal default that `local.py`/`production.py` override).
   - `local.py`: **SQLite** (`db.sqlite3`) — no PostgreSQL dependency for local dev.
@@ -115,15 +117,24 @@ The project guidelines say "use built-ins before third-party." The dependencies 
   - Install `django-ratelimit`.
   - Apply rate limits to abuse-prone endpoints: allauth login/register (5/minute per IP), consent POST (10/minute per user), session start (3/minute per user), attempt submission (10/minute per user).
   - Return `429 Too Many Requests` with a Bulma-styled error page.
-- **Markdown rendering and sanitisation:**
-  - Install `markdown` and `bleach` (or `nh3`).
-  - Create a template filter `|render_markdown` that: converts markdown to HTML via `markdown` library, then sanitises with an allowlist of safe tags (`p`, `h1`–`h6`, `ul`, `ol`, `li`, `strong`, `em`, `a`, `code`, `pre`, `blockquote`, `br`, `hr`, `table`, `thead`, `tbody`, `tr`, `th`, `td`). No raw HTML passthrough — admin markdown is sanitised the same way.
+- **Markdown rendering:**
+  - Install `markdown`.
+  - Create a template filter `|render_markdown` that converts markdown to HTML via the `markdown` library.
   - Use this filter for: consent document bodies, challenge descriptions, survey question help text.
-  - **No `|safe` filter** on any user-facing or admin-authored content without going through `|render_markdown`.
+  - Admin-authored content is trusted — use `|safe` after `|render_markdown` in templates. No sanitisation layer needed.
 - **Bot friction:**
   - Install `django-recaptcha` (or `django-turnstile` for Cloudflare Turnstile). Configure with env vars.
   - Add CAPTCHA to the registration form only (not login — allauth's email verification handles most abuse). Can be made conditional (only shown after N failed attempts) in a later iteration.
-- **Verify:** CSP headers are present in responses. Inline script without nonce is blocked by CSP. Rate-limited endpoint returns 429 after threshold. Markdown with `<script>` tag is sanitised to plain text. CAPTCHA renders on registration.
+- **Static file serving (Whitenoise):**
+  - Install `whitenoise`. Add `WhiteNoiseMiddleware` to `MIDDLEWARE` (immediately after `SecurityMiddleware`).
+  - Configure `STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"` in `base.py`.
+  - This ensures static file paths are stable and cache-busted (hashed filenames), CSP `'self'` works reliably for static JS/CSS, and no separate nginx config is needed for static files.
+  - Add `whitenoise` to `pyproject.toml` dependencies.
+- **Baseline security headers (Django built-ins):**
+  - In `base.py`: `SECURE_CONTENT_TYPE_NOSNIFF = True` (X-Content-Type-Options: nosniff), `X_FRAME_OPTIONS = "DENY"`, `SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"`.
+  - In `production.py` only: `SECURE_SSL_REDIRECT = True`, `SECURE_HSTS_SECONDS = 31536000` (1 year), `SECURE_HSTS_INCLUDE_SUBDOMAINS = True`, `SECURE_HSTS_PRELOAD = True`, `SESSION_COOKIE_SECURE = True`, `CSRF_COOKIE_SECURE = True`, `SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")`.
+  - In `local.py`: leave HSTS/SSL settings off (plain HTTP for local dev).
+- **Verify:** CSP headers are present in responses. Inline script without nonce is blocked by CSP. Rate-limited endpoint returns 429 after threshold. CAPTCHA renders on registration. `X-Content-Type-Options: nosniff` header present. Static files served with hashed filenames. In production settings, HSTS and SSL redirect are enabled.
 
 ---
 
@@ -174,8 +185,42 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Register in Django admin.
 - Add indexes on: `ChallengeAttempt.participant`, `ChallengeAttempt.session`, `Challenge.difficulty`, `Challenge.is_active`.
 - Add `CheckConstraint` on CodeSession: `completed_at` must be set when `status="completed"`, `abandoned_at` must be set when `status="abandoned"`.
+- Add `CheckConstraint`s on ChallengeAttempt for reasonable value ranges: `time_taken_seconds >= 0`, `active_time_seconds >= 0`, `idle_time_seconds >= 0`, `tests_passed >= 0`, `tests_passed <= tests_total`, `paste_count >= 0`, `keystroke_count >= 0`, `tab_blur_count >= 0`. Add `Model.clean()` for the same rules with clear error messages.
+- Add `CheckConstraint` on Challenge: `difficulty >= 1 AND difficulty <= 5`.
+- **Cross-model integrity constraints on ChallengeAttempt:**
+  - **Participant consistency:** add a `CheckConstraint` (or `Model.clean()` + DB trigger if the ORM can't express the cross-table check) ensuring `ChallengeAttempt.participant == ChallengeAttempt.session.participant`. Since Django `CheckConstraint` cannot reference joined tables, enforce this in `ChallengeAttempt.clean()` and in the submission service function. Write tests that a ChallengeAttempt with a mismatched participant is rejected.
+  - **Challenge assignment validation:** the submission service function must verify that `ChallengeAttempt.challenge` is one of the `CodeSessionChallenge` rows for that session (i.e., `CodeSessionChallenge.objects.filter(session=session, challenge=challenge).exists()`). Reject with a clear error if the challenge was not assigned to this session. Write tests for both valid and unassigned challenge submissions.
+  - **Position ordering enforcement:** the submission service function must enforce that attempts are submitted in position order — only the next unattempted position in the `CodeSessionChallenge` sequence can be submitted (or skipped). This prevents users from skipping ahead or posting out-of-order results by crafting manual POSTs. Write tests: submitting for position 3 when position 2 is unattempted is rejected; submitting for position 2 after position 1 is accepted.
 - Run `makemigrations` and `migrate`.
-- **Verify:** Can create challenges in admin, create sessions and attempts in the shell. Duplicate `(session, challenge)` attempt is rejected. Duplicate `attempt_uuid` is rejected.
+- **Verify:** Can create challenges in admin, create sessions and attempts in the shell. Duplicate `(session, challenge)` attempt is rejected. Duplicate `attempt_uuid` is rejected. Negative timing values are rejected at DB level. Cross-user attempt is rejected. Unassigned challenge attempt is rejected. Out-of-order submission is rejected.
+
+### Action 1.5 — Study Settings (settings dict)
+**Depends on:** nothing
+**Description:** Define study parameters as a plain dict in `base.py`. No model, no migration, no caching — change the value and restart.
+```python
+STUDY = {
+    "TIER_DISTRIBUTION": {"1": 3, "2": 3, "3": 2, "4": 1, "5": 1},
+    "CHALLENGES_PER_SESSION": 10,
+    "SESSION_COOLDOWN_DAYS": 28,
+    "SESSION_TIMEOUT_HOURS": 4,
+    "MIN_GROUP_SIZE_FOR_AGGREGATES": 10,
+}
+```
+- Access everywhere via `from django.conf import settings; settings.STUDY["TIER_DISTRIBUTION"]`.
+- **Validation:** add a Django system check (`register` a check function in `apps.py`) that runs on startup and verifies: tier keys are `"1"`–`"5"`, values are non-negative ints summing to `CHALLENGES_PER_SESSION`, cooldown ≥ 1, timeout ≥ 1. Fails `manage.py check` with a clear error if invalid.
+- **Embargo start date:** not stored in settings — derived at query time as `CodeSession.objects.filter(status="completed").order_by("completed_at").values_list("completed_at", flat=True).first()`. Only checked on the dataset download page (cheap query, one row).
+- **Verify:** `uv run python manage.py check` passes. Deliberately invalid tier distribution (wrong sum) fails the check with a clear message.
+
+### Action 1.6 — Audit Event Model
+**Depends on:** 0.5
+**Description:** Create a lightweight, append-only audit trail for user-facing critical events. This complements `django-simple-history` (which tracks research instrument changes) by recording **what happened to whom and when** for debugging and ethics reporting.
+- `AuditEvent`: `event_type` (CharField, choices — see below), `participant` (FK, nullable — null for system events like export runs), `actor` (FK → User, nullable — the user who triggered the event; null for automated tasks), `timestamp` (DateTimeField, auto_now_add), `metadata` (JSONField, default dict — event-specific details, e.g. consent document version, session ID, export path).
+- **Event types:** `consent_given`, `consent_withdrawn`, `optional_consent_given`, `optional_consent_withdrawn`, `deletion_requested`, `deletion_processed`, `session_started`, `session_completed`, `session_abandoned`, `dataset_export_run`, `withdrawal`.
+- **Append-only:** override `save()` to reject updates on existing rows (raise `ValueError` if `self.pk` is set). Override `delete()` to raise `ProtectedError`. No `update` or `delete` admin actions.
+- **Helper function:** `log_audit_event(event_type, participant=None, actor=None, **metadata)` — a one-liner callsite for all code that needs to record an event. Import and call from consent views, withdrawal flow, deletion processing, session views, and export command.
+- **Admin:** register as read-only (`has_change_permission = False`, `has_delete_permission = False`). List display: timestamp, event_type, participant, actor. Filters: event_type, date range. Search: participant email. Export-to-CSV action for ethics board reporting.
+- Run `makemigrations` and `migrate`.
+- **Verify:** Creating an event via `log_audit_event()` works. Attempting to update or delete an event raises an error. Admin shows events read-only with filters. CSV export produces valid output.
 
 ---
 
@@ -195,10 +240,11 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - View fetches the active `ConsentDocument` and renders its body (markdown → HTML).
 - Form: checkbox "I have read and understand the above, and I consent to participate", submit button "Give consent".
 - Optional consent checkboxes: reminder emails, think-aloud audio, transcript sharing.
-- On POST: create `ConsentRecord` (capture IP, user agent), create `OptionalConsentRecord` entries, set `participant.has_active_consent = True`, redirect to profile intake.
+- On POST: create `ConsentRecord` (capture IP, user agent), create `OptionalConsentRecord` entries, set `participant.has_active_consent = True`, call `log_audit_event("consent_given", participant, actor=request.user, consent_document_version=doc.version)`. For each optional consent, call `log_audit_event("optional_consent_given", ...)`. Redirect to profile intake.
 - Decline path: show a message explaining they can return later.
 - Style with Bulma.
-- **Verify:** Full consent flow works end-to-end. ConsentRecord appears in admin. Declining blocks access. Re-consent flow works after document version update.
+- **Depends also on:** 1.6 (AuditEvent model).
+- **Verify:** Full consent flow works end-to-end. ConsentRecord appears in admin. AuditEvent for `consent_given` is created. Declining blocks access. Re-consent flow works after document version update.
 
 ---
 
@@ -211,40 +257,42 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Make the command idempotent (skip if questions already exist).
 - **Verify:** Run the command. Admin shows all questions with correct contexts and ordering.
 
-### Action 3.2 — Survey Question Renderer (Reusable Component)
-**Depends on:** 1.3
-**Description:** Build a reusable Django template tag / inclusion tag that renders a `SurveyQuestion` as the appropriate HTML widget.
-- Input: a `SurveyQuestion` instance.
-- Output: the correct Bulma-styled form widget based on `question_type`:
-  - `text` → text input
-  - `number` → number input
-  - `single_choice` → radio buttons or dropdown
-  - `multi_choice` → checkbox group
-  - `scale` → horizontal slider or tappable scale with min/mid/max labels
-- Include `help_text` display and `is_required` validation.
-- Make it accessible: proper `<label>`, `aria-describedby` for help text, keyboard-operable slider.
-- **Verify:** Template tag renders each question type correctly. Test with a few sample questions in a throwaway view.
+### Action 3.2 — Dynamic Survey Form Builder
+**Depends on:** 1.3, 0.2
+**Description:** Create a helper function that dynamically builds a Django `Form` class from a queryset of `SurveyQuestion` objects. Rendered via crispy-forms + crispy-bulma (per guidelines).
+- Create `surveys/forms.py` with a `build_survey_form(questions_qs)` function that returns a `Form` class. Field mapping:
+  - `text` → `forms.CharField(widget=forms.TextInput)`
+  - `number` → `forms.IntegerField`
+  - `single_choice` → `forms.ChoiceField(widget=forms.RadioSelect, choices=q.choices)`
+  - `multi_choice` → `forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=q.choices)`
+  - `scale` → `forms.IntegerField(min_value=q.scale_min, max_value=q.scale_max)` with a range widget showing min/mid/max labels
+- Each field's `label` is set from `q.text`, `help_text` from `q.help_text`, `required` from `q.is_required`.
+- Field names use `question_{q.pk}` so the view can map answers back to questions.
+- Render in templates with `{% load crispy_forms_tags %}` and `{% crispy form %}` — crispy-bulma handles all Bulma styling.
+- Accessible: crispy-forms generates proper `<label>` and `aria-describedby` for help text. Scale widget needs a custom crispy layout or widget override to show min/mid/max labels.
+- **Verify:** Build a form from a queryset containing one of each question type. Render it in a throwaway view — all five types display with correct Bulma styling. Submit with invalid data — Django validation catches it. Submit with valid data — `form.cleaned_data` contains the right types.
 
-### Action 3.3 — Profile Intake View
+### Action 3.3 — Profile Intake View (HTMX Per-Category Steps)
 **Depends on:** 2.2, 3.1, 3.2
-**Description:** Build the intake questionnaire page shown after consent.
-- View fetches all active `SurveyQuestion` entries with `context="profile"`, ordered by `display_order`, grouped by `category`.
-- Renders them using the reusable question renderer (Action 3.2).
-- On POST: validate and create `SurveyResponse` entries for each answer. Set `participant.profile_completed = True`.
-- Redirect to the main dashboard / session start page.
-- Consider using HTMX for per-category submission (submit one category at a time without full page reload) to allow partial saves naturally.
-- **Verify:** New user sees all 24 questions grouped by category. Submitting saves responses. Profile page is accessible again later for edits. Editing creates new `SurveyResponse` with `supersedes` pointing to old one.
+**Description:** Build the intake questionnaire as a multi-step HTMX flow, one category at a time.
+- **Same-endpoint pattern (per guidelines):** a single URL `/profile/intake/`. The view groups active `SurveyQuestion` entries with `context="profile"` by `category`, ordered by `display_order`.
+- On initial GET: render the first category's questions in a partial, with a progress indicator ("Step 1 of 5 — Demographics").
+- On POST (HTMX): validate and save `SurveyResponse` entries for that category. Return the next category's partial via HTMX swap. Each category is persisted immediately — if the user closes the tab mid-flow, completed categories are saved.
+- On final category POST: set `participant.profile_completed = True`, return an `HX-Redirect` to the dashboard / session start page.
+- If the user returns to `/profile/intake/` later (for edits), show the first category pre-filled with existing responses. On submit, create new `SurveyResponse` rows with `supersedes` pointing to the old ones.
+- **Post-challenge and post-session questions** (2–5 questions each) are already rendered as HTMX partials within the session page — they are short enough to show all at once within their partial, no per-question stepping needed.
+- **Verify:** Intake flow steps through each category via HTMX swaps. Each step saves immediately. Progress indicator updates. Closing mid-flow preserves completed categories. Re-visiting pre-fills answers. Editing creates superseding responses.
 
 ### Action 3.4 — Participant Withdrawal and Data Deletion
-**Depends on:** 1.1, 1.2, 3.3
+**Depends on:** 1.1, 1.2, 1.6, 3.3
 **Description:** Build the user-facing withdrawal and data deletion controls on the profile/settings page.
 - Add a **"Withdraw from study"** section on the profile page with a clearly labelled button.
 - On click: show a confirmation dialog (HTMX partial or JS confirm) explaining: withdrawal prevents future sessions, data is retained in anonymised form unless deletion is requested, they can re-enrol later.
-- On confirmation: set `Participant.withdrawn_at = now()`, set `has_active_consent = False`. If a session is in progress, mark it as incomplete.
+- On confirmation: set `Participant.withdrawn_at = now()`, set `has_active_consent = False`. If a session is in progress, mark it as incomplete. Call `log_audit_event("withdrawal", participant, actor=request.user)`.
 - After withdrawal, show a **"Request data deletion"** button (only visible once withdrawn).
-- On deletion request: set `Participant.deletion_requested_at = now()`. Send a notification to staff (email or admin flag).
+- On deletion request: set `Participant.deletion_requested_at = now()`. Send a notification to staff (email or admin flag). Call `log_audit_event("deletion_requested", participant, actor=request.user)`.
 - Create a helper function (in `helpers/task_helpers.py`) that processes deletion: deletes `SurveyResponse` rows, blanks `ChallengeAttempt.submitted_code`, deletes `ThinkAloudRecording` files, deletes `OptionalConsentRecord` rows, clears profile fields. Retains anonymised timing/accuracy data and `ConsentRecord` audit log. Sets `Participant.deleted_at = now()` on completion.
-- **Admin tooling:** add a Django admin action "Process deletion request" on the Participant list. The action calls the deletion helper, sets `deleted_at`, and logs the admin user who processed it. Add a list filter for "Pending deletion requests" (`deletion_requested_at` set, `deleted_at` null) so staff can easily find outstanding requests.
+- **Admin tooling:** add a Django admin action "Process deletion request" on the Participant list. The action calls the deletion helper, sets `deleted_at`, calls `log_audit_event("deletion_processed", participant, actor=request.user)`, and logs the admin user who processed it. Add a list filter for "Pending deletion requests" (`deletion_requested_at` set, `deleted_at` null) so staff can easily find outstanding requests.
 - Add an admin view or export showing deletion audit trail: participant (opaque ID), `deletion_requested_at`, `deleted_at`, processed by (staff username).
 - The consent gate (Action 2.1) must check `withdrawn_at` — withdrawn participants cannot start sessions.
 - The export command (Action 7.4) must exclude participants where `withdrawn_at` or `deletion_requested_at` is set.
@@ -281,16 +329,18 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - **Verify:** Can type Python code, run it, see output. Test cases run and show pass/fail. Timing and telemetry values are captured in JS (console.log for now).
 
 ### Action 4.3 — Challenge Selection Algorithm
-**Depends on:** 1.4
+**Depends on:** 1.4, 1.5
 **Description:** Implement the server-side challenge selection logic.
 - Given a participant, query all active challenges.
 - Exclude challenges the participant has already been shown (via `ChallengeAttempt` records, including skipped).
-- Sample randomly per tier distribution: 3 T1, 3 T2, 2 T3, 1 T4, 1 T5. Store this distribution in a `StudyConfig` singleton model (implement as a plain Django model with `objects.get_or_create(pk=1)` — no third-party needed): `tier_distribution` (JSONField, e.g. `{"1": 3, "2": 3, "3": 2, "4": 1, "5": 1}`), `embargo_start_date` (DateField, nullable — auto-set on first session completion), and other site-wide study parameters. Register in admin with a clear "Study Configuration" section.
+- Read the tier distribution and `challenges_per_session` from `settings.STUDY` (Action 1.5).
 - If a tier is exhausted, fill from adjacent tiers.
+- **Pool exhaustion handling:** if fewer than 10 challenges remain for a participant across all tiers, show a message: *"You've completed most of our challenges! We're adding new ones regularly."* If zero challenges remain, prevent session start with a friendly explanation.
+- **Admin alert:** log a warning (and optionally send a staff email) when any participant's remaining pool drops below 20 challenges, so admins know to add more content.
 - Sort selected challenges by ascending difficulty.
 - Return the ordered list of challenge IDs.
 - Write as a service function in `challenges/services.py` (not in a view).
-- **Verify:** Unit tests: correct tier distribution, no repeats, handles pool exhaustion gracefully, ascending order.
+- **Verify:** Unit tests: correct tier distribution, no repeats, handles pool exhaustion gracefully, ascending order. Near-exhaustion warning triggers. Zero-pool blocks session start.
 
 ---
 
@@ -304,19 +354,26 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - If an `in_progress` session exists but is older than 4 hours, mark it as `abandoned` (set `status="abandoned"`, `abandoned_at=now()`), then proceed as normal.
 - If not eligible (28-day rule): show a message explaining when they can next participate (with countdown).
 - If eligible: show the session environment guidelines (§4.2) with acknowledgement checkbox and a **"What device are you using?"** radio group (Desktop / Laptop / Tablet / Phone).
-- On POST (acknowledged): create a `CodeSession` record with `device_type` from the form. `pyodide_load_ms` and `editor_ready` are updated later by the client via JS callbacks once the editor initialises. Run the challenge selection algorithm (Action 4.3), create `CodeSessionChallenge` rows linking the selected challenges in position order, redirect to the first challenge.
-- **Verify:** 28-day enforcement works (test with recent session). Withdrawn participant is blocked. Environment guidelines displayed. Device type saved. CodeSession created with correct `CodeSessionChallenge` entries.
+- **Mobile/tablet warning:** if the participant selects "Phone" or "Tablet", show a prominent warning: *"This study works best on a desktop or laptop with a physical keyboard. You can continue on this device, but your experience may be affected and timing data may be less reliable."* Allow them to proceed (don't block — some participants only have mobile), but the self-reported device type is a covariate that lets analysts account for it.
+- On POST (acknowledged): create a `CodeSession` record with `device_type` from the form. Call `log_audit_event("session_started", participant, actor=request.user, session_id=session.pk)`. `pyodide_load_ms` and `editor_ready` are updated later by the client via JS callbacks once the editor initialises. Run the challenge selection algorithm (Action 4.3), create `CodeSessionChallenge` rows linking the selected challenges in position order, redirect to the first challenge.
+- **Concurrent session creation guard:** wrap the "check for existing in_progress session → create new session" sequence in `transaction.atomic()` with `select_for_update()` on the Participant row. This prevents two browser tabs from racing past the check simultaneously and both creating an `in_progress` session. The lock is held only for the duration of the session creation transaction, so it doesn't affect other queries. Write a test that simulates concurrent session creation and asserts only one `in_progress` session exists.
+- **Verify:** 28-day enforcement works (test with recent session). Withdrawn participant is blocked. Environment guidelines displayed. Device type saved. Mobile/tablet warning shown when appropriate. CodeSession created with correct `CodeSessionChallenge` entries. Concurrent tab session creation produces only one session.
 
 ### Action 5.2 — Challenge Attempt View (Single-Page Session with HTMX)
 **Depends on:** 4.2, 5.1
 **Description:** Build the main session page. The entire session (challenges, reflections, "another?" prompts) lives at **one URL** (e.g. `/sessions/<id>/`). Transitions between states use **HTMX partial swaps** — no full page reloads during a session. The code editor and Pyodide remain in vanilla JS (HTMX doesn't apply there).
 - **Session page layout:** a persistent container with the code editor area. HTMX swaps content within a target div for transitions.
-- **Challenge display:** challenge description, skeleton code in CodeMirror, visible timer (mm:ss, toggleable), "Submit" and "Skip" buttons, subtle "Stop session" link in corner.
-- **On Submit:** JS executes tests via Pyodide (client-side), collects results (tests_passed, tests_total, timing, telemetry), then JS triggers an HTMX POST to the same session URL with the results as form data. Include the client-generated `attempt_uuid` (UUID v4, generated when the challenge is first displayed). Server checks for existing `attempt_uuid` — if found, returns existing result (idempotent). Otherwise creates the `ChallengeAttempt` and returns the reflection questions partial.
+- **Challenge display:** the view determines the current challenge by finding the lowest `CodeSessionChallenge.position` that has no corresponding `ChallengeAttempt` for this session. The client never chooses which challenge to show — the server drives the sequence strictly by position order (1, 2, 3, …). Display: challenge description, skeleton code in CodeMirror, visible timer (mm:ss, toggleable), progress indicator ("Challenge 3 of 10"), "Submit" and "Skip" buttons, subtle "Stop session" link in corner.
+- **On Submit:** JS executes tests via Pyodide (client-side), collects results (tests_passed, tests_total, timing, telemetry), then JS triggers an HTMX POST to the same session URL with the results as form data. Include the client-generated `attempt_uuid` (UUID v4, generated when the challenge is first displayed). Server-side submission service performs integrity checks **before** creating the attempt: (0) session status — session must be `in_progress`, otherwise return **409 Conflict** with an HTMX partial explaining the session has ended (see below); (1) `attempt_uuid` idempotency — if found, return existing result; (2) participant consistency — `request.user.participant == session.participant`; (3) challenge assignment — challenge is in this session's `CodeSessionChallenge` set; (4) position ordering — this challenge is at the next unattempted position (see Action 1.4 constraints). If any check fails, return 400 with a clear error. Otherwise create the `ChallengeAttempt` and return the reflection questions partial.
+- **Attempt POST on completed/abandoned session:** if a submit or skip arrives for a session whose status is `completed` or `abandoned` (e.g. the 4-hour cleanup ran while the participant was idle, or they submitted the post-session survey in another tab), the server **rejects** the attempt with 409 and returns an HTMX partial: *"This session has ended. Your work on this challenge was not recorded."* with a link to the session start page. The attempt is **not** created — accepting stale attempts would corrupt timing data and violate the session state machine. Write tests: attempt POST on a `completed` session returns 409; attempt POST on an `abandoned` session returns 409; the response contains an informative message.
 - **On Skip:** HTMX POST to the same URL with `skipped=True`. Server creates `ChallengeAttempt` with `skipped=True`, returns the reflection questions partial.
 - **On "Stop session":** confirm dialog (JS), then HTMX POST to the same URL with `action=stop`. Server records current challenge as skipped, returns the post-session survey partial.
 - The view detects `request.headers.get("HX-Request")` and returns the appropriate partial (`partials/_reflection.html`, `partials/_another_prompt.html`, `partials/_next_challenge.html`, `partials/_post_session_survey.html`) depending on the action and session state.
-- **Verify:** Full challenge flow works without page reloads: see challenge → write code → submit → results + reflection questions → another/done. All data saved correctly. Skip and stop-session paths work. Browser back button handled gracefully.
+- **Auto-save drafts:** periodically (every 30 seconds) save the current editor content to `localStorage` keyed by `attempt_uuid`. On page reload or session resume, restore the draft. Clear the draft on successful submit or skip. This prevents lost work from browser crashes.
+- **Pyodide load failure:** if Pyodide fails to load (CDN blocked, WASM error), show a clear error message: *"The code execution environment couldn't load. Please check your internet connection and reload the page."* with a "Reload" button. Do not start the timer until Pyodide is ready. If the failure persists, allow the participant to skip the challenge or stop the session without penalty (the attempt is not counted).
+- **HTMX swap failure:** if an HTMX POST fails (network drop), show a Bulma notification: *"Connection lost. Your work is saved locally. Retrying…"* with automatic retry (HTMX's built-in `hx-trigger="retry"` or a JS retry). The idempotency key ensures retries are safe.
+- **Browser back button:** use `hx-push-url="false"` on HTMX swaps within the session page so the browser history is not polluted. The back button takes the user out of the session (with a "leave session?" confirm via `beforeunload` event), not between HTMX states.
+- **Verify:** Full challenge flow works without page reloads: see challenge → write code → submit → results + reflection questions → another/done. All data saved correctly. Skip and stop-session paths work. Draft auto-save and restore works after page reload. Pyodide failure shows recovery UI. Network failure retries gracefully.
 
 ### Action 5.3 — Post-Challenge Reflection Questions (HTMX Partial)
 **Depends on:** 3.2, 5.2
@@ -333,7 +390,7 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 **Description:** Build the post-session habit survey as an HTMX partial.
 - Server returns `partials/_post_session_survey.html` containing active `SurveyQuestion` entries with `context="post_session"`, rendered via the reusable question renderer.
 - Include the optional distraction question: "Were you able to work without distractions?" (Yes / Mostly / No).
-- On submit: HTMX POST to the same session URL. Server creates `SurveyResponse` entries linked to the `CodeSession`. Mark `CodeSession.completed_at`. Update `CodeSession.challenges_attempted`. Return a redirect header (`HX-Redirect`) to the personal results dashboard.
+- On submit: HTMX POST to the same session URL. Server creates `SurveyResponse` entries linked to the `CodeSession`. Mark `CodeSession.completed_at`, set `status="completed"`. Update `CodeSession.challenges_attempted`. Call `log_audit_event("session_completed", participant, actor=request.user, session_id=session.pk)`. Return a redirect header (`HX-Redirect`) to the personal results dashboard.
 - **Verify:** Post-session survey appears via HTMX swap after ending a session. Responses saved. CodeSession marked complete. Redirects to results page.
 
 ---
@@ -396,17 +453,18 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Create a Huey periodic task that runs daily.
 - For each participant where: `has_active_consent=True`, has `OptionalConsentRecord` for `reminder_emails` with `consented=True`, last completed session was > 28 days ago, no reminder sent in the last 28 days.
 - Send a simple email: "It's been a while — ready for your next coding session?" with link to the app.
+- **One-click unsubscribe:** every reminder email includes an unsubscribe link (tokenised, no login required) that sets `OptionalConsentRecord.consented=False` and `withdrawn_at=now()` for `consent_type="reminder_emails"`. Also include a `List-Unsubscribe` header for email client integration.
 - Log reminder sends in a `ReminderLog` model (participant, sent_at) to avoid duplicate sends.
 - Business logic in `helpers/task_helpers.py`, Huey task in `tasks.py` (per guidelines).
-- **Verify:** Huey task runs. Eligible participants receive email. Ineligible participants don't. No duplicate sends.
+- **Verify:** Huey task runs. Eligible participants receive email. Ineligible participants don't. No duplicate sends. Unsubscribe link works without login. Unsubscribed participant stops receiving emails.
 
 ### Action 7.3 — Abandoned Session Cleanup (Huey)
-**Depends on:** 1.4
+**Depends on:** 1.4, 1.5, 1.6
 **Description:** Create a Huey periodic task to mark stale sessions as abandoned.
-- Runs hourly. Finds all `CodeSession` records where `status="in_progress"` and `started_at` is more than 4 hours ago.
-- Sets `status="abandoned"`, `abandoned_at=now()`.
+- Runs hourly. Read `SESSION_TIMEOUT_HOURS` from `settings.STUDY` (Action 1.5). Find all `CodeSession` records where `status="in_progress"` and `started_at` is more than that many hours ago.
+- Sets `status="abandoned"`, `abandoned_at=now()`. Call `log_audit_event("session_abandoned", participant, session_id=session.pk)` for each.
 - Business logic in `helpers/task_helpers.py`, Huey task in `tasks.py` (per guidelines).
-- **Verify:** Create a session with `started_at` 5 hours ago. Run the task. CodeSession status is now `abandoned`. A CodeSession started 1 hour ago is untouched.
+- **Verify:** Create a session with `started_at` 5 hours ago. Run the task. CodeSession status is now `abandoned`. AuditEvent for `session_abandoned` is created. A CodeSession started 1 hour ago is untouched.
 
 ### Action 7.4 — PII Retention Cleanup (Huey)
 **Depends on:** 1.2, 1.4
@@ -432,12 +490,13 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - **Write `manifest.json`**: dataset version (`vYYYY-MM-DD`), row counts per file, SHA-256 checksum per file, export timestamp, git commit hash (via `subprocess`).
 - Output directory: `exports/vYYYY-MM-DD/`. Command accepts `--output-dir` override.
 - Add `pyarrow` to dependencies (for Parquet export).
-- **Verify:** Running `uv run python manage.py export_dataset` produces a complete export directory. Opaque IDs are stable across re-runs. No PII in exported files — write tests that scan all exported files for: email patterns (`*@*.*`), IPv4 patterns (`\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}`), and raw user agent substrings (`Mozilla/`, `Chrome/`, `Safari/`). Codebook covers all columns. Manifest checksums match file contents.
+- On successful export, call `log_audit_event("dataset_export_run", actor=None, version=version_slug, row_counts=manifest_counts)`.
+- **Verify:** Running `uv run python manage.py export_dataset` produces a complete export directory. AuditEvent for `dataset_export_run` is created. Opaque IDs are stable across re-runs. No PII in exported files — write tests that scan all exported files for: email patterns (`*@*.*`), IPv4 patterns (`\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}`), and raw user agent substrings (`Mozilla/`, `Chrome/`, `Safari/`). Codebook covers all columns. Manifest checksums match file contents.
 
 ### Action 7.6 — Dataset Download View and Embargo Enforcement
 **Depends on:** 7.5, 1.4
 **Description:** Build the gated dataset download view and embargo enforcement.
-- Add a site-wide setting `EMBARGO_START_DATE` (DateField). Auto-set on first `CodeSession` completion (use a post-save signal or check in the session completion view). Also editable via admin.
+- **Embargo start date** is derived at query time: `CodeSession.objects.filter(status="completed").order_by("completed_at").values_list("completed_at", flat=True).first()`. No stored setting needed.
 - Create a `DatasetAccessGrant` model: user (FK, nullable — for registered researchers), email (for external requests), granted_by (FK → staff user), granted_at, reason (TextField). Register in admin.
 - Create a dataset download page at `/data/` showing: embargo status (active/lifted), embargo start date, expected lift date, available dataset versions (list of `exports/v*/manifest.json`).
 - Download links (e.g. `/data/download/v2027-03-15/`) are served via a Django view (not static files):
@@ -552,9 +611,28 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 
 ---
 
-## Phase 11: Final MVP Polish
+## Phase 11: Pre-Launch
 
-### Action 11.1 — Accessibility Audit
+### Action 11.1 — Privacy Policy and Terms
+**Depends on:** 2.2
+**Description:** Create the privacy policy and terms of participation pages.
+- Create a `PrivacyPolicy` model (like `ConsentDocument`): version, title, body (markdown), is_active, published_at. Admin-editable. Rendered via `|render_markdown|safe` in templates.
+- Create views at `/privacy/` and `/terms/`. Footer links point here.
+- Content must cover: what data is collected (list all fields), how it's stored, who can access it, retention periods (24-month PII purge), anonymised dataset release, participant rights (withdrawal, deletion), GDPR compliance, cookies (session cookie only, no tracking), contact details.
+- Version the privacy policy the same way as consent documents — show version and last-updated date on the page.
+- **Verify:** Privacy policy page loads. Footer link works. Admin can update the text. Version number displays.
+
+### Action 11.2 — Seed Data for Demo / Testing
+**Depends on:** all models
+**Description:** Create a management command that generates realistic fake data for testing and demos.
+- Create 20 fake participants with varied profiles (mark them as non-staff so they appear in aggregates).
+- Each participant has 1–5 sessions with 3–10 challenge attempts each.
+- Vary accuracy and timing realistically by tier.
+- Include varied vibe-coding percentages in survey responses.
+- Include 1 withdrawn participant and 1 with a deletion request (to test those flows).
+- **Verify:** Running the command populates the database. Charts on the front page and personal dashboards render with realistic-looking data. Withdrawn participant is excluded from aggregates.
+
+### Action 11.3 — Accessibility Audit
 **Depends on:** all UI actions
 **Description:** Audit all pages against WCAG 2.1 AA.
 - Run automated tools (axe-core, Lighthouse accessibility audit) on every page.
@@ -562,19 +640,50 @@ The project guidelines say "use built-ins before third-party." The dependencies 
 - Fix any issues found.
 - **Verify:** Lighthouse accessibility score >= 90 on all pages. Full session flow completable via keyboard only.
 
-### Action 11.2 — End-to-End Smoke Test
-**Depends on:** all prior actions
-**Description:** Walk through the complete user journey and verify.
-- Register new account → consent → intake questionnaire → start session → complete 3 challenges with reflection questions → stop session → post-session survey → view results → log out → log back in → verify 28-day enforcement.
-- Check admin: all records created correctly (participant, consent, survey responses, session, challenge attempts).
-- Check front page: stats update.
-- **Verify:** Zero errors in the full flow. All data persists correctly.
+### Action 11.4 — Pilot Test (Closed Beta)
+**Depends on:** 10.4, 11.2
+**Description:** Run a closed pilot with 5–10 trusted testers before public launch.
+- Recruit testers (colleagues, friends, the dev team) who span different experience levels and devices.
+- Each tester completes the full flow: registration → consent → profile → 1 session (3+ challenges) → post-session → view results.
+- Collect structured feedback via a short post-pilot survey (can be a simple Google Form or an in-app survey): usability issues, confusing wording, bugs, timing experience, device used.
+- Review all data created: check for data integrity issues, constraint violations, edge cases.
+- Run the export command and verify the output is clean.
+- Fix all issues found. This may loop back to earlier actions.
+- **Verify:** All pilot testers complete the flow without blocking issues. No data integrity problems. Export produces valid, PII-free output. Feedback is addressed.
 
-### Action 11.3 — Seed Data for Demo / Testing
-**Depends on:** all models
-**Description:** Create a management command that generates realistic fake data for testing and demos.
-- Create 20 fake participants with varied profiles.
-- Each participant has 1–5 sessions with 3–10 challenge attempts each.
-- Vary accuracy and timing realistically by tier.
-- Include varied vibe-coding percentages in survey responses.
-- **Verify:** Running the command populates the database. Charts on the front page and personal dashboards render with realistic-looking data.
+### Action 11.5 — Pre-Registration (OSF)
+**Depends on:** 11.4
+**Description:** Pre-register the study analysis plan before public launch.
+- Draft a pre-registration document covering: research questions, hypotheses, primary outcome variables, statistical model (Bayesian multilevel regression), covariates, sample size expectations, exclusion criteria (cheating flags, abandoned sessions), sensitivity analyses.
+- Register on the **Open Science Framework (OSF)** at osf.io. This creates a timestamped, immutable record of the analysis plan before data collection begins.
+- Link the pre-registration URL in the study's "About" page and in the dataset's `manifest.json`.
+- This is a **research credibility requirement**, not a code task — but it must happen before public launch.
+- **Verify:** Pre-registration is publicly visible on OSF with a DOI. Link appears on the about page.
+
+### Action 11.6 — End-to-End Smoke Test
+**Depends on:** all prior actions
+**Description:** Walk through the complete user journey on production and verify.
+- Register new account → consent → intake questionnaire → start session → complete 3 challenges with reflection questions → stop session → post-session survey → view results → log out → log back in → verify 28-day enforcement.
+- Test withdrawal flow: withdraw → request deletion → admin processes deletion.
+- Test mobile warning: select "Phone" as device → warning appears → can still proceed.
+- Test email: trigger a reminder → unsubscribe link works.
+- Check admin: all records created correctly (participant, consent, survey responses, session, challenge attempts).
+- Check front page: stats update (excluding staff data).
+- Check privacy policy page.
+- **Verify:** Zero errors in the full flow. All data persists correctly. Staff data excluded from public stats.
+
+---
+
+## Deferred to Post-MVP
+
+The following items are acknowledged but intentionally deferred. They are documented here so they are not forgotten.
+
+| Item | Why deferred | When to revisit |
+|------|-------------|-----------------|
+| **Think-aloud recording** (audio capture, upload, transcription, `ThinkAloudRecording` model) | Complex infrastructure (MediaRecorder API, file storage, STT integration). The model is already designed in the plan (§5.1b) and the `think_aloud_active` field exists on `ChallengeAttempt`. | Phase 2 — after MVP is stable and ethics approval covers audio collection. |
+| **Cheating detection reporting** (admin views for flagged attempts, paste-ratio dashboards) | Telemetry is captured at MVP. Analysis and flagging happen at analysis time, not in-app. | Phase 2 — when enough data exists for meaningful outlier detection. |
+| **Multi-account detection** (IP/behavioural heuristics) | Complex, false-positive-prone, and not critical for initial data collection. Email verification provides basic protection. | Phase 3 — if data analysis reveals suspicious patterns. |
+| **Retention incentives** (badges, streaks, email summaries with personal stats) | Nice-to-have for engagement but not required for data collection. Basic personal dashboard exists. | Phase 2 — based on pilot feedback on participant motivation. |
+| **Adaptive difficulty** (selecting challenges based on prior performance) | Random selection is the research baseline. Adaptive testing is a future enhancement. | Phase 3 — requires IRT model calibration from collected data. |
+| **Community features** (Discord setup, "Get Involved" page content, collaborator interest form) | External service setup, not a code task. Footer links are in place. | Pre-launch — setup Discord server and GitHub Discussions manually. |
+| **Admin runbook** (deletion processing, cheating investigation, export procedures, participant complaint handling) | Operational documentation, not code. | Pre-launch — write alongside pilot testing. |

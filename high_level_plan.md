@@ -512,6 +512,8 @@ This means:
 
 ### 9.1 Key Entities
 
+**All datetime fields are stored in UTC** (`USE_TZ = True` in Django settings). The front-end displays times in the participant's local timezone using JavaScript's `Intl.DateTimeFormat`. The 28-day rule is computed server-side in UTC — since it uses a 28-day minimum (not calendar boundaries), timezone differences cannot cause off-by-one errors.
+
 ```
 Participant
   - user (FK -> Django User)
@@ -581,6 +583,51 @@ ChallengeAttempt
   - Meta: unique_together = (session, challenge) — exactly one attempt per challenge per session
 ```
 
+#### ChallengeAttempt Cross-Model Integrity
+
+Three constraints prevent data corruption from bugs or crafted requests:
+
+1. **Participant consistency:** `ChallengeAttempt.participant` must equal `ChallengeAttempt.session.participant`. Enforced in `Model.clean()` and in the submission service function (Django `CheckConstraint` cannot reference joined tables). A bug that writes a cross-user attempt would silently corrupt the dataset.
+2. **Challenge assignment validation:** `ChallengeAttempt.challenge` must be one of the `CodeSessionChallenge` rows for that session. Enforced in the submission service function. Prevents posting results for a challenge that was never assigned to the session.
+3. **Position ordering enforcement:** attempts must be submitted in `CodeSessionChallenge.position` order — only the next unattempted position can be submitted or skipped. Prevents users from skipping ahead or posting out-of-order results by crafting manual POSTs. The session view serves the next challenge based on the lowest unattempted position.
+
+#### Study Settings (settings dict, not a model)
+
+Study parameters are a plain dict in `settings.base`:
+
+```python
+STUDY = {
+    "TIER_DISTRIBUTION": {"1": 3, "2": 3, "3": 2, "4": 1, "5": 1},
+    "CHALLENGES_PER_SESSION": 10,
+    "SESSION_COOLDOWN_DAYS": 28,
+    "SESSION_TIMEOUT_HOURS": 4,
+    "MIN_GROUP_SIZE_FOR_AGGREGATES": 10,
+}
+```
+
+- These values rarely change. When they do, update the setting and restart — no model, no migration, no caching layer.
+- **Validation:** a Django system check runs on startup and verifies tier keys, value sum, and min values.
+- **Embargo start date** is not a setting — it's derived at query time as the earliest `CodeSession.completed_at`. Only checked on the dataset download page.
+
+#### AuditEvent (Append-Only Event Log)
+
+A lightweight, append-only model recording user-facing critical events for debugging and ethics reporting. Complements `django-simple-history` (which tracks research instrument field changes) by recording **what happened to whom and when**.
+
+```
+AuditEvent
+  - event_type (CharField, choices: consent_given, consent_withdrawn, optional_consent_given,
+    optional_consent_withdrawn, withdrawal, deletion_requested, deletion_processed,
+    session_started, session_completed, session_abandoned, dataset_export_run)
+  - participant (FK -> Participant, nullable — null for system events)
+  - actor (FK -> User, nullable — the user who triggered the event; null for automated tasks)
+  - timestamp (DateTimeField, auto_now_add)
+  - metadata (JSONField, default {} — event-specific details: consent version, session ID, export path, etc.)
+```
+
+- **Append-only:** `save()` rejects updates on existing rows; `delete()` raises `ProtectedError`.
+- **Callsites:** consent views, withdrawal flow, deletion processing, session start/complete, abandoned session cleanup, export command.
+- **Admin:** read-only, filterable by event_type and date range, CSV-exportable for ethics board reporting.
+
 #### Session State Machine
 
 Sessions have three states: `in_progress`, `completed`, `abandoned`.
@@ -609,7 +656,12 @@ Sessions have three states: `in_progress`, `completed`, `abandoned`.
 - **`abandoned`**: a background task (Huey periodic task, running hourly) marks any `in_progress` session older than 4 hours as `abandoned` and sets `abandoned_at`. A participant can also have their in-progress session auto-abandoned when they next log in if it's stale.
 - **Abandoned sessions are NOT counted for the 28-day rule** — only `completed` sessions count. This means if someone's session was abandoned (e.g. browser crash), they can start a new session without waiting 28 days.
 - **Resumable sessions:** when a participant navigates to the session start page and has an `in_progress` session that's less than 4 hours old, they are redirected back to their current session rather than starting a new one — **regardless of which device or browser they are on**. This is the simplest rule and prevents data duplication (one participant, one active session at a time). The session page works on any device since state is server-side. After 4 hours, the session is abandoned and they can start fresh.
+- **Concurrent session creation guard:** the "check for existing in_progress session → create new session" sequence is wrapped in `transaction.atomic()` with `select_for_update()` on the Participant row. This prevents two browser tabs from racing past the check and both creating an `in_progress` session simultaneously. The lock is held only for the duration of the session creation transaction.
 - **Data from abandoned sessions is retained** for analysis (challenge attempts already submitted are valid data), but the session is flagged so analysts can filter it if needed.
+
+#### Attempt POST on Completed/Abandoned Sessions
+
+If a challenge submission arrives for a session whose status is no longer `in_progress` (e.g. the 4-hour cleanup ran while the participant was idle, or they submitted the post-session survey in another tab), the server **rejects** the attempt with **409 Conflict** and returns a message: *"This session has ended. Your work on this challenge was not recorded."* The attempt is **not** created — accepting stale attempts would corrupt timing data and violate the session state machine. The client shows a link to the session start page so the participant can begin a new session when eligible.
 
 #### ChallengeAttempt Idempotency
 
@@ -738,15 +790,15 @@ Community discussion and study design input are handled via **external services*
 
 #### Embargo Start Date
 - The embargo clock starts from the **first completed session by any participant** (i.e. the earliest `CodeSession.completed_at` in the database).
-- This date is stored as a site-wide setting: `EMBARGO_START_DATE` (set automatically on first session completion, or manually via admin if needed).
+- This date is derived at query time: `CodeSession.objects.filter(status="completed").order_by("completed_at").first().completed_at`. No stored setting needed.
 - The embargo lifts exactly 12 calendar months after this date.
 
 #### Enforcement Mechanism
 - Dataset downloads are served via a Django view (not static files), so access can be gated.
 - The view checks:
   1. User is authenticated and is a participant (not anonymous).
-  2. `EMBARGO_START_DATE` is set and the current date is at least 12 months after it.
-  3. If the embargo hasn't lifted: return a 403 with a message explaining when the dataset will be available (computed from `EMBARGO_START_DATE + 12 months`).
+  2. At least one completed session exists, and the current date is at least 12 months after the earliest `completed_at`.
+  3. If the embargo hasn't lifted: return a 403 with a message explaining when the dataset will be available (earliest completion + 12 months).
 - **No guessable URLs:** dataset files are stored in a non-public media directory (not under `STATIC_ROOT` or `MEDIA_ROOT`). They are only accessible through the gated view. The URL uses the version slug (e.g. `/data/download/v2027-03-15/`) but returns 403 if the embargo is active.
 - **Researcher early access:** a separate admin-managed flag (`DatasetAccessGrant` model: researcher email/user FK, granted_by, granted_at, reason) allows case-by-case early access. The download view checks for an active grant before falling back to embargo enforcement.
 
@@ -855,8 +907,10 @@ A "Supported by" / "Sponsored by" section on the landing page:
 | Concern | Solution | Notes |
 |---------|----------|-------|
 | Content Security Policy | **django-csp** | Allowlist CDN origins for Pyodide, chart libs, Bulma. Use nonces for inline scripts. `worker-src` for Pyodide Web Worker. |
+| Static file serving | **whitenoise** | Compressed, cache-busted static files with hashed filenames. Ensures stable CSP `'self'` paths. No separate nginx config. |
+| Security headers | **Django built-ins** | `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin` in all environments. HSTS (1 year, preload), `SECURE_SSL_REDIRECT`, secure cookies in production only. |
 | Rate limiting | **django-ratelimit** | Per-IP and per-user limits on auth, consent, session start, and attempt submission endpoints. |
-| Markdown sanitisation | **markdown** + **bleach** (or **nh3**) | Admin-authored markdown (consent docs, challenge descriptions) is rendered then sanitised through an allowlist of safe HTML tags. No raw HTML passthrough. No `|safe` template filter on any user/admin content. |
+| Markdown rendering | **markdown** | Converts admin-authored markdown (consent docs, challenge descriptions) to HTML. Admin content is trusted — no sanitisation layer. |
 | Bot friction | **django-recaptcha** or **django-turnstile** | CAPTCHA on registration form. Lightweight — allauth email verification handles most abuse. |
 
 ### 14.2 Observability and Operations
