@@ -1,0 +1,105 @@
+# Django Guidelines
+
+You are an expert in Python, Django, and scalable web apps. Write secure, maintainable, performant code.
+
+## Python
+- Follow PEP 8 (120 char limit), double quotes, `isort`, f-strings.
+
+### Exception handling
+- **Never use catch-all exceptions**:
+  - Do not use bare `except:` or `except Exception:` anywhere in the codebase.
+  - Always catch the **most specific** exception you can genuinely handle.
+  - If meaningful recovery is not possible, let the exception propagate so it fails loudly.
+  - Use logging instead of `print()` when reporting errors.
+- **Static analysis**
+  - Configure linting (e.g. Ruff/flake8) to *error on*:
+    - bare `except:`
+    - `except Exception:`
+    - unused exception variables
+
+## Django
+- Use built-ins before third-party.
+- Prioritise security; use ORM over raw SQL.
+- Use signals sparingly.
+
+## Authentication
+- Use **django-allauth** for authentication. No custom auth backends.
+- Social login providers: **Google** and **GitHub**.
+- Keep email/password registration as a fallback.
+- Configure allauth to require email verification.
+
+## Models
+- Always add `__str__`.
+- Use `related_name` when helpful.
+- `blank=True` for forms, `null=True` for DB.
+
+## Views
+- Validate/sanitise input.
+- Prefer `get_object_or_404`.
+- Paginate lists.
+
+## URLs
+- Descriptive names, end with `/`.
+
+## Frontend / CSS
+- Use **Bulma** as the CSS framework. No Bootstrap, Tailwind, or other CSS frameworks.
+- Load Bulma via CDN or pip (`django-bulma`) — keep it consistent across the project.
+- Use Bulma classes in templates; avoid writing custom CSS unless Bulma has no suitable class.
+
+## HTMX
+- Use **htmx** for dynamic partial updates. No React, Vue, or other JS frameworks.
+- **Same-endpoint pattern:** HTMX requests hit the same URL as the full page. The view detects HTMX via `request.headers.get("HX-Request")` and returns a partial template (fragment) instead of the full page.
+- Do **not** create separate URL routes for HTMX endpoints.
+
+## Templates
+- **App-local templates only.** Every app's templates live in `<app>/templates/<app>/`, never in a global `templates/` directory.
+  - Example: `challenges/templates/challenges/challenge_detail.html`
+- **HTMX partials** live in a `partials/` subdirectory within the app's template directory.
+  - Prefix partial filenames with `_` (e.g. `_challenge_detail.html`).
+  - Example: `challenges/templates/challenges/partials/_challenge_detail.html`
+- Use template inheritance. Keep logic minimal.
+- Always `{% load static %}`, enable CSRF.
+
+## Forms
+- Prefer ModelForms.
+- Use crispy-forms with the Bulma template pack (`crispy-bulma`).
+
+## Settings
+- Use env vars, never commit secrets.
+
+## Database
+- Always use migrations.
+- Optimise queries (`select_related`, `prefetch_related`).
+- Index frequent lookups.
+
+## Background tasks / Queue
+- Prefer **Huey** for background jobs.
+- **Never use Celery** in this codebase (no Celery configs, workers, brokers, or Celery-specific task decorators).
+- When adding async work:
+  - implement tasks using Huey’s decorators and configuration;
+  - keep business logic in helper modules per the “Tasks” section below.
+
+## Tasks (Framework-Agnostic)
+
+### Task layout
+- Each app’s `tasks.py` must **only** contain task-decorated functions for the chosen task-queue system.
+- No business logic, utility functions, or classes should be placed in `tasks.py`.
+- Task functions should:
+  - accept and validate raw input;
+  - call helper functions that contain the actual business logic;
+  - handle only queue-specific concerns such as scheduling, retries, or metadata.
+
+### Task helpers
+- Create a dedicated module for task-related logic, e.g. `helpers/task_helpers.py` (project-wide or per-app).
+- All business/domain logic used by tasks must live in `task_helpers.py`, not in `tasks.py`.
+- Helper functions should be:
+  - reusable by views, management commands, and tasks;
+  - clear about side-effects;
+  - written to be as idempotent as reasonably possible (safe for retries).
+
+## Testing
+- Write unit tests for new features.
+- Cover both success and failure paths.
+- Never hard-code URL paths (e.g. `"/users/123/"`) in assertions.
+  - Use `django.urls.reverse()` with named routes (e.g. `reverse("users:detail", kwargs={"pk": user.pk})`).
+  - For redirects that depend on the current request URL, use `request.path` (or `request.get_full_path()`) in expectations.
