@@ -28,6 +28,12 @@ You are an expert in Python, Django, and scalable web apps. Write secure, mainta
 - Keep email/password registration as a fallback.
 - Configure allauth to require email verification.
 
+## User Impersonation
+- Use **django-hijack** to allow admins to impersonate any user.
+- Configure hijack to appear in the Django admin (hijack button on user list/detail).
+- Only superusers and staff with explicit permission should be able to hijack.
+- Show a visible warning banner when a session is hijacked so it's never mistaken for a real user session.
+
 ## Models
 - Always add `__str__`.
 - Use `related_name` when helpful.
@@ -46,13 +52,29 @@ You are an expert in Python, Django, and scalable web apps. Write secure, mainta
 - Load Bulma via CDN or pip (`django-bulma`) — keep it consistent across the project.
 - Use Bulma classes in templates; avoid writing custom CSS unless Bulma has no suitable class.
 
-## HTMX
+## HTMX and JavaScript — when to use which
 - Use **htmx** for dynamic partial updates. No React, Vue, or other JS frameworks.
 - **Same-endpoint pattern:** HTMX requests hit the same URL as the full page. The view detects HTMX via `request.headers.get("HX-Request")` and returns a partial template (fragment) instead of the full page.
 - Do **not** create separate URL routes for HTMX endpoints.
 
+### HTMX is the default for:
+- Form submissions (consent, surveys, profile intake).
+- Session flow transitions (challenge → reflection questions → "another?" prompt → next challenge).
+- Any server-rendered content swap that would otherwise be a full page reload.
+
+### Vanilla JS is used only for:
+- **Pyodide / code editor** — CodeMirror, Web Worker execution, timer, telemetry capture. This is inherently JS-driven and HTMX doesn't apply.
+- **Chart rendering** — Chart.js/Plotly.js fetching JSON from API endpoints. HTMX doesn't help here.
+
+### JSON API endpoints are acceptable only for:
+- Aggregate chart data consumed by Chart.js/Plotly.js (e.g. `/api/stats/`).
+- Pyodide test result submission (client posts JSON after local execution).
+- Do **not** create JSON endpoints for anything that could be an HTMX partial swap instead.
+
 ## Templates
 - **App-local templates only.** Every app's templates live in `<app>/templates/<app>/`, never in a global `templates/` directory.
+  - Base templates (`base.html`, `navbar.html`, etc.) live in the `pages` app: `pages/templates/pages/base.html`.
+  - All other apps extend `pages/base.html`.
   - Example: `challenges/templates/challenges/challenge_detail.html`
 - **HTMX partials** live in a `partials/` subdirectory within the app's template directory.
   - Prefix partial filenames with `_` (e.g. `_challenge_detail.html`).
@@ -66,6 +88,10 @@ You are an expert in Python, Django, and scalable web apps. Write secure, mainta
 
 ## Settings
 - Use env vars, never commit secrets.
+- Split settings: `base.py`, `local.py`, `production.py`.
+- **Local dev (`local.py`):** use SQLite — no need for PostgreSQL locally.
+- **Production (`production.py`):** use PostgreSQL.
+- **Error tracking:** use **Rollbar** in production (`django-rollbar`). Configure via `ROLLBAR_ACCESS_TOKEN` env var. Do not enable in local dev.
 
 ## Database
 - Always use migrations.

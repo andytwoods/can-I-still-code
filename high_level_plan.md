@@ -52,9 +52,11 @@ Before each session starts, a brief reminder is shown:
 >
 > *This isn't a test you can fail. Consistent conditions just help us (and you) track genuine change over time.*
 
-- The participant must tick a checkbox acknowledging they've read this before starting (lightweight — not a multi-page consent flow each time).
+- Before starting, the participant is asked: **"What device are you using right now?"** with options: Desktop / Laptop / Tablet / Phone. This is stored on the `Session` record as `device_type`. Self-report avoids user-agent fingerprinting and is more reliable than UA parsing (which misidentifies devices regularly).
+- The participant must tick a checkbox acknowledging they've read the guidelines before starting (lightweight — not a multi-page consent flow each time).
 - This is a **guideline, not enforced** — we can't control their environment, but the reminder primes good behaviour.
 - Optionally, after the session, ask: *"Were you able to work without distractions?"* (Yes / Mostly / No) — this becomes a covariate we can include in the analysis to account for noisy sessions.
+- Also ask: *"Did you experience any technical issues during this session?"* (No / Minor issues / Major issues that affected my work) — combined with the per-attempt `technical_issues` flag, this lets analysts exclude or control for sessions where the platform misbehaved.
 
 ### 4.3 Session Frequency
 - **Minimum 28 days between sessions** — enforced server-side. Uses days-since-last-session rather than calendar month boundaries, which avoids time zone confusion.
@@ -82,6 +84,16 @@ Time-per-challenge is a key outcome variable. We record it with precision:
 - A **visible elapsed-time indicator** is shown (e.g. a small clock or `mm:ss` in the corner) — not as pressure, but so participants can self-pace. This can be toggled off in user preferences if it causes anxiety.
 - **Idle detection:** if the browser tab loses focus for >30 seconds, or there is no keystroke for >2 minutes, that interval is flagged as `idle_time_seconds` on the attempt. This lets us distinguish "took 8 minutes thinking hard" from "took 8 minutes because they went to make tea."
 - Both `time_taken_seconds` (wall clock) and `active_time_seconds` (wall clock minus idle) are stored. Analysis can use either.
+
+#### Timing Edge Cases
+- **Timer does not start until Pyodide is ready.** The challenge UI shows a "Loading environment..." state until the Pyodide worker reports ready. The timer starts only when the code editor is interactive and Pyodide can execute code.
+- **Page reload mid-challenge:** the attempt's `started_at` is stored server-side (set when the challenge is first served). On reload, the client fetches the existing attempt state and resumes the timer from `started_at`. Time during the reload counts as wall-clock time but not active time (no keystrokes).
+- **Browser sleep/wake** (laptop lid close): treated the same as tab blur — the idle detection picks up the gap. `idle_time_seconds` absorbs it. If the gap exceeds 4 hours, the session is abandoned by the cleanup task.
+- **Pyodide worker crash:** if the worker dies, the UI shows an error and offers "Retry" (reload worker) or "Skip this challenge". The timer continues (it's JS-side, not in the worker). A `technical_issues` flag is set on the attempt.
+
+#### Pyodide Performance Tracking
+- **`pyodide_load_ms`** is recorded on the `Session` model: time in milliseconds from worker creation to Pyodide reporting ready. This is a covariate for timing analysis (slow load may correlate with self-reported device type and affect participant experience).
+- **`editor_ready`** (BooleanField on Session): set to True once CodeMirror and Pyodide are both initialised. If False at session end, something went wrong and the session's timing data may be unreliable.
 
 ### 5.1b Think-Aloud Protocol (Optional)
 
@@ -207,7 +219,7 @@ All challenge sources use **permissive open-source licences** (MIT or CC BY-NC-S
 3. From the remaining pool, randomly sample up to 10 challenges using the **tier distribution**: 3 Tier 1, 3 Tier 2, 2 Tier 3, 1 Tier 4, 1 Tier 5 — tunable via admin settings.
 4. If a tier's pool is exhausted for that participant (e.g. they've seen all Tier 1 problems), fill the remaining slots from adjacent tiers.
 5. Sort the selected challenges in **ascending difficulty order** so participants build confidence before hitting harder problems.
-6. The selected set is locked at session start and stored on the `Session` record, so it doesn't change if the participant pauses mid-session.
+6. The selected set is locked at session start via `SessionChallenge` rows (see data model §9), so it doesn't change if the participant pauses mid-session.
 
 #### Pool Exhaustion
 - With ~200 problems and 10 per session, a participant can complete ~20 sessions before exhausting the pool.
@@ -348,6 +360,13 @@ OptionalConsentRecord
 - Admins can **export consent records** for ethics board reporting.
 - Optional consents are also visible and exportable.
 
+### 7.5 Consent Audit PII Retention Policy
+- `ConsentRecord.ip_address` and `ConsentRecord.user_agent` are stored for **ethics audit compliance** (proof of informed consent).
+- **Retention period:** IP addresses and user agent strings on consent records are retained for **24 months** after the consent was given, then purged by a Huey periodic task (set to `null`/blank). The `consented_at` timestamp and the fact of consent are retained indefinitely.
+- **Session model stores no user agent, browser, OS, timezone, or screen width** — device type is self-reported, eliminating fingerprinting risk entirely.
+- These fields are **never included in anonymised dataset exports** — see §12.4 anonymisation rules.
+- Export pipeline tests must scan for both email-like patterns (`*@*.*`) and IP-like patterns (`\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}`) in all exported files to catch accidental PII leaks.
+
 ---
 
 ## 8. Participant Profile and Demographics
@@ -388,6 +407,26 @@ SurveyResponse
   - challenge_attempt (FK -> ChallengeAttempt, nullable)  -- set for post_challenge questions
   - supersedes (FK -> self, nullable)              -- for profile questions that get updated
 ```
+
+#### Context FK Integrity Constraints
+
+The context FKs must be consistent with the question's `context` value. Enforce via a **`CheckConstraint`** at DB level **and** `Model.clean()` for human-readable validation errors:
+
+| `question.context` | `session` | `challenge_attempt` | `supersedes` allowed? |
+|---------------------|-----------|---------------------|-----------------------|
+| `profile`           | NULL      | NULL                | Yes                   |
+| `post_challenge`    | NULL      | **required**        | No                    |
+| `post_session`      | **required** | NULL             | No                    |
+
+DB-level constraints (in `Meta.constraints`):
+1. `profile_no_fks` — when `session` is NULL and `challenge_attempt` is NULL (profile rows must have neither).
+2. `post_challenge_has_attempt` — when `challenge_attempt` is NOT NULL, `session` must be NULL.
+3. `post_session_has_session` — when `session` is NOT NULL, `challenge_attempt` must be NULL.
+4. A composite check ensuring exactly one of: (both NULL), (only `challenge_attempt` set), (only `session` set) — i.e., never both set.
+
+`Model.clean()` validates the same rules and raises `ValidationError` with a clear message referencing the question context, so admin and form users get useful feedback.
+
+Tests must cover all six invalid combinations (e.g., profile row with session set, post_challenge row with no attempt, both FKs set, etc.).
 
 #### How the Contexts Work
 
@@ -479,13 +518,27 @@ Participant
   - has_active_consent (bool, denormalised — True if latest ConsentRecord matches active ConsentDocument)
   - profile_completed (bool — True once intake questionnaire is finished)
   - profile_updated_at (datetime — last time any SurveyResponse was modified)
+  - withdrawn_at (datetime, nullable — set when participant withdraws; prevents further sessions)
+  - deletion_requested_at (datetime, nullable — set when participant requests data deletion)
+  - deleted_at (datetime, nullable — set when staff processes the deletion; confirms compliance)
 
 Session
   - participant (FK)
+  - status (CharField, choices: "in_progress" / "completed" / "abandoned" — see state machine below)
   - started_at (datetime)
-  - completed_at (datetime)
+  - completed_at (datetime, nullable — set when post-session survey is submitted)
+  - abandoned_at (datetime, nullable — set by cleanup task or on next login)
   - challenges_attempted (int)
-  - distraction_free (nullable bool — optional post-session self-report, see §4.2)
+  - distraction_free (CharField, choices: "yes"/"mostly"/"no", nullable — optional post-session self-report, see §4.2)
+  - device_type (CharField, choices: "desktop"/"laptop"/"tablet"/"phone" — **self-reported** by participant at session start, see §4.2)
+  - pyodide_load_ms (PositiveIntegerField, nullable — Pyodide init time in ms, for timing analysis covariate)
+  - editor_ready (BooleanField, default False — True once CodeMirror + Pyodide both initialised)
+
+SessionChallenge (join table — replaces the old JSONField approach for referential integrity)
+  - session (FK -> Session)
+  - challenge (FK -> Challenge)
+  - position (PositiveIntegerField — ordering within the session, ascending difficulty)
+  - Meta: unique_together = (session, challenge); ordering = ["position"]
 
 -- NOTE: CodingHabitSurvey is no longer a separate model.
 -- Post-session habit questions (vibe coding %, hours/week, tools used, etc.)
@@ -498,13 +551,22 @@ Challenge
   - description (markdown)
   - skeleton_code (the partial code shown to the participant)
   - test_cases (JSON -- list of input/expected-output pairs)
+  - test_cases_hash (CharField — SHA-256 hash of test_cases JSON, auto-computed on save)
   - difficulty (Easy / Medium / Hard or numeric score)
   - tags (e.g. arrays, recursion, DP)
+  - is_active (bool — **never hard-delete challenges**; deactivate instead to preserve referential integrity with SessionChallenge and ChallengeAttempt)
+
+  **Challenge versioning policy:** challenges are **never mutated** once they have been used in a session. If a bug is found in test cases or description:
+  1. Deactivate the existing challenge (`is_active=False`).
+  2. Create a new Challenge row with a versioned `external_id` (e.g. `exercism-two-fer-v2`).
+  3. The old row and all its ChallengeAttempts are preserved with the original test cases, maintaining measurement integrity.
+  4. The `test_cases_hash` field lets analysts verify which exact test suite a participant was assessed against.
 
 ChallengeAttempt
   - participant (FK)
   - challenge (FK)
   - session (FK)
+  - attempt_uuid (UUIDField, unique — client-generated idempotency key to prevent double-submits)
   - submitted_code
   - tests_passed (int)
   - tests_total (int)
@@ -515,7 +577,46 @@ ChallengeAttempt
   - submitted_at (datetime)
   - skipped (bool)  -- participant saw it but chose not to attempt
   - think_aloud_active (bool)        -- was think-aloud recording on for this attempt?
+  - technical_issues (BooleanField, default False — set if Pyodide crashed/reloaded during this attempt)
+  - Meta: unique_together = (session, challenge) — exactly one attempt per challenge per session
 ```
+
+#### Session State Machine
+
+Sessions have three states: `in_progress`, `completed`, `abandoned`.
+
+```
+         start session
+              │
+              ▼
+        ┌─────────────┐
+        │ in_progress  │
+        └──────┬───────┘
+               │
+       ┌───────┴────────┐
+       │                 │
+  post-session       no activity
+  survey submitted   for >4 hours
+       │                 │
+       ▼                 ▼
+ ┌───────────┐   ┌────────────┐
+ │ completed  │   │ abandoned  │
+ └───────────┘   └────────────┘
+```
+
+- **`in_progress`**: session has been started, challenges may have been attempted. The participant can return to this session (e.g. after closing their laptop) as long as it hasn't been abandoned.
+- **`completed`**: the participant finished the post-session survey. `completed_at` is set. This is the state that counts for the 28-day rule.
+- **`abandoned`**: a background task (Huey periodic task, running hourly) marks any `in_progress` session older than 4 hours as `abandoned` and sets `abandoned_at`. A participant can also have their in-progress session auto-abandoned when they next log in if it's stale.
+- **Abandoned sessions are NOT counted for the 28-day rule** — only `completed` sessions count. This means if someone's session was abandoned (e.g. browser crash), they can start a new session without waiting 28 days.
+- **Resumable sessions:** when a participant navigates to the session start page and has an `in_progress` session that's less than 4 hours old, they are redirected back to their current session rather than starting a new one. After 4 hours, the session is abandoned and they can start fresh.
+- **Data from abandoned sessions is retained** for analysis (challenge attempts already submitted are valid data), but the session is flagged so analysts can filter it if needed.
+
+#### ChallengeAttempt Idempotency
+
+- Each challenge attempt carries a client-generated `attempt_uuid` (UUID v4, generated in JS when the challenge is presented).
+- The server uses this as an idempotency key: if a POST arrives with a `attempt_uuid` that already exists, the server returns the existing result rather than creating a duplicate.
+- Additionally, `unique_together = (session, challenge)` enforces that a participant can only have one attempt per challenge per session at the DB level.
+- Together, these two constraints prevent both double-submits (network retries, back button) and multiple attempts at the same challenge.
 
 ### 9.2 Outcome Variables for Analysis
 - **Accuracy:** `tests_passed / tests_total` per attempt.
@@ -634,15 +735,65 @@ Community discussion and study design input are handled via **external services*
 | **Researchers** (upon request) | Early access to anonymised dataset for peer-reviewed research | Case-by-case, with ethical review |
 
 ### 12.3 The 12-Month Embargo
-- The full anonymised dataset is released **one year after the first data collection begins**.
-- This embargo period allows the study to accumulate sufficient data before public release, avoiding premature conclusions from small samples.
-- After the embargo, the dataset updates periodically (e.g. quarterly).
-- Participants are informed about this timeline at registration.
 
-### 12.4 Data Format
-- Published as downloadable CSV / Parquet files.
-- Accompanied by a data dictionary and codebook.
+#### Embargo Start Date
+- The embargo clock starts from the **first completed session by any participant** (i.e. the earliest `Session.completed_at` in the database).
+- This date is stored as a site-wide setting: `EMBARGO_START_DATE` (set automatically on first session completion, or manually via admin if needed).
+- The embargo lifts exactly 12 calendar months after this date.
+
+#### Enforcement Mechanism
+- Dataset downloads are served via a Django view (not static files), so access can be gated.
+- The view checks:
+  1. User is authenticated and is a participant (not anonymous).
+  2. `EMBARGO_START_DATE` is set and the current date is at least 12 months after it.
+  3. If the embargo hasn't lifted: return a 403 with a message explaining when the dataset will be available (computed from `EMBARGO_START_DATE + 12 months`).
+- **No guessable URLs:** dataset files are stored in a non-public media directory (not under `STATIC_ROOT` or `MEDIA_ROOT`). They are only accessible through the gated view. The URL uses the version slug (e.g. `/data/download/v2027-03-15/`) but returns 403 if the embargo is active.
+- **Researcher early access:** a separate admin-managed flag (`DatasetAccessGrant` model: researcher email/user FK, granted_by, granted_at, reason) allows case-by-case early access. The download view checks for an active grant before falling back to embargo enforcement.
+
+#### Dataset Generation Schedule
+- **During embargo:** exports are generated manually by staff (via `uv run manage.py export_dataset`) for internal analysis and researcher early-access requests.
+- **After embargo:** a Huey periodic task generates a new export on the 1st of each quarter (Jan, Apr, Jul, Oct). The latest export is linked from the data download page. Previous versions remain available.
+- All exports (embargo or post-embargo) use the same reproducible pipeline (§12.4).
+
+#### Communication
+- Participants are informed about this timeline at registration (in the consent document).
+- The data download page always shows: embargo status, embargo start date, expected lift date, and (if post-embargo) the latest available dataset version.
+
+### 12.4 Data Format and Export Pipeline
+
+#### Output Format
+- Published as downloadable **CSV and Parquet** files (one file per table).
+- Every export is accompanied by an auto-generated **data dictionary / codebook** (CSV or JSON) listing every column, its type, allowed values, and description.
 - Consider using [PPSR Core](https://citizens-guide-open-data.github.io/guide/6-citizen-science) metadata standards for interoperability with other citizen-science platforms.
+
+#### Anonymisation Rules
+- **Participant ID mapping:** each `Participant.pk` is replaced with a stable opaque ID (deterministic UUID derived from a per-deployment secret + participant pk via HMAC-SHA256). The same participant always gets the same opaque ID across exports, so longitudinal joins work, but the mapping is irreversible without the secret.
+- **Stripped fields:** email, username, IP address, raw user agent strings (both consent and session-level), any free-text that could contain PII (think-aloud transcripts are only included if the participant has `transcript_sharing` optional consent).
+- **Retained device covariate:** only `device_type` is exported (self-reported: desktop/laptop/tablet/phone). No browser, OS, timezone, screen width, or user agent data is exported — these were removed from the Session model to eliminate quasi-identifier risk entirely.
+- **Coarsened fields:** age → age band (e.g. 18–24, 25–34), geographic location → region/continent only, timestamps → date only (no time component).
+- **Excluded participants:** those with `withdrawn_at` or `deletion_requested_at` set, and all staff/superusers, are omitted entirely from exports **and** from aggregate public stats (front-page charts, API endpoints). Admin testing must never pollute the research dataset or public-facing numbers.
+
+#### Reproducible Export Pipeline
+All exports are produced by a single **Django management command**: `python manage.py export_dataset`
+
+The command:
+1. Exports each table as a separate CSV and Parquet file into a timestamped output directory: `exports/vYYYY-MM-DD/`.
+2. Applies all anonymisation rules above.
+3. Auto-generates a `codebook.csv` describing every column in every exported file.
+4. Writes a `manifest.json` containing: dataset version (date-based), row counts per table, SHA-256 checksum of each file, export timestamp, Django app version / git commit hash.
+5. The entire export directory can be zipped and published as a versioned snapshot.
+
+#### Dataset Versioning
+- Exports are versioned by date: `v2026-03-15`, `v2026-06-15`, etc.
+- Analyses cite a specific version: *"Analysis performed on Dataset v2026-06-15."*
+- After the 12-month embargo, new versions are published quarterly.
+- The `manifest.json` makes it trivial to verify which version was used and whether files have been tampered with.
+
+#### What Is NOT Exported
+- Raw consent records (kept for ethics audit only, not research data).
+- Auth credentials, session tokens, IP addresses.
+- Admin/staff user data.
+- Withdrawn participants (filtered out at export time based on withdrawal timestamp).
 
 ---
 
@@ -698,6 +849,26 @@ A "Supported by" / "Sponsored by" section on the landing page:
 | Background tasks | **Huey** | Per project guidelines (no Celery). |
 | Analysis | **R + brms** (primary), **Python + bambi** (secondary) | Bayesian multilevel modelling. |
 | Deployment | **Hetzner** VPS, managed via **Appliku** | Cost-effective EU-based hosting; Appliku handles Docker deployment, SSL, and scaling. |
+
+### 14.1 Security Infrastructure
+
+| Concern | Solution | Notes |
+|---------|----------|-------|
+| Content Security Policy | **django-csp** | Allowlist CDN origins for Pyodide, chart libs, Bulma. Use nonces for inline scripts. `worker-src` for Pyodide Web Worker. |
+| Rate limiting | **django-ratelimit** | Per-IP and per-user limits on auth, consent, session start, and attempt submission endpoints. |
+| Markdown sanitisation | **markdown** + **bleach** (or **nh3**) | Admin-authored markdown (consent docs, challenge descriptions) is rendered then sanitised through an allowlist of safe HTML tags. No raw HTML passthrough. No `|safe` template filter on any user/admin content. |
+| Bot friction | **django-recaptcha** or **django-turnstile** | CAPTCHA on registration form. Lightweight — allauth email verification handles most abuse. |
+
+### 14.2 Observability and Operations
+
+| Concern | Solution | Notes |
+|---------|----------|-------|
+| Error tracking | **Rollbar** (production only) | Per guidelines. Captures unhandled exceptions with full context. |
+| Structured logging | Python `logging` → **JSON formatter** (e.g. `python-json-logger`) | All log output as structured JSON in production. Console logging in local dev. Ship logs to a log aggregator (Appliku's built-in or a simple ELK/Loki stack). |
+| Key metrics | **Django signals + simple counters model** | Track: sessions started/completed/abandoned, challenge attempts submitted, Pyodide load failures (from client error reports), export runs, reminder emails sent, deletion requests processed. Displayed on an admin dashboard widget. |
+| Database backups | **Automated daily PostgreSQL backups** | Via Appliku's managed backups or a cron + `pg_dump` to object storage. Test restore quarterly. |
+| Media backups | **Object storage sync** (if audio uploads are enabled) | Think-aloud audio files synced to S3-compatible storage. |
+| Email backend | **Console backend** in local dev (`EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"`). **SMTP or transactional service** (e.g. Mailgun, Postmark) in production. | Configured via env var `EMAIL_BACKEND` / `EMAIL_HOST` etc. |
 
 ---
 
@@ -762,7 +933,22 @@ As a public citizen-science project, accessibility is both an ethical requiremen
 
 - **Informed consent is enforced in-app** — see §7 for the full consent system. No participation without an explicit, versioned consent record stored in the database.
 - Data stored pseudonymously (no real names required beyond login).
-- Participants can withdraw and request data deletion at any time via profile settings. Withdrawal is timestamped in the database. Already-released anonymised snapshots cannot be recalled, but future releases will exclude withdrawn participants.
+- Participants can withdraw and request data deletion at any time via their profile settings page. This is handled in two stages:
+
+#### Withdrawal (immediate)
+  - A clear **"Withdraw from study"** button on the profile/settings page.
+  - Clicking triggers a confirmation dialog explaining what withdrawal means.
+  - On confirmation: sets `Participant.withdrawn_at`, sets `has_active_consent = False`.
+  - **Effect:** participant cannot start new sessions. Any in-progress session is ended (recorded as incomplete). Login still works (so they can request deletion or re-enrol later).
+  - Withdrawal alone does **not** delete data — anonymised research data is retained for analysis integrity.
+
+#### Data Deletion Request (on request)
+  - After withdrawing, a **"Request data deletion"** button becomes available.
+  - Sets `Participant.deletion_requested_at`. A staff notification is triggered (email or admin flag).
+  - **What gets deleted:** all `SurveyResponse` rows, all `ChallengeAttempt` submitted code, all `ThinkAloudRecording` audio files, all `OptionalConsentRecord` rows, profile fields (set to null/blank).
+  - **What is retained (anonymised):** `ChallengeAttempt` timing and accuracy data (with opaque participant ID), `Session` records (timestamps only), `ConsentRecord` audit log (required for ethics compliance). These are already anonymised — no PII remains.
+  - Deletion is processed within 30 days (allows staff review for edge cases).
+  - Already-released anonymised dataset snapshots cannot be recalled, but future exports exclude withdrawn/deleted participants.
 - **Consent documents are admin-editable** — corrections or updates to the consent text can be made at any time. Participants are re-consented to new versions before continuing.
 - Optional elements (think-aloud audio, transcript sharing, reminder emails) have **separate opt-in consent records**.
 - **Ethics approval will be obtained from Royal Holloway, University of London** (lead researcher's institution). The consent audit log (§7.4) and exportable consent records support ethics board reporting and any conditions imposed during review.
