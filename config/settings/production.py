@@ -98,46 +98,35 @@ EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL regex.
-ADMIN_URL = env("DJANGO_ADMIN_URL")
+ADMIN_URL = env("DJANGO_ADMIN_URL", default="admin/")
 
 # ROLLBAR
 # ------------------------------------------------------------------------------
-MIDDLEWARE += ["rollbar.contrib.django.middleware.RollbarNotifierMiddleware"]  # noqa: F405
-
-ROLLBAR_ENABLED = env.bool("ROLLBAR_ENABLED", default=True)
+ROLLBAR_ENABLED = env.bool("ROLLBAR_ENABLED", default=False)
 if ROLLBAR_ENABLED:
-    try:
-        import rollbar  # type: ignore
-    except ImportError:  # pragma: no cover - optional
-        rollbar = None  # type: ignore[assignment]
-    else:
-        # Minimal-PII Rollbar configuration
-        ROLLBAR = {
-            "access_token": env("ROLLBAR_ACCESS_TOKEN"),
-            "environment": "production",
-            "root": str(BASE_DIR),
-            # Only send user id (no email/username)
-            "person_fn": "hyperlocaltasks.utils.rollbar.get_rollbar_person",
-            # Reduce risk of leaking secrets/PII
-            "scrub_fields": [
-                "password",
-                "passwd",
-                "secret",
-                "token",
-                "access_token",
-                "refresh_token",
-                "authorization",
-                "cookie",
-                "sessionid",
-                "csrftoken",
-                "email",
-                "phone",
-                "address",
-            ],
-            # Store anonymized IP only
-            "capture_ip": "anonymize",
-        }
-        MIDDLEWARE += ["rollbar.contrib.django.middleware.RollbarNotifierMiddleware"]
+    ROLLBAR = {
+        "access_token": env("ROLLBAR_ACCESS_TOKEN"),
+        "environment": env("ROLLBAR_ENVIRONMENT", default="production"),
+        "root": str(BASE_DIR),
+        "branch": "master",
+        "capture_ip": "anonymize",
+        "scrub_fields": [
+            "password",
+            "passwd",
+            "secret",
+            "token",
+            "access_token",
+            "refresh_token",
+            "authorization",
+            "cookie",
+            "sessionid",
+            "csrftoken",
+            "email",
+            "phone",
+            "address",
+        ],
+    }
+    MIDDLEWARE += ["rollbar.contrib.django.middleware.RollbarNotifierMiddleware"]  # noqa: F405
 
 
 # LOGGING
