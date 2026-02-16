@@ -102,6 +102,43 @@ ROLLBAR = {
     "branch": "master",
 }
 
+
+ROLLBAR_ENABLED = env.bool("ROLLBAR_ENABLED", default=True)
+if ROLLBAR_ENABLED:
+    try:
+        import rollbar  # type: ignore
+    except ImportError:  # pragma: no cover - optional
+        rollbar = None  # type: ignore[assignment]
+    else:
+        # Minimal-PII Rollbar configuration
+        ROLLBAR = {
+            "access_token": env("ROLLBAR_SERVER_TOKEN"),
+            "environment": "production",
+            "root": str(BASE_DIR),
+            # Only send user id (no email/username)
+            "person_fn": "hyperlocaltasks.utils.rollbar.get_rollbar_person",
+            # Reduce risk of leaking secrets/PII
+            "scrub_fields": [
+                "password",
+                "passwd",
+                "secret",
+                "token",
+                "access_token",
+                "refresh_token",
+                "authorization",
+                "cookie",
+                "sessionid",
+                "csrftoken",
+                "email",
+                "phone",
+                "address",
+            ],
+            # Store anonymized IP only
+            "capture_ip": "anonymize",
+        }
+        MIDDLEWARE += ["rollbar.contrib.django.middleware.RollbarNotifierMiddleware"]
+
+
 # LOGGING
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#logging
