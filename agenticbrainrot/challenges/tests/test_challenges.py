@@ -17,12 +17,12 @@ from agenticbrainrot.coding_sessions.models import CodeSessionChallenge
 from agenticbrainrot.consent.models import ConsentDocument
 from agenticbrainrot.consent.models import ConsentRecord
 
-EXPECTED_TOTAL_CHALLENGES = 50
-EXPECTED_TIER_1 = 15
-EXPECTED_TIER_2 = 15
-EXPECTED_TIER_3 = 10
-EXPECTED_TIER_4 = 5
-EXPECTED_TIER_5 = 5
+EXPECTED_TOTAL_CHALLENGES = 150
+EXPECTED_TIER_1 = 30
+EXPECTED_TIER_2 = 30
+EXPECTED_TIER_3 = 30
+EXPECTED_TIER_4 = 30
+EXPECTED_TIER_5 = 30
 CHALLENGES_PER_SESSION = 10
 
 

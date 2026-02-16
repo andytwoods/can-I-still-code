@@ -1,0 +1,70 @@
+{
+  "external_id": "parallel-lines-v1",
+  "title": "Parallel Lines",
+  "description": "Write a python function to check whether two given lines are parallel or not.",
+  "skeleton_code": "def parallel_lines(line1, line2):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          2,
+          3,
+          4
+        ],
+        [
+          2,
+          3,
+          8
+        ]
+      ],
+      "expected": true,
+      "description": "Test case 1"
+    },
+    {
+      "input": [
+        [
+          2,
+          3,
+          4
+        ],
+        [
+          4,
+          -3,
+          8
+        ]
+      ],
+      "expected": false,
+      "description": "Test case 2"
+    },
+    {
+      "input": [
+        [
+          3,
+          3
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "expected": true,
+      "description": "Test case 3"
+    }
+  ],
+  "difficulty": 1,
+  "tags": [],
+  "source": {
+    "dataset": "MBPP (Mostly Basic Programming Problems)",
+    "paper": "Austin, J., Odena, A., Nye, M., Bosma, M., Michalewski, H., Dohan, D., Jiang, E., Cai, C., Terry, M., Le, Q., & Sutton, C. (2021). Program Synthesis with Large Language Models. arXiv:2108.07732",
+    "paper_url": "https://arxiv.org/abs/2108.07732",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+    "dataset_id": "mbpp-525",
+    "dataset_split": "validation"
+  },
+  "metadata": {
+    "complexity_score": 0.5,
+    "num_test_cases": 3,
+    "function_name": "parallel_lines"
+  }
+}

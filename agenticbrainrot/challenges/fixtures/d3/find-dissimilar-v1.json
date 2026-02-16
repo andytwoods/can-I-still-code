@@ -1,0 +1,93 @@
+{
+  "external_id": "find-dissimilar-v1",
+  "title": "Find Dissimilar",
+  "description": "Write a function to find the dissimilar elements in the given two tuples.",
+  "skeleton_code": "def find_dissimilar(test_tup1, test_tup2):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          3,
+          4,
+          5,
+          6
+        ],
+        [
+          5,
+          7,
+          4,
+          10
+        ]
+      ],
+      "expected": [
+        3,
+        6,
+        7,
+        10
+      ],
+      "description": "Test case 1"
+    },
+    {
+      "input": [
+        [
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          7,
+          2,
+          3,
+          9
+        ]
+      ],
+      "expected": [
+        1,
+        4,
+        7,
+        9
+      ],
+      "description": "Test case 2"
+    },
+    {
+      "input": [
+        [
+          21,
+          11,
+          25,
+          26
+        ],
+        [
+          26,
+          34,
+          21,
+          36
+        ]
+      ],
+      "expected": [
+        34,
+        36,
+        11,
+        25
+      ],
+      "description": "Test case 3"
+    }
+  ],
+  "difficulty": 3,
+  "tags": [],
+  "source": {
+    "dataset": "MBPP (Mostly Basic Programming Problems)",
+    "paper": "Austin, J., Odena, A., Nye, M., Bosma, M., Michalewski, H., Dohan, D., Jiang, E., Cai, C., Terry, M., Le, Q., & Sutton, C. (2021). Program Synthesis with Large Language Models. arXiv:2108.07732",
+    "paper_url": "https://arxiv.org/abs/2108.07732",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+    "dataset_id": "mbpp-579",
+    "dataset_split": "validation"
+  },
+  "metadata": {
+    "complexity_score": 0.75,
+    "num_test_cases": 3,
+    "function_name": "find_dissimilar"
+  }
+}

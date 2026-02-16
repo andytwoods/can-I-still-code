@@ -125,12 +125,14 @@ json.dumps(_result) if not isinstance(_result, (int, float, bool, type(None))) e
                         passed,
                         actual: result,
                         expected: tc.expected || tc.expected_in || tc.expected_sorted,
+                        input: tc.input || [],
                     });
                 } catch (testErr) {
                     results.push({
                         description: tc.description,
                         passed: false,
                         error: testErr.message,
+                        input: tc.input || [],
                     });
                 }
             }

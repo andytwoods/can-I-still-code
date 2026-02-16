@@ -1,0 +1,69 @@
+{
+  "external_id": "circular-shift-v1",
+  "title": "Circular Shift",
+  "description": "Circular shift the digits of the integer x, shift the digits right by shift\n    and return the result as a string.\n    If shift > number of digits, return digits reversed.\n    >>> circular_shift(12, 1)\n    \"21\"\n    >>> circular_shift(12, 2)\n    \"12\"",
+  "skeleton_code": "def circular_shift(x, shift):\n    \"\"\"Circular shift the digits of the integer x, shift the digits right by shift\n    and return the result as a string.\n    If shift > number of digits, return digits reversed.\n    >>> circular_shift(12, 1)\n    \"21\"\n    >>> circular_shift(12, 2)\n    \"12\"\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        100,
+        2
+      ],
+      "expected": "001",
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        12,
+        2
+      ],
+      "expected": "12",
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        97,
+        8
+      ],
+      "expected": "79",
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        12,
+        1
+      ],
+      "expected": [
+        "21",
+        "This prints if this assert fails 1 (good for debugging!)"
+      ],
+      "description": "Test 4"
+    },
+    {
+      "input": [
+        11,
+        101
+      ],
+      "expected": [
+        "11",
+        "This prints if this assert fails 2 (also good for debugging!)"
+      ],
+      "description": "Test 5"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-65"
+  },
+  "metadata": {
+    "complexity_score": 5.25,
+    "num_test_cases": 5,
+    "function_name": "circular_shift"
+  }
+}

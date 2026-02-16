@@ -22,7 +22,8 @@
     <span class="is-size-7 has-text-grey">Python 3.x</span>
   </div>
 </div>
-<div id="code-editor" data-skeleton="{{ challenge.skeleton_code }}" aria-label="Python code editor"></div>
+<div id="code-editor" aria-label="Python code editor"></div>
+{{ challenge.skeleton_code|json_script:"skeleton-code-data" }}
 
 <div class="buttons mt-3">
   <button id="run-btn" class="button is-info" type="button" disabled>
@@ -44,6 +45,9 @@
 </div>
 
 <div id="test-results" class="mt-3"></div>
+
+<!-- Test cases data for JS -->
+<script id="test-cases-data" type="application/json">{{ test_cases_json|safe }}</script>
 
 <!-- Hidden form for HTMX submission -->
 <form id="challenge-form"

@@ -1,0 +1,54 @@
+{
+  "external_id": "concatenate-v1",
+  "title": "Concatenate",
+  "description": "Concatenate list of strings into a single string\n    >>> concatenate([])\n    ''\n    >>> concatenate(['a', 'b', 'c'])\n    'abc'",
+  "skeleton_code": "def concatenate(strings: List[str]) -> str:\n    \"\"\" Concatenate list of strings into a single string\n    >>> concatenate([])\n    ''\n    >>> concatenate(['a', 'b', 'c'])\n    'abc'\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        []
+      ],
+      "expected": "",
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        [
+          "x",
+          "y",
+          "z"
+        ]
+      ],
+      "expected": "xyz",
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        [
+          "x",
+          "y",
+          "z",
+          "w",
+          "k"
+        ]
+      ],
+      "expected": "xyzwk",
+      "description": "Test 3"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-28"
+  },
+  "metadata": {
+    "complexity_score": 4.23,
+    "num_test_cases": 3,
+    "function_name": "concatenate"
+  }
+}

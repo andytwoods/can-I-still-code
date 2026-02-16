@@ -28,11 +28,15 @@
     </div>
     <div class="navbar-end">
       <div class="navbar-item">
-        <button id="theme-switcher" class="button is-rounded is-light" title="Toggle dark/light mode" aria-label="Toggle dark/light mode">
+        <button id="theme-switcher"
+                class="button is-rounded is-light"
+                type="button"
+                title="Switch to dark mode"
+                aria-label="Switch to dark mode"
+                aria-pressed="false">
           <span class="icon">
-            <i class="fas fa-moon"></i>
+            <i class="fas fa-moon" aria-hidden="true"></i>
           </span>
-          <span class="theme-text is-hidden-touch">Dark Mode</span>
         </button>
       </div>
       {% if request.user.is_authenticated %}

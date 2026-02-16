@@ -1,0 +1,96 @@
+{
+  "external_id": "increment-numerics-v1",
+  "title": "Increment Numerics",
+  "description": "Write a function to increment the numeric values in the given strings by k.",
+  "skeleton_code": "def increment_numerics(test_list, K):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          "MSM",
+          "234",
+          "is",
+          "98",
+          "123",
+          "best",
+          "4"
+        ],
+        6
+      ],
+      "expected": [
+        "MSM",
+        "240",
+        "is",
+        "104",
+        "129",
+        "best",
+        "10"
+      ],
+      "description": "Test case 1"
+    },
+    {
+      "input": [
+        [
+          "Dart",
+          "356",
+          "is",
+          "88",
+          "169",
+          "Super",
+          "6"
+        ],
+        12
+      ],
+      "expected": [
+        "Dart",
+        "368",
+        "is",
+        "100",
+        "181",
+        "Super",
+        "18"
+      ],
+      "description": "Test case 2"
+    },
+    {
+      "input": [
+        [
+          "Flutter",
+          "451",
+          "is",
+          "44",
+          "96",
+          "Magnificent",
+          "12"
+        ],
+        33
+      ],
+      "expected": [
+        "Flutter",
+        "484",
+        "is",
+        "77",
+        "129",
+        "Magnificent",
+        "45"
+      ],
+      "description": "Test case 3"
+    }
+  ],
+  "difficulty": 3,
+  "tags": [],
+  "source": {
+    "dataset": "MBPP (Mostly Basic Programming Problems)",
+    "paper": "Austin, J., Odena, A., Nye, M., Bosma, M., Michalewski, H., Dohan, D., Jiang, E., Cai, C., Terry, M., Le, Q., & Sutton, C. (2021). Program Synthesis with Large Language Models. arXiv:2108.07732",
+    "paper_url": "https://arxiv.org/abs/2108.07732",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+    "dataset_id": "mbpp-621",
+    "dataset_split": "test"
+  },
+  "metadata": {
+    "complexity_score": 0.75,
+    "num_test_cases": 3,
+    "function_name": "increment_numerics"
+  }
+}

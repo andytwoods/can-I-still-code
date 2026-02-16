@@ -1,0 +1,44 @@
+{
+  "external_id": "string-sequence-v1",
+  "title": "String Sequence",
+  "description": "Return a string containing space-delimited numbers starting from 0 upto n inclusive.\n    >>> string_sequence(0)\n    '0'\n    >>> string_sequence(5)\n    '0 1 2 3 4 5'",
+  "skeleton_code": "def string_sequence(n: int) -> str:\n    \"\"\" Return a string containing space-delimited numbers starting from 0 upto n inclusive.\n    >>> string_sequence(0)\n    '0'\n    >>> string_sequence(5)\n    '0 1 2 3 4 5'\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        0
+      ],
+      "expected": "0",
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        3
+      ],
+      "expected": "0 1 2 3",
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        10
+      ],
+      "expected": "0 1 2 3 4 5 6 7 8 9 10",
+      "description": "Test 3"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-15"
+  },
+  "metadata": {
+    "complexity_score": 4.42,
+    "num_test_cases": 3,
+    "function_name": "string_sequence"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "external_id": "filter-by-prefix-v1",
+  "title": "Filter By Prefix",
+  "description": "Filter an input list of strings only for ones that start with a given prefix.\n    >>> filter_by_prefix([], 'a')\n    []\n    >>> filter_by_prefix(['abc', 'bcd', 'cde', 'array'], 'a')\n    ['abc', 'array']",
+  "skeleton_code": "def filter_by_prefix(strings: List[str], prefix: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that start with a given prefix.\n    >>> filter_by_prefix([], 'a')\n    []\n    >>> filter_by_prefix(['abc', 'bcd', 'cde', 'array'], 'a')\n    ['abc', 'array']\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [],
+        "john"
+      ],
+      "expected": [],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        [
+          "xxx",
+          "asd",
+          "xxy",
+          "john doe",
+          "xxxAAA",
+          "xxx"
+        ],
+        "xxx"
+      ],
+      "expected": [
+        "xxx",
+        "xxxAAA",
+        "xxx"
+      ],
+      "description": "Test 2"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-29"
+  },
+  "metadata": {
+    "complexity_score": 4.41,
+    "num_test_cases": 2,
+    "function_name": "filter_by_prefix"
+  }
+}

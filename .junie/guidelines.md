@@ -52,6 +52,11 @@ You are an expert in Python, Django, and scalable web apps. Write secure, mainta
 - Load Bulma via CDN or pip (`django-bulma`) — keep it consistent across the project.
 - Use Bulma classes in templates; avoid writing custom CSS unless Bulma has no suitable class.
 
+## Frontend / UI JavaScript preferences
+- Use **SweetAlert2** for modal dialogs/alerts/confirmations (instead of `alert()`, `confirm()`, or rolling our own modals).
+- **Avoid CDNs for frontend dependencies**: prefer self-hosting JS/CSS libraries in our static files (or bundling them) so we control availability and CSP.
+  - **Exception:** very large dependencies (e.g. **pyiodine**) may be loaded from a CDN when justified.
+
 ## HTMX and JavaScript — when to use which
 - Use **htmx** for dynamic partial updates. No React, Vue, or other JS frameworks.
 - **Same-endpoint pattern:** HTMX requests hit the same URL as the full page. The view detects HTMX via `request.headers.get("HX-Request")` and returns a partial template (fragment) instead of the full page.
@@ -122,6 +127,24 @@ You are an expert in Python, Django, and scalable web apps. Write secure, mainta
   - reusable by views, management commands, and tasks;
   - clear about side-effects;
   - written to be as idempotent as reasonably possible (safe for retries).
+
+## Challenge Fixtures — Scientific Integrity
+
+Challenge fixtures in `challenges/fixtures/` are derived from **published research datasets** (MBPP, HumanEval, etc.). They are research instruments, not ordinary application data.
+
+### Rules
+- **Never edit a fixture file directly.** Descriptions, test cases, skeleton code, and metadata must remain faithful to the original published source so results are reproducible and comparable to prior literature.
+- **All deviations must be logged.** If a challenge description is ambiguous, a test case is incorrect, or any modification is genuinely necessary, it must be recorded in a structured deviation log (e.g. `challenges/fixtures/DEVIATIONS.md`) with:
+  - The fixture file and `external_id` affected.
+  - What was changed and why.
+  - The original value (verbatim).
+  - The new value.
+  - Who approved the change and the date.
+- **Prefer additive changes over edits.** If extra context is needed (e.g. a clarifying example), add a `"clarification"` field to the fixture JSON or display supplementary text in the UI — do not overwrite the original `"description"`.
+- **Attribute the source.** Every fixture must retain its `source` block (dataset, paper citation, license, repository, dataset_id).
+
+### Rationale
+This study measures coding skill using standardised problems. If we silently alter those problems, our results become incomparable to other studies using the same benchmarks, and reviewers or replicators cannot verify what participants actually saw.
 
 ## Testing
 - Write unit tests for new features.

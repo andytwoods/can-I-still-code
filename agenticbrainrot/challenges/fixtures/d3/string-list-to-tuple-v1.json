@@ -1,0 +1,72 @@
+{
+  "external_id": "string-list-to-tuple-v1",
+  "title": "String List To Tuple",
+  "description": "Write a python function to convert a given string list to a tuple.",
+  "skeleton_code": "def string_list_to_tuple(str1):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        "python 3.0"
+      ],
+      "expected": [
+        "p",
+        "y",
+        "t",
+        "h",
+        "o",
+        "n",
+        "3",
+        ".",
+        "0"
+      ],
+      "description": "Test case 1"
+    },
+    {
+      "input": [
+        "bigdata"
+      ],
+      "expected": [
+        "b",
+        "i",
+        "g",
+        "d",
+        "a",
+        "t",
+        "a"
+      ],
+      "description": "Test case 2"
+    },
+    {
+      "input": [
+        "language"
+      ],
+      "expected": [
+        "l",
+        "a",
+        "n",
+        "g",
+        "u",
+        "a",
+        "g",
+        "e"
+      ],
+      "description": "Test case 3"
+    }
+  ],
+  "difficulty": 3,
+  "tags": [],
+  "source": {
+    "dataset": "MBPP (Mostly Basic Programming Problems)",
+    "paper": "Austin, J., Odena, A., Nye, M., Bosma, M., Michalewski, H., Dohan, D., Jiang, E., Cai, C., Terry, M., Le, Q., & Sutton, C. (2021). Program Synthesis with Large Language Models. arXiv:2108.07732",
+    "paper_url": "https://arxiv.org/abs/2108.07732",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+    "dataset_id": "mbpp-538",
+    "dataset_split": "validation"
+  },
+  "metadata": {
+    "complexity_score": 0.75,
+    "num_test_cases": 3,
+    "function_name": "string_list_to_tuple"
+  }
+}

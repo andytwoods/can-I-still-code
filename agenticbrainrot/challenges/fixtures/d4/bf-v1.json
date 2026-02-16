@@ -1,0 +1,47 @@
+{
+  "external_id": "bf-v1",
+  "title": "Bf",
+  "description": "Implement the function bf.",
+  "skeleton_code": "def bf(planet1, planet2):\n    '''\n    There are eight planets in our solar system: the closerst to the Sun \n    is Mercury, the next one is Venus, then Earth, Mars, Jupiter, Saturn, \n    Uranus, Neptune.\n    Write a function that takes two planet names as strings planet1 and planet2. \n    The function should return a tuple containing all planets whose orbits are \n    located between the orbit of planet1 and the orbit of planet2, sorted by \n    the proximity to the sun. \n    The function should return an empty tuple if planet1 or planet2\n    are not correct planet names. \n    Examples\n    bf(\"Jupiter\", \"Neptune\") ==> (\"Saturn\", \"Uranus\")\n    bf(\"Earth\", \"Mercury\") ==> (\"Venus\")\n    bf(\"Mercury\", \"Uranus\") ==> (\"Venus\", \"Earth\", \"Mars\", \"Jupiter\", \"Saturn\")\n    '''\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        "Earth",
+        "Earth"
+      ],
+      "expected": [],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        "Mars",
+        "Earth"
+      ],
+      "expected": [],
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "Jupiter",
+        "Makemake"
+      ],
+      "expected": [],
+      "description": "Test 3"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-148"
+  },
+  "metadata": {
+    "complexity_score": 3.73,
+    "num_test_cases": 3,
+    "function_name": "bf"
+  }
+}

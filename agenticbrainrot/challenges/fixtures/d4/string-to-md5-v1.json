@@ -1,0 +1,51 @@
+{
+  "external_id": "string-to-md5-v1",
+  "title": "String To Md5",
+  "description": "Given a string 'text', return its md5 hash equivalent string.\n    If 'text' is an empty string, return None.\n\n    >>> string_to_md5('Hello world') == '3e25960a79dbc69b674cd4ec67a72c62'",
+  "skeleton_code": "def string_to_md5(text):\n    \"\"\"\n    Given a string 'text', return its md5 hash equivalent string.\n    If 'text' is an empty string, return None.\n\n    >>> string_to_md5('Hello world') == '3e25960a79dbc69b674cd4ec67a72c62'\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        "Hello world"
+      ],
+      "expected": "3e25960a79dbc69b674cd4ec67a72c62",
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        ""
+      ],
+      "expected": null,
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "A B C"
+      ],
+      "expected": "0ef78513b0cb8cef12743f5aeb35f888",
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        "password"
+      ],
+      "expected": "5f4dcc3b5aa765d61d8327deb882cf99",
+      "description": "Test 4"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-162"
+  },
+  "metadata": {
+    "complexity_score": 4.72,
+    "num_test_cases": 4,
+    "function_name": "string_to_md5"
+  }
+}

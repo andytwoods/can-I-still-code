@@ -1,0 +1,58 @@
+{
+  "external_id": "is-palindrome-v1",
+  "title": "Is Palindrome",
+  "description": "Checks if given string is a palindrome\n    >>> is_palindrome('')\n    True\n    >>> is_palindrome('aba')\n    True\n    >>> is_palindrome('aaaaa')\n    True\n    >>> is_palindrome('zbcd')\n    False",
+  "skeleton_code": "def is_palindrome(text: str):\n    \"\"\"\n    Checks if given string is a palindrome\n    >>> is_palindrome('')\n    True\n    >>> is_palindrome('aba')\n    True\n    >>> is_palindrome('aaaaa')\n    True\n    >>> is_palindrome('zbcd')\n    False\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        ""
+      ],
+      "expected": true,
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        "aba"
+      ],
+      "expected": true,
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "aaaaa"
+      ],
+      "expected": true,
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        "zbcd"
+      ],
+      "expected": false,
+      "description": "Test 4"
+    },
+    {
+      "input": [
+        "xywyx"
+      ],
+      "expected": true,
+      "description": "Test 5"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-48"
+  },
+  "metadata": {
+    "complexity_score": 5.36,
+    "num_test_cases": 5,
+    "function_name": "is_palindrome"
+  }
+}

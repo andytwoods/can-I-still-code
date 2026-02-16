@@ -1,0 +1,100 @@
+{
+  "external_id": "extract-d2-v1",
+  "title": "Extract",
+  "description": "Write a python function to get the last element of each sublist.",
+  "skeleton_code": "def Extract(lst):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            6,
+            7,
+            8,
+            9
+          ]
+        ]
+      ],
+      "expected": [
+        3,
+        5,
+        9
+      ],
+      "description": "Test case 1"
+    },
+    {
+      "input": [
+        [
+          [
+            "x",
+            "y",
+            "z"
+          ],
+          [
+            "m"
+          ],
+          [
+            "a",
+            "b"
+          ],
+          [
+            "u",
+            "v"
+          ]
+        ]
+      ],
+      "expected": [
+        "z",
+        "m",
+        "b",
+        "v"
+      ],
+      "description": "Test case 2"
+    },
+    {
+      "input": [
+        [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            4,
+            5
+          ]
+        ]
+      ],
+      "expected": [
+        3,
+        5
+      ],
+      "description": "Test case 3"
+    }
+  ],
+  "difficulty": 2,
+  "tags": [],
+  "source": {
+    "dataset": "MBPP (Mostly Basic Programming Problems)",
+    "paper": "Austin, J., Odena, A., Nye, M., Bosma, M., Michalewski, H., Dohan, D., Jiang, E., Cai, C., Terry, M., Le, Q., & Sutton, C. (2021). Program Synthesis with Large Language Models. arXiv:2108.07732",
+    "paper_url": "https://arxiv.org/abs/2108.07732",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+    "dataset_id": "mbpp-893",
+    "dataset_split": "test"
+  },
+  "metadata": {
+    "complexity_score": 0.5,
+    "num_test_cases": 3,
+    "function_name": "Extract"
+  }
+}

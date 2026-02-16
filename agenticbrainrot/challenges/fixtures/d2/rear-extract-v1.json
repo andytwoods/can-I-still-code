@@ -1,0 +1,105 @@
+{
+  "external_id": "rear-extract-v1",
+  "title": "Rear Extract",
+  "description": "Write a function to perfom the rear element extraction from list of tuples records.",
+  "skeleton_code": "def rear_extract(test_list):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          [
+            1,
+            "Rash",
+            21
+          ],
+          [
+            2,
+            "Varsha",
+            20
+          ],
+          [
+            3,
+            "Kil",
+            19
+          ]
+        ]
+      ],
+      "expected": [
+        21,
+        20,
+        19
+      ],
+      "description": "Test case 1"
+    },
+    {
+      "input": [
+        [
+          [
+            1,
+            "Sai",
+            36
+          ],
+          [
+            2,
+            "Ayesha",
+            25
+          ],
+          [
+            3,
+            "Salman",
+            45
+          ]
+        ]
+      ],
+      "expected": [
+        36,
+        25,
+        45
+      ],
+      "description": "Test case 2"
+    },
+    {
+      "input": [
+        [
+          [
+            1,
+            "Sudeep",
+            14
+          ],
+          [
+            2,
+            "Vandana",
+            36
+          ],
+          [
+            3,
+            "Dawood",
+            56
+          ]
+        ]
+      ],
+      "expected": [
+        14,
+        36,
+        56
+      ],
+      "description": "Test case 3"
+    }
+  ],
+  "difficulty": 2,
+  "tags": [],
+  "source": {
+    "dataset": "MBPP (Mostly Basic Programming Problems)",
+    "paper": "Austin, J., Odena, A., Nye, M., Bosma, M., Michalewski, H., Dohan, D., Jiang, E., Cai, C., Terry, M., Le, Q., & Sutton, C. (2021). Program Synthesis with Large Language Models. arXiv:2108.07732",
+    "paper_url": "https://arxiv.org/abs/2108.07732",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+    "dataset_id": "mbpp-272",
+    "dataset_split": "train"
+  },
+  "metadata": {
+    "complexity_score": 0.75,
+    "num_test_cases": 3,
+    "function_name": "rear_extract"
+  }
+}

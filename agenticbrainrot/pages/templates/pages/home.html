@@ -12,6 +12,9 @@
         <p class="subtitle is-3">
           Is "Vibe Coding" making us worse at Python?
         </p>
+        <p class="is-size-5 mb-5">
+          A citizen-science study helping protect the Python community's skills.
+        </p>
         <div class="buttons is-centered">
           <a href="{% url 'account_signup' %}" class="button is-primary is-large">
             <strong>Join the Study</strong>
@@ -42,7 +45,7 @@
         </div>
         <div class="column is-6">
           <figure class="image is-4by3">
-            <div class="has-background-light" style="display: flex; align-items: center; justify-content: center; height: 100%; border: 2px dashed #ccc;">
+            <div style="display: flex; align-items: center; justify-content: center; height: 100%; background-color: var(--bulma-scheme-main-bis); border: 2px dashed var(--bulma-border);">
               <span class="has-text-grey">Placeholder: Illustration of Human-AI Collaboration</span>
             </div>
           </figure>
@@ -52,11 +55,11 @@
   </section>
 
   {# Participation Stats #}
-  <section class="section has-background-light">
+  <section class="section" style="background-color: var(--bulma-scheme-main-bis);">
     <div class="container">
       <div class="has-text-centered mb-6">
         <h2 class="title is-2">The Big Question</h2>
-        <p class="subtitle">Real-time aggregate data from our participants</p>
+        <p class="subtitle has-text-weight-normal">Real-time aggregate data from our participants</p>
       </div>
       <div class="columns is-centered">
         <div class="column is-3 has-text-centered">
@@ -157,34 +160,54 @@
   </section>
 
   {# Sponsors #}
-  {% if sponsors %}
   <section class="section">
     <div class="container has-text-centered">
-      <p class="heading mb-4">Supported By</p>
-      <div class="columns is-centered is-mobile is-multiline">
-        {% for sponsor in sponsors %}
-          <div class="column is-narrow">
-            {% if sponsor.url %}
-              <a href="{{ sponsor.url }}" target="_blank" rel="noopener">
-            {% endif %}
-            {% if sponsor.logo %}
-              <figure class="image is-128x128 is-inline-block">
-                <img src="{{ sponsor.logo.url }}"
-                     alt="{{ sponsor.name }}"
-                     title="{{ sponsor.name }}">
-              </figure>
-            {% else %}
-              <span class="tag is-large is-light">{{ sponsor.name }}</span>
-            {% endif %}
-            {% if sponsor.url %}
+      <h2 class="title is-3 mb-2">Support This Research</h2>
+      <p class="subtitle has-text-weight-normal">
+        Sponsors help fund this study and contribute to Python community charities.
+      </p>
+      {% if sponsors %}
+        <div class="columns is-centered is-mobile is-multiline mt-4">
+          {% for sponsor in sponsors %}
+            <div class="column is-narrow">
+              {% if sponsor.url %}
+                <a href="{{ sponsor.url }}" target="_blank" rel="noopener">
+              {% endif %}
+              {% if sponsor.logo %}
+                <figure class="image is-128x128 is-inline-block">
+                  <img src="{{ sponsor.logo.url }}"
+                       alt="{{ sponsor.name }}"
+                       title="{{ sponsor.name }}">
+                </figure>
+              {% else %}
+                <span class="tag is-large is-light">{{ sponsor.name }}</span>
+              {% endif %}
+              {% if sponsor.url %}
+                </a>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="columns is-centered mt-4">
+          <div class="column is-6">
+            <div class="box has-text-centered" style="border: 2px dashed var(--bulma-border);">
+              <p class="is-size-5 mb-3">
+                <span class="icon"><i class="fas fa-heart"></i></span>
+                Your logo here
+              </p>
+              <p class="has-text-grey mb-4">
+                Show your support for the Python community. Sponsors are recognised here and help fund contributions to Python charities.
+              </p>
+              <a href="mailto:sponsor@agenticbrainrot.com" class="button is-link is-outlined">
+                Become a Sponsor
               </a>
-            {% endif %}
+            </div>
           </div>
-        {% endfor %}
-      </div>
+        </div>
+      {% endif %}
     </div>
   </section>
-  {% endif %}
 {% endblock content %}
 
 {% block extra_js %}

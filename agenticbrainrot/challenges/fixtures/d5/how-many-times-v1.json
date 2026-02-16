@@ -1,0 +1,55 @@
+{
+  "external_id": "how-many-times-v1",
+  "title": "How Many Times",
+  "description": "Find how many times a given substring can be found in the original string. Count overlaping cases.\n    >>> how_many_times('', 'a')\n    0\n    >>> how_many_times('aaa', 'a')\n    3\n    >>> how_many_times('aaaa', 'aa')\n    3",
+  "skeleton_code": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\" Find how many times a given substring can be found in the original string. Count overlaping cases.\n    >>> how_many_times('', 'a')\n    0\n    >>> how_many_times('aaa', 'a')\n    3\n    >>> how_many_times('aaaa', 'aa')\n    3\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        "",
+        "x"
+      ],
+      "expected": 0,
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        "xyxyxyx",
+        "x"
+      ],
+      "expected": 4,
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "cacacacac",
+        "cac"
+      ],
+      "expected": 4,
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        "john doe",
+        "john"
+      ],
+      "expected": 1,
+      "description": "Test 4"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-18"
+  },
+  "metadata": {
+    "complexity_score": 4.9,
+    "num_test_cases": 4,
+    "function_name": "how_many_times"
+  }
+}

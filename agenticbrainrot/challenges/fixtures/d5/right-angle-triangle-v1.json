@@ -1,0 +1,71 @@
+{
+  "external_id": "right-angle-triangle-v1",
+  "title": "Right Angle Triangle",
+  "description": "Implement the function right_angle_triangle.",
+  "skeleton_code": "def right_angle_triangle(a, b, c):\n    '''\n    Given the lengths of the three sides of a triangle. Return True if the three\n    sides form a right-angled triangle, False otherwise.\n    A right-angled triangle is a triangle in which one angle is right angle or \n    90 degree.\n    Example:\n    right_angle_triangle(3, 4, 5) == True\n    right_angle_triangle(1, 2, 3) == False\n    '''\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        3,
+        4,
+        5
+      ],
+      "expected": [
+        true,
+        "This prints if this assert fails 1 (good for debugging!)"
+      ],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        1,
+        2,
+        3
+      ],
+      "expected": false,
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        10,
+        6,
+        8
+      ],
+      "expected": true,
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        2,
+        2,
+        2
+      ],
+      "expected": false,
+      "description": "Test 4"
+    },
+    {
+      "input": [
+        7,
+        24,
+        25
+      ],
+      "expected": true,
+      "description": "Test 5"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-157"
+  },
+  "metadata": {
+    "complexity_score": 5.42,
+    "num_test_cases": 5,
+    "function_name": "right_angle_triangle"
+  }
+}

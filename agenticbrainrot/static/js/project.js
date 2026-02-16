@@ -1,41 +1,46 @@
 /* Project specific Javascript goes here. */
 
-document.addEventListener('DOMContentLoaded', () => {
-  const themeSwitcher = document.getElementById('theme-switcher');
-  if (themeSwitcher) {
-    themeSwitcher.addEventListener('click', () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      updateThemeIcon(newTheme);
-    });
+/* Project specific Javascript goes here. */
 
-    // Sync icon on load
-    const savedTheme = document.documentElement.getAttribute('data-theme');
-    updateThemeIcon(savedTheme);
-  }
+document.addEventListener("DOMContentLoaded", () => {
+    const themeSwitcher = document.getElementById("theme-switcher");
+    if (themeSwitcher) {
+        themeSwitcher.addEventListener("click", () => {
+            const currentTheme = document.documentElement.getAttribute("data-theme");
+            const newTheme = currentTheme === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
+            updateThemeIcon(newTheme);
+        });
 
-  function updateThemeIcon(theme) {
-    const icon = themeSwitcher.querySelector('i');
-    if (icon) {
-      // Trigger animation
-      icon.classList.remove('theme-animate-in');
-      void icon.offsetWidth; // Trigger reflow
-      icon.classList.add('theme-animate-in');
-
-      if (theme === 'dark') {
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-      } else {
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-      }
+        // Sync icon + a11y labels on load
+        const savedTheme = document.documentElement.getAttribute("data-theme");
+        updateThemeIcon(savedTheme);
     }
-    // Also update text if needed, but here we just use the button title or icon
-    const text = themeSwitcher.querySelector('.theme-text');
-    if (text) {
-        text.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+
+    function updateThemeIcon(theme) {
+        const icon = themeSwitcher.querySelector("i");
+        if (icon) {
+            // Trigger animation
+            icon.classList.remove("theme-animate-in");
+            void icon.offsetWidth; // Trigger reflow
+            icon.classList.add("theme-animate-in");
+
+            if (theme === "dark") {
+                icon.classList.remove("fa-moon");
+                icon.classList.add("fa-sun");
+            } else {
+                icon.classList.remove("fa-sun");
+                icon.classList.add("fa-moon");
+            }
+        }
+
+        // Icon-only button: keep an accessible name + tooltip, and expose toggle state
+        const nextActionLabel = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
+        themeSwitcher.setAttribute("aria-label", nextActionLabel);
+        themeSwitcher.setAttribute("title", nextActionLabel);
+        themeSwitcher.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+
+        // ... existing code ...
     }
-  }
 });

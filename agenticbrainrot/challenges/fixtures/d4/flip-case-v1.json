@@ -1,0 +1,44 @@
+{
+  "external_id": "flip-case-v1",
+  "title": "Flip Case",
+  "description": "For a given string, flip lowercase characters to uppercase and uppercase to lowercase.\n    >>> flip_case('Hello')\n    'hELLO'",
+  "skeleton_code": "def flip_case(string: str) -> str:\n    \"\"\" For a given string, flip lowercase characters to uppercase and uppercase to lowercase.\n    >>> flip_case('Hello')\n    'hELLO'\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        ""
+      ],
+      "expected": "",
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        "Hello!"
+      ],
+      "expected": "hELLO!",
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "These violent delights have violent ends"
+      ],
+      "expected": "tHESE VIOLENT DELIGHTS HAVE VIOLENT ENDS",
+      "description": "Test 3"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-27"
+  },
+  "metadata": {
+    "complexity_score": 4.22,
+    "num_test_cases": 3,
+    "function_name": "flip_case"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "external_id": "digits-v1",
+  "title": "Digits",
+  "description": "Given a positive integer n, return the product of the odd digits.\n    Return 0 if all digits are even.\n    For example:\n    digits(1)  == 1\n    digits(4)  == 0\n    digits(235) == 15",
+  "skeleton_code": "def digits(n):\n    \"\"\"Given a positive integer n, return the product of the odd digits.\n    Return 0 if all digits are even.\n    For example:\n    digits(1)  == 1\n    digits(4)  == 0\n    digits(235) == 15\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        5
+      ],
+      "expected": 5,
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        54
+      ],
+      "expected": 5,
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        5014
+      ],
+      "expected": 5,
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        98765
+      ],
+      "expected": 315,
+      "description": "Test 4"
+    },
+    {
+      "input": [
+        5576543
+      ],
+      "expected": 2625,
+      "description": "Test 5"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-131"
+  },
+  "metadata": {
+    "complexity_score": 5.11,
+    "num_test_cases": 5,
+    "function_name": "digits"
+  }
+}

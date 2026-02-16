@@ -23,17 +23,11 @@
             href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
       <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css" />
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css" />
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/solarized.min.css" />
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/lint/lint.min.css" />
+      {% block extra_css %}{% endblock extra_css %}
       <link href="{% static 'css/project.css' %}" rel="stylesheet" />
     {% endblock css %}
     {% block javascript %}
       <script defer src="https://unpkg.com/htmx.org@2.0.4"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/lint/lint.min.js"></script>
       <script defer src="{% static 'js/project.js' %}"></script>
     {% endblock javascript %}
   </head>

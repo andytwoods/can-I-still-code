@@ -1,0 +1,88 @@
+{
+  "external_id": "double-the-difference-v1",
+  "title": "Double The Difference",
+  "description": "Implement the function double_the_difference.",
+  "skeleton_code": "def double_the_difference(lst):\n    '''\n    Given a list of numbers, return the sum of squares of the numbers\n    in the list that are odd. Ignore numbers that are negative or not integers.\n    \n    double_the_difference([1, 3, 2, 0]) == 1 + 9 + 0 + 0 = 10\n    double_the_difference([-1, -2, 0]) == 0\n    double_the_difference([9, -2]) == 81\n    double_the_difference([0]) == 0  \n   \n    If the input list is empty, return 0.\n    '''\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        []
+      ],
+      "expected": [
+        0,
+        "This prints if this assert fails 1 (good for debugging!)"
+      ],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        [
+          5,
+          4
+        ]
+      ],
+      "expected": [
+        25,
+        "This prints if this assert fails 2 (good for debugging!)"
+      ],
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        [
+          0.1,
+          0.2,
+          0.3
+        ]
+      ],
+      "expected": [
+        0,
+        "This prints if this assert fails 3 (good for debugging!)"
+      ],
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        [
+          -10,
+          -20,
+          -30
+        ]
+      ],
+      "expected": [
+        0,
+        "This prints if this assert fails 4 (good for debugging!)"
+      ],
+      "description": "Test 4"
+    },
+    {
+      "input": [
+        [
+          -1,
+          -2,
+          8
+        ]
+      ],
+      "expected": [
+        0,
+        "This prints if this assert fails 5 (also good for debugging!)"
+      ],
+      "description": "Test 5"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-151"
+  },
+  "metadata": {
+    "complexity_score": 4.42,
+    "num_test_cases": 5,
+    "function_name": "double_the_difference"
+  }
+}

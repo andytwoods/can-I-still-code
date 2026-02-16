@@ -1,0 +1,87 @@
+{
+  "external_id": "cummulative-sum-v1",
+  "title": "Cummulative Sum",
+  "description": "Write a function to find the cumulative sum of all the values that are present in the given tuple list.",
+  "skeleton_code": "def cummulative_sum(test_list):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          [
+            1,
+            3
+          ],
+          [
+            5,
+            6,
+            7
+          ],
+          [
+            2,
+            6
+          ]
+        ]
+      ],
+      "expected": 30,
+      "description": "Test case 1"
+    },
+    {
+      "input": [
+        [
+          [
+            2,
+            4
+          ],
+          [
+            6,
+            7,
+            8
+          ],
+          [
+            3,
+            7
+          ]
+        ]
+      ],
+      "expected": 37,
+      "description": "Test case 2"
+    },
+    {
+      "input": [
+        [
+          [
+            3,
+            5
+          ],
+          [
+            7,
+            8,
+            9
+          ],
+          [
+            4,
+            8
+          ]
+        ]
+      ],
+      "expected": 44,
+      "description": "Test case 3"
+    }
+  ],
+  "difficulty": 3,
+  "tags": [],
+  "source": {
+    "dataset": "MBPP (Mostly Basic Programming Problems)",
+    "paper": "Austin, J., Odena, A., Nye, M., Bosma, M., Michalewski, H., Dohan, D., Jiang, E., Cai, C., Terry, M., Le, Q., & Sutton, C. (2021). Program Synthesis with Large Language Models. arXiv:2108.07732",
+    "paper_url": "https://arxiv.org/abs/2108.07732",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+    "dataset_id": "mbpp-614",
+    "dataset_split": "test"
+  },
+  "metadata": {
+    "complexity_score": 0.75,
+    "num_test_cases": 3,
+    "function_name": "cummulative_sum"
+  }
+}

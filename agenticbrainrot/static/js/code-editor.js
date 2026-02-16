@@ -1,38 +1,37 @@
 /**
  * Code editor controller — manages CodeMirror, Pyodide worker,
  * timing, telemetry, and draft auto-save.
+ *
+ * Supports re-initialisation when HTMX swaps in new challenge content.
  */
 
 (function () {
     "use strict";
 
     // -- State --
-    let editor = null;
-    let worker = null;
-    let pyodideReady = false;
-    let lintCallbacks = {};
-    let lintIdCounter = 0;
-    let timerInterval = null;
-    let startTime = null;
-    let elapsedSeconds = 0;
-    let activeSeconds = 0;
-    let lastKeystrokeTime = null;
-    const IDLE_THRESHOLD_MS = 120000; // 2 minutes
-    const BLUR_THRESHOLD_MS = 30000; // 30 seconds
+    var editor = null;
+    var worker = null;
+    var pyodideReady = false;
+    var lintCallbacks = {};
+    var lintIdCounter = 0;
+    var timerInterval = null;
+    var startTime = null;
+    var elapsedSeconds = 0;
+    var activeSeconds = 0;
+    var lastKeystrokeTime = null;
+    var draftInterval = null;
+    var IDLE_THRESHOLD_MS = 120000; // 2 minutes
+    var BLUR_THRESHOLD_MS = 30000; // 30 seconds
 
     // Telemetry
-    let pasteCount = 0;
-    let pasteTotalChars = 0;
-    let keystrokeCount = 0;
-    let tabBlurCount = 0;
-    let lastBlurTime = null;
-    let idleSeconds = 0;
+    var pasteCount = 0;
+    var pasteTotalChars = 0;
+    var keystrokeCount = 0;
+    var tabBlurCount = 0;
+    var lastBlurTime = null;
+    var idleSeconds = 0;
 
-    // -- Selectors --
-    const editorEl = document.getElementById("code-editor");
-    const themeSelect = document.getElementById("theme-select");
-
-    const THEMES = {
+    var THEMES = {
         "default": "default",
         "dark": "dracula",
         "light": "default",
@@ -41,21 +40,46 @@
         "solarized-dark": "solarized dark"
     };
 
-    const outputEl = document.getElementById("output");
-    const runBtn = document.getElementById("run-btn");
-    const submitBtn = document.getElementById("submit-btn");
-    const skipBtn = document.getElementById("skip-btn");
-    const timerEl = document.getElementById("timer-display");
-    const pyodideStatus = document.getElementById("pyodide-status");
-    const testResultsEl = document.getElementById("test-results");
-    const progressEl = document.getElementById("progress-indicator");
+    // -- Reset telemetry for new challenge --
+    function resetTelemetry() {
+        elapsedSeconds = 0;
+        activeSeconds = 0;
+        idleSeconds = 0;
+        pasteCount = 0;
+        pasteTotalChars = 0;
+        keystrokeCount = 0;
+        tabBlurCount = 0;
+        lastBlurTime = null;
+        lastKeystrokeTime = null;
+        startTime = null;
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = null;
+        if (draftInterval) clearInterval(draftInterval);
+        draftInterval = null;
+    }
 
     // -- CodeMirror 5 setup --
     function initEditor() {
+        var editorEl = document.getElementById("code-editor");
         if (!editorEl) return;
 
+        // Destroy previous editor if it exists
+        if (editor) {
+            var wrapper = editor.getWrapperElement();
+            if (wrapper && wrapper.parentNode) {
+                wrapper.parentNode.removeChild(wrapper);
+            }
+            editor = null;
+        }
+        // Clear previous CodeMirror DOM
+        editorEl.innerHTML = "";
+
+        // Read skeleton code from JSON script tag
+        var skeletonEl = document.getElementById("skeleton-code-data");
+        var skeleton = skeletonEl ? JSON.parse(skeletonEl.textContent) : "";
+
         editor = CodeMirror(editorEl, {
-            value: editorEl.dataset.skeleton || "",
+            value: skeleton,
             mode: "python",
             lineNumbers: true,
             indentUnit: 4,
@@ -71,14 +95,14 @@
         });
 
         // Add telemetry listeners to CodeMirror
-        editor.on("change", (cm, change) => {
+        editor.on("change", function (cm, change) {
             if (change.origin !== "setValue") {
                 keystrokeCount++;
                 lastKeystrokeTime = Date.now();
             }
         });
 
-        editor.on("inputRead", (cm, change) => {
+        editor.on("inputRead", function (cm, change) {
             if (change.origin === "paste") {
                 pasteCount++;
                 pasteTotalChars += change.text.join("\n").length;
@@ -86,12 +110,12 @@
         });
 
         // Custom theme setter for CM5
-        editor.setTheme = (themeName) => {
-            let cmTheme = THEMES[themeName] || "default";
+        editor.setTheme = function (themeName) {
+            var cmTheme = THEMES[themeName] || "default";
 
             // Special handling for site-syncing default
             if (themeName === "default") {
-                const siteTheme = document.documentElement.getAttribute("data-theme") || "light";
+                var siteTheme = document.documentElement.getAttribute("data-theme") || "light";
                 cmTheme = siteTheme === "dark" ? "dracula" : "default";
             }
 
@@ -99,53 +123,43 @@
         };
 
         // Initialize theme from select or localStorage
+        var themeSelect = document.getElementById("theme-select");
         if (themeSelect) {
-            const savedTheme = localStorage.getItem("editor-theme") || "default";
+            var savedTheme = localStorage.getItem("editor-theme") || "default";
             themeSelect.value = savedTheme;
             editor.setTheme(savedTheme);
 
-            themeSelect.addEventListener("change", () => {
-                const theme = themeSelect.value;
+            themeSelect.addEventListener("change", function () {
+                var theme = themeSelect.value;
                 editor.setTheme(theme);
                 localStorage.setItem("editor-theme", theme);
             });
-
-            // Listen for system theme changes to update "default" theme
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'theme' && themeSelect.value === 'default') {
-                    editor.setTheme('default');
-                }
-            });
-
-            // Watch for Bulma theme attribute changes
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.type === "attributes" && mutation.attributeName === "data-theme") {
-                        if (themeSelect.value === 'default') {
-                            editor.setTheme('default');
-                        }
-                    }
-                });
-            });
-            observer.observe(document.documentElement, { attributes: true });
         }
 
-
         // Restore draft if available
-        const attemptUuid = document.getElementById("attempt-uuid");
+        var attemptUuid = document.getElementById("attempt-uuid");
         if (attemptUuid) {
-            const draft = localStorage.getItem("draft_" + attemptUuid.value);
+            var draft = localStorage.getItem("draft_" + attemptUuid.value);
             if (draft) {
                 editor.setValue(draft);
             }
         }
 
         // Auto-save draft every 30 seconds
-        setInterval(() => {
+        draftInterval = setInterval(function () {
             if (attemptUuid && editor) {
                 localStorage.setItem("draft_" + attemptUuid.value, editor.getValue());
             }
         }, 30000);
+
+        // Enable buttons if Pyodide is already ready
+        if (pyodideReady) {
+            var runBtn = document.getElementById("run-btn");
+            var submitBtn = document.getElementById("submit-btn");
+            if (runBtn) runBtn.disabled = false;
+            if (submitBtn) submitBtn.disabled = false;
+            startTimer();
+        }
     }
 
     // -- Python Linter using Pyodide Worker --
@@ -155,14 +169,16 @@
             return;
         }
 
-        const id = ++lintIdCounter;
-        lintCallbacks[id] = (results) => {
-            const annotations = results.map(r => ({
-                from: CodeMirror.Pos(r.line - 1, r.col - 1),
-                to: CodeMirror.Pos(r.line - 1, r.col), // CM5 lint doesn't strictly need precise 'to'
-                message: r.message,
-                severity: r.severity
-            }));
+        var id = ++lintIdCounter;
+        lintCallbacks[id] = function (results) {
+            var annotations = results.map(function (r) {
+                return {
+                    from: CodeMirror.Pos(r.line - 1, r.col - 1),
+                    to: CodeMirror.Pos(r.line - 1, r.col),
+                    message: r.message,
+                    severity: r.severity
+                };
+            });
             updateLinting(cm, annotations);
         };
 
@@ -173,47 +189,78 @@
         });
     }
 
+    // -- Toast notifications --
+    function showToast(message, type, duration) {
+        var toast = document.createElement("div");
+        toast.className = "notification " + type;
+        toast.style.cssText =
+            "position:fixed;top:1rem;right:1rem;z-index:9999;min-width:280px;" +
+            "max-width:400px;opacity:0;transition:opacity 0.3s ease;box-shadow:0 4px 12px rgba(0,0,0,0.15);";
+        toast.innerHTML = message;
+
+        document.body.appendChild(toast);
+        // Trigger reflow then fade in
+        toast.offsetHeight; // eslint-disable-line no-unused-expressions
+        toast.style.opacity = "1";
+
+        if (duration > 0) {
+            setTimeout(function () {
+                toast.style.opacity = "0";
+                setTimeout(function () { toast.remove(); }, 300);
+            }, duration);
+        }
+
+        return toast;
+    }
+
     // -- Pyodide Worker --
     function initPyodide() {
-        if (!pyodideStatus) return;
+        var loadingToast = showToast(
+            '<span class="icon"><i class="fas fa-spinner fa-spin"></i></span> Loading Python environment…',
+            "is-info is-light", 0
+        );
 
-        pyodideStatus.textContent = "Loading Python environment...";
-        pyodideStatus.className = "notification is-info is-light";
-
-        const loadStart = Date.now();
+        var loadStart = Date.now();
         worker = new Worker("/static/js/pyodide-worker.js");
 
         worker.onmessage = function (e) {
-            const msg = e.data;
+            var msg = e.data;
 
             switch (msg.type) {
                 case "ready":
                     pyodideReady = true;
-                    pyodideStatus.textContent = "Python environment ready.";
-                    pyodideStatus.className = "notification is-success is-light";
-                    setTimeout(() => { pyodideStatus.style.display = "none"; }, 2000);
+
+                    // Replace loading toast with success
+                    loadingToast.style.opacity = "0";
+                    setTimeout(function () { loadingToast.remove(); }, 300);
+                    showToast(
+                        '<span class="icon"><i class="fas fa-check"></i></span> Python environment ready.',
+                        "is-success is-light", 2000
+                    );
 
                     // Report load time
-                    const loadMs = Date.now() - loadStart;
-                    const loadMsInput = document.getElementById("pyodide-load-ms");
+                    var loadMs = Date.now() - loadStart;
+                    var loadMsInput = document.getElementById("pyodide-load-ms");
                     if (loadMsInput) loadMsInput.value = loadMs;
 
                     // Mark editor ready
-                    const editorReadyInput = document.getElementById("editor-ready");
+                    var editorReadyInput = document.getElementById("editor-ready");
                     if (editorReadyInput) editorReadyInput.value = "true";
 
-                    // Start timer now
+                    // Start timer and enable buttons
                     startTimer();
-                    if (runBtn) runBtn.disabled = false;
-                    if (submitBtn) submitBtn.disabled = false;
+                    enableButtons();
                     break;
 
                 case "init_error":
-                    pyodideStatus.innerHTML =
+                    loadingToast.style.opacity = "0";
+                    setTimeout(function () { loadingToast.remove(); }, 300);
+                    showToast(
                         "<strong>The code execution environment couldn't load.</strong> " +
                         "Please check your internet connection and reload the page. " +
-                        '<button class="button is-small is-warning mt-2" onclick="location.reload()">Reload</button>';
-                    pyodideStatus.className = "notification is-danger";
+                        '<button class="button is-small is-warning mt-2" onclick="location.reload()">Reload</button>',
+                        "is-danger", 0
+                    );
                     break;
 
                 case "stdout":
@@ -234,15 +281,13 @@
                 case "result":
                     clearRunTimeout();
                     displayTestResults(msg.results);
-                    if (runBtn) runBtn.disabled = false;
-                    if (submitBtn) submitBtn.disabled = false;
+                    enableButtons();
                     break;
 
                 case "error":
                     clearRunTimeout();
                     appendOutput("Error: " + msg.error, "stderr");
-                    if (runBtn) runBtn.disabled = false;
-                    if (submitBtn) submitBtn.disabled = false;
+                    enableButtons();
                     break;
             }
         };
@@ -250,8 +295,16 @@
         worker.postMessage({ type: "init" });
     }
 
+    function enableButtons() {
+        var runBtn = document.getElementById("run-btn");
+        var submitBtn = document.getElementById("submit-btn");
+        if (runBtn) runBtn.disabled = false;
+        if (submitBtn) submitBtn.disabled = false;
+    }
+
     // -- Timer --
     function startTimer() {
+        if (timerInterval) return; // already running
         startTime = Date.now();
         lastKeystrokeTime = Date.now();
         timerInterval = setInterval(updateTimer, 1000);
@@ -260,8 +313,9 @@
     function updateTimer() {
         if (!startTime) return;
         elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-        const mins = Math.floor(elapsedSeconds / 60);
-        const secs = elapsedSeconds % 60;
+        var mins = Math.floor(elapsedSeconds / 60);
+        var secs = elapsedSeconds % 60;
+        var timerEl = document.getElementById("timer-display");
         if (timerEl) {
             timerEl.textContent =
                 String(mins).padStart(2, "0") + ":" + String(secs).padStart(2, "0");
@@ -277,12 +331,14 @@
 
     function stopTimer() {
         if (timerInterval) clearInterval(timerInterval);
+        timerInterval = null;
     }
 
     // -- Output --
     function appendOutput(text, stream) {
+        var outputEl = document.getElementById("output");
         if (!outputEl) return;
-        const line = document.createElement("pre");
+        var line = document.createElement("pre");
         line.className = stream === "stderr" ? "has-text-danger" : "";
         line.textContent = text;
         outputEl.appendChild(line);
@@ -290,28 +346,37 @@
     }
 
     function clearOutput() {
+        var outputEl = document.getElementById("output");
+        var testResultsEl = document.getElementById("test-results");
         if (outputEl) outputEl.innerHTML = "";
         if (testResultsEl) testResultsEl.innerHTML = "";
     }
 
     // -- Test Results --
     function displayTestResults(results) {
+        var testResultsEl = document.getElementById("test-results");
         if (!testResultsEl) return;
         testResultsEl.innerHTML = "";
 
-        let passed = 0;
-        let total = results.length;
+        var passed = 0;
+        var total = results.length;
 
-        results.forEach((r) => {
-            const div = document.createElement("div");
+        results.forEach(function (r) {
+            var div = document.createElement("div");
             div.className = "notification " + (r.passed ? "is-success" : "is-danger") + " is-light py-2 px-3 mb-2";
 
-            let content = (r.passed ? "PASS" : "FAIL") + ": " + r.description;
-            if (!r.passed && r.error) {
-                content += " — " + r.error;
-            } else if (!r.passed) {
-                content += " — Expected: " + JSON.stringify(r.expected) + ", Got: " + JSON.stringify(r.actual);
+            var content = (r.passed ? "PASS" : "FAIL") + ": " + r.description;
+            if (r.input && r.input.length > 0) {
+                content += "\n  Input: " + r.input.map(function (a) { return JSON.stringify(a); }).join(", ");
             }
+            if (!r.passed && r.error) {
+                content += "\n  Error: " + r.error;
+            } else if (!r.passed) {
+                content += "\n  Expected: " + JSON.stringify(r.expected) + "\n  Got:      " + JSON.stringify(r.actual);
+            }
+            div.style.whiteSpace = "pre-wrap";
+            div.style.fontFamily = "monospace";
+            div.style.fontSize = "0.85em";
             div.textContent = content;
             testResultsEl.appendChild(div);
 
@@ -319,24 +384,24 @@
         });
 
         // Summary
-        const summary = document.createElement("div");
+        var summary = document.createElement("div");
         summary.className = "notification " + (passed === total ? "is-success" : "is-warning") + " mt-3";
         summary.innerHTML = "<strong>" + passed + " / " + total + " tests passed</strong>";
         testResultsEl.appendChild(summary);
 
         // Store results for submission
-        const testsPassed = document.getElementById("tests-passed");
-        const testsTotal = document.getElementById("tests-total");
+        var testsPassed = document.getElementById("tests-passed");
+        var testsTotal = document.getElementById("tests-total");
         if (testsPassed) testsPassed.value = passed;
         if (testsTotal) testsTotal.value = total;
     }
 
     // -- Tab blur tracking --
-    document.addEventListener("visibilitychange", () => {
+    document.addEventListener("visibilitychange", function () {
         if (document.hidden) {
             lastBlurTime = Date.now();
         } else if (lastBlurTime) {
-            const blurDuration = Date.now() - lastBlurTime;
+            var blurDuration = Date.now() - lastBlurTime;
             if (blurDuration > BLUR_THRESHOLD_MS) {
                 tabBlurCount++;
                 idleSeconds += Math.floor(blurDuration / 1000);
@@ -346,25 +411,26 @@
     });
 
     // -- Run/Submit handlers --
-    let runTimeout = null;
-    const RUN_TIMEOUT_MS = 30000; // 30 seconds
+    var runTimeout = null;
+    var RUN_TIMEOUT_MS = 30000; // 30 seconds
 
     function runCode() {
         if (!editor || !worker || !pyodideReady) return;
         clearOutput();
+        var runBtn = document.getElementById("run-btn");
+        var submitBtn = document.getElementById("submit-btn");
         if (runBtn) runBtn.disabled = true;
         if (submitBtn) submitBtn.disabled = true;
 
-        const testCasesEl = document.getElementById("test-cases-data");
-        const testCases = testCasesEl ? JSON.parse(testCasesEl.textContent) : [];
+        var testCasesEl = document.getElementById("test-cases-data");
+        var testCases = testCasesEl ? JSON.parse(testCasesEl.textContent) : [];
 
         // Set timeout — kill worker and restart if code runs too long
         if (runTimeout) clearTimeout(runTimeout);
-        runTimeout = setTimeout(() => {
+        runTimeout = setTimeout(function () {
             worker.terminate();
             appendOutput("Timeout: your code took longer than 30 seconds. Please optimise and try again.", "stderr");
-            if (runBtn) runBtn.disabled = false;
-            if (submitBtn) submitBtn.disabled = false;
+            enableButtons();
             // Restart worker
             pyodideReady = false;
             initPyodide();
@@ -396,7 +462,7 @@
         setInput("tab-blur-count-input", tabBlurCount.toString());
 
         // Clear draft
-        const attemptUuid = document.getElementById("attempt-uuid");
+        var attemptUuid = document.getElementById("attempt-uuid");
         if (attemptUuid) {
             localStorage.removeItem("draft_" + attemptUuid.value);
         }
@@ -405,54 +471,79 @@
     }
 
     function setInput(id, value) {
-        const el = document.getElementById(id);
+        var el = document.getElementById(id);
         if (el) el.value = value;
     }
 
-    // -- Init --
-    function init() {
-        initEditor();
-        initPyodide();
+    // -- Bind buttons (called on init and after HTMX swaps) --
+    function bindButtons() {
+        var runBtn = document.getElementById("run-btn");
+        var submitBtn = document.getElementById("submit-btn");
+        var timerEl = document.getElementById("timer-display");
 
         if (runBtn) {
-            runBtn.disabled = true;
-            runBtn.addEventListener("click", runCode);
+            runBtn.disabled = !pyodideReady;
+            runBtn.onclick = runCode;
         }
         if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.addEventListener("click", () => {
+            submitBtn.disabled = !pyodideReady;
+            submitBtn.onclick = function () {
                 runCode();
                 // Wait for results then submit
-                const checkReady = setInterval(() => {
-                    const testsPassed = document.getElementById("tests-passed");
+                var checkReady = setInterval(function () {
+                    var testsPassed = document.getElementById("tests-passed");
                     if (testsPassed && testsPassed.value !== "") {
                         clearInterval(checkReady);
                         prepareSubmission();
                     }
                 }, 200);
-            });
+            };
         }
 
         // Timer toggle
         if (timerEl) {
             timerEl.style.cursor = "pointer";
             timerEl.title = "Click to toggle timer visibility";
-            timerEl.addEventListener("click", () => {
+            timerEl.onclick = function () {
                 timerEl.style.visibility = timerEl.style.visibility === "hidden" ? "visible" : "hidden";
-            });
+            };
         }
+    }
+
+    // -- Initialise a new challenge (called on page load and HTMX swap) --
+    function initChallenge() {
+        var editorEl = document.getElementById("code-editor");
+        if (!editorEl) return; // Not a challenge page
+
+        resetTelemetry();
+        initEditor();
+        bindButtons();
+    }
+
+    // -- Init --
+    function init() {
+        initChallenge();
+        initPyodide();
 
         // Beforeunload warning
-        window.addEventListener("beforeunload", (e) => {
+        window.addEventListener("beforeunload", function (e) {
             if (editor && editor.getValue().trim()) {
                 e.preventDefault();
             }
         });
 
         // Listen for HTMX submission
-        document.addEventListener("htmx:beforeRequest", (e) => {
+        document.addEventListener("htmx:beforeRequest", function (e) {
             if (e.detail.elt && e.detail.elt.id === "challenge-form") {
                 prepareSubmission();
+            }
+        });
+
+        // Re-initialise editor when HTMX swaps in new challenge content
+        document.addEventListener("htmx:afterSwap", function (e) {
+            // Only reinit if the swap target contains a code editor
+            if (e.detail.target && e.detail.target.querySelector("#code-editor")) {
+                initChallenge();
             }
         });
     }

@@ -1,0 +1,128 @@
+{# Challenge selector and navigation #}
+<div class="box mb-4">
+  <div class="columns is-vcentered">
+    <div class="column">
+      <div class="field">
+        <label class="label" for="challenge-select">Select Challenge</label>
+        <div class="control">
+          <div class="select is-fullwidth">
+            <select id="challenge-select">
+              {% for tier, challenges in challenges_by_tier %}
+                <optgroup label="Tier {{ tier }}">
+                  {% for c in challenges %}
+                    <option value="{% url 'challenges:preview_challenge_detail' c.pk %}"
+                            {% if c.pk == challenge.pk %}selected{% endif %}>
+                      {{ c.title }}
+                    </option>
+                  {% endfor %}
+                </optgroup>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="column is-narrow">
+      <div class="field">
+        <label class="label">&nbsp;</label>
+        <div class="buttons">
+          {% if prev_id %}
+            <a hx-get="{% url 'challenges:preview_challenge_detail' prev_id %}"
+               hx-target="#preview-container"
+               hx-push-url="true"
+               hx-swap="innerHTML"
+               class="button is-light"
+               title="Previous challenge">
+              <span class="icon"><i class="fas fa-chevron-left"></i></span>
+              <span>Prev</span>
+            </a>
+          {% else %}
+            <button class="button is-light" disabled>
+              <span class="icon"><i class="fas fa-chevron-left"></i></span>
+              <span>Prev</span>
+            </button>
+          {% endif %}
+
+          <span class="button is-static">
+            {{ current_position }} / {{ total_challenges }}
+          </span>
+
+          {% if next_id %}
+            <a hx-get="{% url 'challenges:preview_challenge_detail' next_id %}"
+               hx-target="#preview-container"
+               hx-push-url="true"
+               hx-swap="innerHTML"
+               class="button is-light"
+               title="Next challenge">
+              <span>Next</span>
+              <span class="icon"><i class="fas fa-chevron-right"></i></span>
+            </a>
+          {% else %}
+            <button class="button is-light" disabled>
+              <span>Next</span>
+              <span class="icon"><i class="fas fa-chevron-right"></i></span>
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="is-size-7 has-text-grey">
+    Tier {{ challenge.difficulty }} &middot;
+    {{ challenge.source.dataset|default:"Unknown source" }} &middot;
+    {{ challenge.external_id }}
+  </p>
+</div>
+
+<div class="columns">
+  <div class="column is-12">
+    <div class="box">
+      <h2 class="title is-4">{{ challenge.title }}</h2>
+      <div class="content">
+        {{ challenge.description|linebreaksbr }}
+      </div>
+    </div>
+
+    <div id="code-editor-toolbar" class="field is-grouped mb-0 p-2 is-dark" style="background-color: var(--bulma-scheme-main-ter); border: 1px solid var(--bulma-border); border-bottom: none; border-top-left-radius: 4px; border-top-right-radius: 4px;">
+      <div class="control">
+        <div class="select is-small">
+          <select id="theme-select" title="Change editor theme">
+            <option value="default">Default Theme</option>
+            <option value="dark">Dark Theme</option>
+            <option value="light">Light Theme</option>
+            <option value="dracula">Dracula</option>
+            <option value="solarized-light">Solarized Light</option>
+            <option value="solarized-dark">Solarized Dark</option>
+          </select>
+        </div>
+      </div>
+      <div class="control">
+        <span class="is-size-7 has-text-grey">Python 3.x</span>
+      </div>
+    </div>
+    <div id="code-editor" aria-label="Python code editor"></div>
+    {{ challenge.skeleton_code|json_script:"skeleton-code-data" }}
+
+    <div class="buttons mt-3">
+      <button id="run-btn" class="button is-info" type="button" disabled>
+        Run Code
+      </button>
+      <button id="preview-submit-btn" class="button is-primary" type="button" disabled>
+        Test Tests
+      </button>
+    </div>
+
+    <div id="output" class="box mt-3" style="min-height: 50px; max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 0.85em;">
+    </div>
+
+    <div id="test-results" class="mt-3"></div>
+  </div>
+</div>
+
+<!-- Test cases data for JS -->
+<script id="test-cases-data" type="application/json">{{ test_cases_json|safe }}</script>
+<input type="hidden" id="pyodide-load-ms" value="">
+<input type="hidden" id="editor-ready" value="">
+<input type="hidden" id="tests-passed" value="">
+<input type="hidden" id="tests-total" value="">
+<input type="hidden" id="attempt-uuid" value="preview-{{ challenge.pk }}">

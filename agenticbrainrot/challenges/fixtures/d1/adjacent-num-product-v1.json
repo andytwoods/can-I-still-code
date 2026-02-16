@@ -1,0 +1,61 @@
+{
+  "external_id": "adjacent-num-product-v1",
+  "title": "Adjacent Num Product",
+  "description": "Write a python function to find the largest product of the pair of adjacent elements from a given list of integers.",
+  "skeleton_code": "def adjacent_num_product(list_nums):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      ],
+      "expected": 30,
+      "description": "Test case 1"
+    },
+    {
+      "input": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      ],
+      "expected": 20,
+      "description": "Test case 2"
+    },
+    {
+      "input": [
+        [
+          2,
+          3
+        ]
+      ],
+      "expected": 6,
+      "description": "Test case 3"
+    }
+  ],
+  "difficulty": 1,
+  "tags": [],
+  "source": {
+    "dataset": "MBPP (Mostly Basic Programming Problems)",
+    "paper": "Austin, J., Odena, A., Nye, M., Bosma, M., Michalewski, H., Dohan, D., Jiang, E., Cai, C., Terry, M., Le, Q., & Sutton, C. (2021). Program Synthesis with Large Language Models. arXiv:2108.07732",
+    "paper_url": "https://arxiv.org/abs/2108.07732",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+    "dataset_id": "mbpp-366",
+    "dataset_split": "train"
+  },
+  "metadata": {
+    "complexity_score": 0.5,
+    "num_test_cases": 3,
+    "function_name": "adjacent_num_product"
+  }
+}

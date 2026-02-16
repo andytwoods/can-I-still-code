@@ -1,0 +1,55 @@
+{
+  "external_id": "all-prefixes-v1",
+  "title": "All Prefixes",
+  "description": "Return list of all prefixes from shortest to longest of the input string\n    >>> all_prefixes('abc')\n    ['a', 'ab', 'abc']",
+  "skeleton_code": "def all_prefixes(string: str) -> List[str]:\n    \"\"\" Return list of all prefixes from shortest to longest of the input string\n    >>> all_prefixes('abc')\n    ['a', 'ab', 'abc']\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        ""
+      ],
+      "expected": [],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        "asdfgh"
+      ],
+      "expected": [
+        "a",
+        "as",
+        "asd",
+        "asdf",
+        "asdfg",
+        "asdfgh"
+      ],
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "WWW"
+      ],
+      "expected": [
+        "W",
+        "WW",
+        "WWW"
+      ],
+      "description": "Test 3"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-14"
+  },
+  "metadata": {
+    "complexity_score": 4.21,
+    "num_test_cases": 3,
+    "function_name": "all_prefixes"
+  }
+}

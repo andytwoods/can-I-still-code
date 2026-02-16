@@ -1,0 +1,94 @@
+{
+  "external_id": "find-min-v1",
+  "title": "Find Min",
+  "description": "Write a python function to find the sublist having minimum length.",
+  "skeleton_code": "def Find_Min(lst):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          [
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ]
+      ],
+      "expected": [
+        1
+      ],
+      "description": "Test case 1"
+    },
+    {
+      "input": [
+        [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            2,
+            7,
+            8
+          ]
+        ]
+      ],
+      "expected": [
+        1,
+        1
+      ],
+      "description": "Test case 2"
+    },
+    {
+      "input": [
+        [
+          [
+            "x"
+          ],
+          [
+            "x",
+            "y"
+          ],
+          [
+            "x",
+            "y",
+            "z"
+          ]
+        ]
+      ],
+      "expected": [
+        "x"
+      ],
+      "description": "Test case 3"
+    }
+  ],
+  "difficulty": 3,
+  "tags": [],
+  "source": {
+    "dataset": "MBPP (Mostly Basic Programming Problems)",
+    "paper": "Austin, J., Odena, A., Nye, M., Bosma, M., Michalewski, H., Dohan, D., Jiang, E., Cai, C., Terry, M., Le, Q., & Sutton, C. (2021). Program Synthesis with Large Language Models. arXiv:2108.07732",
+    "paper_url": "https://arxiv.org/abs/2108.07732",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+    "dataset_id": "mbpp-457",
+    "dataset_split": "train"
+  },
+  "metadata": {
+    "complexity_score": 0.75,
+    "num_test_cases": 3,
+    "function_name": "Find_Min"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "external_id": "modp-v1",
+  "title": "Modp",
+  "description": "Return 2^n modulo p (be aware of numerics).\n    >>> modp(3, 5)\n    3\n    >>> modp(1101, 101)\n    2\n    >>> modp(0, 101)\n    1\n    >>> modp(3, 11)\n    8\n    >>> modp(100, 101)\n    1",
+  "skeleton_code": "def modp(n: int, p: int):\n    \"\"\"Return 2^n modulo p (be aware of numerics).\n    >>> modp(3, 5)\n    3\n    >>> modp(1101, 101)\n    2\n    >>> modp(0, 101)\n    1\n    >>> modp(3, 11)\n    8\n    >>> modp(100, 101)\n    1\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        3,
+        5
+      ],
+      "expected": 3,
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        1101,
+        101
+      ],
+      "expected": 2,
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        0,
+        101
+      ],
+      "expected": 1,
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        3,
+        11
+      ],
+      "expected": 8,
+      "description": "Test 4"
+    },
+    {
+      "input": [
+        100,
+        101
+      ],
+      "expected": 1,
+      "description": "Test 5"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-49"
+  },
+  "metadata": {
+    "complexity_score": 5.3,
+    "num_test_cases": 5,
+    "function_name": "modp"
+  }
+}

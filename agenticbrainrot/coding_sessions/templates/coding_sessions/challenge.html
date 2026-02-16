@@ -3,6 +3,13 @@
 
 {% block title %}Challenge — AgenticBrainrot{% endblock title %}
 
+{% block extra_css %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/solarized.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/lint/lint.min.css" />
+{% endblock extra_css %}
+
 {% block content %}
 <div class="columns">
   <div class="column is-12">
@@ -31,18 +38,11 @@
       </div>
     </div>
 
-    <div id="pyodide-status" class="notification is-info is-light">
-      Loading Python environment...
-    </div>
-
     <div id="session-container">
       {% include "coding_sessions/partials/_challenge_display.html" %}
     </div>
   </div>
 </div>
-
-<!-- Test cases data for JS -->
-<script id="test-cases-data" type="application/json">{{ test_cases_json|safe }}</script>
 
 <!-- Hidden telemetry inputs -->
 <input type="hidden" id="pyodide-load-ms" name="pyodide_load_ms" value="">
@@ -50,5 +50,8 @@
 {% endblock content %}
 
 {% block extra_js %}
-  <script defer src="{% static 'js/code-editor.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/lint/lint.min.js"></script>
+  <script src="{% static 'js/code-editor.js' %}"></script>
 {% endblock extra_js %}

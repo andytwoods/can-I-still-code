@@ -1,0 +1,53 @@
+{
+  "external_id": "factorize-v1",
+  "title": "Factorize",
+  "description": "Return list of prime factors of given integer in the order from smallest to largest.\n    Each of the factors should be listed number of times corresponding to how many times it appeares in factorization.\n    Input number should be equal to the product of all factors\n    >>> factorize(8)\n    [2, 2, 2]\n    >>> factorize(25)\n    [5, 5]\n    >>> factorize(70)\n    [2, 5, 7]",
+  "skeleton_code": "def factorize(n: int) -> List[int]:\n    \"\"\" Return list of prime factors of given integer in the order from smallest to largest.\n    Each of the factors should be listed number of times corresponding to how many times it appeares in factorization.\n    Input number should be equal to the product of all factors\n    >>> factorize(8)\n    [2, 2, 2]\n    >>> factorize(25)\n    [5, 5]\n    >>> factorize(70)\n    [2, 5, 7]\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        2
+      ],
+      "expected": [
+        2
+      ],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        4
+      ],
+      "expected": [
+        2,
+        2
+      ],
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        8
+      ],
+      "expected": [
+        2,
+        2,
+        2
+      ],
+      "description": "Test 3"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-25"
+  },
+  "metadata": {
+    "complexity_score": 5.45,
+    "num_test_cases": 3,
+    "function_name": "factorize"
+  }
+}

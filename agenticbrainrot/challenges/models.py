@@ -29,6 +29,16 @@ class Challenge(models.Model):
         help_text="Tier 1-5",
     )
     tags = models.JSONField(default=list, blank=True)
+    source = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Attribution: dataset name, paper citation, license, URL.",
+    )
+    source_metadata = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Analysis metadata: complexity_score, function_name, etc.",
+    )
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

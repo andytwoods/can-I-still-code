@@ -1,0 +1,106 @@
+{
+  "external_id": "rescale-to-unit-v1",
+  "title": "Rescale To Unit",
+  "description": "Given list of numbers (of at least two elements), apply a linear transform to that list,\n    such that the smallest number will become 0 and the largest will become 1\n    >>> rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])\n    [0.0, 0.25, 0.5, 0.75, 1.0]",
+  "skeleton_code": "def rescale_to_unit(numbers: List[float]) -> List[float]:\n    \"\"\" Given list of numbers (of at least two elements), apply a linear transform to that list,\n    such that the smallest number will become 0 and the largest will become 1\n    >>> rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])\n    [0.0, 0.25, 0.5, 0.75, 1.0]\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          2.0,
+          49.9
+        ]
+      ],
+      "expected": [
+        0.0,
+        1.0
+      ],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        [
+          100.0,
+          49.9
+        ]
+      ],
+      "expected": [
+        1.0,
+        0.0
+      ],
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0
+        ]
+      ],
+      "expected": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        [
+          2.0,
+          1.0,
+          5.0,
+          3.0,
+          4.0
+        ]
+      ],
+      "expected": [
+        0.25,
+        0.0,
+        1.0,
+        0.5,
+        0.75
+      ],
+      "description": "Test 4"
+    },
+    {
+      "input": [
+        [
+          12.0,
+          11.0,
+          15.0,
+          13.0,
+          14.0
+        ]
+      ],
+      "expected": [
+        0.25,
+        0.0,
+        1.0,
+        0.5,
+        0.75
+      ],
+      "description": "Test 5"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-21"
+  },
+  "metadata": {
+    "complexity_score": 5.25,
+    "num_test_cases": 5,
+    "function_name": "rescale_to_unit"
+  }
+}

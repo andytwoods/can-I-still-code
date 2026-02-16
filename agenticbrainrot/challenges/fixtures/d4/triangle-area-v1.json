@@ -1,0 +1,47 @@
+{
+  "external_id": "triangle-area-v1",
+  "title": "Triangle Area",
+  "description": "Given length of a side and high return area for a triangle.\n    >>> triangle_area(5, 3)\n    7.5",
+  "skeleton_code": "def triangle_area(a, h):\n    \"\"\"Given length of a side and high return area for a triangle.\n    >>> triangle_area(5, 3)\n    7.5\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        5,
+        3
+      ],
+      "expected": 7.5,
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        2,
+        2
+      ],
+      "expected": 2.0,
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        10,
+        8
+      ],
+      "expected": 40.0,
+      "description": "Test 3"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-45"
+  },
+  "metadata": {
+    "complexity_score": 4.08,
+    "num_test_cases": 3,
+    "function_name": "triangle_area"
+  }
+}

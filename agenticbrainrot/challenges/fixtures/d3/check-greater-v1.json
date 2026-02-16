@@ -1,0 +1,72 @@
+{
+  "external_id": "check-greater-v1",
+  "title": "Check Greater",
+  "description": "Write a function to check if each element of the second tuple is greater than its corresponding index in the first tuple.",
+  "skeleton_code": "def check_greater(test_tup1, test_tup2):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          10,
+          4,
+          5
+        ],
+        [
+          13,
+          5,
+          18
+        ]
+      ],
+      "expected": true,
+      "description": "Test case 1"
+    },
+    {
+      "input": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          2,
+          1,
+          4
+        ]
+      ],
+      "expected": false,
+      "description": "Test case 2"
+    },
+    {
+      "input": [
+        [
+          4,
+          5,
+          6
+        ],
+        [
+          5,
+          6,
+          7
+        ]
+      ],
+      "expected": true,
+      "description": "Test case 3"
+    }
+  ],
+  "difficulty": 3,
+  "tags": [],
+  "source": {
+    "dataset": "MBPP (Mostly Basic Programming Problems)",
+    "paper": "Austin, J., Odena, A., Nye, M., Bosma, M., Michalewski, H., Dohan, D., Jiang, E., Cai, C., Terry, M., Le, Q., & Sutton, C. (2021). Program Synthesis with Large Language Models. arXiv:2108.07732",
+    "paper_url": "https://arxiv.org/abs/2108.07732",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+    "dataset_id": "mbpp-695",
+    "dataset_split": "test"
+  },
+  "metadata": {
+    "complexity_score": 0.75,
+    "num_test_cases": 3,
+    "function_name": "check_greater"
+  }
+}

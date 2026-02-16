@@ -1,0 +1,73 @@
+{
+  "external_id": "vowels-count-v1",
+  "title": "Vowels Count",
+  "description": "Add more test cases.",
+  "skeleton_code": "FIX = \"\"\"\nAdd more test cases.\n\"\"\"\n\ndef vowels_count(s):\n    \"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        "abcde"
+      ],
+      "expected": [
+        2,
+        "Test 1"
+      ],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        "Alone"
+      ],
+      "expected": [
+        3,
+        "Test 2"
+      ],
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "key"
+      ],
+      "expected": [
+        2,
+        "Test 3"
+      ],
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        "bye"
+      ],
+      "expected": [
+        1,
+        "Test 4"
+      ],
+      "description": "Test 4"
+    },
+    {
+      "input": [
+        "keY"
+      ],
+      "expected": [
+        2,
+        "Test 5"
+      ],
+      "description": "Test 5"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-64"
+  },
+  "metadata": {
+    "complexity_score": 4.5,
+    "num_test_cases": 5,
+    "function_name": "vowels_count"
+  }
+}

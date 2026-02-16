@@ -1,0 +1,85 @@
+{
+  "external_id": "get-positive-v1",
+  "title": "Get Positive",
+  "description": "Return only positive numbers in the list.\n    >>> get_positive([-1, 2, -4, 5, 6])\n    [2, 5, 6]\n    >>> get_positive([5, 3, -5, 2, -3, 3, 9, 0, 123, 1, -10])\n    [5, 3, 2, 3, 9, 123, 1]",
+  "skeleton_code": "def get_positive(l: list):\n    \"\"\"Return only positive numbers in the list.\n    >>> get_positive([-1, 2, -4, 5, 6])\n    [2, 5, 6]\n    >>> get_positive([5, 3, -5, 2, -3, 3, 9, 0, 123, 1, -10])\n    [5, 3, 2, 3, 9, 123, 1]\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          -1,
+          -2,
+          4,
+          5,
+          6
+        ]
+      ],
+      "expected": [
+        4,
+        5,
+        6
+      ],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        [
+          5,
+          3,
+          -5,
+          2,
+          3,
+          3,
+          9,
+          0,
+          123,
+          1,
+          -10
+        ]
+      ],
+      "expected": [
+        5,
+        3,
+        2,
+        3,
+        3,
+        9,
+        123,
+        1
+      ],
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        [
+          -1,
+          -2
+        ]
+      ],
+      "expected": [],
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        []
+      ],
+      "expected": [],
+      "description": "Test 4"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-30"
+  },
+  "metadata": {
+    "complexity_score": 4.72,
+    "num_test_cases": 4,
+    "function_name": "get_positive"
+  }
+}

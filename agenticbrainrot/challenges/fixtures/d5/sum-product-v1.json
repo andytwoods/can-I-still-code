@@ -1,0 +1,72 @@
+{
+  "external_id": "sum-product-v1",
+  "title": "Sum Product",
+  "description": "For a given list of integers, return a tuple consisting of a sum and a product of all the integers in a list.\n    Empty sum should be equal to 0 and empty product should be equal to 1.\n    >>> sum_product([])\n    (0, 1)\n    >>> sum_product([1, 2, 3, 4])\n    (10, 24)",
+  "skeleton_code": "def sum_product(numbers: List[int]) -> Tuple[int, int]:\n    \"\"\" For a given list of integers, return a tuple consisting of a sum and a product of all the integers in a list.\n    Empty sum should be equal to 0 and empty product should be equal to 1.\n    >>> sum_product([])\n    (0, 1)\n    >>> sum_product([1, 2, 3, 4])\n    (10, 24)\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        []
+      ],
+      "expected": [
+        0,
+        1
+      ],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "expected": [
+        3,
+        1
+      ],
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        [
+          100,
+          0
+        ]
+      ],
+      "expected": [
+        100,
+        0
+      ],
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        [
+          10
+        ]
+      ],
+      "expected": [
+        10,
+        10
+      ],
+      "description": "Test 4"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-8"
+  },
+  "metadata": {
+    "complexity_score": 5.13,
+    "num_test_cases": 4,
+    "function_name": "sum_product"
+  }
+}

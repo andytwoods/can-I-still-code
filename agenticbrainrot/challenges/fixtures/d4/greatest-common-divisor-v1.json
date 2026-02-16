@@ -1,0 +1,55 @@
+{
+  "external_id": "greatest-common-divisor-v1",
+  "title": "Greatest Common Divisor",
+  "description": "Return a greatest common divisor of two integers a and b\n    >>> greatest_common_divisor(3, 5)\n    1\n    >>> greatest_common_divisor(25, 15)\n    5",
+  "skeleton_code": "def greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\" Return a greatest common divisor of two integers a and b\n    >>> greatest_common_divisor(3, 5)\n    1\n    >>> greatest_common_divisor(25, 15)\n    5\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        3,
+        7
+      ],
+      "expected": 1,
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        10,
+        15
+      ],
+      "expected": 5,
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        49,
+        14
+      ],
+      "expected": 7,
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        144,
+        60
+      ],
+      "expected": 12,
+      "description": "Test 4"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-13"
+  },
+  "metadata": {
+    "complexity_score": 4.53,
+    "num_test_cases": 4,
+    "function_name": "greatest_common_divisor"
+  }
+}

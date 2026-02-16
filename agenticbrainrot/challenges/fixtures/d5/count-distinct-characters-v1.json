@@ -1,0 +1,51 @@
+{
+  "external_id": "count-distinct-characters-v1",
+  "title": "Count Distinct Characters",
+  "description": "Given a string, find out how many distinct characters (regardless of case) does it consist of\n    >>> count_distinct_characters('xyzXYZ')\n    3\n    >>> count_distinct_characters('Jerry')\n    4",
+  "skeleton_code": "def count_distinct_characters(string: str) -> int:\n    \"\"\" Given a string, find out how many distinct characters (regardless of case) does it consist of\n    >>> count_distinct_characters('xyzXYZ')\n    3\n    >>> count_distinct_characters('Jerry')\n    4\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        ""
+      ],
+      "expected": 0,
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        "abcde"
+      ],
+      "expected": 5,
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "aaaaAAAAaaaa"
+      ],
+      "expected": 1,
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        "Jerry jERRY JeRRRY"
+      ],
+      "expected": 5,
+      "description": "Test 4"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-16"
+  },
+  "metadata": {
+    "complexity_score": 4.76,
+    "num_test_cases": 4,
+    "function_name": "count_distinct_characters"
+  }
+}

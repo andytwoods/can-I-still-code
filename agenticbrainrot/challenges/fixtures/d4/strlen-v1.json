@@ -1,0 +1,44 @@
+{
+  "external_id": "strlen-v1",
+  "title": "Strlen",
+  "description": "Return length of given string\n    >>> strlen('')\n    0\n    >>> strlen('abc')\n    3",
+  "skeleton_code": "def strlen(string: str) -> int:\n    \"\"\" Return length of given string\n    >>> strlen('')\n    0\n    >>> strlen('abc')\n    3\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        ""
+      ],
+      "expected": 0,
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        "x"
+      ],
+      "expected": 1,
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "asdasnakj"
+      ],
+      "expected": 9,
+      "description": "Test 3"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-23"
+  },
+  "metadata": {
+    "complexity_score": 4.01,
+    "num_test_cases": 3,
+    "function_name": "strlen"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "external_id": "split-words-v1",
+  "title": "Split Words",
+  "description": "Implement the function split_words.",
+  "skeleton_code": "def split_words(txt):\n    '''\n    Given a string of words, return a list of words split on whitespace, if no whitespaces exists in the text you\n    should split on commas ',' if no commas exists you should return the number of lower-case letters with odd order in the\n    alphabet, ord('a') = 0, ord('b') = 1, ... ord('z') = 25\n    Examples\n    split_words(\"Hello world!\") \u279e [\"Hello\", \"world!\"]\n    split_words(\"Hello,world!\") \u279e [\"Hello\", \"world!\"]\n    split_words(\"abcdef\") == 3 \n    '''\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        "Hello world!"
+      ],
+      "expected": [
+        "Hello",
+        "world!"
+      ],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        "Hello,world!"
+      ],
+      "expected": [
+        "Hello",
+        "world!"
+      ],
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "Hello world,!"
+      ],
+      "expected": [
+        "Hello",
+        "world,!"
+      ],
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        "Hello,Hello,world !"
+      ],
+      "expected": [
+        "Hello,Hello,world",
+        "!"
+      ],
+      "description": "Test 4"
+    },
+    {
+      "input": [
+        "abcdef"
+      ],
+      "expected": 3,
+      "description": "Test 5"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-125"
+  },
+  "metadata": {
+    "complexity_score": 4.78,
+    "num_test_cases": 5,
+    "function_name": "split_words"
+  }
+}

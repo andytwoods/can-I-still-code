@@ -1,0 +1,102 @@
+{
+  "external_id": "total-match-v1",
+  "title": "Total Match",
+  "description": "Implement the function total_match.",
+  "skeleton_code": "def total_match(lst1, lst2):\n    '''\n    Write a function that accepts two lists of strings and returns the list that has \n    total number of chars in the all strings of the list less than the other list.\n\n    if the two lists have the same number of chars, return the first list.\n\n    Examples\n    total_match([], []) \u279e []\n    total_match(['hi', 'admin'], ['hI', 'Hi']) \u279e ['hI', 'Hi']\n    total_match(['hi', 'admin'], ['hi', 'hi', 'admin', 'project']) \u279e ['hi', 'admin']\n    total_match(['hi', 'admin'], ['hI', 'hi', 'hi']) \u279e ['hI', 'hi', 'hi']\n    total_match(['4'], ['1', '2', '3', '4', '5']) \u279e ['4']\n    '''\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [],
+        []
+      ],
+      "expected": [],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        [
+          "hi",
+          "admin"
+        ],
+        [
+          "hi",
+          "hi"
+        ]
+      ],
+      "expected": [
+        "hi",
+        "hi"
+      ],
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        [
+          "hi",
+          "admin"
+        ],
+        [
+          "hi",
+          "hi",
+          "admin",
+          "project"
+        ]
+      ],
+      "expected": [
+        "hi",
+        "admin"
+      ],
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        [
+          "4"
+        ],
+        [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+        ]
+      ],
+      "expected": [
+        "4"
+      ],
+      "description": "Test 4"
+    },
+    {
+      "input": [
+        [
+          "hi",
+          "admin"
+        ],
+        [
+          "hI",
+          "Hi"
+        ]
+      ],
+      "expected": [
+        "hI",
+        "Hi"
+      ],
+      "description": "Test 5"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-74"
+  },
+  "metadata": {
+    "complexity_score": 4.97,
+    "num_test_cases": 5,
+    "function_name": "total_match"
+  }
+}

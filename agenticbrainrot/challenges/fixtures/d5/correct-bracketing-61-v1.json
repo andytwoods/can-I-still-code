@@ -1,0 +1,51 @@
+{
+  "external_id": "correct-bracketing-61-v1",
+  "title": "Correct Bracketing",
+  "description": "brackets is a string of \"(\" and \")\".\n    return True if every opening bracket has a corresponding closing bracket.\n\n    >>> correct_bracketing(\"(\")\n    False\n    >>> correct_bracketing(\"()\")\n    True\n    >>> correct_bracketing(\"(()())\")\n    True\n    >>> correct_bracketing(\")(()\")\n    False",
+  "skeleton_code": "def correct_bracketing(brackets: str):\n    \"\"\" brackets is a string of \"(\" and \")\".\n    return True if every opening bracket has a corresponding closing bracket.\n\n    >>> correct_bracketing(\"(\")\n    False\n    >>> correct_bracketing(\"()\")\n    True\n    >>> correct_bracketing(\"(()())\")\n    True\n    >>> correct_bracketing(\")(()\")\n    False\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        "()"
+      ],
+      "expected": true,
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        "(()())"
+      ],
+      "expected": true,
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "()()(()())()"
+      ],
+      "expected": true,
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        "()()((()()())())(()()(()))"
+      ],
+      "expected": true,
+      "description": "Test 4"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-61"
+  },
+  "metadata": {
+    "complexity_score": 5.25,
+    "num_test_cases": 4,
+    "function_name": "correct_bracketing"
+  }
+}

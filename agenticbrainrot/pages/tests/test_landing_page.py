@@ -62,10 +62,11 @@ class TestLandingPage:
         # At least 1 participant and 1 session
         assert "1" in content
 
-    def test_sponsors_not_shown_when_empty(self, db):
+    def test_sponsor_placeholder_shown_when_empty(self, db):
         client = Client()
         response = client.get(reverse("home"))
-        assert b"Supported By" not in response.content
+        assert b"Your logo here" in response.content
+        assert b"Become a Sponsor" in response.content
 
     def test_sponsors_shown_when_exist(self, db):
         Sponsor.objects.create(
@@ -75,8 +76,9 @@ class TestLandingPage:
         )
         client = Client()
         response = client.get(reverse("home"))
-        assert b"Supported By" in response.content
+        assert b"Support This Research" in response.content
         assert b"Test Sponsor" in response.content
+        assert b"Your logo here" not in response.content
 
     def test_inactive_sponsors_hidden(self, db):
         Sponsor.objects.create(

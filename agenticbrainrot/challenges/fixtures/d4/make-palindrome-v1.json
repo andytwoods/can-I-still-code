@@ -1,0 +1,58 @@
+{
+  "external_id": "make-palindrome-v1",
+  "title": "Make Palindrome",
+  "description": "Test if given string is a palindrome",
+  "skeleton_code": "def is_palindrome(string: str) -> bool:\n    \"\"\" Test if given string is a palindrome \"\"\"\n    return string == string[::-1]\n\n\ndef make_palindrome(string: str) -> str:\n    \"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        ""
+      ],
+      "expected": "",
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        "x"
+      ],
+      "expected": "x",
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "xyz"
+      ],
+      "expected": "xyzyx",
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        "xyx"
+      ],
+      "expected": "xyx",
+      "description": "Test 4"
+    },
+    {
+      "input": [
+        "jerry"
+      ],
+      "expected": "jerryrrej",
+      "description": "Test 5"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-10"
+  },
+  "metadata": {
+    "complexity_score": 4.18,
+    "num_test_cases": 5,
+    "function_name": "make_palindrome"
+  }
+}

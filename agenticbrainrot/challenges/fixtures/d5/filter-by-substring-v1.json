@@ -1,0 +1,86 @@
+{
+  "external_id": "filter-by-substring-v1",
+  "title": "Filter By Substring",
+  "description": "Filter an input list of strings only for ones that contain given substring\n    >>> filter_by_substring([], 'a')\n    []\n    >>> filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')\n    ['abc', 'bacd', 'array']",
+  "skeleton_code": "def filter_by_substring(strings: List[str], substring: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that contain given substring\n    >>> filter_by_substring([], 'a')\n    []\n    >>> filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')\n    ['abc', 'bacd', 'array']\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [],
+        "john"
+      ],
+      "expected": [],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        [
+          "xxx",
+          "asd",
+          "xxy",
+          "john doe",
+          "xxxAAA",
+          "xxx"
+        ],
+        "xxx"
+      ],
+      "expected": [
+        "xxx",
+        "xxxAAA",
+        "xxx"
+      ],
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        [
+          "xxx",
+          "asd",
+          "aaaxxy",
+          "john doe",
+          "xxxAAA",
+          "xxx"
+        ],
+        "xx"
+      ],
+      "expected": [
+        "xxx",
+        "aaaxxy",
+        "xxxAAA",
+        "xxx"
+      ],
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        [
+          "grunt",
+          "trumpet",
+          "prune",
+          "gruesome"
+        ],
+        "run"
+      ],
+      "expected": [
+        "grunt",
+        "prune"
+      ],
+      "description": "Test 4"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-7"
+  },
+  "metadata": {
+    "complexity_score": 4.86,
+    "num_test_cases": 4,
+    "function_name": "filter_by_substring"
+  }
+}

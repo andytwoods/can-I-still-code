@@ -1,0 +1,45 @@
+{
+  "external_id": "centered-hexagonal-number-v1",
+  "title": "Centered Hexagonal Number",
+  "description": "Write a function to find nth centered hexagonal number.",
+  "skeleton_code": "def centered_hexagonal_number(n):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        10
+      ],
+      "expected": 271,
+      "description": "Test case 1"
+    },
+    {
+      "input": [
+        2
+      ],
+      "expected": 7,
+      "description": "Test case 2"
+    },
+    {
+      "input": [
+        9
+      ],
+      "expected": 217,
+      "description": "Test case 3"
+    }
+  ],
+  "difficulty": 1,
+  "tags": [],
+  "source": {
+    "dataset": "MBPP (Mostly Basic Programming Problems)",
+    "paper": "Austin, J., Odena, A., Nye, M., Bosma, M., Michalewski, H., Dohan, D., Jiang, E., Cai, C., Terry, M., Le, Q., & Sutton, C. (2021). Program Synthesis with Large Language Models. arXiv:2108.07732",
+    "paper_url": "https://arxiv.org/abs/2108.07732",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+    "dataset_id": "mbpp-86",
+    "dataset_split": "train"
+  },
+  "metadata": {
+    "complexity_score": 0.5,
+    "num_test_cases": 3,
+    "function_name": "centered_hexagonal_number"
+  }
+}

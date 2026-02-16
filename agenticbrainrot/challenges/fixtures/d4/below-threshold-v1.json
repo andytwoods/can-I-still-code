@@ -1,0 +1,75 @@
+{
+  "external_id": "below-threshold-v1",
+  "title": "Below Threshold",
+  "description": "Return True if all numbers in the list l are below threshold t.\n    >>> below_threshold([1, 2, 4, 10], 100)\n    True\n    >>> below_threshold([1, 20, 4, 10], 5)\n    False",
+  "skeleton_code": "def below_threshold(l: list, t: int):\n    \"\"\"Return True if all numbers in the list l are below threshold t.\n    >>> below_threshold([1, 2, 4, 10], 100)\n    True\n    >>> below_threshold([1, 20, 4, 10], 5)\n    False\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          1,
+          2,
+          4,
+          10
+        ],
+        100
+      ],
+      "expected": true,
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        [
+          1,
+          20,
+          4,
+          10
+        ],
+        21
+      ],
+      "expected": true,
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        [
+          1,
+          20,
+          4,
+          10
+        ],
+        22
+      ],
+      "expected": true,
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        [
+          1,
+          8,
+          4,
+          10
+        ],
+        11
+      ],
+      "expected": true,
+      "description": "Test 4"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-52"
+  },
+  "metadata": {
+    "complexity_score": 4.64,
+    "num_test_cases": 4,
+    "function_name": "below_threshold"
+  }
+}

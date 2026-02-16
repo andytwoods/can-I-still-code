@@ -1,0 +1,80 @@
+{
+  "external_id": "unique-digits-v1",
+  "title": "Unique Digits",
+  "description": "Given a list of positive integers x. return a sorted list of all \n    elements that hasn't any even digit.\n\n    Note: Returned list should be sorted in increasing order.\n    \n    For example:\n    >>> unique_digits([15, 33, 1422, 1])\n    [1, 15, 33]\n    >>> unique_digits([152, 323, 1422, 10])\n    []",
+  "skeleton_code": "def unique_digits(x):\n    \"\"\"Given a list of positive integers x. return a sorted list of all \n    elements that hasn't any even digit.\n\n    Note: Returned list should be sorted in increasing order.\n    \n    For example:\n    >>> unique_digits([15, 33, 1422, 1])\n    [1, 15, 33]\n    >>> unique_digits([152, 323, 1422, 10])\n    []\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          15,
+          33,
+          1422,
+          1
+        ]
+      ],
+      "expected": [
+        1,
+        15,
+        33
+      ],
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        [
+          152,
+          323,
+          1422,
+          10
+        ]
+      ],
+      "expected": [],
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        [
+          12345,
+          2033,
+          111,
+          151
+        ]
+      ],
+      "expected": [
+        111,
+        151
+      ],
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        [
+          135,
+          103,
+          31
+        ]
+      ],
+      "expected": [
+        31,
+        135
+      ],
+      "description": "Test 4"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-104"
+  },
+  "metadata": {
+    "complexity_score": 5.29,
+    "num_test_cases": 4,
+    "function_name": "unique_digits"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "external_id": "string-xor-v1",
+  "title": "String Xor",
+  "description": "Input are two strings a and b consisting only of 1s and 0s.\n    Perform binary XOR on these inputs and return result also as a string.\n    >>> string_xor('010', '110')\n    '100'",
+  "skeleton_code": "def string_xor(a: str, b: str) -> str:\n    \"\"\" Input are two strings a and b consisting only of 1s and 0s.\n    Perform binary XOR on these inputs and return result also as a string.\n    >>> string_xor('010', '110')\n    '100'\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        "111000",
+        "101010"
+      ],
+      "expected": "010010",
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        "1",
+        "1"
+      ],
+      "expected": "0",
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "0101",
+        "0000"
+      ],
+      "expected": "0101",
+      "description": "Test 3"
+    }
+  ],
+  "difficulty": 4,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-11"
+  },
+  "metadata": {
+    "complexity_score": 4.48,
+    "num_test_cases": 3,
+    "function_name": "string_xor"
+  }
+}

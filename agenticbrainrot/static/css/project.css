@@ -42,15 +42,15 @@ body {
 }
 
 .alert-debug {
-  color: black;
-  background-color: white;
-  border-color: #d6e9c6;
+  color: var(--bulma-text);
+  background-color: var(--bulma-scheme-main);
+  border-color: var(--bulma-border);
 }
 
 .alert-error {
-  color: #842029;
-  background-color: #f2dede;
-  border-color: #eed3d7;
+  color: var(--bulma-danger);
+  background-color: var(--bulma-danger-light);
+  border-color: var(--bulma-danger-light);
 }
 
 /* Accessible focus indicators */

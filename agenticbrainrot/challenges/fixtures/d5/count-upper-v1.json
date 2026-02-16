@@ -1,0 +1,58 @@
+{
+  "external_id": "count-upper-v1",
+  "title": "Count Upper",
+  "description": "Given a string s, count the number of uppercase vowels in even indices.\n    \n    For example:\n    count_upper('aBCdEf') returns 1\n    count_upper('abcdefg') returns 0\n    count_upper('dBBE') returns 0",
+  "skeleton_code": "def count_upper(s):\n    \"\"\"\n    Given a string s, count the number of uppercase vowels in even indices.\n    \n    For example:\n    count_upper('aBCdEf') returns 1\n    count_upper('abcdefg') returns 0\n    count_upper('dBBE') returns 0\n    \"\"\"\"\"\"\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        "aBCdEf"
+      ],
+      "expected": 1,
+      "description": "Test 1"
+    },
+    {
+      "input": [
+        "abcdefg"
+      ],
+      "expected": 0,
+      "description": "Test 2"
+    },
+    {
+      "input": [
+        "dBBE"
+      ],
+      "expected": 0,
+      "description": "Test 3"
+    },
+    {
+      "input": [
+        "B"
+      ],
+      "expected": 0,
+      "description": "Test 4"
+    },
+    {
+      "input": [
+        "U"
+      ],
+      "expected": 1,
+      "description": "Test 5"
+    }
+  ],
+  "difficulty": 5,
+  "tags": [],
+  "source": {
+    "dataset": "HumanEval",
+    "paper": "Chen, M., Tworek, J., Jun, H., Yuan, Q., Pinto, H.P.O., Kaplan, J., Edwards, H., Burda, Y., Joseph, N., Brockman, G., et al. (2021). Evaluating Large Language Models Trained on Code. arXiv:2107.03374",
+    "paper_url": "https://arxiv.org/abs/2107.03374",
+    "license": "MIT",
+    "repository": "https://github.com/openai/human-eval",
+    "dataset_id": "humaneval-98"
+  },
+  "metadata": {
+    "complexity_score": 5.4,
+    "num_test_cases": 5,
+    "function_name": "count_upper"
+  }
+}

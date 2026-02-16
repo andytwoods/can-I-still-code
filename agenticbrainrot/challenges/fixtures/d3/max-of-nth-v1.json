@@ -1,0 +1,96 @@
+{
+  "external_id": "max-of-nth-v1",
+  "title": "Max Of Nth",
+  "description": "Write a function to find the maximum of nth column from the given tuple list.",
+  "skeleton_code": "def max_of_nth(test_list, N):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          [
+            5,
+            6,
+            7
+          ],
+          [
+            1,
+            3,
+            5
+          ],
+          [
+            8,
+            9,
+            19
+          ]
+        ],
+        2
+      ],
+      "expected": 19,
+      "description": "Test case 1"
+    },
+    {
+      "input": [
+        [
+          [
+            6,
+            7,
+            8
+          ],
+          [
+            2,
+            4,
+            6
+          ],
+          [
+            9,
+            10,
+            20
+          ]
+        ],
+        1
+      ],
+      "expected": 10,
+      "description": "Test case 2"
+    },
+    {
+      "input": [
+        [
+          [
+            7,
+            8,
+            9
+          ],
+          [
+            3,
+            5,
+            7
+          ],
+          [
+            10,
+            11,
+            21
+          ]
+        ],
+        1
+      ],
+      "expected": 11,
+      "description": "Test case 3"
+    }
+  ],
+  "difficulty": 3,
+  "tags": [],
+  "source": {
+    "dataset": "MBPP (Mostly Basic Programming Problems)",
+    "paper": "Austin, J., Odena, A., Nye, M., Bosma, M., Michalewski, H., Dohan, D., Jiang, E., Cai, C., Terry, M., Le, Q., & Sutton, C. (2021). Program Synthesis with Large Language Models. arXiv:2108.07732",
+    "paper_url": "https://arxiv.org/abs/2108.07732",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+    "dataset_id": "mbpp-611",
+    "dataset_split": "test"
+  },
+  "metadata": {
+    "complexity_score": 0.75,
+    "num_test_cases": 3,
+    "function_name": "max_of_nth"
+  }
+}

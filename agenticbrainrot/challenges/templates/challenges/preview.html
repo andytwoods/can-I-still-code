@@ -3,6 +3,13 @@
 
 {% block title %}Staff Preview — {{ challenge.title }}{% endblock title %}
 
+{% block extra_css %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/solarized.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/lint/lint.min.css" />
+{% endblock extra_css %}
+
 {% block content %}
 <nav class="breadcrumb" aria-label="breadcrumbs">
   <ul>
@@ -20,75 +27,46 @@
   <strong>Staff Preview Mode:</strong> This page allows you to test the editor. No data will be saved to the database.
 </div>
 
-<div class="columns">
-  <div class="column is-12">
-    <div id="pyodide-status" class="notification is-info is-light">
-      Loading Python environment...
-    </div>
-
-    <div class="box">
-      <h2 class="title is-4">{{ challenge.title }}</h2>
-      <div class="content">
-        {{ challenge.description|linebreaksbr }}
-      </div>
-    </div>
-
-    <div id="code-editor-toolbar" class="field is-grouped mb-0 p-2 is-dark" style="background-color: var(--bulma-scheme-main-ter); border: 1px solid var(--bulma-border); border-bottom: none; border-top-left-radius: 4px; border-top-right-radius: 4px;">
-      <div class="control">
-        <div class="select is-small">
-          <select id="theme-select" title="Change editor theme">
-            <option value="default">Default Theme</option>
-            <option value="dark">Dark Theme</option>
-            <option value="light">Light Theme</option>
-            <option value="dracula">Dracula</option>
-            <option value="solarized-light">Solarized Light</option>
-            <option value="solarized-dark">Solarized Dark</option>
-          </select>
-        </div>
-      </div>
-      <div class="control">
-        <span class="is-size-7 has-text-grey">Python 3.x</span>
-      </div>
-    </div>
-    <div id="code-editor" data-skeleton="{{ challenge.skeleton_code }}"></div>
-
-    <div class="buttons mt-3">
-      <button id="run-btn" class="button is-info" type="button" disabled>
-        Run Code
-      </button>
-      <button id="preview-submit-btn" class="button is-primary" type="button" disabled>
-        Test Tests
-      </button>
-    </div>
-
-    <div id="output" class="box mt-3" style="min-height: 50px; max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 0.85em;">
-    </div>
-
-    <div id="test-results" class="mt-3"></div>
-  </div>
+<div id="preview-container">
+  {% include "challenges/partials/_preview_content.html" %}
 </div>
-
-<!-- Test cases data for JS -->
-<script id="test-cases-data" type="application/json">{{ test_cases_json|safe }}</script>
-<input type="hidden" id="pyodide-load-ms" value="">
-<input type="hidden" id="editor-ready" value="">
-<input type="hidden" id="tests-passed" value="">
-<input type="hidden" id="tests-total" value="">
-<input type="hidden" id="attempt-uuid" value="preview">
 {% endif %}
 {% endblock content %}
 
 {% block extra_js %}
-  <script defer src="{% static 'js/code-editor.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/lint/lint.min.js"></script>
+  <script src="{% static 'js/code-editor.js' %}"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const submitBtn = document.getElementById('preview-submit-btn');
+    function bindPreviewControls() {
+        // Wire "Test Tests" button to just run code
+        var submitBtn = document.getElementById('preview-submit-btn');
         if (submitBtn) {
-            submitBtn.addEventListener('click', () => {
-                // In preview mode, we just run the code and show results without POSTing
-                const runBtn = document.getElementById('run-btn');
+            submitBtn.onclick = function () {
+                var runBtn = document.getElementById('run-btn');
                 if (runBtn) runBtn.click();
-            });
+            };
+        }
+        // Wire dropdown to navigate via HTMX
+        var sel = document.getElementById('challenge-select');
+        if (sel) {
+            sel.onchange = function () {
+                if (sel.value) {
+                    htmx.ajax('GET', sel.value, {
+                        target: '#preview-container',
+                        swap: 'innerHTML',
+                        pushUrl: true
+                    });
+                }
+            };
+        }
+    }
+    document.addEventListener('DOMContentLoaded', bindPreviewControls);
+    document.addEventListener('htmx:afterSwap', function (e) {
+        if (e.detail.target && e.detail.target.id === 'preview-container') {
+            bindPreviewControls();
+            htmx.process(e.detail.target);
         }
     });
   </script>
