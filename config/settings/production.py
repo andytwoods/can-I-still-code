@@ -95,13 +95,6 @@ ADMIN_URL = env("DJANGO_ADMIN_URL")
 # ROLLBAR
 # ------------------------------------------------------------------------------
 MIDDLEWARE += ["rollbar.contrib.django.middleware.RollbarNotifierMiddleware"]  # noqa: F405
-ROLLBAR = {
-    "access_token": env("ROLLBAR_ACCESS_TOKEN"),
-    "environment": env("ROLLBAR_ENVIRONMENT", default="production"),
-    "root": str(BASE_DIR),
-    "branch": "master",
-}
-
 
 ROLLBAR_ENABLED = env.bool("ROLLBAR_ENABLED", default=True)
 if ROLLBAR_ENABLED:
@@ -112,7 +105,7 @@ if ROLLBAR_ENABLED:
     else:
         # Minimal-PII Rollbar configuration
         ROLLBAR = {
-            "access_token": env("ROLLBAR_SERVER_TOKEN"),
+            "access_token": env("ROLLBAR_ACCESS_TOKEN"),
             "environment": "production",
             "root": str(BASE_DIR),
             # Only send user id (no email/username)
