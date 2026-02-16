@@ -44,7 +44,7 @@ RUN DJANGO_SECRET_KEY=build-placeholder \
     ROLLBAR_ACCESS_TOKEN=placeholder \
     python manage.py collectstatic --noinput
 
-EXPOSE 8000
+EXPOSE 8018
 
 # Make run.sh executable
 RUN chmod +x /app/run.sh
