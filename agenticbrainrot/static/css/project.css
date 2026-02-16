@@ -82,3 +82,97 @@ textarea:focus-visible,
 [data-theme="dark"] .heading {
   color: var(--bulma-text-weak, #b5b5b5);
 }
+
+/* Dark mode: cards, boxes, inputs, and form elements */
+[data-theme="dark"] .card,
+[data-theme="dark"] .box {
+  background-color: var(--bulma-scheme-main-bis, #1f2229);
+  color: var(--bulma-text, #f5f5f5);
+}
+
+[data-theme="dark"] .card-content .title,
+[data-theme="dark"] .card-content .subtitle,
+[data-theme="dark"] .box .title,
+[data-theme="dark"] .box .subtitle {
+  color: var(--bulma-text-strong, #fff);
+}
+
+[data-theme="dark"] .input,
+[data-theme="dark"] .textarea,
+[data-theme="dark"] .select select {
+  background-color: var(--bulma-scheme-main-ter, #292d36);
+  color: var(--bulma-text, #f5f5f5);
+  border-color: var(--bulma-border, #4a4a4a);
+}
+
+[data-theme="dark"] .input::placeholder,
+[data-theme="dark"] .textarea::placeholder {
+  color: var(--bulma-text-weak, #7a7a7a);
+}
+
+[data-theme="dark"] .label {
+  color: var(--bulma-text-strong, #f5f5f5);
+}
+
+[data-theme="dark"] .help {
+  color: var(--bulma-text-weak, #b5b5b5);
+}
+
+[data-theme="dark"] .notification {
+  color: var(--bulma-text, #f5f5f5);
+}
+
+[data-theme="dark"] .table {
+  background-color: var(--bulma-scheme-main-bis, #1f2229);
+  color: var(--bulma-text, #f5f5f5);
+}
+
+[data-theme="dark"] .table th {
+  color: var(--bulma-text-strong, #fff);
+}
+
+[data-theme="dark"] .table td,
+[data-theme="dark"] .table th {
+  border-color: var(--bulma-border, #4a4a4a);
+}
+
+[data-theme="dark"] .table.is-striped tbody tr:nth-child(even) {
+  background-color: var(--bulma-scheme-main-ter, #292d36);
+}
+
+[data-theme="dark"] .table.is-hoverable tbody tr:hover {
+  background-color: var(--bulma-scheme-main-ter, #292d36);
+}
+
+/* Dark mode: navbar */
+[data-theme="dark"] .navbar {
+  background-color: var(--bulma-scheme-main-bis, #1f2229);
+}
+
+[data-theme="dark"] .navbar-item,
+[data-theme="dark"] .navbar-link {
+  color: var(--bulma-text, #f5f5f5);
+}
+
+[data-theme="dark"] .navbar-dropdown {
+  background-color: var(--bulma-scheme-main-bis, #1f2229);
+  border-color: var(--bulma-border, #4a4a4a);
+}
+
+/* Dark mode: footer */
+[data-theme="dark"] .footer {
+  background-color: var(--bulma-scheme-main-bis, #1f2229);
+  color: var(--bulma-text, #f5f5f5);
+}
+
+/* Dark mode: checkbox/radio labels */
+[data-theme="dark"] .checkbox,
+[data-theme="dark"] .radio {
+  color: var(--bulma-text, #f5f5f5);
+}
+
+/* Dark mode: tags */
+[data-theme="dark"] .tag.is-light {
+  background-color: var(--bulma-scheme-main-ter, #292d36);
+  color: var(--bulma-text, #f5f5f5);
+}
