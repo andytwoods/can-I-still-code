@@ -14,4 +14,9 @@ urlpatterns = [
         views.session_view,
         name="session_view",
     ),
+    path(
+        "sessions/mock/",
+        views.mock_session_start,
+        name="mock_session_start",
+    ),
 ]

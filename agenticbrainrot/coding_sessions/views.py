@@ -2,6 +2,7 @@ import json
 import uuid
 
 from django.conf import settings
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponse
@@ -20,6 +21,7 @@ from agenticbrainrot.surveys.forms import build_survey_form
 from agenticbrainrot.surveys.models import SurveyQuestion
 from agenticbrainrot.surveys.models import SurveyResponse
 
+from .forms import MockSessionStartForm
 from .forms import SessionStartForm
 from .models import CodeSession
 from .models import CodeSessionChallenge
@@ -78,6 +80,7 @@ def _check_28_day_rule(participant):
         CodeSession.objects.filter(
             participant=participant,
             status=CodeSession.Status.COMPLETED,
+            is_mock=False,
         )
         .order_by("-completed_at")
         .first()
@@ -563,4 +566,95 @@ def _save_survey_responses(
             value=value,
             session=session,
             challenge_attempt=challenge_attempt,
+        )
+
+
+@staff_member_required
+def mock_session_start(request):
+    """
+    Staff-only view to start a mock session that reuses the full
+    participant session flow. Bypasses eligibility and cooldown checks.
+    Data is flagged as mock (is_mock=True).
+    """
+    if request.method == "POST":
+        form = MockSessionStartForm(request.POST)
+        if form.is_valid():
+            return _create_mock_session(request, form)
+    else:
+        form = MockSessionStartForm()
+
+    return render(
+        request,
+        "coding_sessions/mock_session_start.html",
+        {"form": form},
+    )
+
+
+def _create_mock_session(request, form):
+    """Create a mock session for a staff member."""
+    try:
+        with transaction.atomic():
+            # Get-or-create a Participant record for this staff user
+            participant, _created = Participant.objects.get_or_create(
+                user=request.user,
+                defaults={
+                    "has_active_consent": True,
+                    "profile_completed": True,
+                },
+            )
+
+            # Ensure consent/profile flags are set so session_view doesn't redirect
+            if not participant.has_active_consent or not participant.profile_completed:
+                participant.has_active_consent = True
+                participant.profile_completed = True
+                participant.save(
+                    update_fields=["has_active_consent", "profile_completed"],
+                )
+
+            # Abandon any existing in-progress mock sessions for this user
+            in_progress_mocks = CodeSession.objects.filter(
+                participant=participant,
+                status=CodeSession.Status.IN_PROGRESS,
+                is_mock=True,
+            )
+            now = timezone.now()
+            for session in in_progress_mocks:
+                session.status = CodeSession.Status.ABANDONED
+                session.abandoned_at = now
+                session.save(update_fields=["status", "abandoned_at"])
+
+            # Select challenges
+            challenges = select_challenges_for_session(participant)
+
+            # Create mock session
+            session = CodeSession.objects.create(
+                participant=participant,
+                device_type=form.cleaned_data["device_type"],
+                is_mock=True,
+            )
+
+            # Create CodeSessionChallenge rows
+            for i, challenge in enumerate(challenges):
+                CodeSessionChallenge.objects.create(
+                    session=session,
+                    challenge=challenge,
+                    position=i,
+                )
+
+            log_audit_event(
+                "mock_session_started",
+                participant=participant,
+                actor=request.user,
+                session_id=session.pk,
+            )
+
+        return redirect(
+            "coding_sessions:session_view",
+            session_id=session.pk,
+        )
+    except PoolExhaustedError:
+        return render(
+            request,
+            "coding_sessions/session_blocked.html",
+            {"reason": "no_challenges"},
         )

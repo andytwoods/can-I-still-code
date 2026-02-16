@@ -89,6 +89,7 @@ class AuditEvent(models.Model):
         SESSION_STARTED = "session_started", "Session started"
         SESSION_COMPLETED = "session_completed", "Session completed"
         SESSION_ABANDONED = "session_abandoned", "Session abandoned"
+        MOCK_SESSION_STARTED = "mock_session_started", "Mock session started"
         DATASET_EXPORT_RUN = "dataset_export_run", "Dataset export run"
         PROFILE_COMPLETED = "profile_completed", "Profile completed"
         WITHDRAWAL = "withdrawal", "Withdrawal"

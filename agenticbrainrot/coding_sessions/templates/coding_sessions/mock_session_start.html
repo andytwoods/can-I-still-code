@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block title %}Mock Session — AgenticBrainrot{% endblock title %}
+
+{% block content %}
+<div class="columns is-centered">
+  <div class="column is-8">
+    <h1 class="title">Start a Mock Session</h1>
+
+    <div class="notification is-info">
+      <strong>Staff Only:</strong> This mimics the full participant experience.
+      Data is flagged as mock and excluded from analysis.
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="field mt-4">
+        <div class="control">
+          <button type="submit" class="button is-primary is-medium">
+            Start Mock Session
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

@@ -90,12 +90,14 @@ PROFILE_QUESTIONS = [
     },
     {
         "text": "How would you rate your Python proficiency?",
-        "question_type": "scale",
-        "scale_min": 1,
-        "scale_max": 5,
-        "min_label": "Beginner",
-        "mid_label": "Intermediate",
-        "max_label": "Expert",
+        "question_type": "single_choice",
+        "choices": [
+            ["beginner", "Beginner"],
+            ["somewhat_beginner", "Somewhat beginner"],
+            ["intermediate", "Intermediate"],
+            ["advanced", "Advanced"],
+            ["expert", "Expert"],
+        ],
         "context": "profile",
         "category": "Programming Experience",
         "is_required": True,
@@ -200,15 +202,15 @@ PROFILE_QUESTIONS = [
         "display_order": 23,
     },
     {
-        "text": (
-            "How much do you rely on AI tools when coding?"
-        ),
-        "question_type": "scale",
-        "scale_min": 1,
-        "scale_max": 5,
-        "min_label": "Not at all",
-        "mid_label": "Moderately",
-        "max_label": "Heavily",
+        "text": ("How much do you rely on AI tools when coding?"),
+        "question_type": "single_choice",
+        "choices": [
+            ["not_at_all", "Not at all"],
+            ["slightly", "Slightly"],
+            ["moderately", "Moderately"],
+            ["very", "Very"],
+            ["heavily", "Heavily"],
+        ],
         "context": "profile",
         "category": "AI Tool Usage",
         "is_required": True,
@@ -216,9 +218,7 @@ PROFILE_QUESTIONS = [
     },
     # === Problem Solving ===
     {
-        "text": (
-            "When stuck on a coding problem, what do you typically do first?"
-        ),
+        "text": ("When stuck on a coding problem, what do you typically do first?"),
         "question_type": "single_choice",
         "choices": [
             ["search_docs", "Search documentation"],
@@ -235,15 +235,16 @@ PROFILE_QUESTIONS = [
     },
     {
         "text": (
-            "How confident are you in solving programming "
-            "problems without any external help?"
+            "How confident are you in solving programming " "problems without any external help?"
         ),
-        "question_type": "scale",
-        "scale_min": 1,
-        "scale_max": 5,
-        "min_label": "Not confident",
-        "mid_label": "Somewhat confident",
-        "max_label": "Very confident",
+        "question_type": "single_choice",
+        "choices": [
+            ["not_at_all_confident", "Not at all confident"],
+            ["not_confident", "Not confident"],
+            ["neutral", "Neutral / undecided"],
+            ["confident", "Confident"],
+            ["very_confident", "Very confident"],
+        ],
         "context": "profile",
         "category": "Problem Solving",
         "is_required": True,
@@ -251,8 +252,7 @@ PROFILE_QUESTIONS = [
     },
     {
         "text": (
-            "How often do you review and understand AI-generated code "
-            "before using it?"
+            "How often do you review and understand AI-generated code " "before using it?"
         ),
         "question_type": "single_choice",
         "choices": [
@@ -287,15 +287,16 @@ PROFILE_QUESTIONS = [
     },
     {
         "text": (
-            "Do you believe that heavy use of AI coding tools "
-            "could negatively affect programming skills?"
+            "Do you believe that heavy use of AI coding tools " "could negatively affect programming skills?"
         ),
-        "question_type": "scale",
-        "scale_min": 1,
-        "scale_max": 5,
-        "min_label": "Strongly disagree",
-        "mid_label": "Neutral",
-        "max_label": "Strongly agree",
+        "question_type": "single_choice",
+        "choices": [
+            ["strongly_disagree", "Strongly disagree"],
+            ["disagree", "Disagree"],
+            ["neutral", "Neutral / undecided"],
+            ["agree", "Agree"],
+            ["strongly_agree", "Strongly agree"],
+        ],
         "context": "profile",
         "category": "Study Motivation",
         "is_required": True,
@@ -320,8 +321,7 @@ PROFILE_QUESTIONS = [
     },
     {
         "text": (
-            "When writing code, how often do you plan your "
-            "approach before starting to type?"
+            "When writing code, how often do you plan your " "approach before starting to type?"
         ),
         "question_type": "single_choice",
         "choices": [
@@ -355,15 +355,15 @@ PROFILE_QUESTIONS = [
     },
     {
         "text": (
-            "How comfortable are you reading and understanding "
-            "code written by others?"
-        ),
-        "question_type": "scale",
-        "scale_min": 1,
-        "scale_max": 5,
-        "min_label": "Not comfortable",
-        "mid_label": "Somewhat comfortable",
-        "max_label": "Very comfortable",
+            "How comfortable are you reading and understanding " "code written by others?"),
+        "question_type": "single_choice",
+        "choices": [
+            ["not_at_all_comfortable", "Not at all comfortable"],
+            ["not_comfortable", "Not comfortable"],
+            ["undecided", "Undecided"],
+            ["comfortable", "Comfortable"],
+            ["very_comfortable", "Very comfortable"],
+        ],
         "context": "profile",
         "category": "Coding Habits",
         "is_required": True,
@@ -371,12 +371,14 @@ PROFILE_QUESTIONS = [
     },
     {
         "text": "How comfortable are you with debugging code?",
-        "question_type": "scale",
-        "scale_min": 1,
-        "scale_max": 5,
-        "min_label": "Not comfortable",
-        "mid_label": "Somewhat comfortable",
-        "max_label": "Very comfortable",
+        "question_type": "single_choice",
+        "choices": [
+            ["not_at_all_comfortable", "Not at all comfortable"],
+            ["not_comfortable", "Not comfortable"],
+            ["undecided", "Undecided"],
+            ["comfortable", "Comfortable"],
+            ["very_comfortable", "Very comfortable"],
+        ],
         "context": "profile",
         "category": "Coding Habits",
         "is_required": True,
@@ -388,12 +390,14 @@ PROFILE_QUESTIONS = [
 POST_CHALLENGE_QUESTIONS = [
     {
         "text": "How difficult did you find this challenge?",
-        "question_type": "scale",
-        "scale_min": 1,
-        "scale_max": 5,
-        "min_label": "Very easy",
-        "mid_label": "Moderate",
-        "max_label": "Very difficult",
+        "question_type": "single_choice",
+        "choices": [
+            ["very_easy", "Very easy"],
+            ["easy", "Easy"],
+            ["moderate", "Moderate"],
+            ["difficult", "Difficult"],
+            ["very_difficult", "Very difficult"],
+        ],
         "context": "post_challenge",
         "category": "Challenge Reflection",
         "is_required": True,
@@ -401,43 +405,24 @@ POST_CHALLENGE_QUESTIONS = [
     },
     {
         "text": "How confident are you in your solution?",
-        "question_type": "scale",
-        "scale_min": 1,
-        "scale_max": 5,
-        "min_label": "Not confident",
-        "mid_label": "Somewhat confident",
-        "max_label": "Very confident",
+        "question_type": "single_choice",
+        "choices": [
+            ["not_at_all_confident", "Not at all confident"],
+            ["not_confident", "Not confident"],
+            ["neutral", "Neutral / undecided"],
+            ["confident", "Confident"],
+            ["very_confident", "Very confident"],
+        ],
         "context": "post_challenge",
         "category": "Challenge Reflection",
         "is_required": True,
         "display_order": 2,
     },
-    {
-        "text": (
-            "If you could have used an AI assistant, "
-            "would it have helped with this challenge?"
-        ),
-        "question_type": "single_choice",
-        "choices": [
-            ["definitely", "Definitely yes"],
-            ["probably", "Probably yes"],
-            ["not_sure", "Not sure"],
-            ["probably_not", "Probably not"],
-            ["definitely_not", "Definitely not"],
-        ],
-        "context": "post_challenge",
-        "category": "Challenge Reflection",
-        "is_required": True,
-        "display_order": 3,
-    },
 ]
 
 POST_SESSION_QUESTIONS = [
     {
-        "text": (
-            "Since your last session, has your use of AI coding "
-            "tools changed?"
-        ),
+        "text": ("Since your last session, has your use of AI coding " "tools changed?"),
         "question_type": "single_choice",
         "choices": [
             ["increased", "Increased"],
@@ -453,36 +438,65 @@ POST_SESSION_QUESTIONS = [
         "display_order": 1,
     },
     {
-        "text": (
-            "How would you rate your overall coding confidence "
-            "right now?"
-        ),
-        "question_type": "scale",
-        "scale_min": 1,
-        "scale_max": 5,
-        "min_label": "Very low",
-        "mid_label": "Moderate",
-        "max_label": "Very high",
+        "text": ("How would you rate your overall coding confidence " "right now?"),
+        "question_type": "single_choice",
+        "choices": [
+            ["very_low", "Very low"],
+            ["low", "Low"],
+            ["moderate", "Moderate"],
+            ["high", "High"],
+            ["very_high", "Very high"],
+        ],
         "context": "post_session",
         "category": "Session Habits",
         "is_required": True,
         "display_order": 2,
     },
     {
-        "text": (
-            "How did you find the difficulty of the challenges "
-            "in this session overall?"
-        ),
-        "question_type": "scale",
-        "scale_min": 1,
-        "scale_max": 5,
-        "min_label": "Too easy",
-        "mid_label": "About right",
-        "max_label": "Too difficult",
+        "text": ("How did you find the difficulty of the challenges " "in this session overall?"),
+        "question_type": "single_choice",
+        "choices": [
+            ["much_too_easy", "Much too easy"],
+            ["too_easy", "Too easy"],
+            ["about_right", "About right"],
+            ["too_difficult", "Too difficult"],
+            ["much_too_difficult", "Much too difficult"],
+        ],
         "context": "post_session",
         "category": "Session Habits",
         "is_required": True,
         "display_order": 3,
+    },
+    {
+        "text": "How much do you trust code generated by AI?",
+        "question_type": "scale",
+        "scale_min": 1,
+        "scale_max": 5,
+        "min_label": "Not at all",
+        "mid_label": "Undecided",
+        "max_label": "Very much so",
+        "choices": [
+            ["1", "Not at all"],
+            ["2", "Not really"],
+            ["3", "Undecided"],
+            ["4", "Somewhat"],
+            ["5", "Very much so"],
+        ],
+        "context": "post_session",
+        "category": "AI Trust",
+        "is_required": True,
+        "display_order": 4,
+    },
+    {
+        "text": (
+            "Can you estimate what percentage of the code you "
+            "generate with AI you check over?"
+        ),
+        "question_type": "number",
+        "context": "post_session",
+        "category": "AI Trust",
+        "is_required": True,
+        "display_order": 5,
     },
     {
         "text": "Any comments about this session?",
@@ -490,7 +504,7 @@ POST_SESSION_QUESTIONS = [
         "context": "post_session",
         "category": "Session Habits",
         "is_required": False,
-        "display_order": 4,
+        "display_order": 6,
     },
 ]
 
@@ -499,11 +513,7 @@ class Command(BaseCommand):
     help = "Seed default survey questions (idempotent)."
 
     def handle(self, *args, **options):
-        all_questions = (
-            PROFILE_QUESTIONS
-            + POST_CHALLENGE_QUESTIONS
-            + POST_SESSION_QUESTIONS
-        )
+        all_questions = PROFILE_QUESTIONS + POST_CHALLENGE_QUESTIONS + POST_SESSION_QUESTIONS
         created_count = 0
         skipped_count = 0
 
@@ -533,7 +543,6 @@ class Command(BaseCommand):
 
         self.stdout.write(
             self.style.SUCCESS(
-                f"Done. Created: {created_count}, "
-                f"Skipped (already exist): {skipped_count}",
+                f"Done. Created: {created_count}, " f"Skipped (already exist): {skipped_count}",
             ),
         )

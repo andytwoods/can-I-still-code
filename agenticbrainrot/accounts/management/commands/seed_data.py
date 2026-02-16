@@ -126,9 +126,7 @@ class Command(BaseCommand):
             ("experience_years", "profile", "number",
              "Years of programming experience?"),
             ("vibe_coding_pct", "post_session", "number",
-             "What % of coding do you do with AI?"),
-            ("confidence", "post_challenge", "scale",
-             "How confident are you in your solution?"),
+             "Can you estimate what % of coding do you do purely with AI?"),
         ]
         for cat, ctx, qtype, text in q_data:
             q, _ = SurveyQuestion.objects.get_or_create(
@@ -141,6 +139,15 @@ class Command(BaseCommand):
                 },
             )
             questions[cat] = q
+
+        # Reference the canonical confidence question from seed_survey_questions
+        confidence_q = SurveyQuestion.objects.filter(
+            context="post_challenge",
+            text="How confident are you in your solution?",
+        ).first()
+        if confidence_q:
+            questions["confidence"] = confidence_q
+
         return questions
 
     def _create_participants(self, consent_doc):

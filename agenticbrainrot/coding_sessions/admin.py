@@ -15,12 +15,13 @@ class CodeSessionAdmin(admin.ModelAdmin):
         "pk",
         "participant",
         "status",
+        "is_mock",
         "started_at",
         "completed_at",
         "abandoned_at",
         "challenges_attempted",
     ]
-    list_filter = ["status"]
+    list_filter = ["status", "is_mock"]
     search_fields = ["participant__user__email"]
     inlines = [CodeSessionChallengeInline]
     readonly_fields = ["started_at"]

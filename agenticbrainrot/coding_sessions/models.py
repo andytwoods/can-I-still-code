@@ -48,6 +48,7 @@ class CodeSession(models.Model):
     )
     pyodide_load_ms = models.PositiveIntegerField(null=True, blank=True)
     editor_ready = models.BooleanField(default=False)
+    is_mock = models.BooleanField(default=False)
     challenges = models.ManyToManyField(
         "challenges.Challenge",
         through="CodeSessionChallenge",

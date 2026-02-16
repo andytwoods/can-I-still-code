@@ -18,3 +18,13 @@ class SessionStartForm(forms.Form):
         ),
         required=True,
     )
+
+
+class MockSessionStartForm(forms.Form):
+    """Simplified form for staff mock sessions (no acknowledgement needed)."""
+
+    device_type = forms.ChoiceField(
+        choices=CodeSession.DeviceType.choices,
+        widget=forms.RadioSelect,
+        label="What device are you using?",
+    )

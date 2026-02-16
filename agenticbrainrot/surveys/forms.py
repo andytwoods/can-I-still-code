@@ -52,7 +52,7 @@ def build_survey_form(questions_qs):
 
         elif q.question_type == "number":
             fields[field_name] = forms.IntegerField(
-                widget=forms.NumberInput(attrs={"class": "input"}),
+                widget=forms.NumberInput(attrs={"class": "input", "style": "width: 50px;"}),
                 **common,
             )
 
