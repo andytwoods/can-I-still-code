@@ -45,3 +45,8 @@ RUN DJANGO_SECRET_KEY=build-placeholder \
     python manage.py collectstatic --noinput
 
 EXPOSE 8000
+
+# Make run.sh executable
+RUN chmod +x /app/run.sh
+
+CMD ["/app/run.sh"]

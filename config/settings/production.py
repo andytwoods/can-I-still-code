@@ -180,3 +180,21 @@ HUEY = {
     "url": REDIS_URL,
     "immediate": False,
 }
+
+# CSP
+# ------------------------------------------------------------------------------
+# Allow Appliku health checks and other necessary domains
+if "CONTENT_SECURITY_POLICY" not in locals():
+    CONTENT_SECURITY_POLICY = {
+        "DIRECTIVES": {
+            "default-src": ["'self'"],
+            "script-src": ["'self'", "https://unpkg.com", "https://cdn.jsdelivr.net"],
+            "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+            "img-src": ["'self'", "data:"],
+            "font-src": ["'self'", "https://cdn.jsdelivr.net"],
+            "connect-src": ["'self'"],
+            "frame-ancestors": ["'none'"],
+        },
+    }
+
+CONTENT_SECURITY_POLICY["DIRECTIVES"]["connect-src"].append("https://agenticbrainrot.applikuapp.com")
