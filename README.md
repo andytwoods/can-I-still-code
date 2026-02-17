@@ -1,48 +1,117 @@
-# AgenticBrainrot
+# AgenticBrainrot: Coding Skill Longitudinal Assessment
 
-Behold My Awesome Project!
+AgenticBrainrot is a longitudinal, citizen-science research tool designed to measure whether **vibe coding** (AI-assisted coding) leads to coding skill degradation over time. 
 
-[![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+Participants periodically complete short Python coding challenges while self-reporting their coding habits. The resulting dataset supports **Bayesian multilevel regression** modelling and invites the broader community to contribute analyses.
 
-## Settings
+## 🚀 Quick Start (Local Development)
 
-Moved to [settings](https://cookiecutter-django.readthedocs.io/en/latest/1-getting-started/settings.html).
+This project uses `uv` for dependency management.
 
-## Basic Commands
+### 1. Prerequisites
+- Python 3.14
+- `uv` installed ([get uv](https://github.com/astral-sh/uv))
+- Redis (for Huey background tasks)
 
-### Setting Up Your Users
+### 2. Installation
+Clone the repository and install dependencies:
+```bash
+uv sync
+```
 
-- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+### 3. Local Setup
+Run the one-shot setup command to create a superuser, seed challenges, and survey questions:
+```bash
+uv run python manage.py setup_app
+```
+*Note the generated superuser credentials in your terminal.*
 
-- To create a **superuser account**, use this command:
+### 4. Run the Application
+Start the development server:
+```bash
+uv run python manage.py runserver
+```
+Visit `http://127.0.0.1:8000/` to get started.
 
-      uv run python manage.py createsuperuser
+### 5. Start Background Tasks (Huey)
+In a separate terminal, start the Huey worker:
+```bash
+uv run python manage.py run_huey
+```
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+---
 
-### Type checks
+## 🛠 Tech Stack
 
-Running type checks with mypy:
+- **Backend:** Django (Python 3.14)
+- **Frontend:** Bulma (CSS), HTMX (Partial updates), Vanilla JS (Pyodide integration)
+- **Database:** SQLite (local), PostgreSQL (production)
+- **Execution Engine:** Pyodide (WASM) for in-browser Python execution
+- **Background Tasks:** Huey (Redis-backed)
+- **Authentication:** django-allauth (Google/GitHub social login required in production)
+- **Styling:** Bulma via `django-bulma` and `crispy-bulma`
 
-    uv run mypy agenticbrainrot
+---
 
-### Test coverage
+## 🏗 Core Architecture
 
-To run the tests, check your test coverage, and generate an HTML coverage report:
+### 1. Longitudinal Assessment
+- **Minimum 28 days between sessions** enforced server-side.
+- **Up to 10 challenges per session**, presented in ascending difficulty.
+- **In-browser execution:** Pyodide runs code client-side, results sent to server.
 
-    uv run coverage run -m pytest
-    uv run coverage html
-    uv run open htmlcov/index.html
+### 2. Unified Question System
+A flexible model for profile intake, post-challenge reflections, and post-session habit surveys. All managed via the Django admin.
 
-#### Running tests with pytest
+### 3. Citizen Science & Open Data
+- Participants own their data and see rich trend visualizations.
+- Fully anonymized dataset released quarterly (after a 12-month embargo).
+- Built-in data export pipeline for researchers.
 
-    uv run pytest
+---
 
-### Live reloading and Sass CSS compilation
+## 🧪 Testing & Quality
 
-Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/2-local-development/developing-locally.html#using-webpack-or-gulp).
+### Run Tests
+```bash
+uv run pytest
+```
 
-## Deployment
+### Type Checking
+```bash
+uv run mypy agenticbrainrot
+```
 
-The following details how to deploy this application.
+### Linting (Ruff)
+```bash
+uv run ruff check .
+```
+
+---
+
+## 📜 Development Guidelines
+
+- **Exception Handling:** Never use catch-all `except:`. Catch the most specific exception.
+- **HTMX:** Use for dynamic partial updates. HTMX requests hit the same URL as full pages (View detects `HX-Request`).
+- **Templates:** App-local templates only (e.g., `app/templates/app/`). Partials in `partials/` prefixed with `_`.
+- **Background Tasks:** Business logic lives in `helpers/task_helpers.py`, task decorators in `tasks.py`.
+- **Scientific Integrity:** Never edit a challenge fixture directly. Log all deviations in `challenges/fixtures/DEVIATIONS.md`.
+
+---
+
+## 📦 Deployment
+
+Deployed on **Hetzner** VPS via **Appliku**. Configuration is managed in `appliku.yaml`. 
+Production requires:
+- `ROLLBAR_ACCESS_TOKEN` for error tracking.
+- `POSTGRES_URL` for the database.
+- `REDIS_URL` for Huey.
+- Social login providers configured in Django Admin.
+
+---
+
+## 🤝 Contributing
+
+We welcome collaborators! Check out the `high_level_plan.md` for our roadmap.
+- **GitHub Discussions:** Primary channel for study design and analysis ideas.
+- **Discord:** Community watercooler for casual conversation.
