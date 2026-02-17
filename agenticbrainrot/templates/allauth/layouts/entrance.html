@@ -6,14 +6,6 @@
 {% block main %}
   <div class="columns is-centered">
     <div class="column is-5-tablet is-4-desktop">
-      {% if messages %}
-        {% for message in messages %}
-          <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
-            <button class="delete"></button>
-            {{ message }}
-          </div>
-        {% endfor %}
-      {% endif %}
       {% block content %}
       {% endblock content %}
       {% block extra_body %}

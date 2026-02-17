@@ -42,11 +42,11 @@
     {% endif %}
 
     {% include "pages/partials/_navbar.html" %}
+    {% include "pages/partials/_messages.html" %}
 
     <main id="main-content">
       <section class="section">
         <div class="container">
-          {% include "pages/partials/_messages.html" %}
           {% block main %}
             {% block content %}
             {% endblock content %}
@@ -73,12 +73,21 @@
           });
         });
 
-        // Dismiss Bulma notifications
-        (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
-          const $notification = $delete.parentNode;
-          $delete.addEventListener('click', () => {
-            $notification.parentNode.removeChild($notification);
-          });
+        // Toast notifications: auto-dismiss after 4s, manual dismiss on click
+        function dismissToast(el) {
+          el.classList.add('toast-out');
+          el.addEventListener('animationend', () => el.remove(), { once: true });
+        }
+
+        document.querySelectorAll('.toast').forEach(toast => {
+          const btn = toast.querySelector('.delete');
+          if (btn) btn.addEventListener('click', () => dismissToast(toast));
+          setTimeout(() => { if (toast.isConnected) dismissToast(toast); }, 4000);
+        });
+
+        // Dismiss non-toast notifications (manual only)
+        document.querySelectorAll('.notification:not(.toast) .delete').forEach($delete => {
+          $delete.addEventListener('click', () => $delete.parentNode.remove());
         });
       });
     </script>

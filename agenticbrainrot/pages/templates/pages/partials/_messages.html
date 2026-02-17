@@ -1,8 +1,10 @@
 {% if messages %}
-  {% for message in messages %}
-    <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
-      <button class="delete" aria-label="Dismiss notification"></button>
-      {{ message }}
-    </div>
-  {% endfor %}
+  <div class="toast-container" aria-live="polite">
+    {% for message in messages %}
+      <div class="notification toast {% if message.tags %}is-{{ message.tags }}{% endif %}">
+        <button class="delete" aria-label="Dismiss notification"></button>
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
 {% endif %}

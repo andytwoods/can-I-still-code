@@ -569,13 +569,21 @@ def _save_survey_responses(
         )
 
 
-@staff_member_required
 def mock_session_start(request):
     """
-    Staff-only view to start a mock session that reuses the full
-    participant session flow. Bypasses eligibility and cooldown checks.
+    View to start a mock/try session that reuses the full participant
+    session flow. Bypasses eligibility and cooldown checks.
     Data is flagged as mock (is_mock=True).
+
+    Access controlled by settings.LET_PEOPLE_TRY:
+      - True: open to everyone (no login required)
+      - False: requires staff login
     """
+    if not settings.LET_PEOPLE_TRY:
+        if not request.user.is_staff:
+            from django.contrib.auth.views import redirect_to_login
+
+            return redirect_to_login(request.get_full_path())
     if request.method == "POST":
         form = MockSessionStartForm(request.POST)
         if form.is_valid():
@@ -591,12 +599,28 @@ def mock_session_start(request):
 
 
 def _create_mock_session(request, form):
-    """Create a mock session for a staff member."""
+    """Create a mock session for the current user (or a guest)."""
     try:
         with transaction.atomic():
-            # Get-or-create a Participant record for this staff user
+            user = request.user
+
+            # For anonymous visitors when LET_PEOPLE_TRY is enabled,
+            # create a temporary guest account and log them in.
+            if not user.is_authenticated:
+                from django.contrib.auth import get_user_model, login
+
+                User = get_user_model()
+                guest_id = uuid.uuid4().hex[:12]
+                user = User.objects.create_user(
+                    email=f"guest-{guest_id}@try.agenticbrainrot.com",
+                    password=None,
+                    name="Guest",
+                )
+                login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+
+            # Get-or-create a Participant record for this user
             participant, _created = Participant.objects.get_or_create(
-                user=request.user,
+                user=user,
                 defaults={
                     "has_active_consent": True,
                     "profile_completed": True,
@@ -644,7 +668,7 @@ def _create_mock_session(request, form):
             log_audit_event(
                 "mock_session_started",
                 participant=participant,
-                actor=request.user,
+                actor=user,
                 session_id=session.pk,
             )
 

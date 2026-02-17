@@ -258,6 +258,11 @@ LOGGING = {
 }
 
 
+# AgenticBrainrot
+# ------------------------------------------------------------------------------
+# When True, the mock/try session is open to everyone (no login required).
+LET_PEOPLE_TRY = env.bool("LET_PEOPLE_TRY", True)
+
 # django-allauth
 # ------------------------------------------------------------------------------
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)

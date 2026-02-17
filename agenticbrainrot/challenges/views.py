@@ -1,15 +1,25 @@
 import json
 
-from django.contrib.admin.views.decorators import staff_member_required
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 
 from .models import Challenge
 
 
-@staff_member_required
 def preview_challenge(request, challenge_id=None):
-    """Staff-only view to preview a challenge in the code editor."""
+    """
+    Preview a challenge in the code editor. No data is saved.
+
+    Access controlled by settings.LET_PEOPLE_TRY:
+      - True: open to everyone
+      - False: requires staff login
+    """
+    if not settings.LET_PEOPLE_TRY:
+        if not request.user.is_staff:
+            from django.contrib.auth.views import redirect_to_login
+
+            return redirect_to_login(request.get_full_path())
     all_challenges = (
         Challenge.objects.filter(is_active=True)
         .order_by("difficulty", "title")

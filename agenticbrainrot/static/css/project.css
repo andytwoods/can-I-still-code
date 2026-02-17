@@ -41,6 +41,47 @@ body {
   }
 }
 
+/* Toast notifications */
+.toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 400px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  animation: toast-in 0.35s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast.toast-out {
+  animation: toast-out 0.4s ease-in forwards;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
 .alert-debug {
   color: var(--bulma-text);
   background-color: var(--bulma-scheme-main);
@@ -62,6 +103,27 @@ textarea:focus-visible,
 [tabindex]:focus-visible {
   outline: 2px solid var(--bulma-primary, #485fc7);
   outline-offset: 2px;
+}
+
+/* Bulma 1.0 Dark Mode Notification Contrast Fixes */
+[data-theme="dark"] .notification.is-info {
+  background-color: var(--bulma-info-dark);
+  color: var(--bulma-info-light);
+}
+
+[data-theme="dark"] .notification.is-success {
+  background-color: var(--bulma-success-dark);
+  color: var(--bulma-success-light);
+}
+
+[data-theme="dark"] .notification.is-warning {
+  background-color: var(--bulma-warning-dark);
+  color: var(--bulma-warning-light);
+}
+
+[data-theme="dark"] .notification.is-danger {
+  background-color: var(--bulma-danger-dark);
+  color: var(--bulma-danger-light);
 }
 
 /* Dark mode overrides */

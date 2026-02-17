@@ -24,7 +24,7 @@
 </div>
 {% else %}
 <div class="notification is-info is-light">
-  <strong>Staff Preview Mode:</strong> This page allows you to test the editor. No data will be saved to the database.
+  {% if request.user.is_staff %}<strong>Staff Preview Mode:</strong> {% endif %}Try out the code editor. No data is saved.
 </div>
 
 <div id="preview-container">
