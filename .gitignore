@@ -326,3 +326,4 @@ dump.rdb
 agenticbrainrot/media/
 
 .pytest_cache/
+.Rproj.user

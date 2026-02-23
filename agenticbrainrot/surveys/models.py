@@ -20,6 +20,7 @@ class SurveyQuestion(models.Model):
         PROFILE = "profile", "Profile"
         POST_CHALLENGE = "post_challenge", "Post-challenge"
         POST_SESSION = "post_session", "Post-session"
+        EXIT = "exit", "Exit"
 
     text = models.TextField()
     help_text = models.TextField(blank=True)
@@ -58,6 +59,7 @@ class SurveyResponse(models.Model):
     - profile: both session and challenge_attempt must be NULL
     - post_challenge: challenge_attempt must be set, session must be NULL
     - post_session: session must be set, challenge_attempt must be NULL
+    - exit: both session and challenge_attempt must be NULL
     """
 
     participant = models.ForeignKey(

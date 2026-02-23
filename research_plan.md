@@ -29,6 +29,8 @@ All hypotheses are directional and pre-registered. The key causal claim is that 
 
 **H1 (core):** Participants who report a higher vibe-coding percentage will show a steeper decline in challenge accuracy over time (as measured by `tests_passed / tests_total`), after controlling for baseline ability, challenge difficulty, and total coding hours.
 
+**H1b:** The passive reliance index (`vibe_intensity × (1 − review_thoroughness)`) will predict steeper accuracy decline more strongly than vibe-coding intensity alone, because cognitive disengagement from AI-generated code — not mere AI use — is the proximal cause of skill degradation.
+
 **H2:** Participants who report a higher vibe-coding percentage will show a steeper increase in challenge completion time over time (as measured by `log(active_time_seconds)`), after the same controls.
 
 ### Secondary hypotheses
@@ -56,7 +58,7 @@ A null result on H1 is defined as a 95% credible interval for the `vibe_coding_p
 | Population | Adults with existing Python coding experience |
 | Recruitment | Open (social media, developer communities, university networks) |
 | Time horizon | Minimum 12 months of data collection; analysis after ≥12 months |
-| Session cadence | Maximum one session per 28 days; no minimum frequency. Participants may complete as few as 2 sessions with any gap between them. |
+| Session cadence | Maximum one session per 28 days; no minimum frequency. Minimum 2 sessions expected; mode ~6 sessions over the study period. |
 | Session structure | 1–10 Python coding challenges per session; participant-controlled |
 | Blinding | Participants are not told specific hypotheses beyond "we are studying AI coding and skill" |
 
@@ -80,11 +82,17 @@ This is a **purely observational study** — there is no random assignment to vi
 | **Composite score** | Weighted combination of accuracy and normalised speed | Derived at analysis time | Exploratory; weights to be pre-specified in analysis script |
 | **Completion rate** | Proportion of session challenges attempted (not skipped) | `ChallengeAttempt.skipped` | Session-level outcome |
 
-### 4.3 Primary Independent Variable
+### 4.3 Primary Independent Variables
 
-| Variable | Operationalisation | Data field(s) | Time-varying? |
-|----------|--------------------|---------------|---------------|
-| **Vibe-coding intensity** | Self-reported % of coding time that is AI-assisted | `SurveyResponse` for `post_session` question "What percentage of your coding time is currently vibe coding?" | Yes — updated each session |
+Two complementary measures of vibe-coding behaviour are collected per session. Together they yield a **passive reliance index** (see derived variable below) that more precisely captures the construct of interest than either measure alone.
+
+| Variable | Question wording | Data field(s) | Time-varying? |
+|----------|-----------------|---------------|---------------|
+| **Vibe-coding intensity** | *"What percentage of your coding time is currently AI-assisted (i.e. AI generates most of the code, you guide and review)?"* 0–100% slider | `SurveyResponse` post-session | Yes |
+| **AI code review thoroughness** | *"Of the code AI generates for you, roughly what percentage do you check over carefully?"* 0–100% slider | `SurveyResponse` post-session | Yes |
+| **Passive reliance index** (derived) | `vibe_intensity × (1 − review_thoroughness / 100)` — high when using AI heavily *and* rarely checking its output | Computed at analysis time | Yes |
+
+**Rationale for the review question:** a participant who generates 80% of their code with AI but checks every line carefully still engages cognitively with the code and may not experience skill degradation. A participant who generates 50% with AI and never checks it is more cognitively disengaged. The passive reliance index captures this distinction. It also removes the need to anchor the vibe-coding slider precisely — the review question grounds interpretation behaviourally. Primary model uses `vibe_coding_pct` alone (pre-registered); passive reliance index is a pre-registered secondary predictor (H1b).
 
 ### 4.4 Time Variable
 
@@ -120,46 +128,42 @@ This is a **purely observational study** — there is no random assignment to vi
 
 ### 5.1 Specification
 
-A Bayesian multilevel regression model estimated with `brms` (R) using Stan as the backend:
+Frequentist multilevel regression fitted with `lme4` + `lmerTest` (R); p-values via Satterthwaite df approximation. `brms` retained as a pre-specified robustness check.
 
-```
-accuracy_logit ~ vibe_coding_pct * months_since_baseline
+```r
+lmerTest::lmer(
+  accuracy_logit ~ vibe_coding_pct_c * time_unit
+                 + review_thoroughness_c * time_unit   # passive reliance components
                  + hours_per_week
                  + difficulty_tier
                  + leetcode_familiarity
                  + device_type
                  + distraction_free
-                 + (1 + months_since_baseline | participant_id)
-                 + (1 | challenge_id)
+                 + (1 + time_unit || participant_id)   # || avoids singular fits
+                 + (1 | challenge_id),
+  data    = dat,
+  control = lmerControl(optimizer = "bobyqa")
+)
 ```
 
-- **Random intercept + slope for participant:** captures individual baseline ability and individual rate of change over time.
+- **Random intercept + slope for participant (`||`):** decoupled (zero-correlation) parameterisation used to avoid singular fits with participants who have few sessions; the correlation can be added in the brms robustness check.
 - **Random intercept for challenge:** captures item-level difficulty beyond the fixed tier rating.
-- **Key interaction:** `vibe_coding_pct × months_since_baseline` — does higher vibe-coding predict a steeper skill trajectory (positive = improvement, negative = decline)?
-- **Time-varying predictors** (`vibe_coding_pct`, `hours_per_week`) use the value reported at the session containing each attempt.
-- **Vibe-coding percentage** is centred and scaled (z-score across all observations) to aid interpretation and MCMC efficiency.
-- **Months since baseline** is scaled to units of 3 months to make coefficients more interpretable (one unit = one quarter).
+- **Key interaction:** `vibe_coding_pct_c × time_unit` (H1); `review_thoroughness_c × time_unit` enters as a secondary term enabling the passive reliance index to be decomposed.
+- **Time-varying predictors** (`vibe_coding_pct`, `review_thoroughness`, `hours_per_week`) use the value reported at the session containing each attempt.
+- **Predictors are centred** (suffix `_c`) to aid convergence and make the intercept interpretable as average-participant, average-session accuracy.
+- **`time_unit`** is months since baseline scaled to 3-month units (1 unit = one quarter).
 
-### 5.2 Prior Specification (weakly informative)
+### 5.2 Secondary Models
 
-| Parameter | Prior | Justification |
-|-----------|-------|---------------|
-| Intercept | `Normal(0, 1)` on logit scale | Equivalent to 50% accuracy ± plausible range |
-| Fixed slopes | `Normal(0, 0.5)` | Regularising; allows moderate effects |
-| SD of random intercepts (participant) | `HalfNormal(0.5)` | Substantial between-person variation expected |
-| SD of random slopes (participant) | `HalfNormal(0.25)` | Smaller — slope variation is a secondary quantity |
-| SD of random intercepts (challenge) | `HalfNormal(0.5)` | Substantial between-item variation expected |
-| Correlation of random effects | `LKJ(2)` | Weakly regularising; slight pull toward uncorrelated |
+**S1 — Speed model:** same structure with `log(active_time_seconds)` as the outcome. Attempts with `active_time_seconds < 10` or `> 3600` excluded as implausible.
 
-Prior predictive checks will be run before data collection to confirm priors generate plausible accuracy distributions (0–100%).
+**S2 — Passive reliance model:** replaces the two separate vibe-coding terms with the derived passive reliance index (`vibe_pct × (1 − review_thoroughness)`), testing H1b.
 
-### 5.3 Secondary Models
+**S3 — Tier moderation model:** extends the primary model with `vibe_coding_pct_c × time_unit × difficulty_tier_low_binary` (Tier 1–2 vs. Tier 3–5), testing H3. Treated as exploratory pending sufficient Tier 3+ data.
 
-**S1 — Speed model:** Same random effects structure, with `log(active_time_seconds)` as the outcome and a Gaussian likelihood. Attempts with `active_time_seconds < 10` or `> 3600` are excluded as implausible.
+**S4 — Cross-source tier validation:** after ~3 months of data, compute the average pass rate per tier per source (Exercism, APPS, custom). If pass rates within a tier are comparable across sources, the human-assigned tier mapping is confirmed. If a source's tier diverges notably, re-map that source's challenges to an adjacent tier for future imports (documented in the challenge codebook). No IRT required — within-study pass rates are the empirical check, aggregated at the tier-source level (~50 attempts per cell needed, not per individual challenge).
 
-**S2 — Tier moderation model:** Extends the primary model with a three-way interaction `vibe_coding_pct × months_since_baseline × difficulty_tier_low_binary` (Tier 1–2 vs. Tier 3–5), testing H3.
-
-**S3 — Item Response Theory:** A 2PL IRT model (`brms` using `bernoulli` likelihood with item difficulty and discrimination parameters) to estimate latent ability per participant per time point. Latent ability estimates are then used as the outcome in a simplified version of the primary longitudinal model.
+**S5 — brms robustness check:** primary model re-fitted with `brms` using weakly informative priors (`Normal(0, 0.5)` for fixed effects; `Normal(0, 0.5)` truncated > 0 for SDs; `LKJ(2)` for correlations). Reported if results materially differ from the `lmerTest` primary.
 
 ---
 
@@ -208,7 +212,7 @@ A purposive sample of willing participants (drawn from those who gave follow-up 
 
 **Target N:** 15–20 interviews (theoretical saturation expected; reassess after 10).
 
-**Analysis:** reflexive thematic analysis; themes reported alongside quantitative findings in the paper.
+**Analysis:** reflexive thematic analysis (Braun & Clarke). Reported as a qualitative supplement section in the same paper, using a convergent mixed-methods design (Creswell & Plano Clark, 2018); strands integrated at the interpretation stage.
 
 **Ethics note:** interviews require a separate ethics amendment or are covered under the initial application if pre-declared. Declare in the ethics application. Interviews are recorded and transcribed (with consent); recordings deleted after transcription.
 
@@ -250,8 +254,9 @@ If results are materially different between primary and sensitivity analyses, th
 |--------|-------|---------------|
 | Minimum participants | 200 | Provides adequate variance in vibe-coding intensity (expected bimodal distribution) |
 | Minimum sessions per participant | 2 | Baseline + at least one follow-up; sufficient for a change score |
+| Expected sessions per participant | ~6 (mode) | Minimum 2, most participants expected to complete ~6 over the study period (~one every 1–2 months) |
 | Study duration | 12 months | Minimum time for detectable skill change if effect exists |
-| Expected total challenge attempts | ~4,000–8,000 | ~4–6 attempts per session (expected; participants are likely to quit when challenges get harder) × 2–5 sessions × 200 participants |
+| Expected total challenge attempts | ~6,000–18,000 | ~5 attempts per session × 6 sessions (expected mode) × 200 participants; upper bound assumes higher engagement and retention |
 | Expected Tier 3–5 attempts | Low — sparse | With ascending difficulty ordering, participants who stop at challenge 4–6 will rarely reach Tier 3 and almost never Tier 4–5 (see §11 limitation) |
 
 ### 7.2 Minimum Effect Size of Interest (MESI)
@@ -272,7 +277,7 @@ Before launch: run simulation-based power analysis using `brms` or `simr`:
 3. Calculate the proportion of simulations where the 95% CI for the key interaction excludes zero.
 4. Target ≥ 80% power; adjust recruitment targets if needed.
 
-Results of the power simulation to be documented in `analysis/power_simulation.R` and appended to this document before pre-registration.
+Results of the power simulation to be documented in `analysis/power_simulation.Rmd` and appended to this document before pre-registration.
 
 ---
 
@@ -282,6 +287,7 @@ Results of the power simulation to be documented in `analysis/power_simulation.R
 |-----------|------|
 | Power simulation complete | Before recruitment opens |
 | OSF pre-registration submitted | Before first participant completes first session |
+| Cross-source tier validation | ~3 months post-launch (compare pass rates per tier per source; re-map outlier challenges if needed) |
 | Interim descriptive analysis | 6 months post-launch (N, retention, covariate distributions) |
 | Primary analysis | After ≥ 12 months of data AND ≥ 200 participants with ≥ 3 sessions |
 | Sensitivity analyses | Immediately after primary analysis |
@@ -304,7 +310,7 @@ Mapping research questions and hypotheses to paper sections:
 ### Method
 - Participants and recruitment
 - Study design (§3)
-- Measures: challenges (difficulty tiers, sources, IRT calibration), survey instruments (all SurveyQuestion items used)
+- Measures: challenges (difficulty tiers, sources, cross-source tier validation), survey instruments (all SurveyQuestion items used)
 - Procedure: session flow, timing, think-aloud (if activated)
 - Statistical analysis plan (§5) and pre-registration details
 
@@ -339,7 +345,7 @@ These are pre-acknowledged to prevent post-hoc rationalisation in the paper:
 | **Vibe-coding definition ambiguity** | "AI generates most of the code, you guide and review" — participants may interpret this differently | Provide a concrete example in the question help text; acknowledge measurement error in the paper |
 | **Short study window** | 12 months may be insufficient to detect gradual skill decay if the effect accrues over years | Report effect at 6 and 12 months separately; acknowledge that longer follow-up is needed |
 | **Challenge pool exhaustion for long-term participants** | After ~20 sessions, participants have seen all challenges | Report N participants who approached exhaustion; note this limits the study to approximately 20 months per participant |
-| **Sparse Tier 3–5 data** | Challenges are presented in ascending difficulty order; participants who stop at challenge 4–6 complete only Tier 1–2. Tier 3+ attempts will be rare, weakening H3 and IRT parameter estimation for higher-tier items | Report actual Tier 3–5 attempt counts before running S2 and S3 models; if sparse, downgrade H3 to exploratory and acknowledge limited generalisability to harder challenges |
+| **Sparse Tier 3–5 data** | Challenges are presented in ascending difficulty order; participants who stop at challenge 4–6 complete only Tier 1–2. Tier 3+ attempts will be rare, weakening H3 and the cross-source tier validation for higher-tier items | Report actual Tier 3–5 attempt counts before running S3 and S4; if sparse, downgrade H3 to exploratory and acknowledge limited generalisability to harder challenges |
 | **Codebase complexity / tool diversity confound** | Skill decline may be driven not by vibe coding per se but by working on larger, more complex codebases with more diverse tools — making it cognitively impossible to stay fluent in any one area regardless of AI use. The quantitative model cannot disentangle this from vibe coding | Include exit survey Q3 (§6.1) to measure perceived complexity change; discuss qualitatively; include role-change as a covariate in sensitivity analysis |
 
 ---
@@ -375,8 +381,7 @@ These are pre-acknowledged to prevent post-hoc rationalisation in the paper:
 - **GDPR compliance:** EU participant data handled per GDPR; data processing agreement with Hetzner (EU-based hosting).
 - **Data retention:** per policy in high_level_plan.md §7.5 and §18.
 - **Participant rights:** withdrawal, data deletion, and optional consent mechanisms fully implemented (see high_level_plan.md §18).
-- **Interview sub-study:** semi-structured interviews (§6.3) require explicit consent (recorded, transcribed, deleted post-transcription). Declared in the ethics application; recordings never shared or included in the open dataset. Interviews are conducted only with participants who have given follow-up contact permission (`OptionalConsentRecord.consent_type = "future_contact"`).
-- **`future_contact` optional consent:** requires a new entry in the `OptionalConsentRecord.consent_type` choices alongside existing types (`think_aloud_audio`, `transcript_sharing`, `reminder_emails`). Must be added to the data model and consent flow before launch.
+- **Interview sub-study:** the ethics application must declare that participants will be asked at exit whether they are willing to be contacted for a potential follow-up interview (`OptionalConsentRecord.consent_type = "future_contact"`, implemented in consent.0002). No interview protocol is required before launch; the instrument can be developed later under the same ethics approval. Any interviews conducted will require explicit consent; recordings deleted post-transcription; never included in the open dataset.
 
 ---
 
@@ -384,16 +389,20 @@ These are pre-acknowledged to prevent post-hoc rationalisation in the paper:
 
 These are open questions that must be answered or decided before the OSF pre-registration is finalised:
 
-- [ ] **Power simulation:** run and document in `analysis/power_simulation.R`; confirm whether N=200 / 2 sessions is sufficient or whether targets need revising.
-- [ ] **Vibe-coding scale anchoring:** the 0–100% slider (profile Q20, post-session) needs concrete anchor examples (e.g., "0% = I write all code myself; 50% = roughly equal; 100% = AI writes everything, I only review"). Without anchors, inter-participant comparability is limited.
-- [ ] **Baseline session design:** the first session establishes each participant's baseline. Should the baseline session have a different structure (e.g., more challenges, no time pressure) to get a more stable estimate of initial ability? Currently it's identical to follow-up sessions.
-- [ ] **IRT calibration timing:** the IRT model (§5 S3) requires sufficient data to estimate item parameters. Plan for when to run the first IRT calibration (after N attempts per challenge?), and how to handle challenges with few responses in early months. Note: Tier 3–5 items may never accumulate sufficient responses if participants routinely quit before reaching them.
-- [ ] **Session ordering vs. tier coverage trade-off:** ascending difficulty means participants who quit at challenge 4–6 never see Tier 3–5. Consider alternatives: (a) interleaved ordering (e.g. T1, T2, T1, T2, T3, T2, T3, T4, T3, T5) to guarantee at least one harder item early; (b) a fixed "anchor" Tier 3 challenge always presented as challenge 3 to ensure some harder-tier data per session. Decide before pre-registration as it affects H3 testability.
-- [ ] **Handling zero vibe-coders:** participants who report 0% vibe coding at every session form the natural comparison group but may be a small and unusual subgroup (non-adopters). Decide whether to model vibe-coding as continuous or create ordered groups (0%, 1–25%, 26–50%, 51–75%, 76–100%).
-- [ ] **Minimum meaningful session for analysis:** a session with only 1 challenge attempted has very noisy accuracy (0 or 100%). Define a minimum number of challenge attempts per session for inclusion in the primary model (suggest: ≥ 3 attempts).
-- [ ] **Multiple comparison correction:** the primary model has one pre-specified test (H1). Secondary models (H2, H3, H4) and sensitivity analyses are separate model fits, not additional coefficients in the primary model. State explicitly whether Bayesian posterior probabilities for secondary models will be interpreted with any adjustment.
-- [ ] **Pre-registration of exploratory analyses:** clarify which analyses are confirmatory (H1–H5) and which are explicitly flagged as exploratory to prevent inflated claims in the paper.
-- [ ] **Exit survey implementation:** add `context = "exit"` as a new valid value in the unified question system (`SurveyQuestion.context` choices) and implement the exit survey trigger (shown when participant chooses to leave the study, or at 12-month mark). Define the 5 exit questions (§6.1) as `SurveyQuestion` fixtures.
-- [ ] **`future_contact` consent:** add to `OptionalConsentRecord.consent_type` choices in the data model. Decide where in the UI to present it (profile page, exit survey, or both).
-- [ ] **Interview protocol:** draft a semi-structured interview guide before recruitment opens. Requires ethics approval to be in place first.
-- [ ] **Qualitative analysis plan:** decide whether thematic analysis of exit surveys is reported in the same paper as the quantitative findings (as a mixed-methods paper) or as a separate publication.
+- [x] **Power simulation:** script exists at `analysis/power_simulation.Rmd` — knit it and update §8.1 targets based on results. Requires R packages: `lme4`, `dplyr`, `tibble`, `tidyr`, `ggplot2`, `MASS`, `knitr`, `kableExtra`, `gridExtra`, `pbmcapply`. Parallelised across available cores (1000 sims per condition); expected runtime ~3–6 min on M4 Max.
+- [x] **Vibe-coding scale anchoring:** resolved by adding a complementary review-thoroughness question (*"Of the code AI generates for you, roughly what percentage do you check over carefully?"*). The two measures together yield a passive reliance index (§4.3) that is behaviourally grounded and reduces reliance on precise slider calibration. Both questions added to post-session survey via the unified question system.
+- [x] **Baseline session design:** sessions are identical across all time points. The multilevel model estimates each participant's baseline ability from all sessions jointly (random intercept via partial pooling), so a noisy session 1 is handled gracefully. A different baseline structure would introduce measurement non-invariance and make session 1 timing data incomparable — particularly problematic for H2. Note in the paper that individual baselines are estimated jointly rather than from session 1 alone.
+- [x] **IRT calibration timing:** IRT dropped entirely. Difficulty is handled by: (1) human-assigned 5-tier labels at import using documented per-source mapping rules (Exercism 1–10 scale → tiers, APPS introductory/interview/competition → tiers, custom challenges assigned directly); (2) cross-source tier validation at ~3 months (S4 sensitivity analysis) — aggregate pass rates per tier per source, ~50 attempts per tier-source cell sufficient. No per-challenge sample size needed. See §9 milestone and §5 S4.
+- [x] **Session ordering vs. tier coverage trade-off:** ascending difficulty is retained. H1 (primary) targets Tier 1–2 everyday fluency — exactly what ascending order measures. Interleaving risks dropout at hard early challenges, which would damage longitudinal retention far more than sparse Tier 3+ data. Across 400 participants × 6 sessions, Tier 3+ data will accumulate from participants who complete more challenges, sufficient for exploratory analysis. H3 is formally downgraded to exploratory, contingent on sufficient Tier 3+ attempts accumulating.
+- [x] **Handling zero vibe-coders:** vibe-coding percentage is treated as continuous in the primary model. The expected distribution is near-bimodal (heavy users vs non/low users, few in the middle) — high variance in the predictor is beneficial for power, and the model is valid regardless of predictor distribution shape. Two pre-specified sensitivity analyses: (a) binary split (≤20% = low, >20% = high) as a cleaner comparison for paper presentation; (b) quadratic term added to test for non-linearity / threshold effects, since with few participants in the middle the linearity assumption across the full range is empirically undertested.
+- [x] **Minimum meaningful session for analysis:** sessions with fewer than 4 challenge attempts are excluded from the primary model — a single attempt yields accuracy of 0% or 100% (no variance), and 2–3 attempts remain very noisy. The in-app prompt has been updated to explicitly encourage completing 4–5 challenges ("For the most useful data, we'd really appreciate it if you could complete at least 4–5 challenges"). Sessions with < 4 attempts are retained in the database and reported descriptively but excluded from the multilevel model.
+- [x] **Multiple comparison correction:** no formal correction applied. The primary analysis is frequentist multilevel regression (`lme4` + `lmerTest`; Satterthwaite df). Pre-registration serves as the protection against inflated false-positive rates — correction is for unplanned fishing, not pre-registered hypotheses (Lakens et al., 2018). Strict hierarchy is maintained instead: H1 is the single primary test; H1b, H2, H3, H4 are pre-registered secondary tests reported with full effect sizes and 95% CIs; exploratory analyses are clearly labelled. `brms` retained as a pre-specified robustness check if convergence issues arise with real data or if requested by reviewers.
+- [x] **Pre-registration of exploratory analyses:** framework established. Exploratory analyses are pre-committed (listed in the OSF registration) but clearly labelled as hypothesis-generating, not hypothesis-testing. Paper will have two clearly labelled sections: *Confirmatory analyses* and *Exploratory analyses*.
+  - **Confirmatory:** H1 (primary), H1b, H2, H4
+  - **Secondary (pre-registered, lower evidentiary weight):** H5
+  - **Conditionally confirmatory:** H3 — treated as confirmatory only if Tier 3+ attempts exceed 500 across all participants at analysis time; otherwise automatically downgraded to exploratory. Threshold pre-registered to prevent post-hoc reclassification.
+  - **Exploratory (pre-committed, hypothesis-generating):** §4.6 variables, passive reliance index decompositions beyond H1b, qualitative themes. Pre-committed to running and reporting all regardless of outcome to prevent selective reporting (Nosek et al., 2018, PNAS).
+- [x] **Exit survey implementation (Phase 1 — model):** `context = "exit"` added to `SurveyQuestion.Context` choices and migrated (surveys.0003). Phase 2 deferred: exit flow UI, withdrawal trigger, 12-month email trigger, and exit question fixtures.
+- [x] **`future_contact` consent:** `FUTURE_CONTACT = "future_contact"` added to `OptionalConsentRecord.ConsentType` choices and migrated (consent.0002). Will be presented in the exit survey UI (Phase 2).
+- [x] **Interview protocol:** no protocol needed before launch. Key ethics action: declare in the ethics application that participants will be asked whether they consent to being contacted for a potential follow-up interview (`OptionalConsentRecord.consent_type = "future_contact"`). The interview instrument itself can be developed later under the same ethics approval.
+- [x] **Qualitative analysis plan:** same paper, convergent mixed-methods design (Creswell & Plano Clark, 2018). Reflexive thematic analysis of exit survey responses and interviews reported as a qualitative supplement section alongside the quantitative findings; strands integrated at the interpretation stage. Fallback only if interviews run significantly later: submit quant paper first, qual as follow-up — but this is not the plan.

@@ -12,11 +12,36 @@
     </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      {% block title %}AgenticBrainrot{% endblock title %}
-    </title>
-    <meta name="description" content="AgenticBrainrot Research Study" />
+
+    {# ── Primary SEO ─────────────────────────────────────────────────────── #}
+    <title>{% block title %}AgenticBrainrot | Citizen Science Python Skills Study{% endblock title %}</title>
+    <meta name="description" content="{% block meta_description %}A longitudinal citizen-science study measuring whether AI-assisted vibe coding leads to Python skill degradation over time. Join, complete challenges monthly, and contribute to open science.{% endblock meta_description %}" />
+    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}" />
+    <meta name="robots" content="index, follow" />
     <meta name="author" content="Andy T Woods" />
+
+    {# ── Open Graph (Facebook, LinkedIn, Slack, Discord, …) ─────────────── #}
+    <meta property="og:type" content="{% block og_type %}website{% endblock og_type %}" />
+    <meta property="og:site_name" content="AgenticBrainrot" />
+    <meta property="og:title" content="{% block og_title %}AgenticBrainrot | Citizen Science Python Skills Study{% endblock og_title %}" />
+    <meta property="og:description" content="{% block og_description %}A longitudinal citizen-science study measuring whether AI-assisted vibe coding leads to Python skill degradation over time. Join monthly coding challenges and contribute to open science.{% endblock og_description %}" />
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}" />
+    {# og:image must be an absolute URL; child templates override this block with their page-specific image #}
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/og/og-default.png' %}{% endblock og_image %}" />
+    <meta property="og:image:width" content="{% block og_image_width %}1200{% endblock og_image_width %}" />
+    <meta property="og:image:height" content="{% block og_image_height %}630{% endblock og_image_height %}" />
+    <meta property="og:image:alt" content="{% block og_image_alt %}AgenticBrainrot — Citizen Science Python Skills Study{% endblock og_image_alt %}" />
+
+    {# ── Twitter / X Card ────────────────────────────────────────────────── #}
+    <meta name="twitter:card" content="{% block twitter_card %}summary_large_image{% endblock twitter_card %}" />
+    <meta name="twitter:title" content="{% block twitter_title %}AgenticBrainrot | Citizen Science Python Skills Study{% endblock twitter_title %}" />
+    <meta name="twitter:description" content="{% block twitter_description %}A longitudinal citizen-science study measuring whether AI-assisted vibe coding leads to Python skill degradation over time.{% endblock twitter_description %}" />
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/og/og-default.png' %}{% endblock twitter_image %}" />
+    <meta name="twitter:image:alt" content="{% block twitter_image_alt %}AgenticBrainrot — Citizen Science Python Skills Study{% endblock twitter_image_alt %}" />
+
+    {# ── Structured data, page-specific meta (e.g. JSON-LD) ─────────────── #}
+    {% block extra_head %}{% endblock extra_head %}
+
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
     {% block css %}
       <link rel="stylesheet"

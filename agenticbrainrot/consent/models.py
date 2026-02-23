@@ -64,6 +64,7 @@ class OptionalConsentRecord(models.Model):
         REMINDER_EMAILS = "reminder_emails", "Reminder emails"
         THINK_ALOUD_AUDIO = "think_aloud_audio", "Think-aloud audio"
         TRANSCRIPT_SHARING = "transcript_sharing", "Transcript sharing"
+        FUTURE_CONTACT = "future_contact", "Future contact for follow-up interview"
 
     participant = models.ForeignKey(
         "accounts.Participant",

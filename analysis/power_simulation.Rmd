@@ -1,0 +1,562 @@
+---
+title: "Power Simulation: H1 — Vibe Coding × Time Interaction"
+subtitle: "Longitudinal Assessment of AI-Assisted Coding and Python Skill"
+author: "Andy Woods, Royal Holloway, University of London"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    theme: flatly
+    highlight: kate
+    code_folding: show
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo    = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache   = TRUE,        # cache slow simulation chunks
+  fig.width  = 9,
+  fig.height = 6,
+  dpi     = 150
+)
+
+library(lme4)
+library(dplyr)
+library(tibble)
+library(tidyr)
+library(ggplot2)
+library(MASS)
+library(knitr)
+library(kableExtra)
+library(parallel)    # base R — mclapply for multi-core parallelisation
+
+# pbmcapply adds a progress bar to mclapply; install if missing
+if (!requireNamespace("pbmcapply", quietly = TRUE)) install.packages("pbmcapply")
+library(pbmcapply)
+
+# MASS::select masks dplyr::select; prefer dplyr throughout.
+if (!requireNamespace("conflicted", quietly = TRUE)) install.packages("conflicted")
+library(conflicted)
+# Pre-declare all known conflicts from lme4/Matrix/brms dependencies
+# to avoid whack-a-mole errors during knitting.
+conflicts_prefer(
+  dplyr::select,
+  dplyr::filter,
+  dplyr::lag,
+  tidyr::expand,
+  tidyr::pack,
+  tidyr::unpack,
+  stats::ar,
+  stats::sigma
+)
+
+# Format seconds as "Xm Ys" or "Xs"
+format_time <- function(seconds) {
+  seconds <- round(seconds)
+  if (seconds < 60) return(sprintf("%ds", seconds))
+  sprintf("%dm %02ds", seconds %/% 60L, seconds %% 60L)
+}
+```
+
+---
+
+## Background
+
+This document powers the primary hypothesis of the vibe coding study (see `research_plan.md §8`):
+
+> **H1:** Participants who report a higher vibe-coding percentage will show a steeper decline in challenge accuracy over time.
+
+The key quantity is the interaction term `vibe_coding_pct × months_since_baseline` in a multilevel model with accuracy (logit-transformed) as the outcome.
+
+### Minimum Effect Size of Interest (MESI)
+
+From `research_plan.md §8.2`:
+
+- A **≥ 5 percentage-point** accuracy decline per 6 months at `vibe_coding_pct = 1.0` vs `0.0`, all else equal.
+- 6 months = 2 time units (1 unit = 3 months).
+- On the logit scale: $\text{logit}(0.65) - \text{logit}(0.70) \approx -0.228$ across 2 units at full vibe coding.
+- Interaction coefficient: $-0.228 / 2 = -0.114$ per 3-month unit per 100% vibe coding.
+
+---
+
+## 1. Data-Generating Parameters
+
+```{r params}
+# Fixed effects (logit scale)
+INTERCEPT        <- 0.847   # logit(0.70) — ~70% baseline accuracy
+BETA_TIME        <- 0.05    # slight improvement from practice alone, per 3-month unit
+BETA_VIBE        <- -0.05   # direct effect of vibe coding within a session
+BETA_DIFFICULTY  <- -0.30   # per difficulty tier (1–5)
+
+# KEY INTERACTION (MESI)
+BETA_INTERACTION <- -0.114  # per 3-month unit per 100% vibe coding
+
+# Random effects
+SD_INTERCEPT_P <- 0.50   # between-person SD in baseline ability
+SD_SLOPE_P     <- 0.15   # between-person SD in skill trajectory
+COR_P          <- -0.20  # faster improvers tend to start lower
+SD_CHALLENGE   <- 0.40   # between-challenge variation beyond tier rating
+```
+
+The MESI implies the following accuracy trajectories for a participant at average ability:
+
+```{r mesi-illustration, echo=FALSE}
+tibble(
+  months          = seq(0, 12, by = 1.5),
+  time_unit       = months / 3,
+  vibe_0pct       = plogis(INTERCEPT + BETA_TIME  * time_unit),
+  vibe_50pct      = plogis(INTERCEPT + (BETA_TIME + BETA_INTERACTION * 0.5) * time_unit + BETA_VIBE * 0.5),
+  vibe_100pct     = plogis(INTERCEPT + (BETA_TIME + BETA_INTERACTION * 1.0) * time_unit + BETA_VIBE * 1.0)
+) |>
+  pivot_longer(starts_with("vibe_"), names_to = "group", values_to = "accuracy") |>
+  mutate(group = recode(group,
+    vibe_0pct   = "0% vibe coding",
+    vibe_50pct  = "50% vibe coding",
+    vibe_100pct = "100% vibe coding"
+  )) |>
+  ggplot(aes(x = months, y = accuracy, colour = group)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  scale_y_continuous(labels = scales::percent_format(), limits = c(0.4, 1)) +
+  scale_colour_brewer(palette = "Set2", name = NULL) +
+  labs(
+    title    = "Simulated accuracy trajectories at the MESI",
+    subtitle = "Tier 1 challenge, average-ability participant",
+    x        = "Months since baseline",
+    y        = "Expected accuracy"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "top")
+```
+
+---
+
+## 2. Data Simulation
+
+The simulated dataset reflects the expected study structure:
+
+- **Sessions per participant:** Poisson-distributed (minimum 2), as participants may only complete baseline + 1 follow-up.
+- **Challenges per session:** 3–6 (weighted toward 4–5), reflecting expected dropout before the harder challenges.
+- **Vibe-coding distribution:** bimodal — low adopters (0–25%) and heavy adopters (50–100%).
+- **Difficulty tier:** ascending within session (positions 1–3 = Tier 1, 4–6 = Tier 2, 7–8 = Tier 3); Tier 3+ is rarely reached.
+
+```{r simulate-fn}
+# Fully vectorised — no nested for-loops. Generates all participants, sessions,
+# and challenges in bulk using expand/rep, then computes eta in a single pass.
+simulate_dataset <- function(n_participants,
+                              mean_sessions      = 5.0,
+                              session_gap_months = 1.5) {
+
+  # --- Participant level ---
+  re_cov <- matrix(
+    c(SD_INTERCEPT_P^2,
+      COR_P * SD_INTERCEPT_P * SD_SLOPE_P,
+      COR_P * SD_INTERCEPT_P * SD_SLOPE_P,
+      SD_SLOPE_P^2),
+    nrow = 2
+  )
+  re_p <- MASS::mvrnorm(n_participants, mu = c(0, 0), Sigma = re_cov)
+
+  n_sess    <- pmax(2L, rpois(n_participants, mean_sessions))
+  vibe_base <- ifelse(
+    runif(n_participants) < 0.5,
+    runif(n_participants, 0.00, 0.25),   # low adopters
+    runif(n_participants, 0.50, 1.00)    # heavy adopters
+  )
+
+  # --- Session level (expand participant → sessions) ---
+  pid      <- rep(seq_len(n_participants), n_sess)
+  sess_idx <- sequence(n_sess)                      # 1,2,...,n_sess[i] per participant
+
+  months    <- (sess_idx - 1) * session_gap_months
+  time_unit <- months / 3
+  vibe_pct  <- pmin(1, pmax(0, vibe_base[pid] + rnorm(length(pid), 0, 0.05)))
+  n_chal    <- sample(3:6, length(pid), replace = TRUE, prob = c(0.10, 0.30, 0.40, 0.20))
+
+  # --- Challenge level (expand sessions → challenges) ---
+  sess_row  <- rep(seq_along(pid), n_chal)
+  c_idx     <- sequence(n_chal)
+
+  tier <- ifelse(c_idx <= 3, 1L,
+          ifelse(c_idx <= 6, 2L,
+          ifelse(c_idx <= 8, 3L,
+          ifelse(c_idx == 9, 4L, 5L))))
+
+  # --- Vectorised linear predictor ---
+  eta <- INTERCEPT +
+    re_p[pid[sess_row], 1] +
+    (BETA_TIME + re_p[pid[sess_row], 2]) * time_unit[sess_row] +
+    BETA_VIBE       * vibe_pct[sess_row] +
+    BETA_DIFFICULTY * (tier - 1) +
+    BETA_INTERACTION * vibe_pct[sess_row] * time_unit[sess_row] +
+    rnorm(length(sess_row), 0, SD_CHALLENGE)
+
+  prob         <- plogis(eta)
+  tests_passed <- rbinom(length(prob), 5L, prob)
+  accuracy     <- tests_passed / 5
+
+  tibble(
+    participant_id        = factor(pid[sess_row]),
+    session               = sess_idx[sess_row],
+    challenge_idx         = c_idx,
+    months_since_baseline = months[sess_row],
+    time_unit             = time_unit[sess_row],
+    vibe_coding_pct       = vibe_pct[sess_row],
+    difficulty_tier       = tier,
+    accuracy              = accuracy,
+    accuracy_logit        = log((accuracy + 0.01) / (1 - accuracy + 0.01))
+  ) |>
+    mutate(
+      vibe_coding_pct_c = vibe_coding_pct - mean(vibe_coding_pct),
+      difficulty_tier_c = difficulty_tier  - mean(difficulty_tier)
+    )
+}
+```
+
+### Example dataset (N = 50)
+
+```{r example-dataset}
+set.seed(20260219)
+example_dat <- simulate_dataset(n_participants = 50)
+
+glimpse(example_dat)
+```
+
+```{r example-distributions, echo=FALSE, fig.height=4}
+p1 <- example_dat |>
+  distinct(participant_id, session, vibe_coding_pct) |>
+  distinct(participant_id, .keep_all = TRUE) |>
+  ggplot(aes(x = vibe_coding_pct)) +
+  geom_histogram(bins = 20, fill = "#66c2a5", colour = "white") +
+  labs(title = "Vibe-coding % distribution", x = "Vibe-coding %", y = "Participants") +
+  theme_minimal()
+
+p2 <- example_dat |>
+  distinct(participant_id, session) |>
+  count(participant_id) |>
+  ggplot(aes(x = n)) +
+  geom_bar(fill = "#fc8d62", colour = "white") +
+  scale_x_continuous(breaks = 1:10) +
+  labs(title = "Sessions per participant", x = "N sessions", y = "Participants") +
+  theme_minimal()
+
+gridExtra::grid.arrange(p1, p2, ncol = 2)
+```
+
+---
+
+## 3. Model and Test
+
+For speed, each simulated dataset is fitted with `lme4` (Wald t-test). This approximates the `brms` Bayesian model specified in `research_plan.md §5`. Power is the proportion of simulations where $|t| > 1.96$ (two-tailed $\alpha = .05$).
+
+```{r fit-fn}
+fit_and_test <- function(dat) {
+  # Use || (zero-correlation parameterisation) to decouple random intercept and
+  # slope — one fewer parameter, greatly reduces singular fits when participants
+  # have only 2 sessions. The fixed-effect interaction t-value (our test
+  # statistic) is unaffected by this simplification.
+  # suppressWarnings: boundary/singular warnings are expected in simulation
+  # contexts with small per-person sample sizes and are not informative here.
+  m <- tryCatch(
+    suppressWarnings(
+      lmer(
+        accuracy_logit ~ vibe_coding_pct_c * time_unit +
+          difficulty_tier_c +
+          (1 + time_unit || participant_id),
+        data    = dat,
+        control = lmerControl(optimizer = "bobyqa")
+      )
+    ),
+    error = function(e) NULL
+  )
+
+  if (is.null(m)) return(NA_real_)
+
+  coefs <- summary(m)$coefficients
+  row   <- grep("vibe_coding_pct_c:time_unit", rownames(coefs))
+  if (length(row) == 0) return(NA_real_)
+
+  coefs[row, "t value"]
+}
+```
+
+---
+
+## 4. Power Sweep
+
+```{r power-fn}
+run_power_sim <- function(n_participants,
+                           mean_sessions = 2.5,
+                           n_sims        = 500,
+                           alpha         = 0.05) {
+  t_crit <- qnorm(1 - alpha / 2)
+
+  t_vals <- replicate(n_sims, {
+    dat <- simulate_dataset(n_participants, mean_sessions = mean_sessions)
+    fit_and_test(dat)
+  })
+
+  t_vals <- t_vals[!is.na(t_vals)]
+  power  <- mean(abs(t_vals) > t_crit)
+  se     <- sqrt(power * (1 - power) / length(t_vals))
+
+  tibble(
+    n_participants = n_participants,
+    mean_sessions  = mean_sessions,
+    n_sims_valid   = length(t_vals),
+    power          = power,
+    power_lower    = max(0, power - 1.96 * se),
+    power_upper    = min(1, power + 1.96 * se)
+  )
+}
+```
+
+**Expected runtime:** ~2–4 minutes on an M4 Max (25 conditions × 500 simulations, parallelised across 15 cores; vectorised data generation eliminates the nested for-loop bottleneck). The chunk is cached, so re-knitting is instant. A progress bar appears in the RStudio console/terminal during the run; it is not captured in the knitted HTML.
+
+```{r run-sweep, cache=TRUE}
+# L'Ecuyer-CMRG gives each forked process its own independent RNG stream,
+# ensuring reproducibility under parallel execution.
+RNGkind("L'Ecuyer-CMRG")
+set.seed(20260219)
+
+# Mean sessions reflect expected distribution: minimum 2, most completing ~6.
+# Poisson(mean) with max(2, .) gives realistic unbalanced data.
+# Range covers pessimistic dropout (3) through engaged participants (8).
+param_grid <- expand.grid(
+  n_participants = c(400, 500, 600, 700, 800),
+  mean_sessions  = c(3.0, 4.0, 5.0, 6.0, 8.0)
+)
+
+n_conditions <- nrow(param_grid)
+n_cores      <- max(1L, detectCores() - 1L)   # leave one core for the OS
+
+cat(sprintf(
+  "Hardware: %d logical cores detected, using %d\n",
+  detectCores(), n_cores
+))
+cat(sprintf(
+  "Sweep: %d conditions x 500 simulations — progress bar in console\n\n",
+  n_conditions
+))
+
+t_start <- proc.time()
+
+# pbmclapply = mclapply + console progress bar.
+# Each list element is one row of param_grid; mc.set.seed propagates the
+# L'Ecuyer seed stream into each child process automatically.
+results_list <- pbmcapply::pbmclapply(
+  seq_len(n_conditions),
+  function(k) {
+    tryCatch(
+      run_power_sim(
+        n_participants = param_grid$n_participants[k],
+        mean_sessions  = param_grid$mean_sessions[k],
+        n_sims         = 500
+      ),
+      error = function(e) tibble(
+        n_participants = param_grid$n_participants[k],
+        mean_sessions  = param_grid$mean_sessions[k],
+        n_sims_valid   = 0L,
+        power          = NA_real_,
+        power_lower    = NA_real_,
+        power_upper    = NA_real_
+      )
+    )
+  },
+  mc.cores    = n_cores,
+  mc.set.seed = TRUE
+)
+
+elapsed <- (proc.time() - t_start)[["elapsed"]]
+cat(sprintf("\nDone. Total time: %s\n", format_time(elapsed)))
+
+# mclapply returns try-error objects for crashed workers rather than raising;
+# report them and drop before binding.
+is_error <- sapply(results_list, inherits, "try-error")
+if (any(is_error)) {
+  message(sprintf(
+    "%d worker(s) failed and will be excluded: conditions %s",
+    sum(is_error),
+    paste(which(is_error), collapse = ", ")
+  ))
+  results_list <- results_list[!is_error]
+}
+
+power_results <- bind_rows(results_list)
+```
+
+---
+
+## 5. Results
+
+### Power table
+
+```{r results-table, echo=FALSE}
+power_results |>
+  mutate(
+    power       = round(power,       3),
+    power_lower = round(power_lower, 3),
+    power_upper = round(power_upper, 3),
+    meets_target = ifelse(power >= 0.80, "✓", "")
+  ) |>
+  arrange(n_participants, mean_sessions) |>
+  rename(
+    "N participants"    = n_participants,
+    "Mean sessions"     = mean_sessions,
+    "Valid sims"        = n_sims_valid,
+    "Power"             = power,
+    "Lower 95% CI"      = power_lower,
+    "Upper 95% CI"      = power_upper,
+    "≥ 80%?"            = meets_target
+  ) |>
+  kable(align = "rrrrrrr") |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) |>
+  row_spec(
+    which(power_results$power >= 0.80),
+    background = "#d4edda"
+  )
+```
+
+### Power curve
+
+```{r power-curve, echo=FALSE}
+ggplot(
+  power_results,
+  aes(
+    x      = n_participants,
+    y      = power,
+    colour = factor(mean_sessions),
+    fill   = factor(mean_sessions),
+    group  = factor(mean_sessions)
+  )
+) +
+  geom_ribbon(
+    aes(ymin = power_lower, ymax = power_upper),
+    alpha = 0.12, colour = NA
+  ) +
+  geom_line(linewidth = 0.9) +
+  geom_point(size = 2.5) +
+  geom_hline(
+    yintercept = 0.80,
+    linetype   = "dashed",
+    colour     = "grey35",
+    linewidth  = 0.6
+  ) +
+  annotate(
+    "text", x = 410, y = 0.815, label = "80% target",
+    hjust = 0, size = 3.2, colour = "grey35"
+  ) +
+  scale_y_continuous(labels = scales::percent_format(), limits = c(0, 1)) +
+  scale_colour_brewer(
+    palette = "Set2",
+    name    = "Mean sessions\nper participant"
+  ) +
+  scale_fill_brewer(
+    palette = "Set2",
+    name    = "Mean sessions\nper participant"
+  ) +
+  labs(
+    title    = "Power simulation: H1 — vibe_coding_pct × months interaction",
+    subtitle = paste0(
+      "MESI: 5pp accuracy decline per 6 months at 100% vs 0% vibe coding  |  ",
+      "500 simulations per condition\n",
+      "lme4 Wald t-test approximation of brms primary model"
+    ),
+    x = "Number of participants",
+    y = "Power"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position  = "right",
+    plot.subtitle    = element_text(size = 9, colour = "grey40"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Recommendation
+
+```{r recommendation, echo=FALSE}
+# Find the smallest N that hits 80% at each session level
+recommendation <- power_results |>
+  filter(power >= 0.80) |>
+  group_by(mean_sessions) |>
+  slice_min(n_participants, n = 1) |>
+  ungroup() |>
+  arrange(mean_sessions)
+
+if (nrow(recommendation) == 0) {
+  cat("No tested condition reaches 80% power. Consider increasing N or sessions.")
+} else {
+  recommendation |>
+    mutate(power = scales::percent(power, accuracy = 0.1)) |>
+    select(
+      "Mean sessions per participant" = mean_sessions,
+      "Minimum N for ≥80% power"     = n_participants,
+      "Achieved power"                = power
+    ) |>
+    kable() |>
+    kable_styling(bootstrap_options = c("striped", "condensed"), full_width = FALSE)
+}
+```
+
+---
+
+## 6. Caveats
+
+1. **Model approximation.** `lme4` Wald t-tests are a fast proxy for the `brms` Bayesian model (research_plan.md §5.2). Bayesian posteriors with weakly informative priors tend to be slightly wider, so true power under `brms` may be marginally lower. Validate a subset with the snippet below.
+
+2. **Zero-correlation random effects (`||`).** The simulation uses `(1 + time_unit || participant_id)` rather than the correlated form `(1 + time_unit | participant_id)` specified in the primary brms model. With only 2 sessions per participant the correlation parameter is unidentifiable, causing widespread singular fits. The `||` form drops that correlation, removing one variance parameter and eliminating the warnings. The fixed-effect interaction t-value — the only quantity we care about here — is not materially affected by this simplification.
+
+3. **Parallel RNG.** `RNGkind("L'Ecuyer-CMRG")` with `mc.set.seed = TRUE` gives each forked process its own independent random stream derived from the master seed, ensuring the results are fully reproducible.
+
+4. **Session distribution.** Minimum 2 sessions, expected mode ~6 (roughly one session every 1–2 months over 12 months). The grid spans mean_sessions 3–8 to bracket pessimistic dropout through high engagement. Use the `mean_sessions = 3.0` row as the conservative bound.
+
+5. **Vibe-coding distribution.** Simulated as bimodal (low: 0–25%, high: 50–100%). Less variance in the predictor → lower power.
+
+6. **Tier 3–5 sparsity.** The simulation correctly reflects that most attempts are Tier 1–2. H3 (tier moderation) is **not** powered here — it is flagged as potentially exploratory in `research_plan.md §15`.
+
+7. **Challenge random effects.** Simplified as iid noise. The full brms model uses `(1 | challenge_id)`; this minor simplification slightly inflates power estimates.
+
+---
+
+## 7. brms Validation Snippet
+
+Run this on a single simulated dataset to confirm the lme4 approximation is reasonable. **Slow — not cached.**
+
+```{r brms-validation, eval=FALSE}
+library(brms)
+
+dat_val <- simulate_dataset(n_participants = 200, mean_sessions = 2.5)
+
+m_brms <- brm(
+  accuracy_logit ~ vibe_coding_pct_c * time_unit +
+    difficulty_tier_c +
+    (1 + time_unit | participant_id),
+  data   = dat_val,
+  family = gaussian(),
+  prior  = c(
+    prior(normal(0, 1),   class = Intercept),
+    prior(normal(0, 0.5), class = b),
+    prior(normal(0, 0.5), class = sd),   # truncated to >0 automatically by brms
+    prior(lkj(2),         class = cor)
+  ),
+  chains = 4, cores = 4, iter = 2000, warmup = 1000,
+  seed   = 20260219
+)
+
+# Does the 95% CI for the interaction exclude zero?
+fixef(m_brms)["vibe_coding_pct_c:time_unit", c("Estimate", "Q2.5", "Q97.5")]
+```
+
+---
+
+## Session Info
+
+```{r session-info, echo=FALSE}
+sessionInfo()
+```

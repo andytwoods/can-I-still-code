@@ -1,6 +1,86 @@
 {% extends "base.html" %}
 {% load static %}
 
+{# ── SEO: Primary ────────────────────────────────────────────────────────── #}
+{% block title %}Does Vibe Coding Erode Python Skills? | AgenticBrainrot{% endblock title %}
+
+{% block meta_description %}Join a longitudinal citizen-science study tracking whether AI-assisted vibe coding erodes Python developer skills. Complete short monthly coding challenges, see your own progress, and contribute to peer-reviewed open research.{% endblock meta_description %}
+
+{# ── SEO: Open Graph ─────────────────────────────────────────────────────── #}
+{% block og_title %}Does Vibe Coding Erode Python Skills? | AgenticBrainrot{% endblock og_title %}
+
+{% block og_description %}AI coding tools are everywhere — but are they quietly eroding our raw Python ability? AgenticBrainrot is an open citizen-science study that tracks your coding skills over time. Join free, complete monthly challenges, and help answer the big question.{% endblock og_description %}
+
+{#
+  og_image / twitter_image — PLACEHOLDER
+  Replace 'images/og/og-home.png' with a real 1200×630 PNG (or JPG < 5 MB).
+  Recommended content: project name + tagline on a branded background.
+  Tools: Canva, Figma, or any image editor. Keep text large enough to read at small sizes.
+  Place the file at:  <project_root>/agenticbrainrot/static/images/og/og-home.png
+#}
+{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/og/og-home.png' %}{% endblock og_image %}
+{% block og_image_alt %}AgenticBrainrot — a citizen-science study tracking whether vibe coding erodes Python developer skills{% endblock og_image_alt %}
+
+{# ── SEO: Twitter / X Card ───────────────────────────────────────────────── #}
+{% block twitter_title %}Does Vibe Coding Erode Python Skills? | AgenticBrainrot{% endblock twitter_title %}
+
+{% block twitter_description %}AI tools are everywhere — are they quietly eroding our raw coding ability? Join this free citizen-science study to track your Python skills over time and contribute to open research.{% endblock twitter_description %}
+
+{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/og/og-home.png' %}{% endblock twitter_image %}
+{% block twitter_image_alt %}AgenticBrainrot — citizen-science study on vibe coding and Python skills{% endblock twitter_image_alt %}
+
+{# ── SEO: Structured Data (JSON-LD) ─────────────────────────────────────── #}
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "{{ request.scheme }}://{{ request.get_host }}/#website",
+      "url": "{{ request.scheme }}://{{ request.get_host }}/",
+      "name": "AgenticBrainrot",
+      "description": "A longitudinal citizen-science study measuring whether AI-assisted vibe coding leads to Python skill degradation over time.",
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "ResearchProject",
+      "@id": "{{ request.scheme }}://{{ request.get_host }}/#research-project",
+      "name": "AgenticBrainrot: Longitudinal Assessment of Coding Skills in the Vibe Coding Era",
+      "alternateName": "AgenticBrainrot",
+      "url": "{{ request.scheme }}://{{ request.get_host }}/",
+      "description": "A longitudinal, citizen-science research project designed to measure whether vibe coding — AI-assisted coding where the AI generates most of the logic — leads to degradation of Python developer skills over time. Participants complete short Python coding challenges monthly and self-report their AI tool usage. The resulting open dataset supports Bayesian multilevel regression modelling.",
+      "keywords": [
+        "vibe coding", "AI coding assistants", "GitHub Copilot", "Cursor", "Python skills",
+        "longitudinal study", "citizen science", "coding skill degradation", "software developer research",
+        "Bayesian analysis", "open science", "coding challenges"
+      ],
+      "subjectOf": {
+        "@type": "Dataset",
+        "name": "AgenticBrainrot Open Dataset",
+        "description": "Anonymised longitudinal dataset of Python coding challenge performance and self-reported AI tool usage, released after a 12-month embargo.",
+        "license": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "funder": {
+        "@type": "Organization",
+        "name": "Royal Holloway, University of London"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "{{ request.scheme }}://{{ request.get_host }}/#webpage",
+      "url": "{{ request.scheme }}://{{ request.get_host }}/",
+      "name": "Does Vibe Coding Erode Python Skills? | AgenticBrainrot",
+      "isPartOf": { "@id": "{{ request.scheme }}://{{ request.get_host }}/#website" },
+      "about": { "@id": "{{ request.scheme }}://{{ request.get_host }}/#research-project" },
+      "description": "Join a free longitudinal citizen-science study tracking whether AI-assisted vibe coding erodes Python developer skills.",
+      "inLanguage": "en-GB"
+    }
+  ]
+}
+</script>
+{% endblock extra_head %}
+
 {% block content %}
   {# Hero Section #}
   <section class="hero is-medium is-link">
