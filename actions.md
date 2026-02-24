@@ -1,4 +1,4 @@
-# Actions: Implementation Breakdown
+get# Actions: Implementation Breakdown
 
 Each action is a self-contained chunk suitable for an agentic LLM to complete in one session. Actions are ordered by dependency — later actions build on earlier ones. Each action specifies what to build, what it depends on, and how to verify it works.
 
