@@ -35,7 +35,7 @@ AgenticBrainrot maintainers have the right and responsibility to remove, edit, o
 This Code of Conduct applies within all community spaces associated with this project, including:
 
 - The [AgenticBrainrot GitHub repository](https://github.com/andytwoods/agenticbrainrot) — issues, pull requests, discussions, and code reviews
-- This website (agenticbrainrot.applikuapp.com)
+- This website (canistillcode.org)
 - Social media posts, threads, and public discussions about the project (Twitter/X, Mastodon, LinkedIn, etc.)
 - Discord and any other community channels linked to the project
 - Conference presentations, workshops, or other events where the project is represented

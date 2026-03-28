@@ -7,13 +7,14 @@ from .base import env
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["agenticbrainrot.applikuapp.com", "127.0.0.1", "localhost"])
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["canistillcode.org", "www.canistillcode.org", "127.0.0.1", "localhost"])
 
 
 CSRF_TRUSTED_ORIGINS = env.list(
     "CSRF_TRUSTED_ORIGINS",
     default=[
-        "https://agenticbrainrot.applikuapp.com", "https://agenticbrainrot.applikuapp.com",
+        "https://canistillcode.org",
+        "https://www.canistillcode.org",
     ],
 )
 
@@ -80,7 +81,7 @@ STORAGES = {
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = env(
     "DJANGO_DEFAULT_FROM_EMAIL",
-    default="AgenticBrainrot <noreply@example.com>",
+    default="AgenticBrainrot <noreply@canistillcode.org>",
 )
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 EMAIL_SUBJECT_PREFIX = env(
@@ -197,4 +198,4 @@ if "CONTENT_SECURITY_POLICY" not in locals():
         },
     }
 
-CONTENT_SECURITY_POLICY["DIRECTIVES"]["connect-src"].append("https://agenticbrainrot.applikuapp.com")
+CONTENT_SECURITY_POLICY["DIRECTIVES"]["connect-src"].append("https://canistillcode.org")
