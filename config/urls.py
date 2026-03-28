@@ -10,6 +10,7 @@ from agenticbrainrot.pages.api import stats_accuracy_by_vibe_coding
 from agenticbrainrot.pages.api import stats_accuracy_over_time
 from agenticbrainrot.pages.api import stats_summary
 from agenticbrainrot.pages.views import AboutView
+from agenticbrainrot.pages.views import CoCView
 from agenticbrainrot.pages.views import HomeView
 from agenticbrainrot.pages.views import PrivacyView
 from agenticbrainrot.pages.views import TermsView
@@ -19,6 +20,7 @@ urlpatterns = [
     path("about/", AboutView.as_view(), name="about"),
     path("privacy/", PrivacyView.as_view(), name="privacy"),
     path("terms/", TermsView.as_view(), name="terms"),
+    path("code-of-conduct/", CoCView.as_view(), name="code_of_conduct"),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management

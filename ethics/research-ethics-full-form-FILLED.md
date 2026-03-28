@@ -24,7 +24,7 @@
 
 ### Project Summary (lay summary)
 
-This study investigates whether reliance on AI-assisted coding tools — commonly known as "vibe coding" — leads to measurable changes in Python coding skill over time. Participants who already code in Python periodically complete short Python coding challenges (up to 10 per session) on a purpose-built website and self-report their AI coding habits via a brief post-session survey. Sessions are separated by a minimum of 28 days, and the study runs for at least 12 months. The data are analysed using multilevel statistical modelling to test whether the proportion of coding time spent using AI tools predicts changes in challenge accuracy and completion speed over time.
+This study investigates whether reliance on AI-assisted coding tools — commonly known as "vibe coding" -- leads to measurable changes in Python coding skill over time. Participants who already code in Python periodically complete short Python coding challenges (up to 10 per session) on a purpose-built website and self-report their AI coding habits via a brief post-session survey. Sessions are separated by a minimum of 28 days, and the study run for at least 12 months. The data are analysed using multilevel statistical modelling to test whether the proportion of coding time spent using AI tools predicts changes in challenge accuracy and completion speed over time.
 
 The study follows a citizen-science model: participants can view their own personal performance trends over time, and the fully anonymised dataset will be released publicly after a 12-month embargo to allow independent analyses by the broader research community. A qualitative strand — an exit survey and optional follow-up interviews — will explore participants' own explanations for any changes (or lack of change) in their skills.
 
@@ -96,7 +96,7 @@ All participants are adults (18+) who self-select into the study by signing up v
 Participants can contact the researcher directly by email (andy.woods@rhul.ac.uk) at any time. A self-service withdrawal function is available within the participant's account settings, allowing them to withdraw from the study and request data deletion at any point before the dataset is anonymised. Contact details for the researcher and for the RHUL ethics committee (ethics@rhul.ac.uk) are provided in the participant information sheet and on the platform.
 
 **Social media sources and potential participants:**
-Participants will be recruited via developer communities and social platforms including: Reddit (r/Python, r/programming, r/learnpython), X/Twitter (developer and tech communities), LinkedIn (software engineers, developers), Hacker News, GitHub Discussions, and developer-focused newsletters and Discord servers. The study website (agenticbrainrot.com) acts as a permanent landing page. Recruitment posts will link to the information sheet before registration.
+Participants will be recruited via developer communities and social platforms including: Reddit (r/Python, r/programming, r/learnpython), X/Twitter (developer and tech communities), LinkedIn (software engineers, developers), Hacker News, GitHub Discussions, and developer-focused newsletters and Discord servers. The study website (tbd) acts as a permanent landing page. Recruitment posts will link to the information sheet before registration.
 
 **Number of participants:** Minimum 200; target 400+. No upper limit is set; the study is open-access and citizen-science in nature.
 

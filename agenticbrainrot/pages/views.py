@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.cache import cache
 from django.db.models import Sum
 from django.views.generic import TemplateView
@@ -64,4 +65,13 @@ class TermsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["document"] = PolicyDocument.get_active(PolicyDocument.DocType.TERMS)
+        return context
+
+
+class CoCView(TemplateView):
+    template_name = "pages/code_of_conduct.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["contact_email"] = settings.ADMINS[0][1]
         return context

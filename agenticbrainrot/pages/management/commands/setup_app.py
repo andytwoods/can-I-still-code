@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.utils.crypto import get_random_string
@@ -12,9 +14,18 @@ class Command(BaseCommand):
     help = "One-shot setup: create superuser, seed challenges and survey questions."
 
     def handle(self, *args, **kwargs):
+        self._sync_site()
         self._create_superuser()
         self._seed_challenges()
         self._seed_survey_questions()
+
+    def _sync_site(self):
+        domain = settings.DOMAIN
+        Site.objects.update_or_create(
+            id=settings.SITE_ID,
+            defaults={"domain": domain, "name": domain},
+        )
+        self.stdout.write(f"Site domain set to: {domain}")
 
     def _create_superuser(self):
         email = "andytwoods@gmail.com"
