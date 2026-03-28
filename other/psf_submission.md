@@ -30,7 +30,7 @@ AI coding tools are now shaping Python development for many people, but there is
 
 This initiative exists to generate that evidence in a Python-specific way. The findings should be useful to:
 
-- Python developers deciding how heavily to rely on AI tooling
+- Python developers when deciding how heavily to rely on AI tooling
 - educators designing Python teaching for the AI-assisted era
 - employers and teams setting expectations around AI-assisted Python work
 - researchers studying skill change, programming practice, and human–AI collaboration
@@ -55,7 +55,7 @@ We want the outputs to be useful beyond the initial study. Open materials, analy
 ## Credentials and credibility
 
 - **PI:** Dr Andy Woods – experimental psychologist and Python developer with 25+ years of coding experience; has used Django since 1.11. Elected DSF Individual Member in December 2025  
-  Relevant publications include *First Steps in Django Web Development* and *Conducting Perception Research over the Internet: A Tutorial Review*
+  Relevant publications include *First Steps in Django Web Development* and *Conducting Perception Research over the Internet: A Tutorial Review*  https://osf.io/download/xrm5w/, https://peerj.com/articles/1058/?sa=X&ved=0CCUQ9QEwB2oVChMI6Za8iLX3xgIVUgfbCh3AUw7L
 
 - **Co-Investigator:** Dr Alex Reppel, Royal Holloway
 
@@ -63,7 +63,7 @@ We want the outputs to be useful beyond the initial study. Open materials, analy
 
 - **Institutional affiliation:** Royal Holloway, University of London
 
-- **Funding:** self funded
+- **Funding:** Independently funded
 
 - **Ethics:** Application submitted to the Royal Holloway Research Ethics Committee; approval is currently pending. The wider study will launch once approval is in place.
 
