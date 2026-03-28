@@ -74,11 +74,14 @@ STORAGES = {
     },
 }
 
-# EMAIL
+# EMAIL — Brevo (Sendinblue) SMTP
 # ------------------------------------------------------------------------------
-# TODO: Configure a real email backend (e.g. SMTP, SES, Mailgun) when ready.
-# For now, all emails are printed to the console/logs.
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp-relay.brevo.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = env(
     "DJANGO_DEFAULT_FROM_EMAIL",
     default="AgenticBrainrot <noreply@canistillcode.org>",
@@ -89,12 +92,6 @@ EMAIL_SUBJECT_PREFIX = env(
     default="[AgenticBrainrot] ",
 )
 ACCOUNT_EMAIL_SUBJECT_PREFIX = EMAIL_SUBJECT_PREFIX
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST = env("EMAIL_HOST", default="localhost")
-# EMAIL_PORT = env.int("EMAIL_PORT", default=587)
-# EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
-# EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
-# EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
 
 # ADMIN
 # ------------------------------------------------------------------------------
