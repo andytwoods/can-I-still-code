@@ -39,6 +39,11 @@ class Challenge(models.Model):
         blank=True,
         help_text="Analysis metadata: complexity_score, function_name, etc.",
     )
+    clarification = models.TextField(
+        blank=True,
+        default="",
+        help_text="AI-generated parameter docs and worked examples. Additive only – never replaces description.",
+    )
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

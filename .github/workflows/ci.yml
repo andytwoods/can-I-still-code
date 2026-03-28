@@ -7,11 +7,11 @@ env:
 
 on:
   pull_request:
-    branches: ['main']
+    branches: ['master']
     paths-ignore: ['docs/**']
 
   push:
-    branches: ['main']
+    branches: ['master']
     paths-ignore: ['docs/**']
 
 concurrency:
@@ -73,3 +73,7 @@ jobs:
 
       - name: Test with pytest
         run: uv run pytest
+
+      - name: Trigger deployment
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: curl -s -o /dev/null -w "" -X POST "https://api.appliku.com/api/deploy_webhook/4164/${{ secrets.APPLIKU_DEPLOY_TOKEN }}"

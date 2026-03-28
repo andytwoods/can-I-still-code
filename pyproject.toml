@@ -184,4 +184,5 @@ dependencies = [
     "python-json-logger>=3.0",
     "redis>=5.0",
     "whitenoise==6.11.0",
+    "anthropic>=0.86.0",
 ]
