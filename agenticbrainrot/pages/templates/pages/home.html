@@ -253,7 +253,7 @@
             <div class="column is-narrow">
               {% if sponsor.url %}
                 <a href="{{ sponsor.url }}" target="_blank" rel="noopener">
-              {% endif %}
+              {% endif %}2
               {% if sponsor.logo %}
                 <figure class="image is-128x128 is-inline-block">
                   <img src="{{ sponsor.logo.url }}"
@@ -285,6 +285,33 @@
       {% endif %}
     </div>
   </section>
+  {# About the Researcher #}
+  <section class="section">
+    <div class="container">
+      <div class="columns is-vcentered">
+        <div class="column is-8 is-offset-2">
+          <h2 class="title is-2">About the Researcher</h2>
+          <p class="content is-size-5">
+            I'm Andy Woods, a researcher at Royal Holloway, University of London. My background is in experimental psychology, but I've also been writing production Python and JavaScript for about 15 years – building and deploying Django applications, and at various points working in the startup world.
+          </p>
+          <p class="content is-size-5">
+            My interest in developer deskilling is personal as well as scientific. I use AI coding assistants in my own work, supervise a PhD student working on AI and coding, and found myself genuinely unsure of the answer to a simple question: <em>am I still actually any good at this?</em>
+          </p>
+          <p class="content is-size-5">
+            I bring to this question the methodological tools of experimental psychology – Bayesian multilevel regression, longitudinal design – alongside the experience of a working developer who has skin in the game.
+          </p>
+          <p class="is-size-6 has-text-grey">
+            <a href="https://pure.royalholloway.ac.uk/en/persons/andrew-woods/" target="_blank" rel="noopener noreferrer">Royal Holloway profile</a>
+            &nbsp;&middot;&nbsp;
+            <a href="https://scholar.google.co.uk/citations?user=p5dUkQIAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Google Scholar</a>
+            &nbsp;&middot;&nbsp;
+            <a href="https://www.linkedin.com/in/woodsandy/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
 {% endblock content %}
 
 {% block extra_js %}

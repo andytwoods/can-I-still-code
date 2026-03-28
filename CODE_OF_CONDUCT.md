@@ -34,7 +34,7 @@ Can I Still Code maintainers have the right and responsibility to remove, edit, 
 
 This Code of Conduct applies within all community spaces associated with this project, including:
 
-- The [Can I Still Code GitHub repository](https://github.com/andytwoods/agenticbrainrot)  –  issues, pull requests, discussions, and code reviews
+- The [Can I Still Code GitHub repository](https://github.com/andytwoods/can-i-still-code)  –  issues, pull requests, discussions, and code reviews
 - This website (canistillcode.org)
 - Social media posts, threads, and public discussions about the project (Twitter/X, Mastodon, LinkedIn, etc.)
 - Discord and any other community channels linked to the project

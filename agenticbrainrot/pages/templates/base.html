@@ -4,10 +4,24 @@
 <html lang="en" data-theme="light">
   <head>
     <script>
-      // Apply theme before page renders to avoid flash
-      (function() {
-        const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        document.documentElement.setAttribute('data-theme', theme);
+      // Apply a11y prefs before page renders to avoid flash
+      (function () {
+        var LS_KEY = 'a11yPrefs';
+        var html = document.documentElement;
+        try {
+          var stored = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
+          var theme = (stored && stored.theme) ? stored.theme : (localStorage.getItem('theme') || 'system');
+          if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.setAttribute('data-theme', 'dark');
+          } else {
+            html.setAttribute('data-theme', 'light');
+          }
+          if (stored) {
+            if (stored.contrast && stored.contrast !== 'standard') html.setAttribute('data-a11y-contrast', stored.contrast);
+            if (stored.text && stored.text !== 'standard') html.setAttribute('data-a11y-text', stored.text);
+            if (stored.motion && stored.motion !== 'standard') html.setAttribute('data-a11y-motion', stored.motion);
+          }
+        } catch (_) {}
       })();
     </script>
     <meta charset="utf-8" />
@@ -86,6 +100,70 @@
     </main>
 
     {% include "pages/partials/_footer.html" %}
+
+    {# ── ACCESSIBILITY PANEL ──────────────────────────────────────────── #}
+    <div class="a11y-panel" id="a11yPanel" role="dialog"
+         aria-modal="false"
+         aria-labelledby="a11yPanelTitle"
+         aria-describedby="a11yPanelDesc">
+      <div class="a11y-panel-header">
+        <span class="a11y-panel-title" id="a11yPanelTitle">Accessibility</span>
+        <button class="a11y-close" id="a11yClose" aria-label="Close accessibility panel">&#x2715;</button>
+      </div>
+      <p class="a11y-description" id="a11yPanelDesc">
+        Adjust display settings. Preferences are saved for your next visit.
+      </p>
+
+      <div class="a11y-group" role="group" aria-labelledby="a11y-theme-label">
+        <span class="a11y-group-label" id="a11y-theme-label">Theme</span>
+        <div class="a11y-pills">
+          <input type="radio" name="a11y-theme" id="a11y-theme-system" value="system">
+          <label for="a11y-theme-system">System</label>
+          <input type="radio" name="a11y-theme" id="a11y-theme-light" value="light">
+          <label for="a11y-theme-light">Light</label>
+          <input type="radio" name="a11y-theme" id="a11y-theme-dark" value="dark">
+          <label for="a11y-theme-dark">Dark</label>
+        </div>
+      </div>
+
+      <div class="a11y-group" role="group" aria-labelledby="a11y-contrast-label">
+        <span class="a11y-group-label" id="a11y-contrast-label">Contrast</span>
+        <div class="a11y-pills">
+          <input type="radio" name="a11y-contrast" id="a11y-contrast-standard" value="standard">
+          <label for="a11y-contrast-standard">Standard</label>
+          <input type="radio" name="a11y-contrast" id="a11y-contrast-low" value="low">
+          <label for="a11y-contrast-low">Low</label>
+          <input type="radio" name="a11y-contrast" id="a11y-contrast-high" value="high">
+          <label for="a11y-contrast-high">High</label>
+        </div>
+      </div>
+
+      <div class="a11y-group" role="group" aria-labelledby="a11y-text-label">
+        <span class="a11y-group-label" id="a11y-text-label">Text Size</span>
+        <div class="a11y-pills">
+          <input type="radio" name="a11y-text" id="a11y-text-standard" value="standard">
+          <label for="a11y-text-standard">Standard</label>
+          <input type="radio" name="a11y-text" id="a11y-text-large" value="large">
+          <label for="a11y-text-large">Large</label>
+          <input type="radio" name="a11y-text" id="a11y-text-extra-large" value="extra-large">
+          <label for="a11y-text-extra-large">Extra Large</label>
+        </div>
+      </div>
+
+      <div class="a11y-group" role="group" aria-labelledby="a11y-motion-label">
+        <span class="a11y-group-label" id="a11y-motion-label">Motion</span>
+        <div class="a11y-pills">
+          <input type="radio" name="a11y-motion" id="a11y-motion-standard" value="standard">
+          <label for="a11y-motion-standard">Standard</label>
+          <input type="radio" name="a11y-motion" id="a11y-motion-reduced" value="reduced">
+          <label for="a11y-motion-reduced">Reduced</label>
+        </div>
+      </div>
+
+      <button class="button is-light is-small is-fullwidth a11y-reset" id="a11yReset">
+        Reset to defaults
+      </button>
+    </div>
 
     {% block extra_js %}{% endblock extra_js %}
     {% block inline_javascript %}{% endblock inline_javascript %}
