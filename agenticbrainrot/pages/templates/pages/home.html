@@ -93,8 +93,8 @@
     }
   </script>
 {% endblock extra_head %}
-{% block content %}
-  {# Hero Section #}
+{% block main %}
+  {# Hero Section – outside the base container so it can be full-bleed on mobile #}
   <section class="hero is-medium hero-cta">
     <div class="hero-watermark-wrap">
       <button id="watermarkPause"
@@ -245,7 +245,7 @@
       {% endif %}
     </div>
   </section>
-{% endblock content %}
+{% endblock main %}
 {% block inline_javascript %}
   <script>
     (function() {

@@ -284,13 +284,19 @@ body {
   font-family: monospace;
   font-size: clamp(3rem, 9vw, 8rem);
   font-weight: 900;
-  opacity: 0.06;
-  color: #ffffff;
   pointer-events: none;
   user-select: none;
   line-height: 1;
   white-space: nowrap;
   transition: font-size 0.4s ease;
+}
+[data-theme="light"] .hero-code-watermark {
+  opacity: 0.30;
+  color: #ffffff;
+}
+[data-theme="dark"] .hero-code-watermark {
+  opacity: 0.45;
+  color: #ffffff;
 }
 .hero-watermark-pause {
   display: none;
@@ -528,28 +534,34 @@ body {
 
 /* ── Contrast overrides ────────────────────────────────────────────────────── */
 html[data-a11y-contrast="high"][data-theme="light"] {
-  --theme-text:        #073642;
-  --theme-text-strong: #00202a;
-  --theme-text-weak:   #3a5560;
-  --theme-border:      #586e75;
+  --theme-bg:          #ffffff;
+  --theme-bg-bis:      #eeeeee;
+  --theme-bg-ter:      #dddddd;
+  --theme-text:        #000000;
+  --theme-text-strong: #000000;
+  --theme-text-weak:   #333333;
+  --theme-border:      #000000;
 }
 html[data-a11y-contrast="high"][data-theme="dark"] {
+  --theme-bg:          #000000;
+  --theme-bg-bis:      #0d0d0d;
+  --theme-bg-ter:      #1a1a1a;
   --theme-text:        #ffffff;
   --theme-text-strong: #ffffff;
-  --theme-text-weak:   #c4c8d8;
-  --theme-border:      #8be9fd;
+  --theme-text-weak:   #cccccc;
+  --theme-border:      #ffffff;
 }
 html[data-a11y-contrast="low"][data-theme="light"] {
-  --theme-text:        #93a1a1;
-  --theme-text-strong: #586e75;
-  --theme-text-weak:   #b8c4c4;
-  --theme-border:      #ddd8c3;
+  --theme-text:        #aaaaaa;
+  --theme-text-strong: #888888;
+  --theme-text-weak:   #cccccc;
+  --theme-border:      #dddddd;
 }
 html[data-a11y-contrast="low"][data-theme="dark"] {
-  --theme-text:        #6272a4;
-  --theme-text-strong: #8892c4;
-  --theme-text-weak:   #44475a;
-  --theme-border:      #3a3c50;
+  --theme-text:        #555566;
+  --theme-text-strong: #666677;
+  --theme-text-weak:   #444455;
+  --theme-border:      #333344;
 }
 
 /* ── Text size overrides ───────────────────────────────────────────────────── */
