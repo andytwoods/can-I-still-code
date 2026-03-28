@@ -29,13 +29,10 @@ CHART_COLOURS = {
 
 def _build_session_data(participant):
     """Build session history and chart data for a participant."""
-    sessions = (
-        CodeSession.objects.filter(
-            participant=participant,
-            status=CodeSession.Status.COMPLETED,
-        )
-        .order_by("completed_at")
-    )
+    sessions = CodeSession.objects.filter(
+        participant=participant,
+        status=CodeSession.Status.COMPLETED,
+    ).order_by("completed_at")
 
     session_rows = []
     accuracy_points = []
@@ -64,13 +61,15 @@ def _build_session_data(participant):
         label = f"Session {i}"
         date_str = session.completed_at.strftime("%d %b %Y")
 
-        session_rows.append({
-            "number": i,
-            "date": date_str,
-            "challenges_attempted": session.challenges_attempted,
-            "avg_accuracy": avg_accuracy,
-            "avg_time": avg_time,
-        })
+        session_rows.append(
+            {
+                "number": i,
+                "date": date_str,
+                "challenges_attempted": session.challenges_attempted,
+                "avg_accuracy": avg_accuracy,
+                "avg_time": avg_time,
+            },
+        )
         accuracy_points.append({"x": label, "y": avg_accuracy})
         speed_points.append({"x": label, "y": avg_time})
 
@@ -127,11 +126,13 @@ def _get_available_versions():
             if manifest_path.exists():
                 with manifest_path.open() as f:
                     manifest = json.load(f)
-                versions.append({
-                    "slug": d.name,
-                    "exported_at": manifest.get("exported_at", ""),
-                    "row_counts": manifest.get("row_counts", {}),
-                })
+                versions.append(
+                    {
+                        "slug": d.name,
+                        "exported_at": manifest.get("exported_at", ""),
+                        "row_counts": manifest.get("row_counts", {}),
+                    },
+                )
     return versions
 
 
@@ -167,8 +168,7 @@ def dataset_download(request, version):
     if embargo_active and not has_grant:
         lift_str = lift_date.strftime("%d %B %Y") if lift_date else "TBD"
         return HttpResponse(
-            f"Dataset is under embargo until {lift_str}. "
-            "Contact the research team for early access.",
+            f"Dataset is under embargo until {lift_str}. Contact the research team for early access.",
             status=403,
         )
 

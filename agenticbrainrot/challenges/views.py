@@ -1,6 +1,7 @@
 import json
 
 from django.conf import settings
+from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 
@@ -17,18 +18,13 @@ def preview_challenge(request, challenge_id=None):
     """
     if not settings.LET_PEOPLE_TRY:
         if not request.user.is_staff:
-            from django.contrib.auth.views import redirect_to_login
-
             return redirect_to_login(request.get_full_path())
-    all_challenges = (
-        Challenge.objects.filter(is_active=True)
-        .order_by("difficulty", "title")
+    all_challenges = Challenge.objects.filter(is_active=True).order_by(
+        "difficulty",
+        "title",
     )
 
-    if challenge_id:
-        challenge = get_object_or_404(Challenge, pk=challenge_id)
-    else:
-        challenge = all_challenges.first()
+    challenge = get_object_or_404(Challenge, pk=challenge_id) if challenge_id else all_challenges.first()
 
     if not challenge:
         return render(
@@ -63,8 +59,6 @@ def preview_challenge(request, challenge_id=None):
         "total_challenges": len(ordered_ids),
     }
     template = (
-        "challenges/partials/_preview_content.html"
-        if request.headers.get("HX-Request")
-        else "challenges/preview.html"
+        "challenges/partials/_preview_content.html" if request.headers.get("HX-Request") else "challenges/preview.html"
     )
     return render(request, template, context)

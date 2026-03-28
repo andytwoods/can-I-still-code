@@ -12,7 +12,8 @@ from agenticbrainrot.consent.models import OptionalConsentRecord
 class TestReminderUnsubscribe(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            email="unsub@example.com", password="testpass123",
+            email="unsub@example.com",
+            password="testpass123",
         )
         self.participant, _ = Participant.objects.get_or_create(
             user=self.user,
@@ -29,7 +30,8 @@ class TestReminderUnsubscribe(TestCase):
     def test_valid_token_unsubscribes(self):
         token = self.signer.sign(str(self.participant.pk))
         url = reverse(
-            "accounts:reminder_unsubscribe", kwargs={"token": token},
+            "accounts:reminder_unsubscribe",
+            kwargs={"token": token},
         )
 
         response = self.client.get(url)
@@ -47,7 +49,8 @@ class TestReminderUnsubscribe(TestCase):
     def test_valid_token_logs_audit_event(self):
         token = self.signer.sign(str(self.participant.pk))
         url = reverse(
-            "accounts:reminder_unsubscribe", kwargs={"token": token},
+            "accounts:reminder_unsubscribe",
+            kwargs={"token": token},
         )
 
         self.client.get(url)
@@ -71,7 +74,8 @@ class TestReminderUnsubscribe(TestCase):
         """Unsubscribe should work without authentication."""
         token = self.signer.sign(str(self.participant.pk))
         url = reverse(
-            "accounts:reminder_unsubscribe", kwargs={"token": token},
+            "accounts:reminder_unsubscribe",
+            kwargs={"token": token},
         )
 
         # No login  -  should still work
@@ -87,7 +91,8 @@ class TestReminderUnsubscribe(TestCase):
 
         token = self.signer.sign(str(self.participant.pk))
         url = reverse(
-            "accounts:reminder_unsubscribe", kwargs={"token": token},
+            "accounts:reminder_unsubscribe",
+            kwargs={"token": token},
         )
 
         response = self.client.get(url)

@@ -7,7 +7,14 @@ class ScaleWidget(forms.NumberInput):
     template_name = "surveys/widgets/scale.html"
 
     def __init__(
-        self, *, scale_min, scale_max, min_label, mid_label, max_label, **kwargs,
+        self,
+        *,
+        scale_min,
+        scale_max,
+        min_label,
+        mid_label,
+        max_label,
+        **kwargs,
     ):
         self.scale_min = scale_min
         self.scale_max = scale_max
@@ -18,13 +25,15 @@ class ScaleWidget(forms.NumberInput):
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
-        context["widget"].update({
-            "scale_min": self.scale_min,
-            "scale_max": self.scale_max,
-            "min_label": self.min_label,
-            "mid_label": self.mid_label,
-            "max_label": self.max_label,
-        })
+        context["widget"].update(
+            {
+                "scale_min": self.scale_min,
+                "scale_max": self.scale_max,
+                "min_label": self.min_label,
+                "mid_label": self.mid_label,
+                "max_label": self.max_label,
+            },
+        )
         return context
 
 
@@ -52,7 +61,9 @@ def build_survey_form(questions_qs):
 
         elif q.question_type == "number":
             fields[field_name] = forms.IntegerField(
-                widget=forms.NumberInput(attrs={"class": "input", "style": "width: 50px;"}),
+                widget=forms.NumberInput(
+                    attrs={"class": "input", "style": "width: 50px;"},
+                ),
                 **common,
             )
 

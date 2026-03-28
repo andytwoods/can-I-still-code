@@ -19,7 +19,8 @@ from agenticbrainrot.helpers.task_helpers import send_reminder_emails
 class TestAbandonStaleSessions(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            email="test@example.com", password="testpass123",
+            email="test@example.com",
+            password="testpass123",
         )
         self.participant, _ = Participant.objects.get_or_create(
             user=self.user,
@@ -76,7 +77,8 @@ class TestAbandonStaleSessions(TestCase):
 class TestSendReminderEmails(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            email="reminder@example.com", password="testpass123",
+            email="reminder@example.com",
+            password="testpass123",
         )
         self.participant, _ = Participant.objects.get_or_create(
             user=self.user,
@@ -149,13 +151,16 @@ class TestCleanupPiiRetention(TestCase):
         from agenticbrainrot.consent.models import ConsentDocument  # noqa: PLC0415
 
         self.user = User.objects.create_user(
-            email="pii@example.com", password="testpass123",
+            email="pii@example.com",
+            password="testpass123",
         )
         self.participant, _ = Participant.objects.get_or_create(
             user=self.user,
         )
         self.doc = ConsentDocument.objects.create(
-            title="Test", body="test", version=1,
+            title="Test",
+            body="test",
+            version=1,
         )
 
     def test_cleans_old_records(self):

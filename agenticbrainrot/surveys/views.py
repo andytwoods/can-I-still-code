@@ -144,7 +144,9 @@ def profile_intake(request):
             next_questions = _get_questions_for_category(next_category)
             next_form_class = build_survey_form(next_questions)
             next_form = _prefill_form(
-                next_form_class, participant, next_questions,
+                next_form_class,
+                participant,
+                next_questions,
             )
 
             return render(

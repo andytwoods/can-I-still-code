@@ -1,7 +1,8 @@
 from http import HTTPStatus
 
 import pytest
-from django.test import Client, override_settings
+from django.test import Client
+from django.test import override_settings
 from django.urls import reverse
 
 from agenticbrainrot.accounts.models import User

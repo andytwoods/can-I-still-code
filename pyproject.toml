@@ -53,10 +53,12 @@ indent_size = 2
 indent_size = 2
 
 [tool.ruff]
+line-length = 120
 # Exclude a variety of commonly ignored directories.
 extend-exclude = [
     "*/migrations/*.py",
     "staticfiles/*",
+    "ethics/*",
 ]
 
 [tool.ruff.lint]
@@ -123,6 +125,9 @@ ignore = [
     # of types for comparison.
     # Deactivated because it can make the code slow:
     # https://github.com/astral-sh/ruff/issues/7871
+    "TC001", "TC002", "TC003", # TYPE_CHECKING import blocks not required in this project
+    "RUF001", # En dashes (–) are used intentionally in this codebase
+    "COM812", # Conflicts with ruff formatter
 ]
 
 [tool.ruff.lint.isort]

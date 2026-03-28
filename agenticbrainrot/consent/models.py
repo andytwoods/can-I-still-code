@@ -83,7 +83,4 @@ class OptionalConsentRecord(models.Model):
 
     def __str__(self) -> str:
         status = "consented" if self.consented else "declined"
-        return (
-            f"Optional consent ({status}) for "
-            f"{self.participant}: {self.consent_type}"
-        )
+        return f"Optional consent ({status}) for {self.participant}: {self.consent_type}"

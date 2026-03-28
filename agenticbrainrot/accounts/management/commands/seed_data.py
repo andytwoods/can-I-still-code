@@ -35,25 +35,74 @@ CHALLENGES_DATA = [
 ]
 
 NAMES = [
-    "Alex Chen", "Jamie Rivera", "Sam Patel", "Morgan Lee",
-    "Casey Kim", "Jordan Taylor", "Riley Johnson", "Avery Garcia",
-    "Quinn Williams", "Drew Martinez", "Harper Brown", "Cameron Davis",
-    "Blake Wilson", "Skyler Moore", "Finley Thomas", "Rowan Jackson",
-    "Emery White", "Sage Harris", "Dakota Clark", "Reese Lewis",
+    "Alex Chen",
+    "Jamie Rivera",
+    "Sam Patel",
+    "Morgan Lee",
+    "Casey Kim",
+    "Jordan Taylor",
+    "Riley Johnson",
+    "Avery Garcia",
+    "Quinn Williams",
+    "Drew Martinez",
+    "Harper Brown",
+    "Cameron Davis",
+    "Blake Wilson",
+    "Skyler Moore",
+    "Finley Thomas",
+    "Rowan Jackson",
+    "Emery White",
+    "Sage Harris",
+    "Dakota Clark",
+    "Reese Lewis",
 ]
 
 AGES = [
-    "18-24", "18-24", "18-24", "25-34", "25-34", "25-34",
-    "25-34", "35-44", "35-44", "35-44", "35-44", "45-54",
-    "45-54", "25-34", "18-24", "35-44", "25-34", "45-54",
-    "25-34", "35-44",
+    "18-24",
+    "18-24",
+    "18-24",
+    "25-34",
+    "25-34",
+    "25-34",
+    "25-34",
+    "35-44",
+    "35-44",
+    "35-44",
+    "35-44",
+    "45-54",
+    "45-54",
+    "25-34",
+    "18-24",
+    "35-44",
+    "25-34",
+    "45-54",
+    "25-34",
+    "35-44",
 ]
 
 EXPERIENCE_YEARS = [1, 2, 1, 5, 3, 8, 4, 10, 7, 6, 12, 15, 3, 2, 1, 9, 4, 20, 3, 6]
 
 VIBE_CODING_PCTS = [
-    10, 15, 20, 25, 30, 35, 40, 45, 50, 55,
-    60, 65, 70, 75, 80, 85, 90, 5, 40, 50,
+    10,
+    15,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50,
+    55,
+    60,
+    65,
+    70,
+    75,
+    80,
+    85,
+    90,
+    5,
+    40,
+    50,
 ]
 
 
@@ -78,10 +127,11 @@ class Command(BaseCommand):
         self._create_profile_responses(participants, profile_questions)
         self._create_sessions(participants, challenges)
 
-        self.stdout.write(self.style.SUCCESS(
-            f"Seed data created: {len(participants)} participants, "
-            f"{len(challenges)} challenges",
-        ))
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Seed data created: {len(participants)} participants, {len(challenges)} challenges",
+            ),
+        )
 
     def _clear_data(self):
         """Remove seed users (by email pattern)."""
@@ -123,10 +173,18 @@ class Command(BaseCommand):
         questions = {}
         q_data = [
             ("age_range", "profile", "single_choice", "What is your age range?"),
-            ("experience_years", "profile", "number",
-             "Years of programming experience?"),
-            ("vibe_coding_pct", "post_session", "number",
-             "Can you estimate what % of coding do you do purely with AI?"),
+            (
+                "experience_years",
+                "profile",
+                "number",
+                "Years of programming experience?",
+            ),
+            (
+                "vibe_coding_pct",
+                "post_session",
+                "number",
+                "Can you estimate what % of coding do you do purely with AI?",
+            ),
         ]
         for cat, ctx, qtype, text in q_data:
             q, _ = SurveyQuestion.objects.get_or_create(
@@ -277,7 +335,8 @@ class Command(BaseCommand):
                         time_taken_seconds=time_taken,
                         active_time_seconds=time_taken * active_pct,
                         idle_time_seconds=time_taken * (1 - active_pct),
-                        submitted_at=session_start + timedelta(
+                        submitted_at=session_start
+                        + timedelta(
                             seconds=rng.randint(120, 3000),
                         ),
                         keystroke_count=rng.randint(50, 500),

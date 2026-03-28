@@ -56,7 +56,10 @@ class TestConsentGateMiddleware:
         assert response.status_code == HTTPStatus.OK
 
     def test_user_without_consent_redirected(
-        self, authenticated_client, participant, consent_doc,
+        self,
+        authenticated_client,
+        participant,
+        consent_doc,
     ):
         """User without active consent is redirected."""
         response = authenticated_client.get(reverse("home"))
@@ -64,7 +67,10 @@ class TestConsentGateMiddleware:
         assert reverse("consent:give_consent") in response.url
 
     def test_user_with_consent_not_redirected(
-        self, authenticated_client, participant, consent_doc,
+        self,
+        authenticated_client,
+        participant,
+        consent_doc,
     ):
         """User with active consent can access other pages."""
         participant.has_active_consent = True
@@ -78,7 +84,10 @@ class TestConsentGateMiddleware:
         assert response.status_code == HTTPStatus.OK
 
     def test_consent_page_not_redirected(
-        self, authenticated_client, participant, consent_doc,
+        self,
+        authenticated_client,
+        participant,
+        consent_doc,
     ):
         """Consent page itself is exempt from the gate."""
         url = reverse("consent:give_consent")
@@ -86,14 +95,19 @@ class TestConsentGateMiddleware:
         assert response.status_code == HTTPStatus.OK
 
     def test_logout_not_redirected(
-        self, authenticated_client, participant,
+        self,
+        authenticated_client,
+        participant,
     ):
         """Logout URL is exempt from the gate."""
         response = authenticated_client.get(reverse("account_logout"))
         assert response.status_code == HTTPStatus.OK
 
     def test_stale_consent_redirected(
-        self, authenticated_client, participant, consent_doc,
+        self,
+        authenticated_client,
+        participant,
+        consent_doc,
     ):
         """User with stale consent (older version) is redirected."""
         participant.has_active_consent = True
@@ -133,7 +147,10 @@ class TestConsentGateMiddleware:
 
 class TestConsentView:
     def test_consent_page_renders_document(
-        self, authenticated_client, participant, consent_doc,
+        self,
+        authenticated_client,
+        participant,
+        consent_doc,
     ):
         """Consent page renders the active document."""
         url = reverse("consent:give_consent")
@@ -143,7 +160,9 @@ class TestConsentView:
         assert b"You agree to participate" in response.content
 
     def test_consent_page_no_document(
-        self, authenticated_client, participant,
+        self,
+        authenticated_client,
+        participant,
     ):
         """If no consent doc exists, show unavailable message."""
         url = reverse("consent:give_consent")
@@ -152,7 +171,10 @@ class TestConsentView:
         assert b"Consent Document Unavailable" in response.content
 
     def test_give_consent_creates_records(
-        self, authenticated_client, participant, consent_doc,
+        self,
+        authenticated_client,
+        participant,
+        consent_doc,
     ):
         """Submitting consent creates all expected records."""
         response = authenticated_client.post(
@@ -200,7 +222,10 @@ class TestConsentView:
         assert optional_events.exists()
 
     def test_consent_without_checkbox_fails(
-        self, authenticated_client, participant, consent_doc,
+        self,
+        authenticated_client,
+        participant,
+        consent_doc,
     ):
         """Submitting without consent checkbox returns errors."""
         response = authenticated_client.post(
@@ -211,7 +236,9 @@ class TestConsentView:
         assert b"This field is required" in response.content
 
     def test_decline_page_renders(
-        self, authenticated_client, participant,
+        self,
+        authenticated_client,
+        participant,
     ):
         """Decline page explains they can return later."""
         response = authenticated_client.get(
@@ -221,7 +248,10 @@ class TestConsentView:
         assert b"welcome to return" in response.content
 
     def test_re_consent_after_version_update(
-        self, authenticated_client, participant, consent_doc,
+        self,
+        authenticated_client,
+        participant,
+        consent_doc,
     ):
         """After new doc version, user can re-consent."""
         # First consent

@@ -1,12 +1,13 @@
+from allauth.account.models import EmailAddress
+from allauth.account.models import EmailConfirmation
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
+from django.core.management.base import CommandError
+from django.db import DatabaseError
 from django.utils.crypto import get_random_string
-
-from allauth.account.models import EmailAddress
-from allauth.account.models import EmailConfirmation
 
 User = get_user_model()
 
@@ -49,19 +50,23 @@ class Command(BaseCommand):
                 self.stdout.write("=======================")
             else:
                 self.stdout.write("A superuser exists in the database. Skipping.")
-        except Exception as e:
+        except DatabaseError as e:
             self.stderr.write(f"There was an error creating superuser: {e}")
 
     def _seed_challenges(self):
         self.stdout.write("Seeding challenges...")
         try:
             call_command("seed_challenges", stdout=self.stdout, stderr=self.stderr)
-        except Exception as e:
+        except CommandError as e:
             self.stderr.write(f"There was an error seeding challenges: {e}")
 
     def _seed_survey_questions(self):
         self.stdout.write("Seeding survey questions...")
         try:
-            call_command("seed_survey_questions", stdout=self.stdout, stderr=self.stderr)
-        except Exception as e:
+            call_command(
+                "seed_survey_questions",
+                stdout=self.stdout,
+                stderr=self.stderr,
+            )
+        except CommandError as e:
             self.stderr.write(f"There was an error seeding survey questions: {e}")

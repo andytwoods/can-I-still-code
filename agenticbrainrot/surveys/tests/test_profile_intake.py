@@ -148,9 +148,12 @@ class TestProfileIntakeView:
         assert b"Experience" in response.content
         assert b"Step 2 of 2" in response.content
 
-        assert SurveyResponse.objects.filter(
-            participant=consented_participant,
-        ).count() == EXPECTED_RESPONSE_COUNT
+        assert (
+            SurveyResponse.objects.filter(
+                participant=consented_participant,
+            ).count()
+            == EXPECTED_RESPONSE_COUNT
+        )
 
     def test_final_step_completes_profile(
         self,

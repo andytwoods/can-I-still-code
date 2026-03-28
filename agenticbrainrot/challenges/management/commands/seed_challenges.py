@@ -12,9 +12,7 @@ from django.core.management.base import BaseCommand
 
 from agenticbrainrot.challenges.models import Challenge
 
-FIXTURES_DIR = (
-    Path(__file__).resolve().parent.parent.parent / "fixtures"
-)
+FIXTURES_DIR = Path(__file__).resolve().parent.parent.parent / "fixtures"
 
 
 class Command(BaseCommand):
@@ -35,11 +33,7 @@ class Command(BaseCommand):
         skipped = 0
         errors = 0
 
-        dirs = (
-            [FIXTURES_DIR / f"d{tier}"]
-            if tier
-            else sorted(FIXTURES_DIR.glob("d[1-5]"))
-        )
+        dirs = [FIXTURES_DIR / f"d{tier}"] if tier else sorted(FIXTURES_DIR.glob("d[1-5]"))
 
         for tier_dir in dirs:
             if not tier_dir.is_dir():
@@ -73,8 +67,8 @@ class Command(BaseCommand):
                         f"Error loading {json_file.name}: {exc}",
                     )
 
-        self.stdout.write(self.style.SUCCESS(
-            f"Done. Created: {created}, "
-            f"Skipped: {skipped}, "
-            f"Errors: {errors}",
-        ))
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Done. Created: {created}, Skipped: {skipped}, Errors: {errors}",
+            ),
+        )

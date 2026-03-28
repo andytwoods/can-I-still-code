@@ -60,7 +60,9 @@ def authenticated_client(user):
 
 class TestWithdrawal:
     def test_withdraw_page_renders(
-        self, authenticated_client, consented_participant,
+        self,
+        authenticated_client,
+        consented_participant,
     ):
         response = authenticated_client.get(
             reverse("accounts:withdraw"),
@@ -69,7 +71,9 @@ class TestWithdrawal:
         assert b"Withdraw from Study" in response.content
 
     def test_withdraw_sets_fields(
-        self, authenticated_client, consented_participant,
+        self,
+        authenticated_client,
+        consented_participant,
     ):
         response = authenticated_client.post(
             reverse("accounts:withdraw"),
@@ -81,7 +85,9 @@ class TestWithdrawal:
         assert consented_participant.has_active_consent is False
 
     def test_withdraw_logs_audit_event(
-        self, authenticated_client, consented_participant,
+        self,
+        authenticated_client,
+        consented_participant,
     ):
         authenticated_client.post(reverse("accounts:withdraw"))
         assert AuditEvent.objects.filter(
@@ -90,7 +96,9 @@ class TestWithdrawal:
         ).exists()
 
     def test_withdrawn_cannot_start_session(
-        self, authenticated_client, consented_participant,
+        self,
+        authenticated_client,
+        consented_participant,
     ):
         """Withdrawn participant is not redirected to consent but
         cannot access session pages (handled by session views)."""
@@ -104,7 +112,9 @@ class TestWithdrawal:
         assert response.status_code == HTTPStatus.OK
 
     def test_htmx_withdraw_returns_partial(
-        self, authenticated_client, consented_participant,
+        self,
+        authenticated_client,
+        consented_participant,
     ):
         response = authenticated_client.post(
             reverse("accounts:withdraw"),
@@ -116,7 +126,9 @@ class TestWithdrawal:
 
 class TestDeletionRequest:
     def test_deletion_requires_withdrawal(
-        self, authenticated_client, consented_participant,
+        self,
+        authenticated_client,
+        consented_participant,
     ):
         """Cannot request deletion without withdrawing first."""
         response = authenticated_client.post(
@@ -125,7 +137,9 @@ class TestDeletionRequest:
         assert response.status_code == HTTPStatus.BAD_REQUEST
 
     def test_deletion_request_sets_field(
-        self, authenticated_client, consented_participant,
+        self,
+        authenticated_client,
+        consented_participant,
     ):
         """Deletion request after withdrawal sets the field."""
         consented_participant.withdrawn_at = timezone.now()
@@ -140,7 +154,9 @@ class TestDeletionRequest:
         assert consented_participant.deletion_requested_at is not None
 
     def test_deletion_request_logs_audit(
-        self, authenticated_client, consented_participant,
+        self,
+        authenticated_client,
+        consented_participant,
     ):
         consented_participant.withdrawn_at = timezone.now()
         consented_participant.save(update_fields=["withdrawn_at"])

@@ -10,29 +10,31 @@ from .models import SurveyResponse
 def export_survey_responses_csv(modeladmin, request, queryset):
     """Export selected survey responses as CSV."""
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        "attachment; filename=survey_responses.csv"
-    )
+    response["Content-Disposition"] = "attachment; filename=survey_responses.csv"
     writer = csv.writer(response)
-    writer.writerow([
-        "participant",
-        "question",
-        "context",
-        "value",
-        "session",
-        "challenge_attempt",
-        "answered_at",
-    ])
+    writer.writerow(
+        [
+            "participant",
+            "question",
+            "context",
+            "value",
+            "session",
+            "challenge_attempt",
+            "answered_at",
+        ],
+    )
     for obj in queryset.select_related("question", "participant"):
-        writer.writerow([
-            obj.participant,
-            obj.question.text[:60],
-            obj.question.context,
-            obj.value,
-            obj.session_id,
-            obj.challenge_attempt_id,
-            obj.answered_at,
-        ])
+        writer.writerow(
+            [
+                obj.participant,
+                obj.question.text[:60],
+                obj.question.context,
+                obj.value,
+                obj.session_id,
+                obj.challenge_attempt_id,
+                obj.answered_at,
+            ],
+        )
     return response
 
 

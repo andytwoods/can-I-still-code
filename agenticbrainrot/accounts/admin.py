@@ -87,9 +87,7 @@ class PendingDeletionFilter(admin.SimpleListFilter):
 
 def process_deletion_request(modeladmin, request, queryset):
     """Process data deletion for selected participants."""
-    from agenticbrainrot.helpers.task_helpers import (  # noqa: PLC0415
-        process_participant_deletion,
-    )
+    from agenticbrainrot.helpers.task_helpers import process_participant_deletion  # noqa: PLC0415
 
     processed = 0
     for participant in queryset.filter(
@@ -146,13 +144,15 @@ def export_audit_events_csv(modeladmin, request, queryset):
     writer = csv.writer(response)
     writer.writerow(["timestamp", "event_type", "participant", "actor", "metadata"])
     for event in queryset:
-        writer.writerow([
-            event.timestamp,
-            event.event_type,
-            event.participant,
-            event.actor,
-            event.metadata,
-        ])
+        writer.writerow(
+            [
+                event.timestamp,
+                event.event_type,
+                event.participant,
+                event.actor,
+                event.metadata,
+            ],
+        )
     return response
 
 

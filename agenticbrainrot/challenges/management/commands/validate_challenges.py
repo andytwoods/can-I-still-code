@@ -14,13 +14,15 @@ from pathlib import Path
 
 from django.core.management.base import BaseCommand
 
-FIXTURES_DIR = (
-    Path(__file__).resolve().parent.parent.parent / "fixtures"
-)
+FIXTURES_DIR = Path(__file__).resolve().parent.parent.parent / "fixtures"
 
 REQUIRED_FIELDS = {
-    "external_id", "title", "description",
-    "skeleton_code", "test_cases", "difficulty",
+    "external_id",
+    "title",
+    "description",
+    "skeleton_code",
+    "test_cases",
+    "difficulty",
 }
 
 
@@ -44,10 +46,7 @@ def _validate_test_case(tc, file_path):
         if "tree" not in tc:
             errors.append(f"{file_path}: tree_ops test missing 'tree'")
     else:
-        has_expected = any(
-            k in tc
-            for k in ("expected", "expected_in", "expected_sorted")
-        )
+        has_expected = any(k in tc for k in ("expected", "expected_in", "expected_sorted"))
         if not has_expected:
             errors.append(f"{file_path}: test_case missing expected value")
     return errors
@@ -79,15 +78,13 @@ def _validate_file(json_file, expected_difficulty, seen_ids):
 
     if ext_id in seen_ids:
         errors.append(
-            f"{rel}: duplicate external_id '{ext_id}' "
-            f"(also in {seen_ids[ext_id]})",
+            f"{rel}: duplicate external_id '{ext_id}' (also in {seen_ids[ext_id]})",
         )
     seen_ids[ext_id] = rel
 
     if data["difficulty"] != expected_difficulty:
         errors.append(
-            f"{rel}: difficulty {data['difficulty']} "
-            f"doesn't match directory d{expected_difficulty}",
+            f"{rel}: difficulty {data['difficulty']} doesn't match directory d{expected_difficulty}",
         )
 
     n_tests = 0
@@ -123,7 +120,9 @@ class Command(BaseCommand):
             for json_file in sorted(tier_dir.glob("*.json")):
                 total_files += 1
                 errors, n_tests = _validate_file(
-                    json_file, expected_difficulty, seen_ids,
+                    json_file,
+                    expected_difficulty,
+                    seen_ids,
                 )
                 all_errors.extend(errors)
                 total_tests += n_tests
@@ -132,11 +131,11 @@ class Command(BaseCommand):
             for err in all_errors:
                 self.stderr.write(self.style.ERROR(err))
             self.stderr.write(
-                f"\n{len(all_errors)} error(s) in "
-                f"{total_files} files.",
+                f"\n{len(all_errors)} error(s) in {total_files} files.",
             )
         else:
-            self.stdout.write(self.style.SUCCESS(
-                f"All {total_files} fixture files valid "
-                f"({total_tests} test cases).",
-            ))
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"All {total_files} fixture files valid ({total_tests} test cases).",
+                ),
+            )

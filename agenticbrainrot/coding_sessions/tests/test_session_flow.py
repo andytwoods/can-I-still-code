@@ -140,7 +140,10 @@ def post_session_questions(db):
 
 class TestSessionStart:
     def test_start_page_renders(
-        self, logged_in_client, consented_participant, challenges,
+        self,
+        logged_in_client,
+        consented_participant,
+        challenges,
     ):
         response = logged_in_client.get(
             reverse("coding_sessions:session_start"),
@@ -156,7 +159,9 @@ class TestSessionStart:
         assert response.status_code == HTTPStatus.FOUND
 
     def test_start_requires_consent(
-        self, logged_in_client, participant,
+        self,
+        logged_in_client,
+        participant,
     ):
         response = logged_in_client.get(
             reverse("coding_sessions:session_start"),
@@ -164,7 +169,9 @@ class TestSessionStart:
         assert response.status_code == HTTPStatus.FOUND
 
     def test_start_requires_profile(
-        self, logged_in_client, participant,
+        self,
+        logged_in_client,
+        participant,
     ):
         doc = ConsentDocument.objects.create(
             version=1,
@@ -188,7 +195,10 @@ class TestSessionStart:
         assert "profile/intake" in response.url
 
     def test_start_creates_session(
-        self, logged_in_client, consented_participant, challenges,
+        self,
+        logged_in_client,
+        consented_participant,
+        challenges,
     ):
         response = logged_in_client.post(
             reverse("coding_sessions:session_start"),
@@ -203,7 +213,10 @@ class TestSessionStart:
         assert session.status == CodeSession.Status.IN_PROGRESS
 
     def test_start_creates_session_challenges(
-        self, logged_in_client, consented_participant, challenges,
+        self,
+        logged_in_client,
+        consented_participant,
+        challenges,
     ):
         logged_in_client.post(
             reverse("coding_sessions:session_start"),
@@ -215,7 +228,10 @@ class TestSessionStart:
         assert session.session_challenges.count() > 0
 
     def test_start_logs_audit_event(
-        self, logged_in_client, consented_participant, challenges,
+        self,
+        logged_in_client,
+        consented_participant,
+        challenges,
     ):
         logged_in_client.post(
             reverse("coding_sessions:session_start"),
@@ -227,7 +243,10 @@ class TestSessionStart:
         ).exists()
 
     def test_withdrawn_participant_blocked(
-        self, logged_in_client, consented_participant, challenges,
+        self,
+        logged_in_client,
+        consented_participant,
+        challenges,
     ):
         consented_participant.withdrawn_at = timezone.now()
         consented_participant.save(update_fields=["withdrawn_at"])
@@ -239,7 +258,10 @@ class TestSessionStart:
         assert b"withdrawn" in response.content
 
     def test_28_day_cooldown(
-        self, logged_in_client, consented_participant, challenges,
+        self,
+        logged_in_client,
+        consented_participant,
+        challenges,
     ):
         # Create a completed session from 10 days ago
         session = CodeSession.objects.create(
@@ -257,7 +279,10 @@ class TestSessionStart:
         assert b"cooldown" in response.content or b"recently" in response.content
 
     def test_cooldown_only_counts_completed(
-        self, logged_in_client, consented_participant, challenges,
+        self,
+        logged_in_client,
+        consented_participant,
+        challenges,
     ):
         """Abandoned sessions do NOT trigger the 28-day rule."""
         CodeSession.objects.create(
@@ -272,7 +297,9 @@ class TestSessionStart:
         assert b"Start a Coding Session" in response.content
 
     def test_resumable_session(
-        self, logged_in_client, session_with_challenges,
+        self,
+        logged_in_client,
+        session_with_challenges,
     ):
         """If an in-progress session exists, redirect to it."""
         response = logged_in_client.get(
@@ -286,7 +313,10 @@ class TestSessionStart:
         assert expected_url in response.url
 
     def test_stale_session_auto_abandoned(
-        self, logged_in_client, consented_participant, challenges,
+        self,
+        logged_in_client,
+        consented_participant,
+        challenges,
     ):
         """Sessions older than 4 hours are auto-abandoned."""
         old_session = CodeSession.objects.create(
@@ -306,7 +336,9 @@ class TestSessionStart:
         assert response.status_code == HTTPStatus.OK
 
     def test_pool_exhaustion_shows_message(
-        self, logged_in_client, consented_participant,
+        self,
+        logged_in_client,
+        consented_participant,
     ):
         """When no challenges exist, show a message."""
         response = logged_in_client.post(
@@ -319,7 +351,9 @@ class TestSessionStart:
 
 class TestSessionView:
     def test_session_get_renders_challenge(
-        self, logged_in_client, session_with_challenges,
+        self,
+        logged_in_client,
+        session_with_challenges,
     ):
         response = logged_in_client.get(
             reverse(
@@ -369,7 +403,9 @@ class TestSessionView:
         assert not attempt.skipped
 
     def test_submit_idempotency(
-        self, logged_in_client, session_with_challenges,
+        self,
+        logged_in_client,
+        session_with_challenges,
     ):
         """Submitting the same attempt_uuid returns existing result."""
         url = reverse(
@@ -397,12 +433,17 @@ class TestSessionView:
         logged_in_client.post(url, data, HTTP_HX_REQUEST="true")
 
         # Only one attempt created
-        assert ChallengeAttempt.objects.filter(
-            attempt_uuid=attempt_uuid,
-        ).count() == 1
+        assert (
+            ChallengeAttempt.objects.filter(
+                attempt_uuid=attempt_uuid,
+            ).count()
+            == 1
+        )
 
     def test_skip_creates_attempt(
-        self, logged_in_client, session_with_challenges,
+        self,
+        logged_in_client,
+        session_with_challenges,
     ):
         url = reverse(
             "coding_sessions:session_view",
@@ -443,7 +484,9 @@ class TestSessionView:
         ).exists()
 
     def test_submit_on_completed_session_returns_409(
-        self, logged_in_client, session_with_challenges,
+        self,
+        logged_in_client,
+        session_with_challenges,
     ):
         session_with_challenges.status = CodeSession.Status.COMPLETED
         session_with_challenges.completed_at = timezone.now()
@@ -462,7 +505,9 @@ class TestSessionView:
         assert response.status_code == HTTPStatus.CONFLICT
 
     def test_submit_on_abandoned_session_returns_409(
-        self, logged_in_client, session_with_challenges,
+        self,
+        logged_in_client,
+        session_with_challenges,
     ):
         session_with_challenges.status = CodeSession.Status.ABANDONED
         session_with_challenges.abandoned_at = timezone.now()
@@ -482,7 +527,9 @@ class TestSessionView:
         assert b"session has ended" in response.content
 
     def test_forbidden_for_other_user(
-        self, session_with_challenges, consented_participant,
+        self,
+        session_with_challenges,
+        consented_participant,
     ):
         other_user = User.objects.create_user(
             email="other2@example.com",
@@ -602,7 +649,9 @@ class TestReflection:
 
 class TestAnotherPrompt:
     def test_another_loads_next_challenge(
-        self, logged_in_client, session_with_challenges,
+        self,
+        logged_in_client,
+        session_with_challenges,
     ):
         url = reverse(
             "coding_sessions:session_view",
@@ -666,9 +715,7 @@ class TestPostSessionSurvey:
         assert response["HX-Redirect"] == "/results/"
 
         session_with_challenges.refresh_from_db()
-        assert session_with_challenges.status == (
-            CodeSession.Status.COMPLETED
-        )
+        assert session_with_challenges.status == (CodeSession.Status.COMPLETED)
         assert session_with_challenges.completed_at is not None
 
     def test_post_session_logs_audit(

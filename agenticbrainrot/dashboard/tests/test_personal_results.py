@@ -112,7 +112,9 @@ class TestPersonalResults:
         assert b"first session" in response.content
 
     def test_with_sessions_shows_table(
-        self, logged_in_client, completed_sessions,
+        self,
+        logged_in_client,
+        completed_sessions,
     ):
         response = logged_in_client.get(
             reverse("dashboard:personal_results"),
@@ -123,7 +125,9 @@ class TestPersonalResults:
         assert b"Session 2" in response.content
 
     def test_with_sessions_includes_chart_data(
-        self, logged_in_client, completed_sessions,
+        self,
+        logged_in_client,
+        completed_sessions,
     ):
         response = logged_in_client.get(
             reverse("dashboard:personal_results"),
@@ -134,7 +138,9 @@ class TestPersonalResults:
         assert b"chart.js" in response.content.lower()
 
     def test_accuracy_calculation(
-        self, logged_in_client, completed_sessions,
+        self,
+        logged_in_client,
+        completed_sessions,
     ):
         """Accuracy should be 50% (1 of 2 tests passed)."""
         response = logged_in_client.get(

@@ -234,9 +234,7 @@ PROFILE_QUESTIONS = [
         "display_order": 30,
     },
     {
-        "text": (
-            "How confident are you in solving programming " "problems without any external help?"
-        ),
+        "text": ("How confident are you in solving programming problems without any external help?"),
         "question_type": "single_choice",
         "choices": [
             ["not_at_all_confident", "Not at all confident"],
@@ -251,9 +249,7 @@ PROFILE_QUESTIONS = [
         "display_order": 31,
     },
     {
-        "text": (
-            "How often do you review and understand AI-generated code " "before using it?"
-        ),
+        "text": ("How often do you review and understand AI-generated code before using it?"),
         "question_type": "single_choice",
         "choices": [
             ["always", "Always"],
@@ -286,9 +282,7 @@ PROFILE_QUESTIONS = [
         "display_order": 40,
     },
     {
-        "text": (
-            "Do you believe that heavy use of AI coding tools " "could negatively affect programming skills?"
-        ),
+        "text": ("Do you believe that heavy use of AI coding tools could negatively affect programming skills?"),
         "question_type": "single_choice",
         "choices": [
             ["strongly_disagree", "Strongly disagree"],
@@ -320,9 +314,7 @@ PROFILE_QUESTIONS = [
         "display_order": 50,
     },
     {
-        "text": (
-            "When writing code, how often do you plan your " "approach before starting to type?"
-        ),
+        "text": ("When writing code, how often do you plan your approach before starting to type?"),
         "question_type": "single_choice",
         "choices": [
             ["always", "Always"],
@@ -354,8 +346,7 @@ PROFILE_QUESTIONS = [
         "display_order": 52,
     },
     {
-        "text": (
-            "How comfortable are you reading and understanding " "code written by others?"),
+        "text": ("How comfortable are you reading and understanding code written by others?"),
         "question_type": "single_choice",
         "choices": [
             ["not_at_all_comfortable", "Not at all comfortable"],
@@ -436,7 +427,7 @@ POST_CHALLENGE_QUESTIONS = [
 
 POST_SESSION_QUESTIONS = [
     {
-        "text": ("Since your last session, has your use of AI coding " "tools changed?"),
+        "text": ("Since your last session, has your use of AI coding tools changed?"),
         "question_type": "single_choice",
         "choices": [
             ["increased", "Increased"],
@@ -452,7 +443,7 @@ POST_SESSION_QUESTIONS = [
         "display_order": 1,
     },
     {
-        "text": ("How would you rate your overall coding confidence " "right now?"),
+        "text": ("How would you rate your overall coding confidence right now?"),
         "question_type": "single_choice",
         "choices": [
             ["very_low", "Very low"],
@@ -467,7 +458,7 @@ POST_SESSION_QUESTIONS = [
         "display_order": 2,
     },
     {
-        "text": ("How did you find the difficulty of the challenges " "in this session overall?"),
+        "text": ("How did you find the difficulty of the challenges in this session overall?"),
         "question_type": "single_choice",
         "choices": [
             ["much_too_easy", "Much too easy"],
@@ -502,10 +493,7 @@ POST_SESSION_QUESTIONS = [
         "display_order": 4,
     },
     {
-        "text": (
-            "Can you estimate what percentage of the code you "
-            "generate with AI you check over?"
-        ),
+        "text": ("Can you estimate what percentage of the code you generate with AI you check over?"),
         "question_type": "number",
         "context": "post_session",
         "category": "AI Trust",
@@ -557,6 +545,6 @@ class Command(BaseCommand):
 
         self.stdout.write(
             self.style.SUCCESS(
-                f"Done. Created: {created_count}, " f"Skipped (already exist): {skipped_count}",
+                f"Done. Created: {created_count}, Skipped (already exist): {skipped_count}",
             ),
         )

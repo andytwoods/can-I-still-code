@@ -94,31 +94,14 @@ def small_challenge_set(db):
 
 class TestSeedChallenges:
     def test_seed_creates_challenges(self, seeded_challenges):
-        assert (
-            seeded_challenges.count() == EXPECTED_TOTAL_CHALLENGES
-        )
+        assert seeded_challenges.count() == EXPECTED_TOTAL_CHALLENGES
 
     def test_tier_distribution(self, seeded_challenges):
-        assert (
-            seeded_challenges.filter(difficulty=1).count()
-            == EXPECTED_TIER_1
-        )
-        assert (
-            seeded_challenges.filter(difficulty=2).count()
-            == EXPECTED_TIER_2
-        )
-        assert (
-            seeded_challenges.filter(difficulty=3).count()
-            == EXPECTED_TIER_3
-        )
-        assert (
-            seeded_challenges.filter(difficulty=4).count()
-            == EXPECTED_TIER_4
-        )
-        assert (
-            seeded_challenges.filter(difficulty=5).count()
-            == EXPECTED_TIER_5
-        )
+        assert seeded_challenges.filter(difficulty=1).count() == EXPECTED_TIER_1
+        assert seeded_challenges.filter(difficulty=2).count() == EXPECTED_TIER_2
+        assert seeded_challenges.filter(difficulty=3).count() == EXPECTED_TIER_3
+        assert seeded_challenges.filter(difficulty=4).count() == EXPECTED_TIER_4
+        assert seeded_challenges.filter(difficulty=5).count() == EXPECTED_TIER_5
 
     def test_idempotent(self, seeded_challenges):
         first_count = seeded_challenges.count()
@@ -127,26 +110,22 @@ class TestSeedChallenges:
 
     def test_challenges_have_test_cases(self, seeded_challenges):
         for c in seeded_challenges:
-            assert len(c.test_cases) > 0, (
-                f"Challenge {c.external_id} has no test cases"
-            )
+            assert len(c.test_cases) > 0, f"Challenge {c.external_id} has no test cases"
 
     def test_challenges_have_skeleton_code(self, seeded_challenges):
         for c in seeded_challenges:
-            assert c.skeleton_code.strip(), (
-                f"Challenge {c.external_id} has no skeleton code"
-            )
+            assert c.skeleton_code.strip(), f"Challenge {c.external_id} has no skeleton code"
 
     def test_test_cases_hash_populated(self, seeded_challenges):
         for c in seeded_challenges:
-            assert c.test_cases_hash, (
-                f"Challenge {c.external_id} has no test_cases_hash"
-            )
+            assert c.test_cases_hash, f"Challenge {c.external_id} has no test_cases_hash"
 
 
 class TestChallengeSelection:
     def test_selects_correct_count(
-        self, consented_participant, small_challenge_set,
+        self,
+        consented_participant,
+        small_challenge_set,
     ):
         selected = select_challenges_for_session(
             consented_participant,
@@ -154,7 +133,9 @@ class TestChallengeSelection:
         assert len(selected) == CHALLENGES_PER_SESSION
 
     def test_ascending_difficulty(
-        self, consented_participant, small_challenge_set,
+        self,
+        consented_participant,
+        small_challenge_set,
     ):
         selected = select_challenges_for_session(
             consented_participant,
@@ -163,7 +144,9 @@ class TestChallengeSelection:
         assert difficulties == sorted(difficulties)
 
     def test_no_repeats(
-        self, consented_participant, small_challenge_set,
+        self,
+        consented_participant,
+        small_challenge_set,
     ):
         selected = select_challenges_for_session(
             consented_participant,
@@ -172,7 +155,9 @@ class TestChallengeSelection:
         assert len(ids) == len(set(ids))
 
     def test_excludes_already_seen(
-        self, consented_participant, small_challenge_set,
+        self,
+        consented_participant,
+        small_challenge_set,
     ):
         """Challenges already attempted are excluded."""
         session = CodeSession.objects.create(
@@ -203,7 +188,9 @@ class TestChallengeSelection:
         assert first_ids.isdisjoint(second_ids)
 
     def test_pool_exhaustion_raises(
-        self, consented_participant, db,
+        self,
+        consented_participant,
+        db,
     ):
         """When no challenges remain, PoolExhaustedError is raised."""
         # No challenges in DB
@@ -211,7 +198,9 @@ class TestChallengeSelection:
             select_challenges_for_session(consented_participant)
 
     def test_partial_pool_returns_fewer(
-        self, consented_participant, db,
+        self,
+        consented_participant,
+        db,
     ):
         """When fewer than 10 challenges are available, returns what's available."""
         for i in range(3):
@@ -230,7 +219,9 @@ class TestChallengeSelection:
         assert len(selected) == expected_sparse_count
 
     def test_tier_fill_from_adjacent(
-        self, consented_participant, db,
+        self,
+        consented_participant,
+        db,
     ):
         """When a tier is exhausted, fills from adjacent tiers."""
         # Only create tier 1 challenges (no tier 2-5)
@@ -262,7 +253,9 @@ class TestSessionView:
         assert response.status_code == HTTPStatus.FOUND
 
     def test_session_view_forbidden_for_other_user(
-        self, consented_participant, small_challenge_set,
+        self,
+        consented_participant,
+        small_challenge_set,
     ):
         """Cannot view another participant's session."""
         session = CodeSession.objects.create(

@@ -59,17 +59,11 @@ class CodeSession(models.Model):
         ordering = ["-started_at"]
         constraints = [
             models.CheckConstraint(
-                condition=(
-                    models.Q(status="completed", completed_at__isnull=False)
-                    | ~models.Q(status="completed")
-                ),
+                condition=(models.Q(status="completed", completed_at__isnull=False) | ~models.Q(status="completed")),
                 name="completed_status_requires_completed_at",
             ),
             models.CheckConstraint(
-                condition=(
-                    models.Q(status="abandoned", abandoned_at__isnull=False)
-                    | ~models.Q(status="abandoned")
-                ),
+                condition=(models.Q(status="abandoned", abandoned_at__isnull=False) | ~models.Q(status="abandoned")),
                 name="abandoned_status_requires_abandoned_at",
             ),
         ]
@@ -105,7 +99,4 @@ class CodeSessionChallenge(models.Model):
         ordering = ["position"]
 
     def __str__(self) -> str:
-        return (
-            f"Challenge {self.challenge} in session "
-            f"{self.session.pk} (position {self.position})"
-        )
+        return f"Challenge {self.challenge} in session {self.session.pk} (position {self.position})"

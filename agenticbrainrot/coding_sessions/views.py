@@ -2,8 +2,10 @@ import json
 import uuid
 
 from django.conf import settings
-from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import get_user_model
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import redirect_to_login
 from django.db import transaction
 from django.http import HttpResponse
 from django.http import HttpResponseForbidden
@@ -548,7 +550,11 @@ def _handle_post_session_submit(request, session, participant):
 
 
 def _save_survey_responses(
-    participant, questions, form, session=None, challenge_attempt=None,
+    participant,
+    questions,
+    form,
+    session=None,
+    challenge_attempt=None,
 ):
     """Save survey responses from a form."""
     for question in questions:
@@ -581,8 +587,6 @@ def mock_session_start(request):
     """
     if not settings.LET_PEOPLE_TRY:
         if not request.user.is_staff:
-            from django.contrib.auth.views import redirect_to_login
-
             return redirect_to_login(request.get_full_path())
     if request.method == "POST":
         form = MockSessionStartForm(request.POST)
@@ -607,16 +611,18 @@ def _create_mock_session(request, form):
             # For anonymous visitors when LET_PEOPLE_TRY is enabled,
             # create a temporary guest account and log them in.
             if not user.is_authenticated:
-                from django.contrib.auth import get_user_model, login
-
-                User = get_user_model()
+                user_model = get_user_model()
                 guest_id = uuid.uuid4().hex[:12]
-                user = User.objects.create_user(
+                user = user_model.objects.create_user(
                     email=f"guest-{guest_id}@try.agenticbrainrot.com",
                     password=None,
                     name="Guest",
                 )
-                login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+                login(
+                    request,
+                    user,
+                    backend="django.contrib.auth.backends.ModelBackend",
+                )
 
             # Get-or-create a Participant record for this user
             participant, _created = Participant.objects.get_or_create(

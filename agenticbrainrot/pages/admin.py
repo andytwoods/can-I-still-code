@@ -7,8 +7,12 @@ from .models import Sponsor
 @admin.register(PolicyDocument)
 class PolicyDocumentAdmin(admin.ModelAdmin):
     list_display = [
-        "title", "doc_type", "version",
-        "is_active", "published_at", "updated_at",
+        "title",
+        "doc_type",
+        "version",
+        "is_active",
+        "published_at",
+        "updated_at",
     ]
     list_filter = ["doc_type", "is_active"]
     search_fields = ["title"]

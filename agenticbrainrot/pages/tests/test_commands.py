@@ -1,10 +1,13 @@
-import pytest
-from django.core.management import call_command
-from django.contrib.auth import get_user_model
-from allauth.account.models import EmailAddress, EmailConfirmation
 from io import StringIO
 
+import pytest
+from allauth.account.models import EmailAddress
+from allauth.account.models import EmailConfirmation
+from django.contrib.auth import get_user_model
+from django.core.management import call_command
+
 User = get_user_model()
+
 
 @pytest.mark.django_db
 def test_setup_app_creates_superuser_and_sends_email():

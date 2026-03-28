@@ -1,4 +1,3 @@
-# ruff: noqa: E501
 import csv
 import hashlib
 import hmac
@@ -91,12 +90,15 @@ def export_participants(output_dir):
         "profile_completed",
         "profile_updated_at",
     ]
-    rows = _build_rows(participants, lambda p: [
-        _anon_id(p.pk),
-        p.has_active_consent,
-        p.profile_completed,
-        _date_only(p.profile_updated_at),
-    ])
+    rows = _build_rows(
+        participants,
+        lambda p: [
+            _anon_id(p.pk),
+            p.has_active_consent,
+            p.profile_completed,
+            _date_only(p.profile_updated_at),
+        ],
+    )
 
     count = _write_csv(output_dir / "participants.csv", headers, rows)
     _write_parquet(output_dir / "participants.parquet", headers, rows)
@@ -124,30 +126,33 @@ def export_code_sessions(output_dir):
         "device_type",
         "distraction_free",
     ]
-    rows = _build_rows(sessions, lambda s: [
-        s.pk,
-        _anon_id(s.participant_id),
-        s.status,
-        _date_only(s.started_at),
-        _date_only(s.completed_at),
-        _date_only(s.abandoned_at),
-        s.challenges_attempted,
-        s.device_type,
-        s.distraction_free,
-    ])
+    rows = _build_rows(
+        sessions,
+        lambda s: [
+            s.pk,
+            _anon_id(s.participant_id),
+            s.status,
+            _date_only(s.started_at),
+            _date_only(s.completed_at),
+            _date_only(s.abandoned_at),
+            s.challenges_attempted,
+            s.device_type,
+            s.distraction_free,
+        ],
+    )
 
     count = _write_csv(output_dir / "code_sessions.csv", headers, rows)
     _write_parquet(
-        output_dir / "code_sessions.parquet", headers, rows,
+        output_dir / "code_sessions.parquet",
+        headers,
+        rows,
     )
     return count
 
 
 def export_code_session_challenges(output_dir):
     """Export code session challenge assignments."""
-    from agenticbrainrot.coding_sessions.models import (  # noqa: PLC0415
-        CodeSessionChallenge,
-    )
+    from agenticbrainrot.coding_sessions.models import CodeSessionChallenge  # noqa: PLC0415
 
     records = CodeSessionChallenge.objects.filter(
         session__participant__withdrawn_at__isnull=True,
@@ -161,18 +166,25 @@ def export_code_session_challenges(output_dir):
         "position",
         "assigned_at",
     ]
-    rows = _build_rows(records, lambda r: [
-        r.session_id,
-        r.challenge_id,
-        r.position,
-        _date_only(r.assigned_at),
-    ])
+    rows = _build_rows(
+        records,
+        lambda r: [
+            r.session_id,
+            r.challenge_id,
+            r.position,
+            _date_only(r.assigned_at),
+        ],
+    )
 
     count = _write_csv(
-        output_dir / "code_session_challenges.csv", headers, rows,
+        output_dir / "code_session_challenges.csv",
+        headers,
+        rows,
     )
     _write_parquet(
-        output_dir / "code_session_challenges.parquet", headers, rows,
+        output_dir / "code_session_challenges.parquet",
+        headers,
+        rows,
     )
     return count
 
@@ -204,29 +216,36 @@ def export_challenge_attempts(output_dir):
         "keystroke_count",
         "tab_blur_count",
     ]
-    rows = _build_rows(attempts, lambda a: [
-        _anon_id(a.participant_id),
-        a.challenge_id,
-        a.session_id,
-        a.tests_passed,
-        a.tests_total,
-        a.time_taken_seconds,
-        a.active_time_seconds,
-        a.idle_time_seconds,
-        _date_only(a.started_at),
-        _date_only(a.submitted_at),
-        a.skipped,
-        a.paste_count,
-        a.paste_total_chars,
-        a.keystroke_count,
-        a.tab_blur_count,
-    ])
+    rows = _build_rows(
+        attempts,
+        lambda a: [
+            _anon_id(a.participant_id),
+            a.challenge_id,
+            a.session_id,
+            a.tests_passed,
+            a.tests_total,
+            a.time_taken_seconds,
+            a.active_time_seconds,
+            a.idle_time_seconds,
+            _date_only(a.started_at),
+            _date_only(a.submitted_at),
+            a.skipped,
+            a.paste_count,
+            a.paste_total_chars,
+            a.keystroke_count,
+            a.tab_blur_count,
+        ],
+    )
 
     count = _write_csv(
-        output_dir / "challenge_attempts.csv", headers, rows,
+        output_dir / "challenge_attempts.csv",
+        headers,
+        rows,
     )
     _write_parquet(
-        output_dir / "challenge_attempts.parquet", headers, rows,
+        output_dir / "challenge_attempts.parquet",
+        headers,
+        rows,
     )
     return count
 
@@ -246,15 +265,18 @@ def export_challenges(output_dir):
         "is_active",
         "created_at",
     ]
-    rows = _build_rows(challenges, lambda c: [
-        c.pk,
-        c.external_id,
-        c.title,
-        c.difficulty,
-        json.dumps(c.tags),
-        c.is_active,
-        _date_only(c.created_at),
-    ])
+    rows = _build_rows(
+        challenges,
+        lambda c: [
+            c.pk,
+            c.external_id,
+            c.title,
+            c.difficulty,
+            json.dumps(c.tags),
+            c.is_active,
+            _date_only(c.created_at),
+        ],
+    )
 
     count = _write_csv(output_dir / "challenges.csv", headers, rows)
     _write_parquet(output_dir / "challenges.parquet", headers, rows)
@@ -277,22 +299,29 @@ def export_survey_questions(output_dir):
         "is_active",
         "display_order",
     ]
-    rows = _build_rows(questions, lambda q: [
-        q.pk,
-        q.text,
-        q.question_type,
-        q.context,
-        q.category,
-        q.is_required,
-        q.is_active,
-        q.display_order,
-    ])
+    rows = _build_rows(
+        questions,
+        lambda q: [
+            q.pk,
+            q.text,
+            q.question_type,
+            q.context,
+            q.category,
+            q.is_required,
+            q.is_active,
+            q.display_order,
+        ],
+    )
 
     count = _write_csv(
-        output_dir / "survey_questions.csv", headers, rows,
+        output_dir / "survey_questions.csv",
+        headers,
+        rows,
     )
     _write_parquet(
-        output_dir / "survey_questions.parquet", headers, rows,
+        output_dir / "survey_questions.parquet",
+        headers,
+        rows,
     )
     return count
 
@@ -315,43 +344,110 @@ def export_survey_responses(output_dir):
         "session_id",
         "challenge_attempt_id",
     ]
-    rows = _build_rows(responses, lambda r: [
-        _anon_id(r.participant_id),
-        r.question_id,
-        r.value,
-        _date_only(r.answered_at),
-        r.session_id or "",
-        r.challenge_attempt_id or "",
-    ])
+    rows = _build_rows(
+        responses,
+        lambda r: [
+            _anon_id(r.participant_id),
+            r.question_id,
+            r.value,
+            _date_only(r.answered_at),
+            r.session_id or "",
+            r.challenge_attempt_id or "",
+        ],
+    )
 
     count = _write_csv(
-        output_dir / "survey_responses.csv", headers, rows,
+        output_dir / "survey_responses.csv",
+        headers,
+        rows,
     )
     _write_parquet(
-        output_dir / "survey_responses.parquet", headers, rows,
+        output_dir / "survey_responses.parquet",
+        headers,
+        rows,
     )
     return count
 
 
 # Codebook definitions  -  each tuple: (file, column, type, description, allowed_values)
 CODEBOOK = [
-    ("participants.csv", "participant_id", "string", "HMAC-anonymised participant ID", ""),
-    ("participants.csv", "has_active_consent", "boolean", "Active consent", "True/False"),
-    ("participants.csv", "profile_completed", "boolean", "Profile intake completed", "True/False"),
-    ("participants.csv", "profile_updated_at", "date", "Profile last updated", "YYYY-MM-DD"),
+    (
+        "participants.csv",
+        "participant_id",
+        "string",
+        "HMAC-anonymised participant ID",
+        "",
+    ),
+    (
+        "participants.csv",
+        "has_active_consent",
+        "boolean",
+        "Active consent",
+        "True/False",
+    ),
+    (
+        "participants.csv",
+        "profile_completed",
+        "boolean",
+        "Profile intake completed",
+        "True/False",
+    ),
+    (
+        "participants.csv",
+        "profile_updated_at",
+        "date",
+        "Profile last updated",
+        "YYYY-MM-DD",
+    ),
     ("code_sessions.csv", "session_id", "integer", "Session primary key", ""),
-    ("code_sessions.csv", "participant_id", "string", "HMAC-anonymised participant ID", ""),
-    ("code_sessions.csv", "status", "string", "Session status", "in_progress/completed/abandoned"),
+    (
+        "code_sessions.csv",
+        "participant_id",
+        "string",
+        "HMAC-anonymised participant ID",
+        "",
+    ),
+    (
+        "code_sessions.csv",
+        "status",
+        "string",
+        "Session status",
+        "in_progress/completed/abandoned",
+    ),
     ("code_sessions.csv", "started_at", "date", "Session start date", "YYYY-MM-DD"),
     ("code_sessions.csv", "completed_at", "date", "Completion date", "YYYY-MM-DD"),
     ("code_sessions.csv", "abandoned_at", "date", "Abandonment date", "YYYY-MM-DD"),
-    ("code_sessions.csv", "challenges_attempted", "integer", "Challenges attempted", ""),
-    ("code_sessions.csv", "device_type", "string", "Device type", "desktop/laptop/tablet/phone"),
-    ("code_sessions.csv", "distraction_free", "string", "Distraction-free", "yes/mostly/no"),
+    (
+        "code_sessions.csv",
+        "challenges_attempted",
+        "integer",
+        "Challenges attempted",
+        "",
+    ),
+    (
+        "code_sessions.csv",
+        "device_type",
+        "string",
+        "Device type",
+        "desktop/laptop/tablet/phone",
+    ),
+    (
+        "code_sessions.csv",
+        "distraction_free",
+        "string",
+        "Distraction-free",
+        "yes/mostly/no",
+    ),
     ("code_session_challenges.csv", "session_id", "integer", "Session PK", ""),
     ("code_session_challenges.csv", "challenge_id", "integer", "Challenge PK", ""),
     ("code_session_challenges.csv", "position", "integer", "Position in session", ""),
-    ("code_session_challenges.csv", "assigned_at", "date", "Assignment date", "YYYY-MM-DD"),
+    (
+        "code_session_challenges.csv",
+        "assigned_at",
+        "date",
+        "Assignment date",
+        "YYYY-MM-DD",
+    ),
     ("challenge_attempts.csv", "participant_id", "string", "HMAC-anonymised ID", ""),
     ("challenge_attempts.csv", "challenge_id", "integer", "Challenge PK", ""),
     ("challenge_attempts.csv", "session_id", "integer", "Session PK", ""),
@@ -376,8 +472,20 @@ CODEBOOK = [
     ("challenges.csv", "created_at", "date", "Creation date", "YYYY-MM-DD"),
     ("survey_questions.csv", "question_id", "integer", "Question PK", ""),
     ("survey_questions.csv", "text", "string", "Question text", ""),
-    ("survey_questions.csv", "question_type", "string", "Type", "text/number/single_choice/multi_choice/scale"),
-    ("survey_questions.csv", "context", "string", "Context", "profile/post_challenge/post_session"),
+    (
+        "survey_questions.csv",
+        "question_type",
+        "string",
+        "Type",
+        "text/number/single_choice/multi_choice/scale",
+    ),
+    (
+        "survey_questions.csv",
+        "context",
+        "string",
+        "Context",
+        "profile/post_challenge/post_session",
+    ),
     ("survey_questions.csv", "category", "string", "Category", ""),
     ("survey_questions.csv", "is_required", "boolean", "Required", "True/False"),
     ("survey_questions.csv", "is_active", "boolean", "Active", "True/False"),
@@ -394,7 +502,11 @@ CODEBOOK = [
 def write_codebook(output_dir):
     """Write codebook.csv describing all exported columns."""
     headers = [
-        "file", "column", "data_type", "description", "allowed_values",
+        "file",
+        "column",
+        "data_type",
+        "description",
+        "allowed_values",
     ]
     _write_csv(output_dir / "codebook.csv", headers, CODEBOOK)
 
@@ -426,10 +538,7 @@ def run_export(output_dir=None):
     today = timezone.now().date()
     version_slug = f"v{today.isoformat()}"
 
-    if output_dir is None:
-        output_dir = Path("exports") / version_slug
-    else:
-        output_dir = Path(output_dir)
+    output_dir = Path("exports") / version_slug if output_dir is None else Path(output_dir)
 
     output_dir.mkdir(parents=True, exist_ok=True)
 

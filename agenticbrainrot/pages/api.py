@@ -83,7 +83,8 @@ def stats_accuracy_over_time(request):
                     F("tests_passed") * 100.0 / F("tests_total"),
                 ),
                 n_participants=Count(
-                    "participant_id", distinct=True,
+                    "participant_id",
+                    distinct=True,
                 ),
             )
             .order_by("month")
@@ -135,7 +136,7 @@ def stats_accuracy_by_vibe_coding(request):
         for pid, value in vibe_responses:
             try:
                 pct = int(value)
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 continue
             if pct <= VIBE_LOW_THRESHOLD:
                 groups["low"].add(pid)

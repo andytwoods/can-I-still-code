@@ -55,10 +55,7 @@ class ConsentGateMiddleware:
         # Exempt named URL patterns
         try:
             match = resolve(path)
-            if match.namespace:
-                url_name = f"{match.namespace}:{match.url_name}"
-            else:
-                url_name = match.url_name
+            url_name = f"{match.namespace}:{match.url_name}" if match.namespace else match.url_name
             if url_name in self.EXEMPT_URL_NAMES:
                 return False
         except Exception:  # noqa: BLE001
@@ -85,11 +82,7 @@ class ConsentGateMiddleware:
             return True
 
         # Check for stale consent: is the active document newer?
-        active_doc = (
-            ConsentDocument.objects.filter(is_active=True)
-            .order_by("-version")
-            .first()
-        )
+        active_doc = ConsentDocument.objects.filter(is_active=True).order_by("-version").first()
         if not active_doc:
             return False
 
@@ -104,6 +97,4 @@ class ConsentGateMiddleware:
         if not latest_record:
             return True
 
-        return (
-            latest_record.consent_document.version < active_doc.version
-        )
+        return latest_record.consent_document.version < active_doc.version

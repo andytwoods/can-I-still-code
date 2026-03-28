@@ -13,11 +13,7 @@ from .models import OptionalConsentRecord
 @login_required
 def give_consent(request):
     """Display consent document and handle consent form submission."""
-    active_doc = (
-        ConsentDocument.objects.filter(is_active=True)
-        .order_by("-version")
-        .first()
-    )
+    active_doc = ConsentDocument.objects.filter(is_active=True).order_by("-version").first()
 
     if not active_doc:
         return render(

@@ -15,7 +15,8 @@ def participant(db):
     from agenticbrainrot.accounts.models import Participant  # noqa: PLC0415
 
     user = User.objects.create_user(
-        email="test@example.com", password="testpass123",
+        email="test@example.com",
+        password="testpass123",
     )
     participant, _ = Participant.objects.get_or_create(user=user)
     return participant
@@ -81,7 +82,9 @@ class TestSurveyResponseFKConstraints:
     # --- 3 VALID cases ---
 
     def test_profile_both_null_valid(
-        self, participant, profile_question,
+        self,
+        participant,
+        profile_question,
     ):
         resp = SurveyResponse(
             participant=participant,
@@ -92,7 +95,10 @@ class TestSurveyResponseFKConstraints:
         resp.save()
 
     def test_post_session_with_session_valid(
-        self, participant, post_session_question, session,
+        self,
+        participant,
+        post_session_question,
+        session,
     ):
         resp = SurveyResponse(
             participant=participant,
@@ -104,7 +110,10 @@ class TestSurveyResponseFKConstraints:
         resp.save()
 
     def test_post_challenge_with_attempt_valid(
-        self, participant, post_challenge_question, attempt,
+        self,
+        participant,
+        post_challenge_question,
+        attempt,
     ):
         resp = SurveyResponse(
             participant=participant,
@@ -118,7 +127,10 @@ class TestSurveyResponseFKConstraints:
     # --- 6 INVALID cases ---
 
     def test_profile_with_session_invalid(
-        self, participant, profile_question, session,
+        self,
+        participant,
+        profile_question,
+        session,
     ):
         resp = SurveyResponse(
             participant=participant,
@@ -130,7 +142,10 @@ class TestSurveyResponseFKConstraints:
             resp.clean()
 
     def test_profile_with_attempt_invalid(
-        self, participant, profile_question, attempt,
+        self,
+        participant,
+        profile_question,
+        attempt,
     ):
         resp = SurveyResponse(
             participant=participant,
@@ -142,7 +157,9 @@ class TestSurveyResponseFKConstraints:
             resp.clean()
 
     def test_post_session_without_session_invalid(
-        self, participant, post_session_question,
+        self,
+        participant,
+        post_session_question,
     ):
         resp = SurveyResponse(
             participant=participant,
@@ -153,7 +170,11 @@ class TestSurveyResponseFKConstraints:
             resp.clean()
 
     def test_post_session_with_attempt_invalid(
-        self, participant, post_session_question, session, attempt,
+        self,
+        participant,
+        post_session_question,
+        session,
+        attempt,
     ):
         resp = SurveyResponse(
             participant=participant,
@@ -166,7 +187,9 @@ class TestSurveyResponseFKConstraints:
             resp.clean()
 
     def test_post_challenge_without_attempt_invalid(
-        self, participant, post_challenge_question,
+        self,
+        participant,
+        post_challenge_question,
     ):
         resp = SurveyResponse(
             participant=participant,
@@ -177,7 +200,11 @@ class TestSurveyResponseFKConstraints:
             resp.clean()
 
     def test_post_challenge_with_session_invalid(
-        self, participant, post_challenge_question, session, attempt,
+        self,
+        participant,
+        post_challenge_question,
+        session,
+        attempt,
     ):
         resp = SurveyResponse(
             participant=participant,
@@ -194,7 +221,11 @@ class TestSurveyResponseDBConstraint:
     """Test DB-level CheckConstraint prevents both FKs set."""
 
     def test_both_fks_set_rejected_at_db(
-        self, participant, profile_question, session, attempt,
+        self,
+        participant,
+        profile_question,
+        session,
+        attempt,
     ):
         with pytest.raises(IntegrityError):
             SurveyResponse.objects.create(

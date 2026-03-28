@@ -8,10 +8,7 @@ class ConsentForm(forms.Form):
 
     consent = forms.BooleanField(
         required=True,
-        label=(
-            "I have read and understand the above, "
-            "and I consent to participate"
-        ),
+        label=("I have read and understand the above, and I consent to participate"),
     )
 
     # Optional consent checkboxes

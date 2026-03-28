@@ -13,7 +13,8 @@ from agenticbrainrot.dashboard.models import DatasetAccessGrant
 class TestDatasetList(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            email="data@example.com", password="testpass123",
+            email="data@example.com",
+            password="testpass123",
         )
         self.participant, _ = Participant.objects.get_or_create(
             user=self.user,
@@ -48,7 +49,8 @@ class TestDatasetList(TestCase):
 class TestDatasetDownload(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            email="download@example.com", password="testpass123",
+            email="download@example.com",
+            password="testpass123",
         )
         self.participant, _ = Participant.objects.get_or_create(
             user=self.user,
@@ -136,7 +138,8 @@ class TestDatasetDownload(TestCase):
 class TestDatasetAccessGrant(TestCase):
     def test_str(self):
         user = User.objects.create_user(
-            email="grant@example.com", password="testpass123",
+            email="grant@example.com",
+            password="testpass123",
         )
         grant = DatasetAccessGrant.objects.create(
             user=user,

@@ -12,10 +12,7 @@ class SessionStartForm(forms.Form):
         label="What device are you using?",
     )
     acknowledge = forms.BooleanField(
-        label=(
-            "I acknowledge that I will work independently, "
-            "without external help or AI tools, during this session."
-        ),
+        label=("I acknowledge that I will work independently, without external help or AI tools, during this session."),
         required=True,
     )
 

@@ -65,8 +65,7 @@ def check_study_settings(app_configs, **kwargs):
     if set(tier_dist.keys()) != expected_keys:
         errors.append(
             Error(
-                f"STUDY['TIER_DISTRIBUTION'] keys must be {expected_keys}, "
-                f"got {set(tier_dist.keys())}.",
+                f"STUDY['TIER_DISTRIBUTION'] keys must be {expected_keys}, got {set(tier_dist.keys())}.",
                 id="accounts.E003",
             ),
         )

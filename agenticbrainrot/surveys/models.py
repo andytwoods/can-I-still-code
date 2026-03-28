@@ -123,10 +123,7 @@ class SurveyResponse(models.Model):
 
         if context == SurveyQuestion.Context.PROFILE:
             if self.session_id or self.challenge_attempt_id:
-                msg = (
-                    "Profile responses must not reference "
-                    "a session or challenge attempt."
-                )
+                msg = "Profile responses must not reference a session or challenge attempt."
                 raise ValidationError(msg)
 
         elif context == SurveyQuestion.Context.POST_SESSION:
