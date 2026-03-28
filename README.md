@@ -1,10 +1,12 @@
-# AgenticBrainrot: Coding Skill Longitudinal Assessment
+# Can I Still Code: Coding Skill Longitudinal Assessment
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
-AgenticBrainrot is a longitudinal, citizen-science research tool designed to measure whether **vibe coding** (AI-assisted coding) leads to coding skill degradation over time. 
+Can I Still Code is a longitudinal, citizen-science research tool designed to measure whether **vibe coding** (AI-assisted coding) leads to coding skill degradation over time. 
 
 Participants periodically complete short Python coding challenges while self-reporting their coding habits. The resulting dataset supports **Bayesian multilevel regression** modelling and invites the broader community to contribute analyses.
+
+> This codebase was developed with AI assistance (Claude) by a Django developer with 15+ years of experience. Scientific design, study protocol, and research decisions are the author's own.
 
 ## 🚀 Quick Start (Local Development)
 

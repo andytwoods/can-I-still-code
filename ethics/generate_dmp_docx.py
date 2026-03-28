@@ -107,7 +107,7 @@ sections_data = [
         "1. Briefly introduce the types of data the research will create. Why did you decide to use these data types?",
         "The study will generate three types of data.\n\n"
         "First, structured quantitative performance data: for each coding challenge attempt, the platform automatically records the proportion of test cases passed (accuracy), active completion time in seconds, idle time, device type, and technical issue flags. This approach was chosen because automatic capture eliminates transcription error and produces a precise, objective measure of coding skill that can be tracked longitudinally.\n\n"
-        "Second, structured survey data: participants self-report their AI coding habits (percentage of coding time that is AI-assisted, how thoroughly they review AI-generated code), hours coding per week, and demographic/background information. Surveys are used because the primary independent variable — vibe-coding behaviour — cannot be observed directly and must be self-reported.\n\n"
+        "Second, structured survey data: participants self-report their AI coding habits (percentage of coding time that is AI-assisted, how thoroughly they review AI-generated code), hours coding per week, and demographic/background information. Surveys are used because the primary independent variable  -  vibe-coding behaviour  -  cannot be observed directly and must be self-reported.\n\n"
         "Third, qualitative free-text data: an optional exit survey (five open questions) and optional semi-structured interviews (~15–20 participants) explore participants' own explanations for any skill changes. These are included to contextualise and interrogate the quantitative findings using a convergent mixed-methods design."
     ),
     (
@@ -135,7 +135,7 @@ sections_data = [
     (
         "Long-term Data Storage",
         "4a. Where have you decided to store it, why is this appropriate?",
-        "The anonymised open dataset will be stored on OSF and/or Zenodo — both are established open-access repositories used by the research community for data sharing in the social and computer sciences, and both provide persistent DOIs. Analysis code will be stored on GitHub (public repository) and archived to Zenodo to ensure long-term reproducibility. Identifiable data and interview transcripts will be stored in RHUL OneDrive, in line with institutional guidelines."
+        "The anonymised open dataset will be stored on OSF and/or Zenodo  -  both are established open-access repositories used by the research community for data sharing in the social and computer sciences, and both provide persistent DOIs. Analysis code will be stored on GitHub (public repository) and archived to Zenodo to ensure long-term reproducibility. Identifiable data and interview transcripts will be stored in RHUL OneDrive, in line with institutional guidelines."
     ),
     (
         "Long-term Data Storage",
@@ -144,13 +144,13 @@ sections_data = [
     ),
     (
         "Long-term Data Storage",
-        "4c. Costs of storage — why are these appropriate?",
+        "4c. Costs of storage  -  why are these appropriate?",
         "Hetzner VPS hosting costs approximately €10–20/month during active data collection (~24 months); this is a nominal cost borne by the researcher. OSF, Zenodo, and GitHub storage are free. RHUL OneDrive is provided by the institution at no additional cost. No significant storage budget is required."
     ),
     (
         "Data Sharing",
         "5. How will the data be shared and the value it will have to others?",
-        "A fully anonymised version of the dataset will be released publicly after a 12-month embargo under an open licence (CC BY 4.0 or equivalent), via OSF and/or Zenodo. This citizen-science dataset — the first longitudinal dataset linking self-reported AI coding habits to objective coding performance — will be of value to researchers in human-computer interaction, cognitive psychology, software engineering education, and AI tool design. Analysis scripts will be released on GitHub under MIT licence to support reproducibility and independent reanalysis. Summary findings will be shared via academic publication, conference presentations, and the study website."
+        "A fully anonymised version of the dataset will be released publicly after a 12-month embargo under an open licence (CC BY 4.0 or equivalent), via OSF and/or Zenodo. This citizen-science dataset  -  the first longitudinal dataset linking self-reported AI coding habits to objective coding performance  -  will be of value to researchers in human-computer interaction, cognitive psychology, software engineering education, and AI tool design. Analysis scripts will be released on GitHub under MIT licence to support reproducibility and independent reanalysis. Summary findings will be shared via academic publication, conference presentations, and the study website."
     ),
     (
         "Data Sharing",
@@ -165,7 +165,7 @@ sections_data = [
     (
         "Data Sharing",
         "5c. Will the data need to be updated?",
-        "Participants may withdraw consent at any time before dataset anonymisation — in this case, their data will be deleted within 10 working days. After the dataset is anonymised and released, individual records can no longer be identified or removed. This is clearly explained in the participant information sheet and consent form."
+        "Participants may withdraw consent at any time before dataset anonymisation  -  in this case, their data will be deleted within 10 working days. After the dataset is anonymised and released, individual records can no longer be identified or removed. This is clearly explained in the participant information sheet and consent form."
     ),
     (
         "Data Sharing",
@@ -207,7 +207,7 @@ for (section_name, question, answer) in sections_data:
     q_run.font.size = Pt(11)
     q_run.font.color.rgb = RGBColor(0x2E, 0x4D, 0x7B)
 
-    # Answer — handle embedded newlines
+    # Answer  -  handle embedded newlines
     for i, chunk in enumerate(answer.split('\n\n')):
         a_para = doc.add_paragraph(chunk.strip())
         a_para.paragraph_format.space_after = Pt(4)

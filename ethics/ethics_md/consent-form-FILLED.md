@@ -1,13 +1,13 @@
-# Research Participant Consent Form — FILLED
+# Research Participant Consent Form  –  FILLED
 # Longitudinal Assessment of AI-Assisted Coding and Python Coding Skill
 
 ---
 
 **Name of study:** Longitudinal Assessment of the Relationship Between AI-Assisted Coding Practices and Python Coding Skill
 
-**Lead researcher:** Dr Andy Woods — andy.woods@rhul.ac.uk
-**Co-Investigator:** Dr Alex Reppel — alex.reppel@rhul.ac.uk
-**PhD Researcher:** Chris Chowen — christopher.Chowen.2024@live.rhul.ac.uk
+**Lead researcher:** Dr Andy Woods  –  andy.woods@rhul.ac.uk
+**Co-Investigator:** Dr Alex Reppel  –  alex.reppel@rhul.ac.uk
+**PhD Researcher:** Chris Chowen  –  christopher.Chowen.2024@live.rhul.ac.uk
 
 **Department:** MediaArts / StoryFutures, Royal Holloway, University of London
 
@@ -50,4 +50,4 @@
 
 ### Note for online implementation
 
-In the platform, each statement above is presented as a tick-box. Participants must tick every item before the "Begin" button becomes active. Consent records are timestamped and stored separately from performance data. Consent is versioned — if the consent form is updated, active participants are asked to re-confirm before their next session.
+In the platform, each statement above is presented as a tick-box. Participants must tick every item before the "Begin" button becomes active. Consent records are timestamped and stored separately from performance data. Consent is versioned  –  if the consent form is updated, active participants are asked to re-confirm before their next session.

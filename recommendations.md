@@ -1,9 +1,9 @@
-Practice effects — the biggest methodological threat. Participants do coding challenges every month for a year+. That
+Practice effects  –  the biggest methodological threat. Participants do coding challenges every month for a year+. That
 alone will improve their skills, especially on Tier 1–2
-problems. The non-vibe-coders will improve, the vibe-coders might improve less (or not at all) — but you're measuring a
+problems. The non-vibe-coders will improve, the vibe-coders might improve less (or not at all)  –  but you're measuring a
 difference in improvement rates, not absolute decline.    
 This is fine statistically (the interaction term captures it), but it needs to be clearly framed in any write-up. You
-might also want a "no-practice" baseline — e.g. participants
+might also want a "no-practice" baseline  –  e.g. participants
 who do sessions every 3 months instead of monthly, to estimate the practice effect size.
 
 Selection bias. Who volunteers for a study called "does vibe coding make you worse?" Probably people already worried
@@ -13,7 +13,7 @@ it.
 
 Attrition bias. If participants who notice their skills declining drop out (demoralising), your surviving sample skews
 toward people who are stable or improving. Consider
-analysing dropout patterns — is dropout predicted by declining scores or high vibe-coding %?
+analysing dropout patterns  –  is dropout predicted by declining scores or high vibe-coding %?
 
 Causality. This is observational. You can find that vibe-coding % predicts skill change, but not that it causes it. A
 confounder like "people who are burning out code less
@@ -21,7 +21,7 @@ carefully AND adopt AI tools more" could explain both. Worth being upfront about
 
 LeetCode problem licensing. The LeetCodeDataset on HuggingFace is a research dataset, but LeetCode's ToS prohibit
 reproducing their problems commercially. You should check the
-licence carefully — you may need to stick to problems sourced from openly-licensed repos, or author Tier 1–2 problems
+licence carefully  –  you may need to stick to problems sourced from openly-licensed repos, or author Tier 1–2 problems
 yourself (which you're already partly planning).
 
 Pyodide load time. The WASM bundle is ~10–15MB. First load on a slow connection could take 10–30 seconds. Consider:
@@ -51,7 +51,7 @@ between sessions" rather than calendar month boundaries.
 
 Ecological validity. LeetCode-style challenges test a specific slice of coding skill (algorithmic problem-solving,
 syntax recall). They don't test debugging, reading others'
-code, system design, or writing tests — skills that may also be affected by vibe coding. Worth acknowledging this as a
+code, system design, or writing tests  –  skills that may also be affected by vibe coding. Worth acknowledging this as a
 limitation. Could add other challenge types in later
 phases.
 
@@ -63,7 +63,7 @@ Retention incentives beyond data. Rich personal dashboards are good, but after 6
 periodic email summaries ("Your skill trajectory this
 quarter"), milestone badges (completed 5 sessions), and the social angle (anonymised leaderboards or cohort
 comparisons). The citizen-science framing ("you're contributing to
-real research") is powerful — lean into it with periodic blog posts about emerging findings.
+real research") is powerful  –  lean into it with periodic blog posts about emerging findings.
 
 Pre-registration. For a study making claims about vibe coding and skill, pre-registering the analysis plan (e.g. on OSF
 or AsPredicted) before data collection would massively

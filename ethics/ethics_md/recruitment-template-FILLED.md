@@ -1,4 +1,4 @@
-# Recruitment Material — FILLED
+# Recruitment Material  –  FILLED
 # Longitudinal Assessment of AI-Assisted Coding and Python Coding Skill
 
 ---
@@ -9,7 +9,7 @@
 
 **Does vibe coding make you worse at coding over time?**
 
-Nobody knows — there's no longitudinal data. We're trying to change that.
+Nobody knows  –  there's no longitudinal data. We're trying to change that.
 
 We're running a citizen-science study at Royal Holloway, University of London, tracking how Python coding skill changes over 12 months in people with different levels of AI tool use.
 
@@ -18,13 +18,13 @@ We're running a citizen-science study at Royal Holloway, University of London, t
 - A brief survey about your coding habits
 - You get your own performance trend dashboard
 
-**Who we're looking for:** Any Python coder, aged 18+. Whether you never use AI tools or use them for everything — we need both.
+**Who we're looking for:** Any Python coder, aged 18+. Whether you never use AI tools or use them for everything  –  we need both.
 
 **No AI assistance during challenges** (that's the point).
 
 Interested? Sign up and read more: [agenticbrainrot.com]
 
-Researchers: Dr Andy Woods & Dr Alex Reppel, Royal Holloway, University of London — andy.woods@rhul.ac.uk
+Researchers: Dr Andy Woods & Dr Alex Reppel, Royal Holloway, University of London  –  andy.woods@rhul.ac.uk
 
 *Ethics approved by the Royal Holloway Research Ethics Committee.*
 
@@ -40,7 +40,7 @@ My name is Andy Woods and I am a researcher at StoryFutures / MediaArts, Royal H
 
 **"Longitudinal Assessment of the Relationship Between AI-Assisted Coding Practices and Python Coding Skill"**
 
-We are investigating whether the proportion of coding time spent on AI-assisted work (such as using GitHub Copilot, ChatGPT, Cursor, or similar tools) predicts changes in manual Python coding skill over time. This is a citizen-science study — there is no right answer, and we want to hear from coders at every point on the spectrum, from those who never use AI tools to those who use them for almost everything.
+We are investigating whether the proportion of coding time spent on AI-assisted work (such as using GitHub Copilot, ChatGPT, Cursor, or similar tools) predicts changes in manual Python coding skill over time. This is a citizen-science study  –  there is no right answer, and we want to hear from coders at every point on the spectrum, from those who never use AI tools to those who use them for almost everything.
 
 **What participation involves:**
 

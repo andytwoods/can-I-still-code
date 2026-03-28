@@ -74,7 +74,7 @@ class TestReminderUnsubscribe(TestCase):
             "accounts:reminder_unsubscribe", kwargs={"token": token},
         )
 
-        # No login — should still work
+        # No login  -  should still work
         response = self.client.get(url)
         assert response.status_code == 200
         assert b"Unsubscribed" in response.content

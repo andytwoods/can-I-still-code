@@ -110,7 +110,7 @@ def withdraw(request):
             {"participant": participant},
         )
 
-    # GET — show confirmation
+    # GET  -  show confirmation
     return render(
         request,
         "accounts/withdraw_confirm.html",

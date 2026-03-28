@@ -158,7 +158,7 @@ def profile_intake(request):
                 },
             )
 
-        # Validation errors — re-render current step
+        # Validation errors  -  re-render current step
         return render(
             request,
             "surveys/partials/_intake_step.html",
@@ -170,7 +170,7 @@ def profile_intake(request):
             },
         )
 
-    # GET request — render full page with first (or requested) step
+    # GET request  -  render full page with first (or requested) step
     form = _prefill_form(form_class, participant, questions)
 
     if is_htmx:

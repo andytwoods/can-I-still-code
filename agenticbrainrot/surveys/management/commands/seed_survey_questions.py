@@ -418,6 +418,20 @@ POST_CHALLENGE_QUESTIONS = [
         "is_required": True,
         "display_order": 2,
     },
+    {
+        "text": "Did you use AI assistance to complete this challenge?",
+        "question_type": "single_choice",
+        "choices": [
+            ["no_ai", "No AI assistance"],
+            ["minimal_ai", "Minimal (e.g. autocomplete only)"],
+            ["moderate_ai", "Moderate (e.g. suggestions I edited)"],
+            ["heavy_ai", "Heavy (e.g. AI wrote most of the solution)"],
+        ],
+        "context": "post_challenge",
+        "category": "Challenge Reflection",
+        "is_required": True,
+        "display_order": 3,
+    },
 ]
 
 POST_SESSION_QUESTIONS = [

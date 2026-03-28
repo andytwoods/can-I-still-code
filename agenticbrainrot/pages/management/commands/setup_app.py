@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand
 from django.utils.crypto import get_random_string
 
 from allauth.account.models import EmailAddress
+from allauth.account.models import EmailConfirmation
 
 User = get_user_model()
 
@@ -33,7 +34,14 @@ class Command(BaseCommand):
         try:
             if not User.objects.filter(is_superuser=True).exists():
                 self.stdout.write("No superusers found, creating one")
-                User.objects.create_superuser(email=email, password=new_password)
+                user = User.objects.create_superuser(email=email, password=new_password)
+                email_address = EmailAddress.objects.create(
+                    user=user,
+                    email=email,
+                    primary=True,
+                    verified=False,
+                )
+                EmailConfirmation.create(email_address)
                 self.stdout.write("=======================")
                 self.stdout.write("A superuser has been created")
                 self.stdout.write(f"Email: {email}")

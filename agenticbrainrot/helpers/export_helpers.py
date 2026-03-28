@@ -333,7 +333,7 @@ def export_survey_responses(output_dir):
     return count
 
 
-# Codebook definitions — each tuple: (file, column, type, description, allowed_values)
+# Codebook definitions  -  each tuple: (file, column, type, description, allowed_values)
 CODEBOOK = [
     ("participants.csv", "participant_id", "string", "HMAC-anonymised participant ID", ""),
     ("participants.csv", "has_active_consent", "boolean", "Active consent", "True/False"),

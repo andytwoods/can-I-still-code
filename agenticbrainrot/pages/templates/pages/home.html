@@ -2,32 +2,32 @@
 {% load static %}
 
 {# ── SEO: Primary ────────────────────────────────────────────────────────── #}
-{% block title %}Does Vibe Coding Erode Python Skills? | AgenticBrainrot{% endblock title %}
+{% block title %}Does Vibe Coding Erode Python Skills? | Can I Still Code{% endblock title %}
 
 {% block meta_description %}Join a longitudinal citizen-science study tracking whether AI-assisted vibe coding erodes Python developer skills. Complete short monthly coding challenges, see your own progress, and contribute to peer-reviewed open research.{% endblock meta_description %}
 
 {# ── SEO: Open Graph ─────────────────────────────────────────────────────── #}
-{% block og_title %}Does Vibe Coding Erode Python Skills? | AgenticBrainrot{% endblock og_title %}
+{% block og_title %}Does Vibe Coding Erode Python Skills? | Can I Still Code{% endblock og_title %}
 
-{% block og_description %}AI coding tools are everywhere — but are they quietly eroding our raw Python ability? AgenticBrainrot is an open citizen-science study that tracks your coding skills over time. Join free, complete monthly challenges, and help answer the big question.{% endblock og_description %}
+{% block og_description %}AI coding tools are everywhere  –  but are they quietly eroding our raw Python ability? Can I Still Code is an open citizen-science study that tracks your coding skills over time. Join free, complete monthly challenges, and help answer the big question.{% endblock og_description %}
 
 {#
-  og_image / twitter_image — PLACEHOLDER
+  og_image / twitter_image  –  PLACEHOLDER
   Replace 'images/og/og-home.png' with a real 1200×630 PNG (or JPG < 5 MB).
   Recommended content: project name + tagline on a branded background.
   Tools: Canva, Figma, or any image editor. Keep text large enough to read at small sizes.
   Place the file at:  <project_root>/agenticbrainrot/static/images/og/og-home.png
 #}
 {% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/og/og-home.png' %}{% endblock og_image %}
-{% block og_image_alt %}AgenticBrainrot — a citizen-science study tracking whether vibe coding erodes Python developer skills{% endblock og_image_alt %}
+{% block og_image_alt %}Can I Still Code  –  a citizen-science study tracking whether vibe coding erodes Python developer skills{% endblock og_image_alt %}
 
 {# ── SEO: Twitter / X Card ───────────────────────────────────────────────── #}
-{% block twitter_title %}Does Vibe Coding Erode Python Skills? | AgenticBrainrot{% endblock twitter_title %}
+{% block twitter_title %}Does Vibe Coding Erode Python Skills? | Can I Still Code{% endblock twitter_title %}
 
-{% block twitter_description %}AI tools are everywhere — are they quietly eroding our raw coding ability? Join this free citizen-science study to track your Python skills over time and contribute to open research.{% endblock twitter_description %}
+{% block twitter_description %}AI tools are everywhere  –  are they quietly eroding our raw coding ability? Join this free citizen-science study to track your Python skills over time and contribute to open research.{% endblock twitter_description %}
 
 {% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/og/og-home.png' %}{% endblock twitter_image %}
-{% block twitter_image_alt %}AgenticBrainrot — citizen-science study on vibe coding and Python skills{% endblock twitter_image_alt %}
+{% block twitter_image_alt %}Can I Still Code  –  citizen-science study on vibe coding and Python skills{% endblock twitter_image_alt %}
 
 {# ── SEO: Structured Data (JSON-LD) ─────────────────────────────────────── #}
 {% block extra_head %}
@@ -39,17 +39,17 @@
       "@type": "WebSite",
       "@id": "{{ request.scheme }}://{{ request.get_host }}/#website",
       "url": "{{ request.scheme }}://{{ request.get_host }}/",
-      "name": "AgenticBrainrot",
+      "name": "Can I Still Code",
       "description": "A longitudinal citizen-science study measuring whether AI-assisted vibe coding leads to Python skill degradation over time.",
       "inLanguage": "en-GB"
     },
     {
       "@type": "ResearchProject",
       "@id": "{{ request.scheme }}://{{ request.get_host }}/#research-project",
-      "name": "AgenticBrainrot: Longitudinal Assessment of Coding Skills in the Vibe Coding Era",
-      "alternateName": "AgenticBrainrot",
+      "name": "Can I Still Code: Longitudinal Assessment of Coding Skills in the Vibe Coding Era",
+      "alternateName": "Can I Still Code",
       "url": "{{ request.scheme }}://{{ request.get_host }}/",
-      "description": "A longitudinal, citizen-science research project designed to measure whether vibe coding — AI-assisted coding where the AI generates most of the logic — leads to degradation of Python developer skills over time. Participants complete short Python coding challenges monthly and self-report their AI tool usage. The resulting open dataset supports Bayesian multilevel regression modelling.",
+      "description": "A longitudinal, citizen-science research project designed to measure whether vibe coding  –  AI-assisted coding where the AI generates most of the logic  –  leads to degradation of Python developer skills over time. Participants complete short Python coding challenges monthly and self-report their AI tool usage. The resulting open dataset supports Bayesian multilevel regression modelling.",
       "keywords": [
         "vibe coding", "AI coding assistants", "GitHub Copilot", "Cursor", "Python skills",
         "longitudinal study", "citizen science", "coding skill degradation", "software developer research",
@@ -57,7 +57,7 @@
       ],
       "subjectOf": {
         "@type": "Dataset",
-        "name": "AgenticBrainrot Open Dataset",
+        "name": "Can I Still Code Open Dataset",
         "description": "Anonymised longitudinal dataset of Python coding challenge performance and self-reported AI tool usage, released after a 12-month embargo.",
         "license": "https://creativecommons.org/licenses/by/4.0/"
       },
@@ -70,7 +70,7 @@
       "@type": "WebPage",
       "@id": "{{ request.scheme }}://{{ request.get_host }}/#webpage",
       "url": "{{ request.scheme }}://{{ request.get_host }}/",
-      "name": "Does Vibe Coding Erode Python Skills? | AgenticBrainrot",
+      "name": "Does Vibe Coding Erode Python Skills? | Can I Still Code",
       "isPartOf": { "@id": "{{ request.scheme }}://{{ request.get_host }}/#website" },
       "about": { "@id": "{{ request.scheme }}://{{ request.get_host }}/#research-project" },
       "description": "Join a free longitudinal citizen-science study tracking whether AI-assisted vibe coding erodes Python developer skills.",
@@ -83,25 +83,27 @@
 
 {% block content %}
   {# Hero Section #}
-  <section class="hero is-medium is-link">
+  <section class="hero is-medium hero-cta">
     <div class="hero-body">
       <div class="container has-text-centered">
-        <h1 class="title is-1">
-          AgenticBrainrot
+        <p class="hero-eyebrow mb-3">citizen science &mdash; open data &mdash; Python</p>
+        <h1 class="title is-1 hero-title">
+          Can I Still Code?
         </h1>
-        <p class="subtitle is-3">
-          Is "Vibe Coding" making us worse at Python?
+        <p class="subtitle is-4 hero-subtitle mt-3">
+          Is vibe coding quietly eroding our Python skills?
         </p>
-        <p class="is-size-5 mb-5">
-          A citizen-science study helping protect the Python community's skills.
+        <p class="is-size-5 mb-6 hero-body-text">
+          A longitudinal study tracking real developers over time.
         </p>
         <div class="buttons is-centered">
           {% if ACCOUNT_ALLOW_REGISTRATION %}
-            <a href="{% url 'account_signup' %}" class="button is-primary is-large">
+            <a href="{% url 'account_signup' %}" class="button is-large hero-btn-primary">
+              <span class="icon"><i class="fas fa-flask"></i></span>
               <strong>Join the Study</strong>
             </a>
           {% endif %}
-          <a href="#about" class="button is-light is-large">
+          <a href="#about" class="button is-large hero-btn-secondary">
             Learn More
           </a>
         </div>
@@ -117,27 +119,16 @@
   {# About Section #}
   <section id="about" class="section">
     <div class="container">
-      <div class="columns is-vcentered">
-        <div class="column is-6">
-          <h2 class="title is-2">The Mission</h2>
-          <p class="content is-size-5">
-            As AI assistants like Cursor and GitHub Copilot become ubiquitous, we're entering the era of <strong>vibe coding</strong>—where the AI generates the logic while we guide the "vibe".
-          </p>
-          <p class="content is-size-5">
-            But what happens to our internal skills over time? Does this convenience lead to cognitive atrophy, or does it free us to solve higher-level problems?
-          </p>
-          <p class="content is-size-5">
-            <strong>AgenticBrainrot</strong> is a longitudinal, citizen-science research project designed to measure exactly that.
-          </p>
-        </div>
-        <div class="column is-6">
-          <figure class="image is-4by3">
-            <div style="display: flex; align-items: center; justify-content: center; height: 100%; background-color: var(--bulma-scheme-main-bis); border: 2px dashed var(--bulma-border);">
-              <span class="has-text-grey">Placeholder: Illustration of Human-AI Collaboration</span>
-            </div>
-          </figure>
-        </div>
-      </div>
+      <h2 class="title is-2">The Mission</h2>
+      <p class="content is-size-5">
+        As AI assistants like Cursor, Claude and GitHub Copilot become ubiquitous, we're entering the era of <strong>vibe coding</strong> – where the AI generates the logic while we guide the "vibe".
+      </p>
+      <p class="content is-size-5">
+        But what happens to our internal skills over time? Does this convenience lead to cognitive atrophy, or does it free us to solve higher-level problems?
+      </p>
+      <p class="content is-size-5">
+        <strong>Can I Still Code</strong> is a longitudinal, citizen-science research project designed to measure exactly that.
+      </p>
     </div>
   </section>
 
@@ -177,7 +168,7 @@
                 <canvas id="vibe-chart" height="300"></canvas>
               </div>
               <p id="vibe-chart-fallback" class="has-text-grey has-text-centered" style="display: none;">
-                We need more participants to show trends — join the study!
+                We need more participants to show trends  –  join the study!
               </p>
               <p class="has-text-grey is-size-7 has-text-centered mt-3">
                 Average test accuracy over time by vibe-coding intensity. Only groups with 10+ participants shown.
@@ -215,14 +206,14 @@
             <i class="fas fa-chart-line fa-3x"></i>
           </div>
           <h3 class="title is-4 mt-4">3. Insights</h3>
-          <p>Explore your personal performance trends and see how you compare to the cohort.</p>
+          <p>Explore your personal performance trends and see how you compare.</p>
         </div>
         <div class="column has-text-centered">
           <div class="icon is-large has-text-primary">
             <i class="fas fa-calendar-check fa-3x"></i>
           </div>
           <h3 class="title is-4 mt-4">4. Longitudinal</h3>
-          <p>Return every 28 days to build a robust dataset of your skill trajectory.</p>
+          <p>Return every 28 days to build a robust dataset of your skills over time.</p>
         </div>
       </div>
     </div>
@@ -253,10 +244,9 @@
   {# Sponsors #}
   <section class="section">
     <div class="container has-text-centered">
-      <h2 class="title is-3 mb-2">Support This Research</h2>
-      <p class="subtitle has-text-weight-normal">
-        Sponsors help fund this study and contribute to Python community charities.
-      </p>
+      <h2 class="title is-3 mb-2">
+        <span class="icon mr-2"><i class="fas fa-heart"></i></span>
+        Support This Research</h2>
       {% if sponsors %}
         <div class="columns is-centered is-mobile is-multiline mt-4">
           {% for sponsor in sponsors %}
@@ -283,15 +273,11 @@
         <div class="columns is-centered mt-4">
           <div class="column is-6">
             <div class="box has-text-centered" style="border: 2px dashed var(--bulma-border);">
-              <p class="is-size-5 mb-3">
-                <span class="icon"><i class="fas fa-heart"></i></span>
-                Your logo here
-              </p>
               <p class="has-text-grey mb-4">
-                Show your support for the Python community. Sponsors are recognised here and help fund contributions to Python charities.
+                Please help cover the costs of this app, including servers, storage, and ongoing development. With your support, I'd be able to bring in researchers and developers to add new features and further advance the science.
               </p>
-              <a href="mailto:sponsor@agenticbrainrot.com" class="button is-link is-outlined">
-                Become a Sponsor
+              <a href="mailto:{{ contact_email }}" class="button is-link is-outlined">
+                Get in touch
               </a>
             </div>
           </div>

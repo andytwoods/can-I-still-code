@@ -41,6 +41,7 @@ class HomeView(TemplateView):
 
         context["stats"] = stats
         context["sponsors"] = Sponsor.objects.filter(is_active=True)
+        context["contact_email"] = settings.ADMINS[0][1]
         return context
 
 

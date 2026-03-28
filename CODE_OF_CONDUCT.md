@@ -2,7 +2,7 @@
 
 ## Our Pledge
 
-We as members, contributors, and participants in the AgenticBrainrot research study pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, colour, religion, or sexual identity and orientation.
+We as members, contributors, and participants in the Can I Still Code research study pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, colour, religion, or sexual identity and orientation.
 
 We pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.
 
@@ -26,15 +26,15 @@ Examples of unacceptable behaviour:
 
 ## Enforcement Responsibilities
 
-AgenticBrainrot maintainers are responsible for clarifying and enforcing our standards of acceptable behaviour and will take appropriate and fair corrective action in response to any behaviour that they deem inappropriate, threatening, offensive, or harmful.
+Can I Still Code maintainers are responsible for clarifying and enforcing our standards of acceptable behaviour and will take appropriate and fair corrective action in response to any behaviour that they deem inappropriate, threatening, offensive, or harmful.
 
-AgenticBrainrot maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, and will communicate reasons for moderation decisions when appropriate.
+Can I Still Code maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, and will communicate reasons for moderation decisions when appropriate.
 
 ## Scope
 
 This Code of Conduct applies within all community spaces associated with this project, including:
 
-- The [AgenticBrainrot GitHub repository](https://github.com/andytwoods/agenticbrainrot) — issues, pull requests, discussions, and code reviews
+- The [Can I Still Code GitHub repository](https://github.com/andytwoods/agenticbrainrot)  –  issues, pull requests, discussions, and code reviews
 - This website (canistillcode.org)
 - Social media posts, threads, and public discussions about the project (Twitter/X, Mastodon, LinkedIn, etc.)
 - Discord and any other community channels linked to the project
@@ -44,7 +44,7 @@ It also applies when an individual is officially representing the community in p
 
 ## Reporting
 
-Instances of abusive, harassing, or otherwise unacceptable behaviour may be reported to the AgenticBrainrot maintainers at **andytwoods@gmail.com**. All complaints will be reviewed and investigated promptly and fairly.
+Instances of abusive, harassing, or otherwise unacceptable behaviour may be reported to the Can I Still Code maintainers at **andytwoods@gmail.com**. All complaints will be reviewed and investigated promptly and fairly.
 
 All reports will be handled with discretion and confidentiality. The identity of the reporter will not be disclosed without their explicit consent.
 
@@ -56,7 +56,7 @@ Upon receiving a report, the maintainers will:
 
 ## Enforcement Guidelines
 
-AgenticBrainrot maintainers will follow these Community Impact Guidelines when determining the consequence for any action they deem in violation of this Code of Conduct:
+Can I Still Code maintainers will follow these Community Impact Guidelines when determining the consequence for any action they deem in violation of this Code of Conduct:
 
 ### 1. Correction
 

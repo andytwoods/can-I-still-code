@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 class User(AbstractUser):
     """
-    Default custom user model for AgenticBrainrot.
+    Default custom user model for Can I Still Code.
     If adding fields that need to be filled at user signup,
     check forms.SignupForm and forms.SocialSignupForms accordingly.
     """

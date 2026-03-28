@@ -2,14 +2,14 @@
 
 {% load markdown_tags %}
 
-{% block title %}Privacy Policy - AgenticBrainrot{% endblock title %}
+{% block title %}Privacy Policy – Can I Still Code{% endblock title %}
 
 {% block content %}
 <div class="container">
   {% if document %}
     <h1 class="title">{{ document.title }}</h1>
     <div class="content">
-      <p class="has-text-grey">Version {{ document.version }} — Last updated: {{ document.updated_at|date:"j F Y" }}</p>
+      <p class="has-text-grey">Version {{ document.version }}  –  Last updated: {{ document.updated_at|date:"j F Y" }}</p>
       {{ document.body|render_markdown }}
     </div>
   {% else %}

@@ -258,11 +258,11 @@ LOGGING = {
 }
 
 
-# AgenticBrainrot
+# Can I Still Code
 # ------------------------------------------------------------------------------
 # When True, the mock/try session is open to everyone (no login required).
 LET_PEOPLE_TRY = env.bool("LET_PEOPLE_TRY", True)
-# Public-facing domain — update when a real domain is confirmed.
+# Public-facing domain  -  update when a real domain is confirmed.
 DOMAIN = env("DOMAIN", default="canistillcode.org")
 
 # django-allauth
@@ -322,7 +322,7 @@ STUDY = {
 # ------------------------------------------------------------------------------
 HUEY = {
     "huey_class": "huey.SqliteHuey",
-    "name": "agenticbrainrot",
+    "name": "canistillcode",
     "immediate": env.bool("HUEY_IMMEDIATE", default=True),
 }
 

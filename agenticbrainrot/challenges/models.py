@@ -11,7 +11,7 @@ from simple_history.models import HistoricalRecords
 class Challenge(models.Model):
     """
     A coding challenge presented to participants.
-    Never hard-delete or mutate challenges once used — deactivate and create a new
+    Never hard-delete or mutate challenges once used  -  deactivate and create a new
     row with a versioned external_id.
     """
 

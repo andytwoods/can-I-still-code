@@ -28,7 +28,7 @@ django.setup()
 
 # -- Project information -----------------------------------------------------
 
-project = "AgenticBrainrot"
+project = "Can I Still Code"
 copyright = """2026, Andy T Woods"""  # noqa: A001
 author = "Andy T Woods"
 

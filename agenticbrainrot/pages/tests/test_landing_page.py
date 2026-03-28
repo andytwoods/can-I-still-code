@@ -17,7 +17,7 @@ class TestLandingPage:
         client = Client()
         response = client.get(reverse("home"))
         assert response.status_code == HTTPStatus.OK
-        assert b"AgenticBrainrot" in response.content
+        assert b"Can I Still Code" in response.content
 
     def test_shows_stats(self, db):
         client = Client()
@@ -65,8 +65,8 @@ class TestLandingPage:
     def test_sponsor_placeholder_shown_when_empty(self, db):
         client = Client()
         response = client.get(reverse("home"))
-        assert b"Your logo here" in response.content
-        assert b"Become a Sponsor" in response.content
+        assert b"Get in touch" in response.content
+        assert b"help cover the costs" in response.content
 
     def test_sponsors_shown_when_exist(self, db):
         Sponsor.objects.create(
@@ -78,7 +78,7 @@ class TestLandingPage:
         response = client.get(reverse("home"))
         assert b"Support This Research" in response.content
         assert b"Test Sponsor" in response.content
-        assert b"Your logo here" not in response.content
+        assert b"Get in touch" not in response.content
 
     def test_inactive_sponsors_hidden(self, db):
         Sponsor.objects.create(

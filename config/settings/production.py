@@ -74,7 +74,7 @@ STORAGES = {
     },
 }
 
-# EMAIL — Brevo (Sendinblue) SMTP
+# EMAIL  -  Brevo (Sendinblue) SMTP
 # ------------------------------------------------------------------------------
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp-relay.brevo.com"
@@ -84,12 +84,12 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = env(
     "DJANGO_DEFAULT_FROM_EMAIL",
-    default="AgenticBrainrot <noreply@canistillcode.org>",
+    default="Can I Still Code <noreply@canistillcode.org>",
 )
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 EMAIL_SUBJECT_PREFIX = env(
     "DJANGO_EMAIL_SUBJECT_PREFIX",
-    default="[AgenticBrainrot] ",
+    default="[Can I Still Code] ",
 )
 ACCOUNT_EMAIL_SUBJECT_PREFIX = EMAIL_SUBJECT_PREFIX
 

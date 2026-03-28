@@ -1,5 +1,5 @@
 /**
- * Code editor controller — manages CodeMirror, Pyodide worker,
+ * Code editor controller  -  manages CodeMirror, Pyodide worker,
  * timing, telemetry, and draft auto-save.
  *
  * Supports re-initialisation when HTMX swaps in new challenge content.
@@ -425,7 +425,7 @@
         var testCasesEl = document.getElementById("test-cases-data");
         var testCases = testCasesEl ? JSON.parse(testCasesEl.textContent) : [];
 
-        // Set timeout — kill worker and restart if code runs too long
+        // Set timeout  -  kill worker and restart if code runs too long
         if (runTimeout) clearTimeout(runTimeout);
         runTimeout = setTimeout(function () {
             worker.terminate();

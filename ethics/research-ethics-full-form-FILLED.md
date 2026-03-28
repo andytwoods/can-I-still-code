@@ -1,4 +1,4 @@
-# Research Ethics Full Form — FILLED
+# Research Ethics Full Form  –  FILLED
 # Longitudinal Assessment of AI-Assisted Coding and Python Coding Skill
 
 ---
@@ -16,7 +16,7 @@
 | Start date | 21/03/2026 |
 | End date | 31/03/2028 |
 | Project type | Royal Holloway staff research project |
-| Research Team | Dr Andy Woods (PI), StoryFutures / MediaArts, Royal Holloway, University of London — andy.woods@rhul.ac.uk; Dr Alex Reppel (Co-Investigator), Royal Holloway, University of London — alex.reppel@rhul.ac.uk; Chris Chowen (PhD Researcher), Royal Holloway, University of London — christopher.Chowen.2024@live.rhul.ac.uk |
+| Research Team | Dr Andy Woods (PI), StoryFutures / MediaArts, Royal Holloway, University of London  –  andy.woods@rhul.ac.uk; Dr Alex Reppel (Co-Investigator), Royal Holloway, University of London  –  alex.reppel@rhul.ac.uk; Chris Chowen (PhD Researcher), Royal Holloway, University of London  –  christopher.Chowen.2024@live.rhul.ac.uk |
 | Where will research take place | Online ✓, International ✓ |
 | Location detail | Online platform hosted on EU-based servers (Hetzner VPS, Germany). Participants are recruited internationally via open online recruitment. |
 
@@ -24,9 +24,9 @@
 
 ### Project Summary (lay summary)
 
-This study investigates whether reliance on AI-assisted coding tools — commonly known as "vibe coding" -- leads to measurable changes in Python coding skill over time. Participants who already code in Python periodically complete short Python coding challenges (up to 10 per session) on a purpose-built website and self-report their AI coding habits via a brief post-session survey. Sessions are separated by a minimum of 28 days, and the study run for at least 12 months. The data are analysed using multilevel statistical modelling to test whether the proportion of coding time spent using AI tools predicts changes in challenge accuracy and completion speed over time.
+This study investigates whether reliance on AI-assisted coding tools  –  commonly known as "vibe coding" -- leads to measurable changes in Python coding skill over time. Participants who already code in Python periodically complete short Python coding challenges (up to 10 per session) on a purpose-built website and self-report their AI coding habits via a brief post-session survey. Sessions are separated by a minimum of 28 days, and the study run for at least 12 months. The data are analysed using multilevel statistical modelling to test whether the proportion of coding time spent using AI tools predicts changes in challenge accuracy and completion speed over time.
 
-The study follows a citizen-science model: participants can view their own personal performance trends over time, and the fully anonymised dataset will be released publicly after a 12-month embargo to allow independent analyses by the broader research community. A qualitative strand — an exit survey and optional follow-up interviews — will explore participants' own explanations for any changes (or lack of change) in their skills.
+The study follows a citizen-science model: participants can view their own personal performance trends over time, and the fully anonymised dataset will be released publicly after a 12-month embargo to allow independent analyses by the broader research community. A qualitative strand  –  an exit survey and optional follow-up interviews  –  will explore participants' own explanations for any changes (or lack of change) in their skills.
 
 ---
 
@@ -52,7 +52,7 @@ This research will generate the first longitudinal empirical dataset on the rela
 | Will the research involve human tissue? | No |
 | Are results likely to expose any person to physical or psychological harm? | No |
 | Will the research involve animals? | No |
-| Will you have access to personal information that allows identification of individuals? | Yes — account email addresses are held for authentication. Research data is pseudonymised. See Section D details. |
+| Will you have access to personal information that allows identification of individuals? | Yes  –  account email addresses are held for authentication. Research data is pseudonymised. See Section D details. |
 | Does the research pose a risk to the environment or community? | No |
 | Does the research include removal of or effect on cultural/archaeological artefacts? | No |
 | Will the conduct of the research present a risk to society? | No |
@@ -73,7 +73,7 @@ This research will generate the first longitudinal empirical dataset on the rela
 | Is there a risk that material/data/outcomes used has been derived from ethically unsound procedures? | No |
 | Is there a possibility of reputational risk to the researcher or the Institution? | No |
 
-**Mitigations:** N/A. All research activity is online, asynchronous, and poses no physical risk to the researcher. The topic — AI tool use in coding and its relationship to skill — is not sensitive, controversial, or legally complex. No deception, no vulnerable populations in unusual settings, and no disclosures of illegal activity are anticipated.
+**Mitigations:** N/A. All research activity is online, asynchronous, and poses no physical risk to the researcher. The topic  –  AI tool use in coding and its relationship to skill  –  is not sensitive, controversial, or legally complex. No deception, no vulnerable populations in unusual settings, and no disclosures of illegal activity are anticipated.
 
 ---
 
@@ -87,10 +87,10 @@ This research will generate the first longitudinal empirical dataset on the rela
 | Will the project involve participants in unequal power relations (e.g. students you teach)? | No |
 | Will financial inducements (beyond reasonable expenses) be offered? | No |
 | Will the project involve invasive interventions (drugs, hypnosis, vigorous exercise, etc.)? | No |
-| Could the participant experience psychological stress, anxiety, humiliation, or more than minimal pain at any stage? | No — see details below |
+| Could the participant experience psychological stress, anxiety, humiliation, or more than minimal pain at any stage? | No  –  see details below |
 
 **Details on participant risk:**
-All participants are adults (18+) who self-select into the study by signing up voluntarily. Participants complete Python coding challenges at their own pace with no imposed time pressure. Challenges may involve mild cognitive effort and occasional frustration, which is within the normal range of everyday professional coding activity. Participants are explicitly told before every session: *"This is not a test you can fail — consistent conditions just help us (and you) track genuine change over time."* Participants may skip any individual challenge or end their session at any point without consequence. No sensitive personal topics are raised. The study does not involve deception.
+All participants are adults (18+) who self-select into the study by signing up voluntarily. Participants complete Python coding challenges at their own pace with no imposed time pressure. Challenges may involve mild cognitive effort and occasional frustration, which is within the normal range of everyday professional coding activity. Participants are explicitly told before every session: *"This is not a test you can fail  –  consistent conditions just help us (and you) track genuine change over time."* Participants may skip any individual challenge or end their session at any point without consequence. No sensitive personal topics are raised. The study does not involve deception.
 
 **Provisions for problems and queries raised by participants:**
 Participants can contact the researcher directly by email (andy.woods@rhul.ac.uk) at any time. A self-service withdrawal function is available within the participant's account settings, allowing them to withdraw from the study and request data deletion at any point before the dataset is anonymised. Contact details for the researcher and for the RHUL ethics committee (ethics@rhul.ac.uk) are provided in the participant information sheet and on the platform.
@@ -108,9 +108,9 @@ Participants will be recruited via developer communities and social platforms in
 
 **Will informed consent be obtained?** Yes. Full informed consent is obtained digitally within the platform before the participant completes their first session. Participants must actively confirm each consent item (tick-box format) before proceeding. Consent is versioned and timestamped; records are stored separately from research data. The consent form covers: voluntary participation, right to withdraw, data storage and use, pseudonymisation, open data release after embargo, and the possibility of being invited for an optional follow-up interview.
 
-**Can participants withdraw from the activity?** Yes — at any point, without giving a reason, and without consequence.
+**Can participants withdraw from the activity?** Yes  –  at any point, without giving a reason, and without consequence.
 
-**Can participants withdraw their data?** Yes — via a self-service function in account settings, at any time before the dataset is anonymised and prepared for release (approximately 12 months after a participant's first session). After anonymisation, individual data cannot be identified or removed.
+**Can participants withdraw their data?** Yes  –  via a self-service function in account settings, at any time before the dataset is anonymised and prepared for release (approximately 12 months after a participant's first session). After anonymisation, individual data cannot be identified or removed.
 
 | Question | Answer |
 |----------|--------|

@@ -1,15 +1,15 @@
 /**
- * Pyodide Web Worker — executes Python code in a sandboxed environment.
+ * Pyodide Web Worker  -  executes Python code in a sandboxed environment.
  *
- * Messages IN:  { type: "init" }           — load Pyodide
- *               { type: "run", code, testCases }  — execute code + tests
+ * Messages IN:  { type: "init" }            -  load Pyodide
+ *               { type: "run", code, testCases }   -  execute code + tests
  *
- * Messages OUT: { type: "ready" }           — Pyodide loaded
- *               { type: "init_error", error } — Pyodide failed to load
- *               { type: "stdout", text }    — stdout line
- *               { type: "stderr", text }    — stderr line
- *               { type: "result", results } — test results array
- *               { type: "error", error }    — runtime error
+ * Messages OUT: { type: "ready" }            -  Pyodide loaded
+ *               { type: "init_error", error }  -  Pyodide failed to load
+ *               { type: "stdout", text }     -  stdout line
+ *               { type: "stderr", text }     -  stderr line
+ *               { type: "result", results }  -  test results array
+ *               { type: "error", error }     -  runtime error
  */
 
 /* global importScripts, loadPyodide */
@@ -84,7 +84,7 @@ def check_syntax(code):
                 try {
                     let result;
                     if (tc.input === "operations" || tc.input === "tree_ops") {
-                        // Class-based tests — run operations sequence
+                        // Class-based tests  -  run operations sequence
                         result = runOperationTests(pyodide, tc);
                     } else {
                         // Standard function call tests

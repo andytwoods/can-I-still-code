@@ -152,7 +152,7 @@ def send_reminder_emails():
         email = EmailMessage(
             subject="Ready for your next coding session?",
             body=(
-                "It's been a while — ready for your next coding session?\n\n"
+                "It's been a while  -  ready for your next coding session?\n\n"
                 "Visit the app to start a new session.\n\n"
                 "To unsubscribe from reminders:\n"
                 f"  {unsubscribe_path}\n"

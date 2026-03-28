@@ -291,7 +291,7 @@ def _render_session_get(request, session):
 @login_required
 def session_view(request, session_id):
     """
-    Main session page — single URL for the entire session flow.
+    Main session page  -  single URL for the entire session flow.
     HTMX partials swap content for challenge → reflection → another → next.
     """
     session = get_object_or_404(CodeSession, pk=session_id)
@@ -377,7 +377,7 @@ def _handle_skip(request, session, participant):
 
 
 def _handle_stop(request, session, participant):
-    """Handle stop session — skip current challenge, show post-session survey."""
+    """Handle stop session  -  skip current challenge, show post-session survey."""
     current_sc, _ = _get_current_challenge(session)
     if current_sc:
         ChallengeAttempt.objects.create(
