@@ -1,23 +1,33 @@
 {% extends "base.html" %}
 
 {% block title %}
-  Consent Declined  –  Can I Still Code
+  Ethics Agreement Declined  –  Can I Still Code
 {% endblock title %}
 {% block content %}
   <div class="columns is-centered">
-    <div class="column is-6 has-text-centered">
-      <h1 class="title">No problem</h1>
+    <div class="column is-6">
+      <h1 class="title">Ethics agreement not accepted</h1>
       <div class="content">
         <p>
-          You have chosen not to give consent at this time.
-          You are welcome to return and give consent whenever you are ready.
+          Participation in <em>Can I Still Code?</em> requires accepting the ethics agreement.
+          Without your consent we cannot enrol you in the project or record any of your data.
         </p>
         <p>
-          Without consent, you will not be able to participate in coding sessions
-          or access study features.
+          If you would like to reconsider, you can return to the ethics agreement at any time.
+        </p>
+        <p>
+          If you do not wish to accept, please delete your account. This will remove your email
+          address and all associated data from our systems.
         </p>
       </div>
-      <a href="{% url 'consent:give_consent' %}" class="button is-primary">Return to Consent Page</a>
+      <div class="buttons">
+        <a href="{% url 'consent:give_consent' %}" class="button is-primary">
+          Return to ethics agreement
+        </a>
+        <a href="{% url 'accounts:withdraw' %}" class="button is-danger is-light">
+          Delete my account
+        </a>
+      </div>
     </div>
   </div>
 {% endblock content %}

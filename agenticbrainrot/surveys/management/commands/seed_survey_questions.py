@@ -89,6 +89,21 @@ PROFILE_QUESTIONS = [
         "display_order": 11,
     },
     {
+        "text": "How many years have you been writing Python specifically?",
+        "question_type": "single_choice",
+        "choices": [
+            ["<1", "Less than 1 year"],
+            ["1-3", "1-3 years"],
+            ["3-5", "3-5 years"],
+            ["5-10", "5-10 years"],
+            ["10+", "10+ years"],
+        ],
+        "context": "profile",
+        "category": "Programming Experience",
+        "is_required": True,
+        "display_order": 11,
+    },
+    {
         "text": "How would you rate your Python proficiency?",
         "question_type": "single_choice",
         "choices": [
@@ -132,6 +147,41 @@ PROFILE_QUESTIONS = [
         "category": "Programming Experience",
         "is_required": True,
         "display_order": 14,
+    },
+    {
+        "text": "Approximately how many hours per week do you spend writing code?",
+        "question_type": "single_choice",
+        "choices": [
+            ["<5", "Less than 5 hours"],
+            ["5-10", "5-10 hours"],
+            ["10-20", "10-20 hours"],
+            ["20-30", "20-30 hours"],
+            ["30+", "More than 30 hours"],
+        ],
+        "context": "profile",
+        "category": "Programming Experience",
+        "is_required": True,
+        "display_order": 15,
+    },
+    {
+        "text": "Which best describes your primary coding domain?",
+        "question_type": "single_choice",
+        "choices": [
+            ["web_frontend", "Web – frontend"],
+            ["web_backend", "Web – backend"],
+            ["web_fullstack", "Web – full stack"],
+            ["data_science", "Data science / machine learning"],
+            ["systems", "Systems / infrastructure / DevOps"],
+            ["mobile", "Mobile (iOS / Android)"],
+            ["embedded", "Embedded / hardware"],
+            ["academic", "Academic / scientific computing"],
+            ["generalist", "Generalist (no single domain)"],
+            ["other", "Other"],
+        ],
+        "context": "profile",
+        "category": "Programming Experience",
+        "is_required": True,
+        "display_order": 16,
     },
     # === AI Tool Usage ===
     {
@@ -215,6 +265,22 @@ PROFILE_QUESTIONS = [
         "category": "AI Tool Usage",
         "is_required": True,
         "display_order": 24,
+    },
+    {
+        "text": "In a typical coding session, roughly what proportion of your final code is AI-generated?",
+        "question_type": "single_choice",
+        "choices": [
+            ["0", "0% – I write everything myself"],
+            ["1-25", "1-25%"],
+            ["25-50", "25-50%"],
+            ["50-75", "50-75%"],
+            ["75+", "More than 75%"],
+            ["na", "Not applicable"],
+        ],
+        "context": "profile",
+        "category": "AI Tool Usage",
+        "is_required": True,
+        "display_order": 25,
     },
     # === Problem Solving ===
     {

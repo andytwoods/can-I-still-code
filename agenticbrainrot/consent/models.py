@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from simple_history.models import HistoricalRecords
 
@@ -84,3 +85,30 @@ class OptionalConsentRecord(models.Model):
     def __str__(self) -> str:
         status = "consented" if self.consented else "declined"
         return f"Optional consent ({status}) for {self.participant}: {self.consent_type}"
+
+
+class DebriefRecord(models.Model):
+    """
+    Records that a participant was sent the end-of-study debrief email.
+    Created by the send_debrief management command.
+    """
+
+    participant = models.ForeignKey(
+        "accounts.Participant",
+        on_delete=models.CASCADE,
+        related_name="debrief_records",
+    )
+    sent_at = models.DateTimeField(auto_now_add=True)
+    sent_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+
+    class Meta:
+        ordering = ["-sent_at"]
+
+    def __str__(self) -> str:
+        return f"Debrief sent to {self.participant} at {self.sent_at:%Y-%m-%d %H:%M}"

@@ -1,18 +1,17 @@
 {% extends "base.html" %}
 
-{% load crispy_forms_tags %}
-{% load markdown_tags %}
-
 {% block title %}
-  Consent  –  Can I Still Code
+  Ethics Agreement  –  Can I Still Code
 {% endblock title %}
 {% block content %}
   <div class="columns is-centered">
     <div class="column is-8">
       <h1 class="title">
-        {{ document.title }} <span class="tag is-info">v{{ document.version }}</span>
+        Ethics Agreement <span class="tag is-info">v{{ document.version }}</span>
       </h1>
-      <div class="content box">{{ document.body|render_markdown }}</div>
+      <div class="content box">
+        {% include "consent/ethics_agreement.html" %}
+      </div>
       <hr />
       <form method="post">
         {% csrf_token %}
