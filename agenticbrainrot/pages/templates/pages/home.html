@@ -100,7 +100,7 @@
       <button id="watermarkPause"
               aria-label="Pause animation"
               title="Pause animation"
-              class="hero-watermark-pause">⏸</button>
+              class="hero-watermark-pause">⏸&#xFE0E;</button>
       <span class="hero-code-watermark" aria-hidden="true"></span>
     </div>
     <div class="hero-body">
@@ -329,7 +329,7 @@
       if (pauseBtn) {
         pauseBtn.addEventListener("click", () => {
           paused = !paused;
-          pauseBtn.textContent = paused ? "▶" : "⏸";
+          pauseBtn.textContent = paused ? "▶\uFE0E" : "⏸\uFE0E";
           pauseBtn.setAttribute("aria-label", paused ? "Resume animation" : "Pause animation");
           pauseBtn.title = paused ? "Resume animation" : "Pause animation";
         });

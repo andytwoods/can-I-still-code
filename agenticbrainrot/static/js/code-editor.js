@@ -30,6 +30,7 @@
     var tabBlurCount = 0;
     var lastBlurTime = null;
     var idleSeconds = 0;
+    var runCount = 0;
 
     var THEMES = {
         "default": "default",
@@ -49,6 +50,7 @@
         pasteTotalChars = 0;
         keystrokeCount = 0;
         tabBlurCount = 0;
+        runCount = 0;
         lastBlurTime = null;
         lastKeystrokeTime = null;
         startTime = null;
@@ -416,6 +418,7 @@
 
     function runCode() {
         if (!editor || !worker || !pyodideReady) return;
+        runCount++;
         clearOutput();
         var runBtn = document.getElementById("run-btn");
         var submitBtn = document.getElementById("submit-btn");
@@ -460,6 +463,7 @@
         setInput("paste-total-chars-input", pasteTotalChars.toString());
         setInput("keystroke-count-input", keystrokeCount.toString());
         setInput("tab-blur-count-input", tabBlurCount.toString());
+        setInput("run-count-input", runCount.toString());
 
         // Clear draft
         var attemptUuid = document.getElementById("attempt-uuid");

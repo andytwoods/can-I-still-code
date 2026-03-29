@@ -17,5 +17,20 @@
       <a class="button is-primary" href="{% url 'account_email' %}">E-Mail</a>
       <a class="button is-primary" href="{% url 'mfa_index' %}">MFA</a>
     </div>
+    {% if participant %}
+      <hr>
+      <h2 class="title is-5">Data &amp; privacy</h2>
+      {% if participant.deleted_at %}
+        <div class="notification is-light">Your personal data has been deleted. Anonymised research data is retained per the study protocol.</div>
+      {% elif participant.deletion_requested_at %}
+        <div class="notification is-info is-light">Your data deletion request has been received and is pending processing. We will action it shortly.</div>
+      {% elif participant.withdrawn_at %}
+        <p class="mb-3">You have withdrawn from the project. Your data is retained in anonymised form unless you request deletion.</p>
+        <a href="{% url 'accounts:request_deletion' %}" class="button is-warning">Request data deletion</a>
+      {% else %}
+        <p class="mb-3">You can withdraw from the project and, separately, request deletion of your personal data.</p>
+        <a href="{% url 'accounts:withdraw' %}" class="button is-danger is-light">Withdraw &amp; delete my data</a>
+      {% endif %}
+    {% endif %}
   {% endif %}
 {% endblock content %}

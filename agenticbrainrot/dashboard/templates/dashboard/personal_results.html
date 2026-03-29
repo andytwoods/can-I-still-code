@@ -17,23 +17,32 @@
         </div>
       {% else %}
         {# Charts #}
-        <div class="columns">
-          <div class="column is-6">
+        <div class="columns is-multiline">
+          <div class="column is-4">
             <div class="box">
-              <h2 class="title is-5">Accuracy Over Sessions</h2>
+              <h2 class="title is-5">Accuracy</h2>
               <canvas id="accuracy-chart"
-                      aria-label="Line chart showing accuracy percentage across sessions"
-                      role="img">Accuracy percentage over sessions – see the table below for the same data.</canvas>
+                      aria-label="Line chart showing accuracy percentage over time"
+                      role="img">Accuracy percentage over time – see the table below for the same data.</canvas>
               <p class="is-size-7 has-text-grey mt-2" id="accuracy-summary"></p>
             </div>
           </div>
-          <div class="column is-6">
+          <div class="column is-4">
             <div class="box">
-              <h2 class="title is-5">Average Time Over Sessions</h2>
+              <h2 class="title is-5">Time Taken</h2>
               <canvas id="speed-chart"
-                      aria-label="Line chart showing average time in seconds across sessions"
-                      role="img">Average time per challenge in seconds over sessions – see the table below for the same data.</canvas>
+                      aria-label="Line chart showing average time in seconds over time"
+                      role="img">Average time per challenge in seconds over time – see the table below for the same data.</canvas>
               <p class="is-size-7 has-text-grey mt-2" id="speed-summary"></p>
+            </div>
+          </div>
+          <div class="column is-4">
+            <div class="box">
+              <h2 class="title is-5">Submissions Per Challenge</h2>
+              <canvas id="runs-chart"
+                      aria-label="Line chart showing average number of code runs per challenge over time"
+                      role="img">Average runs per challenge over time – see the table below for the same data.</canvas>
+              <p class="is-size-7 has-text-grey mt-2" id="runs-summary"></p>
             </div>
           </div>
         </div>
@@ -49,6 +58,7 @@
                   <th>Challenges</th>
                   <th>Avg Accuracy</th>
                   <th>Avg Time (s)</th>
+                  <th>Avg Runs</th>
                 </tr>
               </thead>
               <tbody>
@@ -59,6 +69,7 @@
                     <td>{{ row.challenges_attempted }}</td>
                     <td>{{ row.avg_accuracy }}%</td>
                     <td>{{ row.avg_time }}</td>
+                    <td>{{ row.avg_runs }}</td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -72,41 +83,54 @@
 {% block extra_js %}
   {% if has_sessions %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function() {
         {# djlint:off #}
         var accuracyData = {{ accuracy_data|safe }};
         var speedData = {{ speed_data|safe }};
+        var runsData = {{ runs_data|safe }};
         var colours = {{ chart_colours|safe }};
         {# djlint:on #}
 
-        var labels = accuracyData.map(function(d) {
-          return d.x;
-        });
-        var accValues = accuracyData.map(function(d) {
-          return d.y;
-        });
-        var spdValues = speedData.map(function(d) {
-          return d.y;
-        });
+        var accValues = accuracyData.map(function(d) { return d.y; });
+        var spdValues = speedData.map(function(d) { return d.y; });
+        var runValues = runsData.map(function(d) { return d.y; });
 
         var isDark = document.documentElement.getAttribute("data-theme") === "dark";
         var textColor = isDark ? "#e0e0e0" : "#363636";
         var gridColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
 
+        var timeAxis = {
+          type: "time",
+          time: {
+            displayFormats: {
+              day: "d MMM",
+              week: "d MMM",
+              month: "MMM yyyy",
+              quarter: "MMM yyyy",
+              year: "yyyy"
+            },
+            tooltipFormat: "d MMM yyyy"
+          },
+          ticks: { color: textColor },
+          grid: { color: gridColor }
+        };
+
         // Accuracy chart
         new Chart(document.getElementById("accuracy-chart"), {
           type: "line",
           data: {
-            labels: labels,
             datasets: [{
               label: "Accuracy (%)",
-              data: accValues,
+              data: accuracyData,
               borderColor: colours.accuracy,
               backgroundColor: colours.accuracy_bg,
               fill: true,
               tension: 0.3,
-              pointRadius: 5
+              pointStyle: "line",
+              pointRadius: 6,
+              rotation: 90
             }]
           },
           options: {
@@ -115,32 +139,13 @@
               y: {
                 beginAtZero: true,
                 max: 100,
-                title: {
-                  display: true,
-                  text: "Accuracy (%)",
-                  color: textColor
-                },
-                ticks: {
-                  color: textColor
-                },
-                grid: {
-                  color: gridColor
-                }
+                title: { display: true, text: "Accuracy (%)", color: textColor },
+                ticks: { color: textColor },
+                grid: { color: gridColor }
               },
-              x: {
-                ticks: {
-                  color: textColor
-                },
-                grid: {
-                  color: gridColor
-                }
-              }
+              x: timeAxis
             },
-            plugins: {
-              legend: {
-                display: false
-              }
-            }
+            plugins: { legend: { display: false } }
           }
         });
 
@@ -148,15 +153,16 @@
         new Chart(document.getElementById("speed-chart"), {
           type: "line",
           data: {
-            labels: labels,
             datasets: [{
               label: "Avg Time (s)",
-              data: spdValues,
+              data: speedData,
               borderColor: colours.speed,
               backgroundColor: colours.speed_bg,
               fill: true,
               tension: 0.3,
-              pointRadius: 5
+              pointStyle: "line",
+              pointRadius: 6,
+              rotation: 90
             }]
           },
           options: {
@@ -164,50 +170,63 @@
             scales: {
               y: {
                 beginAtZero: true,
-                title: {
-                  display: true,
-                  text: "Time (seconds)",
-                  color: textColor
-                },
-                ticks: {
-                  color: textColor
-                },
-                grid: {
-                  color: gridColor
-                }
+                title: { display: true, text: "Time (seconds)", color: textColor },
+                ticks: { color: textColor },
+                grid: { color: gridColor }
               },
-              x: {
-                ticks: {
-                  color: textColor
-                },
-                grid: {
-                  color: gridColor
-                }
-              }
+              x: timeAxis
             },
-            plugins: {
-              legend: {
-                display: false
-              }
-            }
+            plugins: { legend: { display: false } }
+          }
+        });
+
+        // Runs chart
+        new Chart(document.getElementById("runs-chart"), {
+          type: "line",
+          data: {
+            datasets: [{
+              label: "Avg Runs",
+              data: runsData,
+              borderColor: colours.runs,
+              backgroundColor: colours.runs_bg,
+              fill: true,
+              tension: 0.3,
+              pointStyle: "line",
+              pointRadius: 6,
+              rotation: 90
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: "Runs per challenge", color: textColor },
+                ticks: { color: textColor },
+                grid: { color: gridColor }
+              },
+              x: timeAxis
+            },
+            plugins: { legend: { display: false } }
           }
         });
 
         // Text summaries
         if (accValues.length > 1) {
-          var accFirst = accValues[0],
-            accLast = accValues[accValues.length - 1];
-          var accDiff = (accLast - accFirst).toFixed(1);
+          var accDiff = (accValues[accValues.length - 1] - accValues[0]).toFixed(1);
           var accDir = accDiff >= 0 ? "up" : "down";
           document.getElementById("accuracy-summary").textContent =
             "Your accuracy went " + accDir + " by " + Math.abs(accDiff) + "% from your first to latest session.";
 
-          var spdFirst = spdValues[0],
-            spdLast = spdValues[spdValues.length - 1];
-          var spdDiff = (spdLast - spdFirst).toFixed(1);
+          var spdDiff = (spdValues[spdValues.length - 1] - spdValues[0]).toFixed(1);
           var spdDir = spdDiff >= 0 ? "increased" : "decreased";
           document.getElementById("speed-summary").textContent =
             "Your average time " + spdDir + " by " + Math.abs(spdDiff) + "s from your first to latest session.";
+
+          var runDiff = (runValues[runValues.length - 1] - runValues[0]).toFixed(1);
+          var runDir = runDiff >= 0 ? "increased" : "decreased";
+          document.getElementById("runs-summary").textContent =
+            "Average runs per challenge " + runDir + " by " + Math.abs(runDiff) + " from your first to latest session.";
         }
       });
     </script>

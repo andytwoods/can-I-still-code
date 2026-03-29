@@ -22,8 +22,10 @@ from .models import DatasetAccessGrant
 CHART_COLOURS = {
     "accuracy": "rgb(0, 114, 178)",
     "speed": "rgb(230, 159, 0)",
+    "runs": "rgb(0, 158, 115)",
     "accuracy_bg": "rgba(0, 114, 178, 0.1)",
     "speed_bg": "rgba(230, 159, 0, 0.1)",
+    "runs_bg": "rgba(0, 158, 115, 0.1)",
 }
 
 
@@ -37,6 +39,7 @@ def _build_session_data(participant):
     session_rows = []
     accuracy_points = []
     speed_points = []
+    runs_points = []
 
     for i, session in enumerate(sessions, 1):
         attempts = ChallengeAttempt.objects.filter(
@@ -51,14 +54,16 @@ def _build_session_data(participant):
                     F("tests_passed") * 100.0 / F("tests_total"),
                 ),
                 avg_time=Avg("time_taken_seconds"),
+                avg_runs=Avg("run_count"),
             )
             avg_accuracy = round(agg["avg_accuracy"] or 0, 1)
             avg_time = round(agg["avg_time"] or 0, 1)
+            avg_runs = round(agg["avg_runs"] or 0, 1)
         else:
             avg_accuracy = 0
             avg_time = 0
+            avg_runs = 0
 
-        label = session.completed_at.strftime("%b '%y")
         date_str = session.completed_at.strftime("%d %b %Y")
 
         session_rows.append(
@@ -68,12 +73,15 @@ def _build_session_data(participant):
                 "challenges_attempted": session.challenges_attempted,
                 "avg_accuracy": avg_accuracy,
                 "avg_time": avg_time,
+                "avg_runs": avg_runs,
             },
         )
-        accuracy_points.append({"x": label, "y": avg_accuracy})
-        speed_points.append({"x": label, "y": avg_time})
+        x = session.completed_at.isoformat()
+        accuracy_points.append({"x": x, "y": avg_accuracy})
+        speed_points.append({"x": x, "y": avg_time})
+        runs_points.append({"x": x, "y": avg_runs})
 
-    return session_rows, accuracy_points, speed_points
+    return session_rows, accuracy_points, speed_points, runs_points
 
 
 @login_required
@@ -81,7 +89,7 @@ def personal_results(request):
     """Personal results dashboard for the participant."""
     participant = get_object_or_404(Participant, user=request.user)
 
-    session_rows, accuracy_points, speed_points = _build_session_data(
+    session_rows, accuracy_points, speed_points, runs_points = _build_session_data(
         participant,
     )
 
@@ -90,6 +98,7 @@ def personal_results(request):
         "has_sessions": len(session_rows) > 0,
         "accuracy_data": json.dumps(accuracy_points),
         "speed_data": json.dumps(speed_points),
+        "runs_data": json.dumps(runs_points),
         "chart_colours": json.dumps(CHART_COLOURS),
     }
 

@@ -46,9 +46,13 @@ class Command(BaseCommand):
         # Accuracy degrades: base ~88% dropping to ~62% by last session
         now = timezone.now()
 
+        # Build session dates working backwards from today, each gap >= 28 days
+        gaps = [28 + random.randint(0, 14) for _ in range(n_sessions)]
+        cumulative = [sum(gaps[i:]) for i in range(n_sessions)]
+
         for i in range(n_sessions):
             # Oldest session first
-            days_ago = (n_sessions - 1 - i) * 29 + random.randint(-2, 2)
+            days_ago = cumulative[i]
             started = now - timedelta(days=days_ago, hours=random.randint(9, 20))
             completed = started + timedelta(minutes=random.randint(25, 55))
 
@@ -91,6 +95,10 @@ class Command(BaseCommand):
 
                 attempt_time = started + timedelta(minutes=pos * 5 + random.randint(1, 4))
 
+                # Runs before submitting: starts ~2, drifts up to ~5 as confidence drops
+                base_runs = 2 + t * 3
+                run_count = max(1, round(base_runs + random.gauss(0, 0.8)))
+
                 attempt = ChallengeAttempt(
                     participant=participant,
                     challenge=challenge,
@@ -107,6 +115,7 @@ class Command(BaseCommand):
                     paste_count=0,
                     paste_total_chars=0,
                     tab_blur_count=random.randint(0, 4),
+                    run_count=run_count,
                 )
                 # bypass auto_now_add on started_at
                 attempt.save()

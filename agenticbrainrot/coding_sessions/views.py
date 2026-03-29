@@ -352,6 +352,7 @@ def _handle_submit(request, session, participant):
         paste_total_chars=int(request.POST.get("paste_total_chars", 0)),
         keystroke_count=int(request.POST.get("keystroke_count", 0)),
         tab_blur_count=int(request.POST.get("tab_blur_count", 0)),
+        run_count=int(request.POST.get("run_count", 0)),
         submitted_at=timezone.now(),
         skipped=False,
     )

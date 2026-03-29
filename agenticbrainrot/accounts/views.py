@@ -22,6 +22,14 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     slug_field = "id"
     slug_url_kwarg = "id"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            context["participant"] = self.object.participant
+        except Exception:
+            context["participant"] = None
+        return context
+
 
 user_detail_view = UserDetailView.as_view()
 

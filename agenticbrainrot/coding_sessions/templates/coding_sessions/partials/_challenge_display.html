@@ -80,13 +80,9 @@
      aria-label="Test results"
      aria-live="polite"></div>
 <!-- Test cases data for JS -->
-<script id="test-cases-data" type="application/json">
-  {
-    {
-      test_cases_json | safe
-    }
-  }
-</script>
+{# djlint:off #}
+<script id="test-cases-data" type="application/json">{{ test_cases_json|safe }}</script>
+{# djlint:on #}
 <!-- Hidden form for HTMX submission -->
 <form id="challenge-form"
       hx-post="{% url 'coding_sessions:session_view' session.pk %}"
@@ -118,4 +114,5 @@
          id="tab-blur-count-input"
          name="tab_blur_count"
          value="0" />
+  <input type="hidden" id="run-count-input" name="run_count" value="0" />
 </form>

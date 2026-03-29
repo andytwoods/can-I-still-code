@@ -154,6 +154,10 @@ class ChallengeAttempt(models.Model):
     paste_total_chars = models.IntegerField(default=0)
     keystroke_count = models.IntegerField(default=0)
     tab_blur_count = models.IntegerField(default=0)
+    run_count = models.PositiveIntegerField(
+        default=0,
+        help_text="Number of times the participant ran the code before final submission.",
+    )
 
     class Meta:
         unique_together = [("session", "challenge")]
