@@ -13,11 +13,13 @@ from agenticbrainrot.pages.views import AboutView
 from agenticbrainrot.pages.views import CoCView
 from agenticbrainrot.pages.views import HomeView
 from agenticbrainrot.pages.views import HowItWorksView
+from agenticbrainrot.pages.views import LoggedInHomeView
 from agenticbrainrot.pages.views import PrivacyView
 from agenticbrainrot.pages.views import TermsView
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
+    path("dashboard/", LoggedInHomeView.as_view(), name="logged_in_home"),
     path("about/", AboutView.as_view(), name="about"),
     path("how-it-works/", HowItWorksView.as_view(), name="how_it_works"),
     path("privacy/", PrivacyView.as_view(), name="privacy"),

@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Dashboard | Can I Still Code{% endblock title %}
+
+{% block main %}
+  <section class="section">
+    <div class="container">
+
+      <div class="mb-6">
+        <h1 class="title is-2">
+          Welcome back{% if request.user.name %}, {{ request.user.name }}{% endif %}!
+        </h1>
+        <p class="subtitle is-5 has-text-grey">What would you like to do today?</p>
+      </div>
+
+      {% if no_participant %}
+        {# Staff user without a participant record #}
+        <div class="columns is-multiline">
+
+          <div class="column is-4">
+            <div class="box has-text-centered" style="height: 100%">
+              <span class="icon is-large has-text-primary mb-4" style="font-size: 3rem">
+                <i class="fas fa-flask"></i>
+              </span>
+              <h2 class="title is-4">Code Editor</h2>
+              <p class="has-text-grey mb-5">Preview and test Python challenges.</p>
+              <a href="{% url 'challenges:preview_challenge' %}" class="button is-primary is-fullwidth">
+                Open Editor
+              </a>
+            </div>
+          </div>
+
+          <div class="column is-4">
+            <div class="box has-text-centered" style="height: 100%">
+              <span class="icon is-large has-text-info mb-4" style="font-size: 3rem">
+                <i class="fas fa-play-circle"></i>
+              </span>
+              <h2 class="title is-4">Mock Session</h2>
+              <p class="has-text-grey mb-5">Simulate a full participant session.</p>
+              <a href="{% url 'coding_sessions:mock_session_start' %}" class="button is-info is-fullwidth">
+                Start Mock
+              </a>
+            </div>
+          </div>
+
+          <div class="column is-4">
+            <div class="box has-text-centered" style="height: 100%">
+              <span class="icon is-large has-text-dark mb-4" style="font-size: 3rem">
+                <i class="fas fa-cog"></i>
+              </span>
+              <h2 class="title is-4">Django Admin</h2>
+              <p class="has-text-grey mb-5">Manage users, data, and site settings.</p>
+              <a href="{% url 'admin:index' %}" class="button is-dark is-fullwidth">
+                Open Admin
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      {% else %}
+
+        <div class="columns is-multiline">
+
+          {# ── Coding Session card ─────────────────────────────────────────── #}
+          <div class="column is-6">
+            <div class="box has-text-centered" style="height: 100%; display: flex; flex-direction: column">
+              <span class="icon is-large mb-4" style="font-size: 3rem">
+                <i class="fas fa-code has-text-primary"></i>
+              </span>
+              <h2 class="title is-4">Coding Session</h2>
+
+              {% if session_status == "active" %}
+                <p class="has-text-grey mb-2">You have a session in progress.</p>
+                <a href="{% url 'coding_sessions:session_view' active_session.pk %}"
+                   class="button is-warning is-fullwidth" style="margin-top: auto">
+                  <span class="icon"><i class="fas fa-play"></i></span>
+                  <span>Resume Session</span>
+                </a>
+
+              {% elif session_status == "cooldown" %}
+                <p class="has-text-grey mb-2">
+                  Great work on your last session! Your next session unlocks on:
+                </p>
+                <p class="has-text-weight-bold mb-4">
+                  {{ next_eligible|date:"j N Y" }} at {{ next_eligible|time:"H:i" }} UTC
+                </p>
+                <button class="button is-primary is-fullwidth" disabled style="margin-top: auto">
+                  <span class="icon"><i class="fas fa-lock"></i></span>
+                  <span>Not available yet</span>
+                </button>
+
+              {% else %}
+                {% if completed_sessions_count == 0 %}
+                  <p class="has-text-grey mb-0">Ready for your first session? Complete short Python challenges and track your skills over time.</p>
+                {% else %}
+                  <p class="has-text-grey mb-0">
+                    You have completed
+                    <strong>{{ completed_sessions_count }}</strong>
+                    session{{ completed_sessions_count|pluralize }}.
+                    Time for another!
+                  </p>
+                {% endif %}
+                <a href="{% url 'coding_sessions:session_start' %}"
+                   class="button is-primary is-fullwidth" style="margin-top: auto">
+                  <span class="icon"><i class="fas fa-play"></i></span>
+                  <span>Start Session</span>
+                </a>
+              {% endif %}
+            </div>
+          </div>
+
+          {# ── My Results card ─────────────────────────────────────────────── #}
+          <div class="column is-6">
+            <div class="box has-text-centered" style="height: 100%; display: flex; flex-direction: column">
+              <span class="icon is-large mb-4" style="font-size: 3rem">
+                <i class="fas fa-chart-line has-text-info"></i>
+              </span>
+              <h2 class="title is-4">My Results</h2>
+              {% if completed_sessions_count > 0 %}
+                <p class="has-text-grey mb-0">View your accuracy and speed trends across all sessions.</p>
+              {% else %}
+                <p class="has-text-grey mb-0">Complete your first session to unlock your personal results dashboard.</p>
+              {% endif %}
+              <a href="{% url 'dashboard:personal_results' %}"
+                 class="button is-info is-fullwidth" style="margin-top: auto" {% if completed_sessions_count == 0 %}disabled{% endif %}>
+                <span class="icon"><i class="fas fa-chart-bar"></i></span>
+                <span>View Results</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        {# Staff admin tools row #}
+        {% if request.user.is_staff %}
+          <hr>
+          <h2 class="title is-5 has-text-grey">Staff Tools</h2>
+          <div class="columns">
+
+            <div class="column is-narrow">
+              <a href="{% url 'challenges:preview_challenge' %}" class="button is-light">
+                <span class="icon"><i class="fas fa-flask"></i></span>
+                <span>Code Editor</span>
+              </a>
+            </div>
+
+            <div class="column is-narrow">
+              <a href="{% url 'coding_sessions:mock_session_start' %}" class="button is-light">
+                <span class="icon"><i class="fas fa-play-circle"></i></span>
+                <span>Mock Session</span>
+              </a>
+            </div>
+
+            <div class="column is-narrow">
+              <a href="{% url 'admin:index' %}" class="button is-light">
+                <span class="icon"><i class="fas fa-cog"></i></span>
+                <span>Django Admin</span>
+              </a>
+            </div>
+
+          </div>
+        {% endif %}
+
+      {% endif %}
+
+    </div>
+  </section>
+{% endblock main %}

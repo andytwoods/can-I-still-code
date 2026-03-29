@@ -390,8 +390,9 @@
         // Backspace the initial </>
         await deleteBack(INITIAL.length);
 
-        // Shrink font for commands and reveal pause button
+        // Shrink font for commands, switch to coding font, reveal pause button
         el.style.fontSize = "clamp(0.9rem, 2.5vw, 2rem)";
+        el.style.fontFamily = '"JetBrains Mono", monospace';
         if (pauseBtn) pauseBtn.style.display = "inline";
 
         // Out-of-hat shuffle: exhaust all commands before repeating

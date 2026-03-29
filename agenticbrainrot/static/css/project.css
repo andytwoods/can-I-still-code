@@ -1,5 +1,13 @@
 /* These styles are generated from project.scss. */
 
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../webfonts/JetBrainsMono-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 html, body {
   height: 100%;
 }
@@ -276,19 +284,18 @@ body {
   position: absolute;
   left: 2%;
   top: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.3em;
 }
 .hero-code-watermark {
   font-family: monospace;
   font-size: clamp(3rem, 9vw, 8rem);
-  font-weight: 900;
+  font-weight: 800;
   pointer-events: none;
   user-select: none;
   line-height: 1;
   white-space: nowrap;
   transition: font-size 0.4s ease;
+  margin-left: 1.5rem;
+  display: inline-block;
 }
 [data-theme="light"] .hero-code-watermark {
   opacity: 0.30;
@@ -300,19 +307,28 @@ body {
 }
 .hero-watermark-pause {
   display: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
   background: none;
   border: none;
   cursor: pointer;
   opacity: 0.2;
-  font-size: 0.8rem;
+  font-size: 1.4rem;
   color: #ffffff;
-  padding: 0.2rem;
+  padding: 0.3rem;
   line-height: 1;
-  flex-shrink: 0;
   transition: opacity 0.2s;
 }
 .hero-watermark-pause:hover,
 .hero-watermark-pause:focus-visible { opacity: 0.6; }
+
+@media (max-width: 768px) {
+  .hero-cta .hero-body {
+    padding-top: 6rem;
+  }
+}
 
 .hero-eyebrow {
   font-size: 0.8rem;

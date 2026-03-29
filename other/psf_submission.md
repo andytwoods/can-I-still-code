@@ -101,13 +101,13 @@ We understand that use of the PSF name and logo is subject to the PSF Trademark 
 
 ## Supporting links
 
-| Resource | URL |
-|---|---|
-| Study website | https://canistillcode.org |
-| PI profile (RHUL) | https://pure.royalholloway.ac.uk/en/persons/andrew-woods/ |
-| PI Google Scholar | https://scholar.google.co.uk/citations?user=p5dUkQIAAAAJ&hl=en |
-| PI LinkedIn | https://www.linkedin.com/in/woodsandy/ |
-| GitHub | https://github.com/andytwoods/can-I-still-code/ |
+| Resource          | URL                                                                            |
+| :---------------- | :----------------------------------------------------------------------------- |
+| Study website     | https://canistillcode.org                                                     |
+| PI profile (RHUL) | https://pure.royalholloway.ac.uk/en/persons/andrew-woods/                    |
+| PI Google Scholar | https://scholar.google.co.uk/citations?user=p5dUkQIAAAAJ&hl=en               |
+| PI LinkedIn       | https://www.linkedin.com/in/woodsandy/                                        |
+| GitHub            | https://github.com/andytwoods/can-I-still-code/                               |
 
 ---
 

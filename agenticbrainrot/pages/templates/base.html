@@ -88,6 +88,11 @@
     <link rel="manifest" href="{% static 'images/social/site.webmanifest' %}" />
     {% block css %}
       <link rel="preload"
+            href="{% static 'webfonts/JetBrainsMono-ExtraBold.woff2' %}"
+            as="font"
+            type="font/woff2"
+            crossorigin />
+      <link rel="preload"
             href="{% static 'webfonts/fa-solid-900.woff2' %}"
             as="font"
             type="font/woff2"
