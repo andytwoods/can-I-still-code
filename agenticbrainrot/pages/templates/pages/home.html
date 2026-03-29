@@ -25,7 +25,7 @@
   {{ request.scheme }}://{{ request.get_host }}{% static 'images/og/og-home.png' %}
 {% endblock og_image %}
 {% block og_image_alt %}
-  Can I Still Code  –  a citizen-science study tracking whether vibe coding erodes Python developer skills
+  Can I Still Code  –  a citizen-science project tracking whether vibe coding erodes Python developer skills
 {% endblock og_image_alt %}
 {# ── SEO: Twitter / X Card ───────────────────────────────────────────────── #}
 {% block twitter_title %}
@@ -158,7 +158,7 @@
         <p class="hero-eyebrow mb-3">citizen science &ndash; open data &ndash; Python</p>
         <h1 class="title is-1 hero-title">Can I Still Code?</h1>
         <p class="subtitle is-4 hero-subtitle mt-3">Is vibe coding quietly eroding our Python skills?</p>
-        <p class="is-size-5 mb-6 hero-body-text">A longitudinal study tracking real developers over time.</p>
+        <p class="is-size-5 mb-6 hero-body-text">A longitudinal project tracking real developers over time.</p>
         <div class="buttons is-centered">
           {% if ACCOUNT_ALLOW_REGISTRATION %}
             <a href="{% url 'account_signup' %}"
@@ -255,7 +255,7 @@
   <section class="section">
     <div class="container">
       <div class="has-text-centered mb-5">
-        <h2 class="title is-3">What your data looks like</h2>
+        <h2 class="title is-3">Your insights panel</h2>
         <p class="subtitle is-5">
           Example trends from a single participant.
         </p>
