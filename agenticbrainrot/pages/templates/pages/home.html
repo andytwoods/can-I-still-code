@@ -4,15 +4,15 @@
 
 {# ── SEO: Primary ────────────────────────────────────────────────────────── #}
 {% block title %}
-  Does Vibe Coding Erode Python Skills? | Can I Still Code
+  How Does Vibe Coding Affect Python Skills? | Can I Still Code
 {% endblock title %}
-{% block meta_description %}Join a free longitudinal citizen-science study tracking whether AI-assisted vibe coding erodes Python developer skills. Complete short monthly challenges, see your own progress, and contribute to open research.{% endblock meta_description %}
+{% block meta_description %}A longitudinal citizen-science study tracking how AI coding tools affect Python developer skills over time. Join free, complete monthly challenges, and contribute to open research.{% endblock meta_description %}
 {# ── SEO: Open Graph ─────────────────────────────────────────────────────── #}
 {% block og_title %}
-  Does Vibe Coding Erode Python Skills? | Can I Still Code
+  How Does Vibe Coding Affect Python Skills? | Can I Still Code
 {% endblock og_title %}
 {% block og_description %}
-  AI coding tools are everywhere  –  but are they quietly eroding our raw Python ability? Can I Still Code is an open citizen-science study that tracks your coding skills over time. Join free, complete monthly challenges, and help answer the big question.
+  AI coding tools are everywhere – but how are they changing our Python ability? Can I Still Code is an open citizen-science study that tracks your coding skills over time. Join free, complete monthly challenges, and help answer the question.
 {% endblock og_description %}
 {#
   og_image / twitter_image  –  PLACEHOLDER
@@ -25,14 +25,14 @@
   {{ request.scheme }}://{{ request.get_host }}{% static 'images/og/og-home.png' %}
 {% endblock og_image %}
 {% block og_image_alt %}
-  Can I Still Code  –  a citizen-science project tracking whether vibe coding erodes Python developer skills
+  Can I Still Code  –  a citizen-science project tracking how vibe coding affects Python developer skills
 {% endblock og_image_alt %}
 {# ── SEO: Twitter / X Card ───────────────────────────────────────────────── #}
 {% block twitter_title %}
-  Does Vibe Coding Erode Python Skills? | Can I Still Code
+  How Does Vibe Coding Affect Python Skills? | Can I Still Code
 {% endblock twitter_title %}
 {% block twitter_description %}
-  AI tools are everywhere  –  are they quietly eroding our raw coding ability? Join this free citizen-science study to track your Python skills over time and contribute to open research.
+  AI tools are everywhere – but how are they changing our coding ability? Join this free citizen-science study to track your Python skills over time and contribute to open research.
 {% endblock twitter_description %}
 {% block twitter_image %}
   {{ request.scheme }}://{{ request.get_host }}{% static 'images/og/og-home.png' %}
@@ -51,7 +51,7 @@
           "@id": "{{ request.scheme }}://{{ request.get_host }}/#website",
           "url": "{{ request.scheme }}://{{ request.get_host }}/",
           "name": "Can I Still Code",
-          "description": "A longitudinal citizen-science study measuring whether AI-assisted vibe coding leads to Python skill degradation over time.",
+          "description": "A longitudinal citizen-science study tracking how AI-assisted vibe coding affects Python developer skills over time.",
           "inLanguage": "en-GB",
           "publisher": {
             "@id": "{{ request.scheme }}://{{ request.get_host }}/#organisation"
@@ -77,8 +77,8 @@
           "name": "Can I Still Code: Longitudinal Assessment of Coding Skills in the Vibe Coding Era",
           "alternateName": "Can I Still Code",
           "url": "{{ request.scheme }}://{{ request.get_host }}/",
-          "description": "A longitudinal, citizen-science research project measuring whether vibe coding – AI-assisted coding where the AI generates most of the logic – leads to degradation of Python developer skills over time. Participants complete short Python coding challenges every 28 days and self-report their AI tool usage. The resulting open dataset supports Bayesian multilevel regression modelling.",
-          "keywords": "vibe coding, AI coding assistants, GitHub Copilot, Cursor, Claude, Python skills, longitudinal study, citizen science, coding skill degradation, software developer research, Bayesian analysis, open science, coding challenges",
+          "description": "A longitudinal, citizen-science research project measuring how vibe coding – AI-assisted coding where the AI generates most of the logic – affects Python developer skills over time. Participants complete short Python coding challenges every 28 days and self-report their AI tool usage. The resulting open dataset supports Bayesian multilevel regression modelling.",
+          "keywords": "vibe coding, AI coding assistants, GitHub Copilot, Cursor, Claude, Python skills, longitudinal study, citizen science, coding skill change, software developer research, Bayesian analysis, open science, coding challenges",
           "sameAs": "https://github.com/andytwoods/can-I-still-code",
           "funder": {
             "@type": "CollegeOrUniversity",
@@ -97,11 +97,11 @@
           "@type": "WebPage",
           "@id": "{{ request.scheme }}://{{ request.get_host }}/#webpage",
           "url": "{{ request.scheme }}://{{ request.get_host }}/",
-          "name": "Does Vibe Coding Erode Python Skills? | Can I Still Code",
+          "name": "How Does Vibe Coding Affect Python Skills? | Can I Still Code",
           "isPartOf": {"@id": "{{ request.scheme }}://{{ request.get_host }}/#website"},
           "about": {"@id": "{{ request.scheme }}://{{ request.get_host }}/#research-project"},
           "publisher": {"@id": "{{ request.scheme }}://{{ request.get_host }}/#organisation"},
-          "description": "Join a free longitudinal citizen-science study tracking whether AI-assisted vibe coding erodes Python developer skills. Complete short monthly Python challenges and see your own skill trends over time.",
+          "description": "Join a free longitudinal citizen-science study tracking how AI-assisted vibe coding affects Python developer skills. Complete short monthly Python challenges and see your own skill trends over time.",
           "inLanguage": "en-GB",
           "breadcrumb": {
             "@type": "BreadcrumbList",
@@ -157,7 +157,7 @@
       <div class="container has-text-centered">
         <p class="hero-eyebrow mb-3">citizen science &ndash; open data &ndash; Python</p>
         <h1 class="title is-1 hero-title">Can I Still Code?</h1>
-        <p class="subtitle is-4 hero-subtitle mt-3">Is vibe coding quietly eroding our Python skills?</p>
+        <p class="subtitle is-4 hero-subtitle mt-3">How is vibe coding changing our Python skills?</p>
         <p class="is-size-5 mb-6 hero-body-text">A longitudinal project tracking real developers over time.</p>
         <div class="buttons is-centered">
           {% if ACCOUNT_ALLOW_REGISTRATION %}
@@ -171,7 +171,7 @@
         </div>
         {% if not ACCOUNT_ALLOW_REGISTRATION %}
           <div class="notification is-warning is-light mt-4"
-               style="display: inline-block">Registration is currently closed. Check back soon!</div>
+               style="display: inline-block">Registration is currently closed between data collection waves. Sign up to be notified when the next wave opens.</div>
         {% endif %}
       </div>
     </div>
@@ -276,7 +276,7 @@
             {% if ACCOUNT_ALLOW_REGISTRATION %}
               <a href="{% url 'account_signup' %}" class="button is-primary is-large">Start Contributing</a>
             {% else %}
-              <span class="tag is-warning is-medium">Registration currently closed</span>
+              <span class="tag is-warning is-medium">Registration closed between waves</span>
             {% endif %}
             <a href="https://github.com/andytwoods/can-I-still-code/discussions"
                class="button is-link is-outlined is-large">Collaborator Interest</a>
