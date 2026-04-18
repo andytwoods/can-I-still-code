@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Unsubscribe from Waitlist | Can I Still Code{% endblock title %}
+
+{% block main %}
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-6-desktop is-8-tablet has-text-centered">
+
+        {% if done %}
+          <span class="icon is-large has-text-success mb-4">
+            <i class="fas fa-check-circle fa-3x"></i>
+          </span>
+          <h1 class="title is-2 mt-4">You've been removed</h1>
+          <p class="subtitle is-5">
+            {{ signup.email }} has been removed from the waitlist. We won't contact you about the study opening.
+          </p>
+          <a href="{% url 'home' %}" class="button is-light mt-4">Back to home</a>
+        {% else %}
+          <h1 class="title is-2">Remove yourself from the waitlist</h1>
+          <p class="subtitle is-5 mb-5">
+            Clicking below will remove <strong>{{ signup.email }}</strong> from the
+            Can I Still Code notification list. You won't receive any further emails.
+          </p>
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="button is-danger is-medium">
+              Yes, remove me from the waitlist
+            </button>
+            <a href="{% url 'home' %}" class="button is-light is-medium ml-3">Cancel</a>
+          </form>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock main %}

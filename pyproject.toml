@@ -190,4 +190,5 @@ dependencies = [
     "redis>=5.0",
     "whitenoise==6.11.0",
     "anthropic>=0.86.0",
+    "django-simple-captcha>=0.6.3",
 ]

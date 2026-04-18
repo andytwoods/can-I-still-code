@@ -16,6 +16,8 @@ from agenticbrainrot.pages.views import HowItWorksView
 from agenticbrainrot.pages.views import LoggedInHomeView
 from agenticbrainrot.pages.views import PrivacyView
 from agenticbrainrot.pages.views import TermsView
+from agenticbrainrot.pages.views import waitlist_signup
+from agenticbrainrot.pages.views import waitlist_unsubscribe
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
@@ -25,6 +27,8 @@ urlpatterns = [
     path("privacy/", PrivacyView.as_view(), name="privacy"),
     path("terms/", TermsView.as_view(), name="terms"),
     path("code-of-conduct/", CoCView.as_view(), name="code_of_conduct"),
+    path("waitlist/", waitlist_signup, name="waitlist_signup"),
+    path("waitlist/unsubscribe/<uuid:token>/", waitlist_unsubscribe, name="waitlist_unsubscribe"),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
@@ -66,6 +70,8 @@ urlpatterns = [
         report_client_metric,
         name="api_report_client_metric",
     ),
+    # django-simple-captcha
+    path("captcha/", include("captcha.urls")),
     # Hijack
     path("hijack/", include("hijack.urls")),
     # Media files

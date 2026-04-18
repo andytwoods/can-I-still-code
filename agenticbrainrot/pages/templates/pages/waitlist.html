@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Join the Waitlist | Can I Still Code{% endblock title %}
+{% block meta_description %}Sign up to be notified when the next data collection wave of the Can I Still Code citizen-science study opens.{% endblock meta_description %}
+
+{% block main %}
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-6-desktop is-8-tablet">
+
+        <h1 class="title is-2">Get notified when we open</h1>
+        <p class="subtitle is-5 mb-5">
+          Registration is currently closed between data collection waves.
+          Leave your email and we'll send you a single notification when the next wave opens.
+        </p>
+
+        {% if rate_limited %}
+          <div class="notification is-danger is-light">
+            Too many requests from your network. Please try again in an hour.
+          </div>
+        {% endif %}
+
+        {% if not rate_limited %}
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="field">
+              <label class="label" for="{{ form.email.id_for_label }}">Email address</label>
+              <div class="control">
+                {{ form.email }}
+              </div>
+              {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                  <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+              {% endif %}
+            </div>
+
+            <div class="field mt-4">
+              <label class="checkbox">
+                {{ form.consent }}
+                <span class="ml-2">{{ form.consent.label }}</span>
+              </label>
+              {% if form.consent.errors %}
+                {% for error in form.consent.errors %}
+                  <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+              {% endif %}
+            </div>
+
+            <div class="field mt-4">
+              {{ form.captcha }}
+              {% if form.captcha.errors %}
+                {% for error in form.captcha.errors %}
+                  <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+              {% endif %}
+            </div>
+
+            <div class="field mt-5">
+              <div class="control">
+                <button type="submit" class="button is-primary is-medium">
+                  Notify me when registration opens
+                </button>
+              </div>
+            </div>
+
+            <p class="help mt-3">
+              Your email is used only for this one notification.
+              See our <a href="{% url 'privacy' %}">Privacy Policy</a> for full details.
+            </p>
+          </form>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock main %}

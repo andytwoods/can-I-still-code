@@ -67,6 +67,7 @@ THIRD_PARTY_APPS = [
     "hijack",
     "simple_history",
     "django_recaptcha",
+    "captcha",
     "huey.contrib.djhuey",
 ]
 
@@ -270,7 +271,7 @@ DOMAIN = env("DOMAIN", default="canistillcode.org")
 
 # django-allauth
 # ------------------------------------------------------------------------------
-ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
+ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", False)
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_LOGIN_METHODS = {"email"}
 # https://docs.allauth.org/en/latest/account/configuration.html

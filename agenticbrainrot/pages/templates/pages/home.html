@@ -150,15 +150,15 @@
       <button id="watermarkPause"
               aria-label="Pause animation"
               title="Pause animation"
-              class="hero-watermark-pause">⏸&#xFE0E;</button>
-      <span class="hero-code-watermark" aria-hidden="true"></span>
+              class="hero-watermark-pause"><i class="fas fa-pause" aria-hidden="true"></i></button>
+      <span class="hero-code-watermark mr-2" aria-hidden="true"></span>
     </div>
     <div class="hero-body">
       <div class="container has-text-centered">
         <p class="hero-eyebrow mb-3">citizen science &ndash; open data &ndash; Python</p>
         <h1 class="title is-1 hero-title">Can I Still Code?</h1>
         <p class="subtitle is-4 hero-subtitle mt-3">How is vibe coding changing our Python skills?</p>
-        <p class="is-size-5 mb-6 hero-body-text">A longitudinal project tracking real developers over time.</p>
+        <p class="is-size-5 mb-6 hero-body-text">A longitudinal project tracking real developers over time</p>
         <div class="buttons is-centered">
           {% if ACCOUNT_ALLOW_REGISTRATION %}
             <a href="{% url 'account_signup' %}"
@@ -171,7 +171,10 @@
         </div>
         {% if not ACCOUNT_ALLOW_REGISTRATION %}
           <div class="notification is-warning is-light mt-4"
-               style="display: inline-block">Registration is currently closed between data collection waves. Sign up to be notified when the next wave opens.</div>
+               style="display: inline-block">
+            Registration is currently closed between data collection waves.
+            <a href="{% url 'waitlist_signup' %}" class="has-text-weight-semibold">Sign up to be notified</a> when the next wave opens.
+          </div>
         {% endif %}
       </div>
     </div>
@@ -181,13 +184,13 @@
     <div class="container">
       <h2 class="title is-2">The Mission</h2>
       <p class="content is-size-5">
-        As AI assistants like Cursor, Claude and GitHub Copilot become ubiquitous, we're entering the era of <strong>vibe coding</strong> – where the AI generates the logic while we guide the "vibe".
+        We're entering an era of agentic coding, where tools such as Cursor, Claude and GitHub Copilot become commonplace.
       </p>
       <p class="content is-size-5">
-        But what happens to our internal skills over time? Does this convenience lead to cognitive atrophy, or does it free us to solve higher-level problems?
+        But what impact does this have on our coding skills? Does it free us to solve higher-level problems?
       </p>
       <p class="content is-size-5">
-        <strong>Can I Still Code</strong> is a longitudinal, citizen-science research project designed to measure exactly that.
+        <strong>Can I Still Code</strong> is a longitudinal, citizen-science research project designed to measure exactly this.
       </p>
     </div>
   </section>
@@ -203,7 +206,7 @@
         <div class="column">
           <h2 class="title is-3">Discovering what protects your skills</h2>
           <p class="content is-size-5">
-            Beyond measuring decline, this project also explores what protects your skills – despite heavy AI use. By identifying what those developers have in common, we can surface concrete, evidence-backed habits and share them with the whole community.
+            Beyond measuring coding ability impact, this project also explores what protects your skills, despite heavy AI use. The plan is to share identified protective habits back with the whole community.
           </p>
         </div>
       </div>
@@ -229,7 +232,7 @@
           </div>
           <h3 class="title is-4 mt-4">2. Assessment</h3>
           <p>
-            Complete short Python challenges periodically (no AI, no Googling!). <a href="{% url 'how_it_works' %}">How does this work?</a>
+            Complete short Python challenges periodically (no AI, no Googling). <a href="{% url 'how_it_works' %}">How does this work?</a>
           </p>
         </div>
         <div class="column has-text-centered">
@@ -276,7 +279,7 @@
             {% if ACCOUNT_ALLOW_REGISTRATION %}
               <a href="{% url 'account_signup' %}" class="button is-primary is-large">Start Contributing</a>
             {% else %}
-              <span class="tag is-warning is-medium">Registration closed between waves</span>
+              <a href="{% url 'waitlist_signup' %}" class="button is-warning is-large">Get notified when we open</a>
             {% endif %}
             <a href="https://github.com/andytwoods/can-I-still-code/discussions"
                class="button is-link is-outlined is-large">Collaborator Interest</a>
@@ -408,7 +411,7 @@
       if (pauseBtn) {
         pauseBtn.addEventListener("click", () => {
           paused = !paused;
-          pauseBtn.textContent = paused ? "▶\uFE0E" : "⏸\uFE0E";
+          pauseBtn.innerHTML = paused ? '<i class="fas fa-play" aria-hidden="true"></i>' : '<i class="fas fa-pause" aria-hidden="true"></i>';
           pauseBtn.setAttribute("aria-label", paused ? "Resume animation" : "Pause animation");
           pauseBtn.title = paused ? "Resume animation" : "Pause animation";
         });

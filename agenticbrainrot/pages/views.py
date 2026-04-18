@@ -2,16 +2,25 @@ import json
 from datetime import timedelta
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
+from django.core.mail import send_mail
 from django.db.models import Sum
+from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
+from django.shortcuts import render
 from django.utils import timezone
 from django.views.generic import TemplateView
+from django_ratelimit.decorators import ratelimit
 
 from agenticbrainrot.accounts.models import Participant
 from agenticbrainrot.coding_sessions.models import CodeSession
 from agenticbrainrot.coding_sessions.views import _abandon_stale_sessions
+
+from .forms import WAITLIST_CONSENT_TEXT
+from .forms import WaitlistSignupForm
+from .models import WaitlistSignup
 
 from .models import PolicyDocument
 from .models import Sponsor
@@ -197,3 +206,91 @@ class CoCView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["contact_email"] = settings.ADMINS[0][1]
         return context
+
+
+def _get_client_ip(request):
+    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
+    if x_forwarded_for:
+        return x_forwarded_for.split(",")[0].strip()
+    return request.META.get("REMOTE_ADDR")
+
+
+def _send_waitlist_acknowledgement(signup, request):
+    unsubscribe_url = request.build_absolute_uri(
+        f"/waitlist/unsubscribe/{signup.unsubscribe_token}/"
+    )
+    subject = "You're on the waitlist – Can I Still Code"
+    body = (
+        f"Hi,\n\n"
+        f"You've signed up to be notified when the next data collection wave of "
+        f"the Can I Still Code study opens. We'll send you a single email when "
+        f"registration becomes available.\n\n"
+        f"If you didn't sign up, or you'd like to remove yourself from the waitlist, "
+        f"click the link below — no account needed:\n\n"
+        f"{unsubscribe_url}\n\n"
+        f"– The Can I Still Code team\n"
+        f"canistillcode.org\n"
+    )
+    send_mail(
+        subject=subject,
+        message=body,
+        from_email=settings.CONTACT_EMAIL,
+        recipient_list=[signup.email],
+        fail_silently=True,
+    )
+
+
+@ratelimit(key="ip", rate="5/h", method="POST", block=False)
+def waitlist_signup(request):
+    if getattr(request, "limited", False):
+        return render(request, "pages/waitlist.html", {
+            "form": WaitlistSignupForm(),
+            "rate_limited": True,
+        }, status=429)
+
+    if request.method == "POST":
+        form = WaitlistSignupForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            existing = WaitlistSignup.objects.filter(email=email).first()
+            if existing:
+                if not existing.is_active:
+                    # Reactivate if they previously unsubscribed
+                    existing.is_active = True
+                    existing.consent_text = WAITLIST_CONSENT_TEXT
+                    existing.ip_address = _get_client_ip(request)
+                    existing.user_agent = request.META.get("HTTP_USER_AGENT", "")[:512]
+                    existing.save()
+                    _send_waitlist_acknowledgement(existing, request)
+                messages.info(
+                    request,
+                    "You're already on the waitlist. Check your inbox for the acknowledgement "
+                    "email — it contains an unsubscribe link if you change your mind.",
+                )
+            else:
+                signup = WaitlistSignup.objects.create(
+                    email=email,
+                    consent_text=WAITLIST_CONSENT_TEXT,
+                    ip_address=_get_client_ip(request),
+                    user_agent=request.META.get("HTTP_USER_AGENT", "")[:512],
+                )
+                _send_waitlist_acknowledgement(signup, request)
+                messages.success(
+                    request,
+                    "You're on the list. We've sent a confirmation to your email address "
+                    "with an unsubscribe link.",
+                )
+            return redirect("waitlist_signup")
+    else:
+        form = WaitlistSignupForm()
+
+    return render(request, "pages/waitlist.html", {"form": form})
+
+
+def waitlist_unsubscribe(request, token):
+    signup = get_object_or_404(WaitlistSignup, unsubscribe_token=token)
+    if request.method == "POST":
+        signup.is_active = False
+        signup.save()
+        return render(request, "pages/waitlist_unsubscribe.html", {"signup": signup, "done": True})
+    return render(request, "pages/waitlist_unsubscribe.html", {"signup": signup, "done": False})

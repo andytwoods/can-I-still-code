@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import PolicyDocument
 from .models import Sponsor
+from .models import WaitlistSignup
 
 
 @admin.register(PolicyDocument)
@@ -25,3 +26,15 @@ class SponsorAdmin(admin.ModelAdmin):
     list_editable = ["display_order", "is_active"]
     list_filter = ["is_active", "tier"]
     search_fields = ["name"]
+
+
+@admin.register(WaitlistSignup)
+class WaitlistSignupAdmin(admin.ModelAdmin):
+    list_display = ["email", "is_active", "consented_at", "notified_at", "ip_address"]
+    list_filter = ["is_active"]
+    search_fields = ["email"]
+    readonly_fields = ["email", "consent_text", "consented_at", "ip_address", "user_agent", "unsubscribe_token"]
+    ordering = ["-consented_at"]
+
+    def has_add_permission(self, request):
+        return False
