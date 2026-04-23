@@ -2,9 +2,15 @@
   <div class="container">
     <div class="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-space-between"
          style="gap: 1rem">
-      <p class="is-size-7">
-        &copy; {% now "Y" %} <strong>Can I Still Code?</strong>
-      </p>
+      <div>
+        <p class="is-size-7">
+          &copy; {% now "Y" %} <strong>Can I Still Code?</strong>
+        </p>
+        <p class="is-size-7 has-text-grey mt-1">
+          <span class="icon is-small"><i class="fas fa-shield-alt" aria-hidden="true"></i></span>
+          Ethics approved by Royal Holloway, University of London Research Ethics Committee (Ref: 991)
+        </p>
+      </div>
       <ul class="is-flex is-flex-wrap-wrap is-justify-content-center"
           style="gap: 1rem;
                  list-style: none">
@@ -21,7 +27,7 @@
           <a class="is-size-7" href="{% url 'code_of_conduct' %}">Code of Conduct</a>
         </li>
         <li>
-          <a class="is-size-7" href="{% url 'how_it_works' %}">Tech Stack</a>
+          <a class="is-size-7" href="{% url 'how_it_works' %}#tech-stack">Tech Stack</a>
         </li>
         <li>
           <a class="is-size-7"
