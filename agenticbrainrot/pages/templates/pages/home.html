@@ -16,13 +16,13 @@
 {% endblock og_description %}
 {#
   og_image / twitter_image  –  PLACEHOLDER
-  Replace 'images/og/og-home.png' with a real 1200×630 PNG (or JPG < 5 MB).
+  Replace 'images/og/og-default.png' with a real 1200×630 PNG (or JPG < 5 MB).
   Recommended content: project name + tagline on a branded background.
   Tools: Canva, Figma, or any image editor. Keep text large enough to read at small sizes.
-  Place the file at:  <project_root>/agenticbrainrot/static/images/og/og-home.png
+  Place the file at:  <project_root>/agenticbrainrot/static/images/og/og-default.png
 #}
 {% block og_image %}
-  {{ request.scheme }}://{{ request.get_host }}{% static 'images/og/og-home.png' %}
+  {{ request.scheme }}://{{ request.get_host }}{% static 'images/og/og-default.png' %}
 {% endblock og_image %}
 {% block og_image_alt %}
   Can I Still Code  –  a citizen-science project tracking how vibe coding affects Python developer skills
@@ -35,7 +35,7 @@
   AI tools are everywhere – but how are they changing our coding ability? Join this free citizen-science study to track your Python skills over time and contribute to open research.
 {% endblock twitter_description %}
 {% block twitter_image %}
-  {{ request.scheme }}://{{ request.get_host }}{% static 'images/og/og-home.png' %}
+  {{ request.scheme }}://{{ request.get_host }}{% static 'images/og/og-default.png' %}
 {% endblock twitter_image %}
 {% block twitter_image_alt %}
   Can I Still Code  –  citizen-science study on vibe coding and Python skills
