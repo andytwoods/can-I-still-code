@@ -146,7 +146,7 @@
 {% block main %}
   {# Hero Section – outside the base container so it can be full-bleed on mobile #}
   <section class="hero is-medium hero-cta">
-    <div class="hero-watermark-wrap">
+    <div class="hero-watermark-wrap is-centered">
       <button id="watermarkPause"
               aria-label="Pause animation"
               title="Pause animation"
@@ -394,6 +394,7 @@
       ];
 
       const el = document.querySelector(".hero-code-watermark");
+      const wrap = document.querySelector(".hero-watermark-wrap");
       const pauseBtn = document.getElementById("watermarkPause");
       if (!el) return;
 
@@ -480,6 +481,9 @@
 
         // Backspace the initial </>
         await deleteBack(INITIAL.length);
+
+        // Remove centering just before starting animation
+        if (wrap) wrap.classList.remove("is-centered");
 
         // Shrink font for commands, switch to coding font, reveal pause button
         el.style.fontSize = "clamp(0.9rem, 2.5vw, 2rem)";
