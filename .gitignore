@@ -328,3 +328,4 @@ agenticbrainrot/media/
 .pytest_cache/
 .Rproj.user
 /ethics/examples/
+/.idea/deployment.xml

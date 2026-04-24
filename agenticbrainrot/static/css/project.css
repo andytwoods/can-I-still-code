@@ -307,11 +307,11 @@ body {
 }
 [data-theme="light"] .hero-code-watermark {
   opacity: 0.30;
-  color: #ffffff;
+  color: #bd93f9;
 }
 [data-theme="dark"] .hero-code-watermark {
   opacity: 0.45;
-  color: #ffffff;
+  color: #bd93f9;
 }
 .hero-watermark-pause {
   display: none;

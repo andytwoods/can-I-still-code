@@ -147,10 +147,18 @@
   {# Hero Section – outside the base container so it can be full-bleed on mobile #}
   <section class="hero is-medium hero-cta">
     <div class="hero-watermark-wrap is-centered">
+      <button id="watermarkPrev"
+              aria-label="Previous command"
+              title="Previous command"
+              class="hero-watermark-pause"><i class="fas fa-step-backward" aria-hidden="true"></i></button>
       <button id="watermarkPause"
               aria-label="Pause animation"
               title="Pause animation"
               class="hero-watermark-pause"><i class="fas fa-pause" aria-hidden="true"></i></button>
+      <button id="watermarkNext"
+              aria-label="Next command"
+              title="Next command"
+              class="hero-watermark-pause"><i class="fas fa-step-forward" aria-hidden="true"></i></button>
       <span class="hero-code-watermark mr-2" aria-hidden="true"></span>
     </div>
     <div class="hero-body">
@@ -396,22 +404,27 @@
       const el = document.querySelector(".hero-code-watermark");
       const wrap = document.querySelector(".hero-watermark-wrap");
       const pauseBtn = document.getElementById("watermarkPause");
+      const prevBtn = document.getElementById("watermarkPrev");
+      const nextBtn = document.getElementById("watermarkNext");
       if (!el) return;
 
       const INITIAL = "</>";
       const rand = (min, max) => Math.random() * (max - min) + min;
 
       let paused = false;
+      let skipDirection = null;
+      const history = [];
+      let histIdx = -1;
+
       const sleep = ms => new Promise(r => setTimeout(r, ms));
+
       const sleepOrPause = async ms => {
         const end = Date.now() + ms;
         while (Date.now() < end) {
+          if (skipDirection) return;
           if (paused) await new Promise(r => {
             const id = setInterval(() => {
-              if (!paused) {
-                clearInterval(id);
-                r();
-              }
+              if (!paused || skipDirection) { clearInterval(id); r(); }
             }, 100);
           });
           await sleep(Math.min(50, end - Date.now()));
@@ -427,14 +440,15 @@
         });
       }
 
+      if (prevBtn) prevBtn.addEventListener("click", () => { skipDirection = 'prev'; paused = false; });
+      if (nextBtn) nextBtn.addEventListener("click", () => { skipDirection = 'next'; paused = false; });
+
       async function typeText(text) {
         for (const ch of text) {
+          if (skipDirection) return;
           if (paused) await new Promise(r => {
             const id = setInterval(() => {
-              if (!paused) {
-                clearInterval(id);
-                r();
-              }
+              if (!paused || skipDirection) { clearInterval(id); r(); }
             }, 100);
           });
           el.textContent += ch;
@@ -444,12 +458,10 @@
 
       async function deleteAll() {
         while (el.textContent.length > 0) {
+          if (skipDirection) return;
           if (paused) await new Promise(r => {
             const id = setInterval(() => {
-              if (!paused) {
-                clearInterval(id);
-                r();
-              }
+              if (!paused || skipDirection) { clearInterval(id); r(); }
             }, 100);
           });
           el.textContent = el.textContent.slice(0, -1);
@@ -461,10 +473,7 @@
         for (let i = 0; i < n; i++) {
           if (paused) await new Promise(r => {
             const id = setInterval(() => {
-              if (!paused) {
-                clearInterval(id);
-                r();
-              }
+              if (!paused) { clearInterval(id); r(); }
             }, 100);
           });
           el.textContent = el.textContent.slice(0, -1);
@@ -472,40 +481,54 @@
         }
       }
 
+      let hat = [];
+      const drawNew = () => {
+        if (hat.length === 0) hat = [...COMMANDS].sort(() => Math.random() - 0.5);
+        return hat.pop();
+      };
+
       async function run() {
-        // Start with the static text
         el.textContent = INITIAL;
-
-        // Wait a few seconds before starting the show
         await sleep(rand(3000, 4500));
-
-        // Backspace the initial </>
         await deleteBack(INITIAL.length);
 
-        // Remove centering just before starting animation
         if (wrap) wrap.classList.remove("is-centered");
-
-        // Shrink font for commands, switch to coding font, reveal pause button
         el.style.fontSize = "clamp(0.9rem, 2.5vw, 2rem)";
         el.style.fontFamily = '"JetBrains Mono", monospace';
         if (pauseBtn) pauseBtn.style.display = "inline";
+        if (prevBtn) prevBtn.style.display = "inline";
+        if (nextBtn) nextBtn.style.display = "inline";
 
-        // Out-of-hat shuffle: exhaust all commands before repeating
-        let hat = [];
-        const draw = () => {
-          if (hat.length === 0) {
-            hat = [...COMMANDS].sort(() => Math.random() - 0.5);
-          }
-          return hat.pop();
-        };
-
-        // Loop through commands indefinitely
         while (true) {
-          const cmd = draw();
+          let cmd;
+          if (skipDirection === 'prev') {
+            skipDirection = null;
+            histIdx = Math.max(0, histIdx - 1);
+            cmd = history[histIdx];
+          } else if (skipDirection === 'next') {
+            skipDirection = null;
+            if (histIdx < history.length - 1) {
+              histIdx++;
+              cmd = history[histIdx];
+            } else {
+              cmd = drawNew();
+              history.push(cmd);
+              histIdx = history.length - 1;
+            }
+          } else {
+            skipDirection = null;
+            cmd = drawNew();
+            history.push(cmd);
+            histIdx = history.length - 1;
+          }
+
+          el.textContent = '';
           await typeText(cmd);
           await sleepOrPause(rand(4500, 5500));
+          if (skipDirection) { el.textContent = ''; continue; }
           await deleteAll();
           await sleepOrPause(rand(400, 800));
+          if (skipDirection) { el.textContent = ''; continue; }
         }
       }
 
