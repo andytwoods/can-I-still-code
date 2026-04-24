@@ -1009,3 +1009,87 @@ As a public citizen-science project, accessibility is both an ethical requiremen
 - GDPR compliance for EU participants.
 - Follow [ethical citizen-science data management guidelines](https://theoryandpractice.citizenscienceassociation.org/articles/10.5334/cstp.538).
 - Transparent about study limitations  –  self-report measures of vibe-coding are inherently noisy; emphasise this in any publications.
+
+---
+
+## 19. Additions Since Initial Plan
+
+Models and features implemented after the initial plan was written. These extend but do not replace the architecture described above.
+
+### 19.1 ChallengeReport (`challenges` app)
+
+Participants can flag a problem with a challenge during or after an attempt. Reports are reviewed and resolved by admins; resolution notes reference `DEVIATIONS.md` entries (per §5 fixture integrity rules).
+
+```
+ChallengeReport
+  – challenge (FK → Challenge, PROTECT)
+  – participant (FK → Participant, SET_NULL, nullable  –  preserved anonymously if participant deletes account)
+  – category (choices: unclear_description / wrong_test_case / broken_skeleton / other)
+  – description (TextField)
+  – resolved (bool, default False)
+  – resolution_notes (TextField  –  internal; references DEVIATIONS.md entries)
+  – created_at
+```
+
+### 19.2 DebriefRecord (`consent` app)
+
+Records that a participant was sent the end-of-study debrief email. Created by the `send_debrief` management command so that staff can verify who has been debriefed and avoid sending duplicates.
+
+```
+DebriefRecord
+  – participant (FK → Participant)
+  – sent_at (auto)
+  – sent_by (FK → User, nullable  –  null for automated sends)
+```
+
+### 19.3 PolicyDocument (`pages` app)
+
+Admin-editable, versioned policy documents (Privacy Policy, Terms of Participation). Parallel in structure to `ConsentDocument` (§7.2). Tracked with `django-simple-history` so the full edit history is auditable.
+
+```
+PolicyDocument
+  – doc_type (choices: privacy_policy / terms)
+  – version (PositiveIntegerField)
+  – title / body (markdown)
+  – is_active (bool  –  at most one active per doc_type)
+  – published_at / created_at / updated_at
+  – UniqueConstraint: (doc_type, version)
+```
+
+### 19.4 WaitlistSignup (`pages` app)
+
+Pre-registration interest capture for the next data-collection wave (used when `ACCOUNT_ALLOW_REGISTRATION = False`). GDPR-compliant: stores the exact consent wording shown at signup, supports self-service unsubscribe via a UUID token, and soft-deletes on unsubscribe so the consent audit trail is preserved.
+
+```
+WaitlistSignup
+  – email (unique)
+  – consent_text (the exact wording shown at signup)
+  – consented_at (auto)
+  – ip_address / user_agent (audit trail; subject to same 24-month purge policy as ConsentRecord, §7.5)
+  – is_active (bool  –  False = unsubscribed)
+  – unsubscribe_token (UUID, unique  –  enables token-authenticated self-service withdrawal)
+  – notified_at (nullable  –  set when the wave-open email is sent)
+```
+
+### 19.5 ReminderLog (`accounts` app)
+
+Tracks each reminder email dispatched to a participant (§4.3). Used by the Huey periodic task to avoid sending duplicate reminders within the same window.
+
+```
+ReminderLog
+  – participant (FK → Participant)
+  – sent_at (auto)
+  – Index: (participant, sent_at)
+```
+
+### 19.6 MetricEvent (`accounts` app)
+
+Daily event counters for key application actions (§14.2). Upserted via `MetricEvent.increment(event_type)`. Displayed on the admin dashboard.
+
+```
+MetricEvent
+  – event_type (CharField  –  e.g. "session_started", "session_completed")
+  – count (int, default 0)
+  – recorded_at (date)
+  – UniqueConstraint: (event_type, recorded_at)
+```
