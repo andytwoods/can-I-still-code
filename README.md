@@ -93,15 +93,6 @@ uv run ruff check .
 
 ---
 
-## 📜 Development Guidelines
-
-- **Exception Handling:** Never use catch-all `except:`. Catch the most specific exception.
-- **HTMX:** Use for dynamic partial updates. HTMX requests hit the same URL as full pages (View detects `HX-Request`).
-- **Templates:** App-local templates only (e.g., `app/templates/app/`). Partials in `partials/` prefixed with `_`.
-- **Background Tasks:** Business logic lives in `helpers/task_helpers.py`, task decorators in `tasks.py`.
-- **Scientific Integrity:** Never edit a challenge fixture directly. Log all deviations in `challenges/fixtures/DEVIATIONS.md`.
-
----
 
 ## 📦 Deployment
 
