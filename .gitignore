@@ -329,3 +329,4 @@ agenticbrainrot/media/
 .Rproj.user
 /ethics/examples/
 /.idea/deployment.xml
+/.claude/settings.local.json
