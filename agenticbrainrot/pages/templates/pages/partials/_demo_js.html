@@ -1,0 +1,189 @@
+{% load static %}
+<script>
+  (function () {
+    'use strict';
+
+    var CM_CDN   = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/';
+    var STARTER  = 'def sum_of_digits(n):\n    # your code here\n    pass\n';
+    var TEST_CASES = [
+      { description: 'single digit',          input: [7],    expected: 7  },
+      { description: 'three digits',          input: [123],  expected: 6  },
+      { description: 'zero',                  input: [0],    expected: 0  },
+      { description: 'repeated nines',        input: [999],  expected: 27 },
+    ];
+    var THEMES = {
+      'default':         'default',
+      'dark':            'dracula',
+      'light':           'default',
+      'dracula':         'dracula',
+      'solarized-light': 'solarized light',
+      'solarized-dark':  'solarized dark',
+    };
+
+    var worker   = null;
+    var ready    = false;
+    var cmEditor = null;
+
+    var overlayEl     = document.getElementById('demo-overlay');
+    var statusEl      = document.getElementById('demo-status');
+    var outputEl      = document.getElementById('demo-output');
+    var runBtn        = document.getElementById('demo-run-btn');
+    var resetBtn      = document.getElementById('demo-reset-btn');
+    var editorEl      = document.getElementById('demo-editor');
+    var themeSelectEl = document.getElementById('demo-theme-select');
+
+    if (!overlayEl) return;
+
+    function setStatus(html, cls) {
+      statusEl.style.display = '';
+      statusEl.className = 'notification ' + cls + ' mb-4';
+      statusEl.innerHTML = html;
+    }
+
+    function clearOutput() { outputEl.innerHTML = ''; }
+
+    function getCode() {
+      return cmEditor ? cmEditor.getValue() : editorEl.value;
+    }
+
+    function showResults(results) {
+      clearOutput();
+      var passed = 0;
+      results.forEach(function (r) {
+        var div = document.createElement('div');
+        div.className = 'notification ' + (r.passed ? 'is-success' : 'is-danger') + ' is-light py-2 px-3 mb-2';
+        var text = (r.passed ? '✓ PASS' : '✗ FAIL') + ': ' + r.description;
+        if (!r.passed && r.error) {
+          text += '\n  Error: ' + r.error;
+        } else if (!r.passed) {
+          text += '\n  Expected: ' + JSON.stringify(r.expected) + '\n  Got: ' + JSON.stringify(r.actual);
+        }
+        div.style.whiteSpace = 'pre-wrap';
+        div.style.fontFamily = 'monospace';
+        div.style.fontSize   = '0.875em';
+        div.textContent = text;
+        outputEl.appendChild(div);
+        if (r.passed) passed++;
+      });
+      var summary = document.createElement('div');
+      var allPassed = passed === results.length;
+      summary.className = 'notification ' + (allPassed ? 'is-success' : 'is-warning') + ' mt-3';
+      summary.innerHTML = '<strong>' + passed + ' / ' + results.length + ' tests passed</strong>' +
+        (allPassed ? ' – nice work!' : '');
+      outputEl.appendChild(summary);
+      runBtn.disabled = false;
+    }
+
+    function loadLink(href) {
+      var el = document.createElement('link');
+      el.rel  = 'stylesheet';
+      el.href = href;
+      document.head.appendChild(el);
+    }
+
+    function loadScript(src, cb) {
+      var el = document.createElement('script');
+      el.src    = src;
+      el.onload = cb;
+      document.head.appendChild(el);
+    }
+
+    function applyTheme(name) {
+      if (!cmEditor) return;
+      var cmTheme = THEMES[name] || 'default';
+      if (name === 'default') {
+        var siteTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        cmTheme = siteTheme === 'dark' ? 'dracula' : 'default';
+      }
+      cmEditor.setOption('theme', cmTheme);
+      localStorage.setItem('editor-theme', name);
+    }
+
+    function initCodeMirror() {
+      loadLink(CM_CDN + 'codemirror.min.css');
+      loadLink(CM_CDN + 'theme/dracula.min.css');
+      loadLink(CM_CDN + 'theme/solarized.min.css');
+
+      loadScript(CM_CDN + 'codemirror.min.js', function () {
+        loadScript(CM_CDN + 'mode/python/python.min.js', function () {
+          cmEditor = CodeMirror.fromTextArea(editorEl, {
+            mode:           'python',
+            lineNumbers:    true,
+            indentUnit:     4,
+            tabSize:        4,
+            indentWithTabs: false,
+            lineWrapping:   true,
+            spellcheck:     false,
+            extraKeys: { 'Tab': function (cm) { cm.replaceSelection('    '); } },
+          });
+
+          var wrapper = cmEditor.getWrapperElement();
+          wrapper.style.borderTop = '1px solid var(--bulma-border)';
+          wrapper.style.borderBottom = '1px solid var(--bulma-border)';
+          wrapper.style.borderLeft = 'none';
+          wrapper.style.borderRight = 'none';
+
+          var savedTheme = localStorage.getItem('editor-theme') || 'default';
+          if (themeSelectEl) themeSelectEl.value = savedTheme;
+          applyTheme(savedTheme);
+
+          if (themeSelectEl) {
+            themeSelectEl.addEventListener('change', function () {
+              applyTheme(themeSelectEl.value);
+            });
+          }
+        });
+      });
+    }
+
+    function activate() {
+      overlayEl.style.display = 'none';
+      setStatus(
+        '<span class="icon"><i class="fas fa-spinner fa-spin"></i></span> Loading Python environment&hellip; (first load ~5 s)',
+        'is-info is-light'
+      );
+
+      initCodeMirror();
+
+      worker = new Worker('{% static "js/pyodide-worker.js" %}');
+      worker.onmessage = function (e) {
+        var msg = e.data;
+        if (msg.type === 'ready') {
+          ready = true;
+          runBtn.disabled = false;
+          setStatus(
+            '<span class="icon"><i class="fas fa-check"></i></span> Python ready – write your solution and click Run.',
+            'is-success is-light'
+          );
+        } else if (msg.type === 'init_error') {
+          setStatus('<strong>Could not load Python.</strong> Check your connection and reload.', 'is-danger is-light');
+        } else if (msg.type === 'result') {
+          showResults(msg.results);
+        } else if (msg.type === 'error') {
+          clearOutput();
+          var err = document.createElement('div');
+          err.className = 'notification is-danger is-light';
+          err.textContent = msg.error;
+          outputEl.appendChild(err);
+          runBtn.disabled = false;
+        }
+      };
+      worker.postMessage({ type: 'init' });
+    }
+
+    overlayEl.addEventListener('click', activate);
+
+    runBtn.addEventListener('click', function () {
+      if (!ready) return;
+      runBtn.disabled = true;
+      clearOutput();
+      worker.postMessage({ type: 'run', code: getCode(), testCases: TEST_CASES });
+    });
+
+    resetBtn.addEventListener('click', function () {
+      if (cmEditor) cmEditor.setValue(STARTER);
+      else editorEl.value = STARTER;
+      clearOutput();
+    });
+  }());
+</script>

@@ -244,7 +244,7 @@
           </div>
           <h3 class="title is-4 mt-4">2. Assessment</h3>
           <p>
-            Complete short Python challenges periodically (no AI, no Googling). <a href="{% url 'how_it_works' %}">How does this work?</a>
+            Complete short Python challenges periodically (no AI, no Googling).
           </p>
         </div>
         <div class="column has-text-centered">
@@ -262,6 +262,19 @@
           <p>
             Return every 28 days (but just 2 sessions a year apart is useful!) to build a robust dataset of your skills over time.
           </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  {# Live coding demo #}
+  <section class="section has-background-light">
+    <div class="container">
+      <div class="has-text-centered mb-5">
+        <h2 class="title is-2">Try a challenge</h2>
+      </div>
+      <div class="columns is-centered">
+        <div class="column is-8">
+          {% include "pages/partials/_demo_box.html" with show_more_link=True %}
         </div>
       </div>
     </div>
@@ -540,4 +553,5 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
   {% include "pages/partials/_result_charts_js.html" %}
+  {% include "pages/partials/_demo_js.html" %}
 {% endblock extra_js %}
