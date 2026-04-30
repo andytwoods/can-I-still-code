@@ -181,7 +181,6 @@ HUEY = {
     "url": REDIS_URL,
     "immediate": False,
     "consumer_options": {"worker_type": "thread", "scheduler_interval": 60},
-    "connection_pool": {"max_connections": 10},
 }
 
 # CSP
