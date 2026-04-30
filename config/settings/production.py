@@ -180,7 +180,6 @@ HUEY = {
     "name": "agenticbrainrot",
     "url": REDIS_URL,
     "immediate": False,
-    "consumer_options": {"worker_type": "thread", "scheduler_interval": 60},
 }
 
 # CSP
