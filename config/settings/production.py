@@ -126,6 +126,16 @@ if ROLLBAR_ENABLED:
             "phone",
             "address",
         ],
+        "exception_level_filters": [
+            ("django.http.Http404", "ignored"),
+            ("django.core.exceptions.PermissionDenied", "ignored"),
+        ],
+        "locals": {
+            "enabled": True,
+            "safe_repr": True,
+        },
+        "suppress_re_reporting": True,
+        "transform": "agenticbrainrot.utils.rollbar_utils.transform_rollbar_payload",
     }
     MIDDLEWARE += ["rollbar.contrib.django.middleware.RollbarNotifierMiddleware"]  # noqa: F405
 
@@ -146,11 +156,6 @@ LOGGING = {
         },
     },
     "handlers": {
-        "mail_admins": {
-            "level": "ERROR",
-            "filters": ["require_debug_false"],
-            "class": "django.utils.log.AdminEmailHandler",
-        },
         "console": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
@@ -160,13 +165,13 @@ LOGGING = {
     "root": {"level": "INFO", "handlers": ["console"]},
     "loggers": {
         "django.request": {
-            "handlers": ["mail_admins"],
+            "handlers": ["console"],
             "level": "ERROR",
             "propagate": True,
         },
         "django.security.DisallowedHost": {
             "level": "ERROR",
-            "handlers": ["console", "mail_admins"],
+            "handlers": ["console"],
             "propagate": True,
         },
     },
