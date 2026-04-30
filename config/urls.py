@@ -75,7 +75,7 @@ urlpatterns = [
     # Hijack
     path("hijack/", include("hijack.urls")),
 
-    path('test-error/', test_error, name='test_error'),
+    # path('test-error/', test_error, name='test_error'),
     # Media files
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]
