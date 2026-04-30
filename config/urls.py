@@ -9,7 +9,7 @@ from agenticbrainrot.pages.api import report_client_metric
 from agenticbrainrot.pages.api import stats_accuracy_by_vibe_coding
 from agenticbrainrot.pages.api import stats_accuracy_over_time
 from agenticbrainrot.pages.api import stats_summary
-from agenticbrainrot.pages.views import AboutView
+from agenticbrainrot.pages.views import AboutView, test_error
 from agenticbrainrot.pages.views import CoCView
 from agenticbrainrot.pages.views import HomeView
 from agenticbrainrot.pages.views import HowItWorksView
@@ -74,6 +74,8 @@ urlpatterns = [
     path("captcha/", include("captcha.urls")),
     # Hijack
     path("hijack/", include("hijack.urls")),
+
+    path('test-error/', test_error, name='test_error'),
     # Media files
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]

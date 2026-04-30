@@ -60,6 +60,9 @@ def _demo_chart_data():
         runs.append({"x": x, "y": run})
     return accuracy, speed, runs
 
+def test_error(request):
+    raise(AttributeError('raised as part of rollbar test'))
+
 
 class HomeView(TemplateView):
     template_name = "pages/home.html"
