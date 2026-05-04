@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.shortcuts import render
 
+from agenticbrainrot.accounts.models import Participant
 from agenticbrainrot.accounts.models import log_audit_event
 
 from .forms import ConsentForm
@@ -22,7 +23,7 @@ def give_consent(request):
             {"message": "No consent document is currently available."},
         )
 
-    participant = request.user.participant
+    participant, _ = Participant.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
         form = ConsentForm(request.POST)
