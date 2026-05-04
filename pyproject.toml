@@ -148,11 +148,11 @@ dev = [
     "ipdb==0.13.13",
     "mypy==1.19.1",
     "pre-commit==4.6.0",
-    "psycopg[binary]==3.3.3",
+    "psycopg[binary]==3.3.4",
     "pytest==9.0.3",
     "pytest-django==4.12.0",
     "pytest-sugar==1.1.1",
-    "ruff==0.15.11",
+    "ruff==0.15.12",
     "werkzeug[watchdog]==3.1.8",
 ]
 
@@ -170,7 +170,7 @@ requires-python = "==3.14.*"
 dependencies = [
     "argon2-cffi==25.1.0",
     "crispy-bulma>=0.12.0",
-    "django==6.0.2",
+    "django==6.0.4",
     "django-allauth[mfa,webauthn]==65.16.1",
     "django-crispy-forms==2.6",
     "django-csp>=4.0",
@@ -184,12 +184,12 @@ dependencies = [
     "gunicorn==25.3.0",
     "markdown>=3.7",
     "pillow==12.2.0",
-    "psycopg[binary]==3.3.3",
+    "psycopg[binary]==3.3.4",
     "pyarrow>=18.0",
     "python-json-logger>=4.1.0",
     "redis>=7.4.0",
     "whitenoise==6.12.0",
-    "anthropic>=0.96.0",
+    "anthropic>=0.98.0",
     "django-simple-captcha>=0.6.3",
     "webauthn>=2.7.1",
 ]
