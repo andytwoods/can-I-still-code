@@ -185,7 +185,7 @@ dependencies = [
     "markdown>=3.7",
     "pillow==12.2.0",
     "psycopg[binary]==3.3.3",
-    "pyarrow>=18.0",
+    "pyarrow>=24.0.0",
     "python-json-logger>=4.1.0",
     "redis>=7.4.0",
     "whitenoise==6.12.0",
