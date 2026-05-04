@@ -1,4 +1,5 @@
-from allauth.account.forms import SignupForm
+from allauth.account.forms import ResetPasswordKeyForm, SignupForm
+from allauth.account.forms import PasswordField
 from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from django.contrib.auth import forms as admin_forms
 from django.forms import EmailField
@@ -25,6 +26,10 @@ class UserAdminCreationForm(admin_forms.AdminUserCreationForm):
         error_messages = {
             "email": {"unique": "This email has already been taken."},
         }
+
+
+class ResetPasswordKeyFormFixed(ResetPasswordKeyForm):
+    password2 = PasswordField(label="New Password (again)", autocomplete="new-password")
 
 
 class UserSignupForm(SignupForm):

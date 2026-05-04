@@ -283,7 +283,10 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_ADAPTER = "agenticbrainrot.accounts.adapters.AccountAdapter"
 # https://docs.allauth.org/en/latest/account/forms.html
-ACCOUNT_FORMS = {"signup": "agenticbrainrot.accounts.forms.UserSignupForm"}
+ACCOUNT_FORMS = {
+    "signup": "agenticbrainrot.accounts.forms.UserSignupForm",
+    "reset_password_from_key": "agenticbrainrot.accounts.forms.ResetPasswordKeyFormFixed",
+}
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_ADAPTER = "agenticbrainrot.accounts.adapters.SocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
