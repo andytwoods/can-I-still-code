@@ -96,5 +96,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "Find_Max"
-  }
+  },
+  "reference_solution": "def Find_Max(lst): \n    maxList = max((x) for x in lst) \n    return maxList"
 }

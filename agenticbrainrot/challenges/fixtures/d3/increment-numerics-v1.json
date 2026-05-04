@@ -92,5 +92,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "increment_numerics"
-  }
+  },
+  "reference_solution": "def increment_numerics(test_list, K):\n  res = [str(int(ele) + K) if ele.isdigit() else ele for ele in test_list]\n  return res "
 }

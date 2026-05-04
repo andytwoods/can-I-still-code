@@ -1,0 +1,30 @@
+{
+  "external_id": "last-element-v1",
+  "title": "Last Element of a List",
+  "description": "Write a Python function that returns the last element of a list. You can assume the list is non-empty.",
+  "skeleton_code": "def last_element(lst):\n    pass\n",
+  "test_cases": [
+    {"input": [[1, 2, 3]], "expected": 3, "description": "Numbers"},
+    {"input": [["a", "b", "c"]], "expected": "c", "description": "Strings"},
+    {"input": [[42]], "expected": 42, "description": "Single element"},
+    {"input": [[1, 2, 3, 4, 5]], "expected": 5, "description": "Longer list"}
+  ],
+  "difficulty": 0,
+  "tags": ["lists"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "last-element-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "last_element",
+    "type": "screening"
+  },
+  "reference_solution": "def last_element(lst):\n    return lst[-1]\n"
+}

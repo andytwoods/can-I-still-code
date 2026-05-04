@@ -1,0 +1,70 @@
+{
+  "external_id": "sort-list-v1",
+  "title": "Sort a List",
+  "description": "Write a Python function that returns a new list with the elements sorted in ascending order. Do not modify the original list.",
+  "skeleton_code": "def sort_list(lst):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          3,
+          1,
+          2
+        ]
+      ],
+      "expected": [
+        1,
+        2,
+        3
+      ],
+      "description": "Three unsorted integers"
+    },
+    {
+      "input": [
+        [
+          5,
+          4,
+          3,
+          2,
+          1
+        ]
+      ],
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "description": "Reverse-ordered list"
+    },
+    {
+      "input": [
+        []
+      ],
+      "expected": [],
+      "description": "Empty list"
+    }
+  ],
+  "difficulty": 0,
+  "tags": [
+    "lists",
+    "sorting"
+  ],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "sort-list-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 3,
+    "function_name": "sort_list",
+    "type": "screening"
+  },
+  "reference_solution": "def sort_list(lst):\n    return sorted(lst)\n"
+}

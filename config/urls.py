@@ -9,7 +9,7 @@ from agenticbrainrot.pages.api import report_client_metric
 from agenticbrainrot.pages.api import stats_accuracy_by_vibe_coding
 from agenticbrainrot.pages.api import stats_accuracy_over_time
 from agenticbrainrot.pages.api import stats_summary
-from agenticbrainrot.pages.views import AboutView, test_error
+from agenticbrainrot.pages.views import AboutView, VoiceDemoView, test_error
 from agenticbrainrot.pages.views import CoCView
 from agenticbrainrot.pages.views import HomeView
 from agenticbrainrot.pages.views import HowItWorksView
@@ -23,6 +23,7 @@ urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path("dashboard/", LoggedInHomeView.as_view(), name="logged_in_home"),
     path("about/", AboutView.as_view(), name="about"),
+    path("voice-demo/", VoiceDemoView.as_view(), name="voice_demo"),
     path("how-it-works/", HowItWorksView.as_view(), name="how_it_works"),
     path("privacy/", PrivacyView.as_view(), name="privacy"),
     path("terms/", TermsView.as_view(), name="terms"),

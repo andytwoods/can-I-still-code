@@ -315,8 +315,8 @@ RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVATE_KEY", default="")
 # STUDY
 # ------------------------------------------------------------------------------
 STUDY = {
-    "TIER_DISTRIBUTION": {"1": 3, "2": 3, "3": 2, "4": 1, "5": 1},
-    "CHALLENGES_PER_SESSION": 10,
+    "TIER_DISTRIBUTION": {"0": 2, "1": 3, "2": 3, "3": 2, "4": 1, "5": 1},
+    "CHALLENGES_PER_SESSION": 12,
     "SESSION_COOLDOWN_DAYS": 28,
     "SESSION_TIMEOUT_HOURS": 4,
     "MIN_GROUP_SIZE_FOR_AGGREGATES": 10,

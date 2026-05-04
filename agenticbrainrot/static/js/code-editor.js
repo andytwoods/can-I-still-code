@@ -31,6 +31,8 @@
     var lastBlurTime = null;
     var idleSeconds = 0;
     var runCount = 0;
+    var lastComplexity = null;
+    var lastEfficiencyRatio = null;
 
     var THEMES = {
         "default": "default",
@@ -51,6 +53,8 @@
         keystrokeCount = 0;
         tabBlurCount = 0;
         runCount = 0;
+        lastComplexity = null;
+        lastEfficiencyRatio = null;
         lastBlurTime = null;
         lastKeystrokeTime = null;
         startTime = null;
@@ -283,6 +287,10 @@
                 case "result":
                     clearRunTimeout();
                     displayTestResults(msg.results);
+                    if (msg.complexity) lastComplexity = msg.complexity;
+                    if (msg.efficiencyRatio !== null && msg.efficiencyRatio !== undefined) {
+                        lastEfficiencyRatio = msg.efficiencyRatio;
+                    }
                     enableButtons();
                     break;
 
@@ -439,10 +447,14 @@
             initPyodide();
         }, RUN_TIMEOUT_MS);
 
+        var refEl = document.getElementById("reference-solution-data");
+        var referenceSolution = refEl ? JSON.parse(refEl.textContent) : "";
+
         worker.postMessage({
             type: "run",
             code: editor.getValue(),
             testCases: testCases,
+            referenceSolution: referenceSolution || "",
         });
     }
 
@@ -464,6 +476,8 @@
         setInput("keystroke-count-input", keystrokeCount.toString());
         setInput("tab-blur-count-input", tabBlurCount.toString());
         setInput("run-count-input", runCount.toString());
+        setInput("complexity-metrics-input", lastComplexity ? JSON.stringify(lastComplexity) : "");
+        setInput("efficiency-ratio-input", lastEfficiencyRatio !== null ? lastEfficiencyRatio.toString() : "");
 
         // Clear draft
         var attemptUuid = document.getElementById("attempt-uuid");
@@ -492,13 +506,19 @@
         if (submitBtn) {
             submitBtn.disabled = !pyodideReady;
             submitBtn.onclick = function () {
+                // Clear stale test results so the poller waits for fresh run
+                var testsPassed = document.getElementById("tests-passed");
+                if (testsPassed) testsPassed.value = "";
+
                 runCode();
-                // Wait for results then submit
+                // Wait for fresh results then submit the HTMX form
                 var checkReady = setInterval(function () {
-                    var testsPassed = document.getElementById("tests-passed");
-                    if (testsPassed && testsPassed.value !== "") {
+                    var tp = document.getElementById("tests-passed");
+                    if (tp && tp.value !== "") {
                         clearInterval(checkReady);
                         prepareSubmission();
+                        var form = document.getElementById("challenge-form");
+                        if (form) htmx.trigger(form, "submit");
                     }
                 }, 200);
             };

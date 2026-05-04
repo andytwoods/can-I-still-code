@@ -138,5 +138,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 2,
     "function_name": "remove_similar_row"
-  }
+  },
+  "reference_solution": "def remove_similar_row(test_list):\n  res = set(sorted([tuple(sorted(set(sub))) for sub in test_list]))\n  return (res) "
 }

@@ -1,0 +1,30 @@
+{
+  "external_id": "string-lower-v1",
+  "title": "Lowercase a String",
+  "description": "Write a Python function that returns the given string converted to lowercase.",
+  "skeleton_code": "def string_lower(s):\n    pass\n",
+  "test_cases": [
+    {"input": ["HELLO"], "expected": "hello", "description": "All uppercase"},
+    {"input": ["Python"], "expected": "python", "description": "Mixed case"},
+    {"input": ["already"], "expected": "already", "description": "Already lowercase"},
+    {"input": [""], "expected": "", "description": "Empty string"}
+  ],
+  "difficulty": 0,
+  "tags": ["strings"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "string-lower-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "string_lower",
+    "type": "screening"
+  },
+  "reference_solution": "def string_lower(s):\n    return s.lower()\n"
+}

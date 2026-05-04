@@ -1,0 +1,50 @@
+{
+  "external_id": "is-even-v1",
+  "title": "Is Even",
+  "description": "Write a Python function that returns True if a given integer is even, and False otherwise.",
+  "skeleton_code": "def is_even(n):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        4
+      ],
+      "expected": true,
+      "description": "Even number"
+    },
+    {
+      "input": [
+        7
+      ],
+      "expected": false,
+      "description": "Odd number"
+    },
+    {
+      "input": [
+        0
+      ],
+      "expected": true,
+      "description": "Zero is even"
+    }
+  ],
+  "difficulty": 0,
+  "tags": [
+    "numbers",
+    "conditionals"
+  ],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "is-even-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 3,
+    "function_name": "is_even",
+    "type": "screening"
+  },
+  "reference_solution": "def is_even(n):\n    return n % 2 == 0\n"
+}

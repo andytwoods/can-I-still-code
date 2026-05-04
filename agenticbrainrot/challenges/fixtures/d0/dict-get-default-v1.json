@@ -1,0 +1,61 @@
+{
+  "external_id": "dict-get-default-v1",
+  "title": "Dict Get with Default",
+  "description": "Write a Python function that returns the value for a given key in a dictionary. If the key is not present, return the supplied default value.",
+  "skeleton_code": "def dict_get(d, key, default):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        {
+          "a": 1,
+          "b": 2
+        },
+        "a",
+        0
+      ],
+      "expected": 1,
+      "description": "Key exists"
+    },
+    {
+      "input": [
+        {
+          "a": 1
+        },
+        "b",
+        0
+      ],
+      "expected": 0,
+      "description": "Key missing, returns default"
+    },
+    {
+      "input": [
+        {},
+        "x",
+        99
+      ],
+      "expected": 99,
+      "description": "Empty dict, returns default"
+    }
+  ],
+  "difficulty": 0,
+  "tags": [
+    "dicts"
+  ],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "dict-get-default-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 3,
+    "function_name": "dict_get",
+    "type": "screening"
+  },
+  "reference_solution": "def dict_get(d, key, default):\n    return d.get(key, default)\n",
+  "clarification": "Return the value for the key if it exists, otherwise return the default. Example: get_value({\"a\": 1}, \"a\", 0) \u2192 1, get_value({\"a\": 1}, \"b\", 0) \u2192 0."
+}

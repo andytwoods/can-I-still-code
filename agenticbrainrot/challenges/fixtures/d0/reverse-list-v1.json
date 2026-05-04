@@ -1,0 +1,46 @@
+{
+  "external_id": "reverse-list-v1",
+  "title": "Reverse a List",
+  "description": "Write a Python function that returns a new list with the elements in reverse order. Do not modify the original list.",
+  "skeleton_code": "def reverse_list(lst):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [[1, 2, 3]],
+      "expected": [3, 2, 1],
+      "description": "Basic reversal"
+    },
+    {
+      "input": [["a", "b", "c", "d"]],
+      "expected": ["d", "c", "b", "a"],
+      "description": "Strings"
+    },
+    {
+      "input": [[42]],
+      "expected": [42],
+      "description": "Single element"
+    },
+    {
+      "input": [[]],
+      "expected": [],
+      "description": "Empty list"
+    }
+  ],
+  "difficulty": 0,
+  "tags": ["lists"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "reverse-list-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "reverse_list",
+    "type": "screening"
+  },
+  "reference_solution": "def reverse_list(lst):\n    return lst[::-1]\n"
+}

@@ -96,5 +96,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "Extract"
-  }
+  },
+  "reference_solution": "def Extract(lst): \n    return [item[-1] for item in lst] "
 }

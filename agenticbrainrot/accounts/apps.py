@@ -61,11 +61,11 @@ def check_study_settings(app_configs, **kwargs):
 
     # Validate TIER_DISTRIBUTION
     tier_dist = study["TIER_DISTRIBUTION"]
-    expected_keys = {"1", "2", "3", "4", "5"}
-    if set(tier_dist.keys()) != expected_keys:
+    expected_keys = {"0", "1", "2", "3", "4", "5"}
+    if not set(tier_dist.keys()).issubset(expected_keys):
         errors.append(
             Error(
-                f"STUDY['TIER_DISTRIBUTION'] keys must be {expected_keys}, got {set(tier_dist.keys())}.",
+                f"STUDY['TIER_DISTRIBUTION'] keys must be a subset of {expected_keys}, got {set(tier_dist.keys())}.",
                 id="accounts.E003",
             ),
         )

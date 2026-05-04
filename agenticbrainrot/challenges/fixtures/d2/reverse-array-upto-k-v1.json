@@ -80,5 +80,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "reverse_Array_Upto_K"
-  }
+  },
+  "reference_solution": "def reverse_Array_Upto_K(input, k): \n  return (input[k-1::-1] + input[k:]) "
 }

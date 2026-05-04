@@ -57,5 +57,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "check_Consecutive"
-  }
+  },
+  "reference_solution": "def check_Consecutive(l): \n    return sorted(l) == list(range(min(l),max(l)+1)) "
 }

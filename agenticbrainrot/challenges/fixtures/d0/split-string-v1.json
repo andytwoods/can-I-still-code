@@ -1,0 +1,46 @@
+{
+  "external_id": "split-string-v1",
+  "title": "Split a String",
+  "description": "Write a Python function that splits a string by a given delimiter and returns a list of substrings.",
+  "skeleton_code": "def split_string(s, delimiter):\n    pass\n",
+  "test_cases": [
+    {
+      "input": ["a,b,c", ","],
+      "expected": ["a", "b", "c"],
+      "description": "Comma delimiter"
+    },
+    {
+      "input": ["hello world", " "],
+      "expected": ["hello", "world"],
+      "description": "Space delimiter"
+    },
+    {
+      "input": ["one::two::three", "::"],
+      "expected": ["one", "two", "three"],
+      "description": "Multi-character delimiter"
+    },
+    {
+      "input": ["nosplit", ","],
+      "expected": ["nosplit"],
+      "description": "No delimiter present"
+    }
+  ],
+  "difficulty": 0,
+  "tags": ["strings"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "split-string-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "split_string",
+    "type": "screening"
+  },
+  "reference_solution": "def split_string(s, delimiter):\n    return s.split(delimiter)\n"
+}

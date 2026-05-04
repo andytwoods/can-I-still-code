@@ -1,0 +1,61 @@
+{
+  "external_id": "list-max-v1",
+  "title": "Maximum of a List",
+  "description": "Write a Python function that returns the largest value in a list of numbers.",
+  "skeleton_code": "def list_max(lst):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          1,
+          3,
+          2
+        ]
+      ],
+      "expected": 3,
+      "description": "Positive integers"
+    },
+    {
+      "input": [
+        [
+          -1,
+          -3,
+          -2
+        ]
+      ],
+      "expected": -1,
+      "description": "All negative"
+    },
+    {
+      "input": [
+        [
+          42
+        ]
+      ],
+      "expected": 42,
+      "description": "Single element"
+    }
+  ],
+  "difficulty": 0,
+  "tags": [
+    "lists",
+    "numbers"
+  ],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "list-max-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 3,
+    "function_name": "list_max",
+    "type": "screening"
+  },
+  "reference_solution": "def list_max(lst):\n    return max(lst)\n",
+  "is_active": false
+}

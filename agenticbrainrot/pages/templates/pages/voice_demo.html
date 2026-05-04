@@ -1,0 +1,355 @@
+{% extends "base.html" %}
+
+{% block title %}Voice-to-Text Demo | Can I Still Code{% endblock %}
+
+{% block content %}
+<div class="columns is-centered">
+  <div class="column is-7-widescreen is-9-desktop">
+
+    <h1 class="title is-3">Voice-to-Text Demo</h1>
+    <p class="subtitle is-6 mb-5">
+      Live transcription as you speak, then refined by Whisper WASM on stop.
+      <strong>No audio ever leaves your device.</strong>
+    </p>
+
+    {# ── Step 1: Model selector ───────────────────────────────────────────── #}
+    <div id="step-model" class="box">
+      <h2 class="title is-5">Choose a Whisper model</h2>
+      <p class="help mb-4">
+        Used to refine the transcript after you stop speaking.
+        Larger models are more accurate but take longer to download the first time.
+        Your choice is cached in the browser after download.
+      </p>
+      <div class="field">
+        <div class="control">
+          <label class="radio is-block py-2">
+            <input type="radio" name="whisper-model" value="Xenova/whisper-tiny" checked>
+            <strong>Tiny</strong>
+            <span class="tag is-info is-light ml-2">~39 MB</span>
+            <span class="has-text-grey ml-2 is-size-7">Good for clear speech &mdash; fastest download</span>
+          </label>
+          <label class="radio is-block py-2">
+            <input type="radio" name="whisper-model" value="Xenova/whisper-base">
+            <strong>Base</strong>
+            <span class="tag is-warning is-light ml-2">~145 MB</span>
+            <span class="has-text-grey ml-2 is-size-7">Noticeably better accuracy</span>
+          </label>
+          <label class="radio is-block py-2">
+            <input type="radio" name="whisper-model" value="Xenova/whisper-small">
+            <strong>Small</strong>
+            <span class="tag is-danger is-light ml-2">~488 MB</span>
+            <span class="has-text-grey ml-2 is-size-7">Near server-side quality</span>
+          </label>
+        </div>
+      </div>
+      <button id="load-btn" class="button is-primary mt-3">
+        <span class="icon"><i class="fas fa-download"></i></span>
+        <span>Load Model</span>
+      </button>
+    </div>
+
+    {# ── Step 2: Download progress ────────────────────────────────────────── #}
+    <div id="step-download" class="box" style="display:none">
+      <h2 class="title is-5 mb-3">Loading Whisper model</h2>
+      <p id="dl-label" class="is-size-7 has-text-grey mb-3">Starting&hellip;</p>
+      <progress id="dl-bar" class="progress is-primary" value="0" max="100"></progress>
+      <p class="help mt-2">
+        Model weights are fetched directly from Hugging Face CDN to your browser &mdash;
+        they do not pass through this server.
+      </p>
+    </div>
+
+    {# ── Step 3: Record + transcript ─────────────────────────────────────── #}
+    <div id="step-record" class="box" style="display:none">
+
+      <div class="level is-mobile mb-4">
+        <div class="level-left">
+          <h2 class="title is-5 mb-0 level-item">Record</h2>
+        </div>
+        <div class="level-right">
+          <a id="change-model-link" href="#" class="level-item is-size-7 has-text-grey">
+            <span class="icon is-small"><i class="fas fa-cog"></i></span>
+            <span>Change model</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="is-flex is-align-items-center mb-4" style="gap:0.75rem;flex-wrap:wrap">
+        <button id="record-btn" class="button is-danger is-medium">
+          <span class="icon"><i id="rec-icon" class="fas fa-microphone"></i></span>
+          <span id="rec-label">Start Recording</span>
+        </button>
+        <span id="rec-badge"    class="tag is-danger is-medium"  style="display:none">&#x25cf; REC</span>
+        <span id="rec-timer"    class="tag is-dark is-medium"    style="display:none">0s</span>
+        <span id="refine-badge" class="tag is-warning is-medium" style="display:none">
+          <span class="icon is-small"><i class="fas fa-magic"></i></span>
+          <span>Refining with Whisper&hellip;</span>
+        </span>
+        <span id="done-badge"   class="tag is-success is-medium" style="display:none">
+          <span class="icon is-small"><i class="fas fa-check"></i></span>
+          <span>Whisper refined</span>
+        </span>
+      </div>
+
+      <div id="mic-error" class="notification is-warning mb-4" style="display:none">
+        <button class="delete" id="mic-error-close"></button>
+        Microphone access was denied or is unavailable. Please check your browser permissions.
+      </div>
+
+      <div class="level is-mobile mb-2">
+        <div class="level-left">
+          <p class="level-item has-text-weight-semibold">Transcript</p>
+        </div>
+        <div class="level-right">
+          <div class="buttons are-small level-item">
+            <button id="clear-btn" class="button is-light">Clear</button>
+            <button id="copy-btn"  class="button is-light">
+              <span class="icon is-small"><i class="fas fa-copy"></i></span>
+              <span>Copy</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="transcript-box"
+           class="p-4 has-background-light"
+           style="min-height:9rem;border-radius:6px;white-space:pre-wrap;line-height:1.8;word-break:break-word;transition:opacity 0.3s">
+        <span id="transcript-placeholder" class="has-text-grey-light">
+          Transcript will appear here as you speak&hellip;
+        </span>
+        <span id="transcript-final"></span><span id="transcript-interim"
+          style="color:#aaa;font-style:italic"></span>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="module">
+import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js';
+
+env.allowLocalModels = false;
+
+const $ = id => document.getElementById(id);
+const stepModel      = $('step-model');
+const stepDownload   = $('step-download');
+const stepRecord     = $('step-record');
+const loadBtn        = $('load-btn');
+const dlBar          = $('dl-bar');
+const dlLabel        = $('dl-label');
+const recordBtn      = $('record-btn');
+const recIcon        = $('rec-icon');
+const recLabel       = $('rec-label');
+const recBadge       = $('rec-badge');
+const recTimer       = $('rec-timer');
+const refineBadge    = $('refine-badge');
+const doneBadge      = $('done-badge');
+const micError       = $('mic-error');
+const transcriptBox  = $('transcript-box');
+const placeholder    = $('transcript-placeholder');
+const finalSpan      = $('transcript-final');
+const interimSpan    = $('transcript-interim');
+const clearBtn       = $('clear-btn');
+const copyBtn        = $('copy-btn');
+const changeLink     = $('change-model-link');
+
+let transcriber   = null;
+let mediaRecorder = null;
+let recognition   = null;
+let audioChunks   = [];
+let isRecording   = false;
+let recSecs       = 0;
+let timerHandle   = null;
+
+// ── Model loading ─────────────────────────────────────────────────────────────
+loadBtn.addEventListener('click', async () => {
+  const modelId = document.querySelector('input[name="whisper-model"]:checked').value;
+
+  stepModel.style.display    = 'none';
+  stepDownload.style.display = '';
+  loadBtn.classList.add('is-loading');
+
+  try {
+    transcriber = await pipeline('automatic-speech-recognition', modelId, {
+      progress_callback(p) {
+        if (p.status === 'progress') {
+          const pct = p.total ? Math.round(p.loaded / p.total * 100) : 0;
+          dlBar.value = pct;
+          dlLabel.textContent = `${p.file} — ${pct}%`;
+        } else if (p.status === 'done') {
+          dlBar.value = 100;
+          dlLabel.textContent = `${p.file} — cached`;
+        } else if (p.status === 'initiate') {
+          dlLabel.textContent = `Preparing ${p.file}…`;
+        }
+      },
+    });
+    stepDownload.style.display = 'none';
+    stepRecord.style.display   = '';
+  } catch (err) {
+    dlLabel.textContent = `Failed to load model: ${err.message}`;
+    dlBar.classList.replace('is-primary', 'is-danger');
+  } finally {
+    loadBtn.classList.remove('is-loading');
+  }
+});
+
+// ── Change model ──────────────────────────────────────────────────────────────
+changeLink.addEventListener('click', e => {
+  e.preventDefault();
+  if (isRecording) stopRecording();
+  transcriber = null;
+  stepRecord.style.display = 'none';
+  stepModel.style.display  = '';
+});
+
+// ── Record / Stop ─────────────────────────────────────────────────────────────
+recordBtn.addEventListener('click', () => {
+  if (isRecording) stopRecording(); else startRecording();
+});
+
+async function startRecording() {
+  micError.style.display  = 'none';
+  doneBadge.style.display = 'none';
+
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+  } catch {
+    micError.style.display = '';
+    return;
+  }
+
+  audioChunks   = [];
+  mediaRecorder = new MediaRecorder(stream);
+  mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+  mediaRecorder.start(300);
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  if (SR) {
+    recognition = new SR();
+    recognition.continuous     = true;
+    recognition.interimResults = true;
+    recognition.lang           = 'en-US';
+
+    recognition.onresult = event => {
+      let fin = '', int = '';
+      for (let i = 0; i < event.results.length; i++) {
+        if (event.results[i].isFinal) fin += event.results[i][0].transcript;
+        else int += event.results[i][0].transcript;
+      }
+      placeholder.style.display = 'none';
+      finalSpan.textContent     = fin;
+      interimSpan.textContent   = int;
+    };
+
+    recognition.onend   = () => { if (isRecording) recognition.start(); };
+    recognition.onerror = e => {
+      if (e.error === 'no-speech' || e.error === 'aborted') return;
+      console.warn('SpeechRecognition:', e.error);
+    };
+
+    recognition.start();
+  }
+
+  isRecording = true;
+  recSecs     = 0;
+  recordBtn.classList.replace('is-danger', 'is-warning');
+  recIcon.className      = 'fas fa-stop';
+  recLabel.textContent   = 'Stop';
+  recBadge.style.display = '';
+  recTimer.style.display = '';
+  recTimer.textContent   = '0s';
+
+  timerHandle = setInterval(() => { recTimer.textContent = `${++recSecs}s`; }, 1000);
+}
+
+async function stopRecording() {
+  isRecording = false;
+  clearInterval(timerHandle);
+
+  if (recognition) {
+    recognition.onend = null;
+    recognition.stop();
+    recognition = null;
+  }
+
+  mediaRecorder.stop();
+  mediaRecorder.stream.getTracks().forEach(t => t.stop());
+
+  recordBtn.classList.replace('is-warning', 'is-danger');
+  recIcon.className      = 'fas fa-microphone';
+  recLabel.textContent   = 'Start Recording';
+  recBadge.style.display = 'none';
+  recTimer.style.display = 'none';
+
+  await refineWithWhisper();
+}
+
+// ── Whisper refinement pass ───────────────────────────────────────────────────
+async function refineWithWhisper() {
+  if (!transcriber || audioChunks.length === 0) return;
+
+  refineBadge.style.display   = '';
+  transcriptBox.style.opacity = '0.45';
+  interimSpan.textContent     = '';
+
+  try {
+    await new Promise(r => setTimeout(r, 150));
+    const blob  = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+    const audio = await decodeToFloat32(await blob.arrayBuffer());
+    const { text } = await transcriber(audio, { language: 'english', task: 'transcribe' });
+
+    placeholder.style.display = 'none';
+    finalSpan.textContent     = text?.trim() ?? '';
+    interimSpan.textContent   = '';
+  } catch (err) {
+    console.error('Whisper refinement error:', err);
+  } finally {
+    transcriptBox.style.opacity = '1';
+    refineBadge.style.display   = 'none';
+    doneBadge.style.display     = '';
+  }
+}
+
+// ── Audio decode + resample to 16 kHz mono ───────────────────────────────────
+async function decodeToFloat32(arrayBuffer) {
+  const ctx = new AudioContext();
+  let buf;
+  try {
+    buf = await ctx.decodeAudioData(arrayBuffer);
+  } finally {
+    ctx.close();
+  }
+
+  if (buf.sampleRate === 16000) return buf.getChannelData(0);
+
+  const len     = Math.round(buf.length * 16000 / buf.sampleRate);
+  const offline = new OfflineAudioContext(1, len, 16000);
+  const src     = offline.createBufferSource();
+  src.buffer    = buf;
+  src.connect(offline.destination);
+  src.start(0);
+  const out = await offline.startRendering();
+  return out.getChannelData(0);
+}
+
+// ── Clear / Copy ──────────────────────────────────────────────────────────────
+clearBtn.addEventListener('click', () => {
+  finalSpan.textContent     = '';
+  interimSpan.textContent   = '';
+  placeholder.style.display = '';
+  doneBadge.style.display   = 'none';
+});
+
+copyBtn.addEventListener('click', async () => {
+  const text = finalSpan.textContent.trim();
+  if (text) await navigator.clipboard.writeText(text);
+});
+
+$('mic-error-close').addEventListener('click', () => { micError.style.display = 'none'; });
+</script>
+{% endblock %}

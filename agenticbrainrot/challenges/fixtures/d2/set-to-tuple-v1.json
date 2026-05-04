@@ -79,5 +79,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "set_to_tuple"
-  }
+  },
+  "reference_solution": "def set_to_tuple(s):\n  t = tuple(sorted(s))\n  return (t)"
 }

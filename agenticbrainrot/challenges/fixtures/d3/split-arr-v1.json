@@ -89,5 +89,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "split_Arr"
-  }
+  },
+  "reference_solution": "def split_Arr(a,n,k):  \n   b = a[:k] \n   return (a[k::]+b[::]) "
 }

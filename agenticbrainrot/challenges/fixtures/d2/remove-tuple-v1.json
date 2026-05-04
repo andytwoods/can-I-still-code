@@ -89,5 +89,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "remove_tuple"
-  }
+  },
+  "reference_solution": "def remove_tuple(test_tup):\n  res = tuple(set(test_tup))\n  return (res) "
 }

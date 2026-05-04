@@ -83,5 +83,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "add_lists"
-  }
+  },
+  "reference_solution": "def add_lists(test_list, test_tup):\n  res = tuple(list(test_tup) + test_list)\n  return (res) "
 }

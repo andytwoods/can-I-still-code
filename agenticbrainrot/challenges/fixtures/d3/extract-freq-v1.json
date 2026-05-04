@@ -92,5 +92,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "extract_freq"
-  }
+  },
+  "reference_solution": "def extract_freq(test_list):\n  res = len(list(set(tuple(sorted(sub)) for sub in test_list)))\n  return (res)"
 }

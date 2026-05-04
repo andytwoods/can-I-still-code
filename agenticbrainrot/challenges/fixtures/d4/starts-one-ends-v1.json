@@ -54,5 +54,6 @@
     "complexity_score": 4.59,
     "num_test_cases": 5,
     "function_name": "starts_one_ends"
-  }
+  },
+  "reference_solution": "\ndef starts_one_ends(n):\n    \"\"\"\n    Given a positive integer n, return the count of the numbers of n-digit\n    positive integers that start or end with 1.\n    \"\"\"\n    if n == 1: return 1\n    return 18 * (10 ** (n - 2))\n"
 }

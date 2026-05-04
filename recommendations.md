@@ -21,7 +21,7 @@ carefully AND adopt AI tools more" could explain both. Worth being upfront about
 
 LeetCode problem licensing. The LeetCodeDataset on HuggingFace is a research dataset, but LeetCode's ToS prohibit
 reproducing their problems commercially. You should check the
-licence carefully  –  you may need to stick to problems sourced from openly-licensed repos, or author Tier 1–2 problems
+licence carefully – wthyou may need to stick to problems sourced from openly-licensed repos, or author Tier 1–2 problems
 yourself (which you're already partly planning).
 
 Pyodide load time. The WASM bundle is ~10–15MB. First load on a slow connection could take 10–30 seconds. Consider:

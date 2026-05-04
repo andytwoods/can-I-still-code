@@ -77,5 +77,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "two_unique_nums"
-  }
+  },
+  "reference_solution": "def two_unique_nums(nums):\n  return [i for i in nums if nums.count(i)==1]"
 }

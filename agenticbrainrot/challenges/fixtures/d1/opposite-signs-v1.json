@@ -44,5 +44,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "opposite_Signs"
-  }
+  },
+  "reference_solution": "def opposite_Signs(x,y): \n    return ((x ^ y) < 0); "
 }

@@ -41,5 +41,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "hexagonal_num"
-  }
+  },
+  "reference_solution": "def hexagonal_num(n): \n\treturn n*(2*n - 1) "
 }

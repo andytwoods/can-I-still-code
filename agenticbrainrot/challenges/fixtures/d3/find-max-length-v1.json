@@ -89,5 +89,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "Find_Max_Length"
-  }
+  },
+  "reference_solution": "def Find_Max_Length(lst):  \n    maxLength = max(len(x) for x in lst )\n    return maxLength "
 }

@@ -123,7 +123,25 @@ Participants will be recruited via developer communities and social platforms in
 
 **Will the research manage identifiable or special category data under GDPR?** Yes.
 
-**GDPR details:** Participants' email addresses are collected at registration for account authentication and, where participants opt in, for session reminder emails. Email addresses are not used as a research variable and are stored separately from performance data. Research data is stored pseudonymously, linked to an internal participant ID only. Prior to any public data release, all potentially identifiable fields (including free-text exit survey responses) are reviewed and removed or redacted. Data is stored on EU-based servers (Hetzner VPS, Germany) in compliance with GDPR. A data processing agreement is in place with Hetzner. Data retention: email addresses and identifiable account data are held for the duration of the participant's active involvement plus 12 months, then deleted. Pseudonymous research data is retained for 10 years after publication in line with RHUL data retention policy. Participants who opt in to follow-up interview contact provide their email address for that purpose only; this is handled via a separate optional consent mechanism and deleted after the interview programme concludes.
+**GDPR details:** The following data are collected and stored, all linked to an internal pseudonymous participant ID:
+
+*Account / authentication data (identifiable):*
+- Email address -- collected at registration for account authentication and, where participants opt in, session reminder emails. Not used as a research variable; stored separately from research data.
+
+*Per-challenge research data (pseudonymous):*
+- **Performance outcomes:** proportion of test cases passed; total time elapsed; active coding time; idle time.
+- **Behavioural telemetry:** number of code-run attempts before submission; keystroke count; paste event count and total characters pasted; tab-switch / focus-loss count.
+- **Code complexity metrics:** a set of numeric metrics derived from static analysis of the submitted code -- specifically: lines of code (non-blank), cyclomatic complexity, maximum control-flow nesting depth, Halstead vocabulary / volume / difficulty / effort, counts of list comprehensions / dict comprehensions / set comprehensions / generator expressions / ternary expressions, unique identifier count, and function definition count. These metrics are computed entirely client-side in the participant's browser (using Python's standard `ast` module via WebAssembly) and only the resulting numeric values are transmitted to the server. Raw code text is never sent to or stored on the server.
+- **Post-session self-report survey:** participants' self-reported AI coding habits for that session (question set approved as part of this protocol).
+
+*Qualitative data (pseudonymous, reviewed before release):*
+- Exit survey free-text responses.
+- Optional semi-structured interview transcripts (participants who separately consent to interview participation only).
+
+*Consent records:*
+- Versioned, timestamped records of each participant's consent confirmation, stored separately from research data.
+
+Research data is stored pseudonymously and cannot be linked to a named individual without access to the separately held authentication table. Prior to any public data release, all potentially identifiable fields (including free-text responses) are reviewed and redacted as necessary. Data is stored on EU-based servers (Hetzner VPS, Germany) in compliance with GDPR. A data processing agreement is in place with Hetzner. Data retention: email addresses and identifiable account data are held for the duration of the participant's active involvement plus 12 months, then deleted. Pseudonymous research data is retained for 10 years after publication in line with RHUL data retention policy. Participants who opt in to follow-up interview contact provide their email address for that purpose only; this is handled via a separate optional consent mechanism and deleted after the interview programme concludes.
 
 ---
 

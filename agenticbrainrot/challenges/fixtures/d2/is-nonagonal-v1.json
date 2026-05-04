@@ -41,5 +41,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "is_nonagonal"
-  }
+  },
+  "reference_solution": "def is_nonagonal(n): \n\treturn int(n * (7 * n - 5) / 2) "
 }

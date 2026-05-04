@@ -40,5 +40,6 @@
     "complexity_score": 4.22,
     "num_test_cases": 3,
     "function_name": "flip_case"
-  }
+  },
+  "reference_solution": "\n\ndef flip_case(string: str) -> str:\n    \"\"\" For a given string, flip lowercase characters to uppercase and uppercase to lowercase.\n    >>> flip_case('Hello')\n    'hELLO'\n    \"\"\"\n    return string.swapcase()\n"
 }

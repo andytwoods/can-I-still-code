@@ -53,5 +53,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "chkList"
-  }
+  },
+  "reference_solution": "def chkList(lst): \n    return len(set(lst)) == 1"
 }

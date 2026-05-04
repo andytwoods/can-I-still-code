@@ -1,0 +1,30 @@
+{
+  "external_id": "count-occurrences-v1",
+  "title": "Count Occurrences in a List",
+  "description": "Write a Python function that returns how many times a given value appears in a list.",
+  "skeleton_code": "def count_occurrences(lst, value):\n    pass\n",
+  "test_cases": [
+    {"input": [[1, 2, 2, 3, 2], 2], "expected": 3, "description": "Multiple occurrences"},
+    {"input": [[1, 2, 3], 5], "expected": 0, "description": "Not present"},
+    {"input": [["a", "b", "a"], "a"], "expected": 2, "description": "Strings"},
+    {"input": [[1], 1], "expected": 1, "description": "Single match"}
+  ],
+  "difficulty": 0,
+  "tags": ["lists"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "count-occurrences-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "count_occurrences",
+    "type": "screening"
+  },
+  "reference_solution": "def count_occurrences(lst, value):\n    return lst.count(value)\n"
+}

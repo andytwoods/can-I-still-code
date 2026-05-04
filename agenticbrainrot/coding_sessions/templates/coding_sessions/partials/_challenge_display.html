@@ -1,5 +1,11 @@
 <div>
-  <h2 class="title is-4">{{ challenge.title }}</h2>
+  <div class="is-flex is-align-items-center mb-2" style="gap: 0.75rem">
+    <h2 class="title is-4 mb-0">{{ challenge.title }}</h2>
+    <div class="tags has-addons mb-0">
+      <span class="tag is-light">Level</span>
+      <span class="tag is-info is-light">{{ challenge.difficulty }} / 5</span>
+    </div>
+  </div>
   <div class="content">{{ challenge.description|linebreaksbr }}</div>
   {% if challenge.clarification %}
     <div class="notification is-info is-light mt-3">
@@ -53,6 +59,7 @@
             border-bottom-left-radius: 4px;
             border-bottom-right-radius: 4px"></div>
 {{ challenge.skeleton_code|json_script:"skeleton-code-data" }}
+{{ challenge.reference_solution|json_script:"reference-solution-data" }}
 <div class="buttons mt-3">
   <button id="run-btn" class="button is-info" type="button" disabled>Run Code</button>
   <button id="submit-btn" class="button is-primary" type="button" disabled>Submit</button>
@@ -115,4 +122,6 @@
          name="tab_blur_count"
          value="0" />
   <input type="hidden" id="run-count-input" name="run_count" value="0" />
+  <input type="hidden" id="complexity-metrics-input" name="complexity_metrics" value="" />
+  <input type="hidden" id="efficiency-ratio-input" name="efficiency_ratio" value="" />
 </form>

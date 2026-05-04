@@ -96,5 +96,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "union_elements"
-  }
+  },
+  "reference_solution": "def union_elements(test_tup1, test_tup2):\n  res = tuple(set(test_tup1 + test_tup2))\n  return (res) "
 }

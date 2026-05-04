@@ -77,8 +77,8 @@
           "name": "Can I Still Code: Longitudinal Assessment of Coding Skills in the Vibe Coding Era",
           "alternateName": "Can I Still Code",
           "url": "{{ request.scheme }}://{{ request.get_host }}/",
-          "description": "A longitudinal, citizen-science research project measuring how vibe coding – AI-assisted coding where the AI generates most of the logic – affects Python developer skills over time. Participants complete short Python coding challenges every 28 days and self-report their AI tool usage. The resulting open dataset supports Bayesian multilevel regression modelling.",
-          "keywords": "vibe coding, AI coding assistants, GitHub Copilot, Cursor, Claude, Python skills, longitudinal study, citizen science, coding skill change, software developer research, Bayesian analysis, open science, coding challenges",
+          "description": "A longitudinal, citizen-science research project measuring how vibe coding – AI-assisted coding where the AI generates most of the logic – affects Python developer skills over time. Participants complete short Python coding challenges every 28 days and self-report their AI tool usage. The resulting open dataset supports multilevel regression modelling.",
+          "keywords": "vibe coding, AI coding assistants, GitHub Copilot, Cursor, Claude, Python skills, longitudinal study, citizen science, coding skill change, software developer research, multilevel modelling, open science, coding challenges",
           "sameAs": "https://github.com/andytwoods/can-I-still-code",
           "funder": {
             "@type": "CollegeOrUniversity",
@@ -285,12 +285,53 @@
       <div class="has-text-centered mb-5">
         <h2 class="title is-3">Your insights panel</h2>
         <p class="subtitle is-5">
-          Example trends from a single participant.
+          Your trends you have access to.
         </p>
       </div>
-      {% include "pages/partials/_result_charts.html" with accuracy_chart_title="Accuracy (demo)" speed_chart_title="Time Taken (demo)" runs_chart_title="Submissions Per Challenge (demo)" %}
+      {% include "pages/partials/_result_charts.html" with accuracy_chart_title="Accuracy (demo)" speed_chart_title="Time Taken (demo)" runs_chart_title="Submissions Per Challenge (demo)" complexity_chart_title="Code Complexity (demo)" loc_chart_title="Lines of Code (demo)" %}
     </div>
   </section>
+  {# Study results panel #}
+  <section class="section has-background-light">
+    <div class="container">
+      <div class="has-text-centered mb-5">
+        <h2 class="title is-3">Early study results</h2>
+        <p class="subtitle is-5">
+          Aggregated findings you get to see as they emerge.
+        </p>
+      </div>
+      <div class="columns is-multiline is-centered">
+        <div class="column is-4">
+          <div class="box has-text-centered" style="height: 100%">
+            <span class="icon is-large mb-3" style="font-size: 2.5rem">
+              <i class="fas fa-users has-text-primary"></i>
+            </span>
+            <h3 class="title is-5">Group trends</h3>
+            <p class="has-text-grey">See how accuracy and speed are shifting across all participants over time &mdash; anonymised and aggregated.</p>
+          </div>
+        </div>
+        <div class="column is-4">
+          <div class="box has-text-centered" style="height: 100%">
+            <span class="icon is-large mb-3" style="font-size: 2.5rem">
+              <i class="fas fa-robot has-text-info"></i>
+            </span>
+            <h3 class="title is-5">AI use patterns</h3>
+            <p class="has-text-grey">Early signals on how self-reported AI usage relates to changes in coding confidence and performance.</p>
+          </div>
+        </div>
+        <div class="column is-4">
+          <div class="box has-text-centered" style="height: 100%">
+            <span class="icon is-large mb-3" style="font-size: 2.5rem">
+              <i class="fas fa-chart-bar has-text-warning"></i>
+            </span>
+            <h3 class="title is-5">Live updates</h3>
+            <p class="has-text-grey">Results are updated as new sessions come in &mdash; participants see the study evolve in real time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   {# Call to Action #}
   <section class="section has-background-primary-light">
     <div class="container">

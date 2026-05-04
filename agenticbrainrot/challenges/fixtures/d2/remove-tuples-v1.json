@@ -149,5 +149,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "remove_tuples"
-  }
+  },
+  "reference_solution": "def remove_tuples(test_list, K):\n  res = [ele for ele in test_list if len(ele) != K]\n  return (res) "
 }

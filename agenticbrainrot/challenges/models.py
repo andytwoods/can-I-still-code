@@ -44,6 +44,11 @@ class Challenge(models.Model):
         default="",
         help_text="AI-generated parameter docs and worked examples. Additive only – never replaces description.",
     )
+    reference_solution = models.TextField(
+        blank=True,
+        default="",
+        help_text="Canonical solution used as timing baseline for efficiency ratio. For benchmark fixtures, drawn directly from source dataset.",
+    )
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -53,7 +58,7 @@ class Challenge(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                condition=models.Q(difficulty__gte=1, difficulty__lte=5),
+                condition=models.Q(difficulty__gte=0, difficulty__lte=5),
                 name="challenge_difficulty_range",
             ),
         ]
@@ -157,6 +162,16 @@ class ChallengeAttempt(models.Model):
     run_count = models.PositiveIntegerField(
         default=0,
         help_text="Number of times the participant ran the code before final submission.",
+    )
+    complexity_metrics = models.JSONField(
+        null=True,
+        blank=True,
+        help_text="AST-derived complexity metrics computed client-side at submission time.",
+    )
+    efficiency_ratio = models.FloatField(
+        null=True,
+        blank=True,
+        help_text="Participant solution time / reference solution time. 1.0 = matched reference; >1 = slower.",
     )
 
     class Meta:

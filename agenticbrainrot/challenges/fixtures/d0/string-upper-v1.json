@@ -1,0 +1,30 @@
+{
+  "external_id": "string-upper-v1",
+  "title": "Uppercase a String",
+  "description": "Write a Python function that returns the given string converted to uppercase.",
+  "skeleton_code": "def string_upper(s):\n    pass\n",
+  "test_cases": [
+    {"input": ["hello"], "expected": "HELLO", "description": "All lowercase"},
+    {"input": ["Python"], "expected": "PYTHON", "description": "Mixed case"},
+    {"input": ["ALREADY"], "expected": "ALREADY", "description": "Already uppercase"},
+    {"input": [""], "expected": "", "description": "Empty string"}
+  ],
+  "difficulty": 0,
+  "tags": ["strings"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "string-upper-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "string_upper",
+    "type": "screening"
+  },
+  "reference_solution": "def string_upper(s):\n    return s.upper()\n"
+}

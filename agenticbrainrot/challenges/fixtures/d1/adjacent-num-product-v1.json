@@ -57,5 +57,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "adjacent_num_product"
-  }
+  },
+  "reference_solution": "def adjacent_num_product(list_nums):\n    return max(a*b for a, b in zip(list_nums, list_nums[1:]))"
 }

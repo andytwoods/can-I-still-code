@@ -61,5 +61,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "sum_elements"
-  }
+  },
+  "reference_solution": "def sum_elements(test_tup):\n  res = sum(list(test_tup))\n  return (res) "
 }

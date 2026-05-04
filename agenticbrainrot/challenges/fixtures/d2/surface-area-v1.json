@@ -44,5 +44,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "surface_Area"
-  }
+  },
+  "reference_solution": "def surface_Area(b,s): \n    return 2 * b * s + pow(b,2) "
 }

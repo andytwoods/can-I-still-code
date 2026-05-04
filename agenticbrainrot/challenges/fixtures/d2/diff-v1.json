@@ -91,5 +91,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "Diff"
-  }
+  },
+  "reference_solution": "def Diff(li1,li2):\n    return (list(list(set(li1)-set(li2)) + list(set(li2)-set(li1))))\n "
 }

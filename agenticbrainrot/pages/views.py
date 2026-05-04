@@ -33,32 +33,39 @@ _CHART_COLOURS = {
     "accuracy": "rgb(0, 114, 178)",
     "speed": "rgb(230, 159, 0)",
     "runs": "rgb(0, 158, 115)",
+    "complexity": "rgb(213, 94, 0)",
+    "loc": "rgb(204, 121, 167)",
     "accuracy_bg": "rgba(0, 114, 178, 0.1)",
     "speed_bg": "rgba(230, 159, 0, 0.1)",
     "runs_bg": "rgba(0, 158, 115, 0.1)",
+    "complexity_bg": "rgba(213, 94, 0, 0.1)",
+    "loc_bg": "rgba(204, 121, 167, 0.1)",
 }
 
-# Demo trajectory: accuracy drifts down, time and runs drift up over 6 sessions
+# Demo trajectory over 6 sessions (~5 months):
+# accuracy drifts down, time/runs/complexity/loc drift up
 _DEMO_SESSIONS = [
-    (0,   88.0, 42.0, 2.1),
-    (28,  85.0, 46.0, 2.4),
-    (59,  83.0, 49.0, 2.6),
-    (89,  79.0, 54.0, 3.0),
-    (120, 75.0, 61.0, 3.4),
-    (151, 71.0, 68.0, 3.8),
+    (0,   88.0, 42.0, 2.1, 3.2, 14),
+    (28,  85.0, 46.0, 2.4, 3.5, 16),
+    (59,  83.0, 49.0, 2.6, 3.8, 17),
+    (89,  79.0, 54.0, 3.0, 4.2, 19),
+    (120, 75.0, 61.0, 3.4, 4.6, 22),
+    (151, 71.0, 68.0, 3.8, 5.1, 25),
 ]
 
 
 def _demo_chart_data():
-    """Return demo accuracy/speed/runs data anchored to today minus ~5 months."""
+    """Return demo chart data anchored to today minus ~5 months."""
     anchor = timezone.now() - timedelta(days=151)
-    accuracy, speed, runs = [], [], []
-    for days_offset, acc, spd, run in _DEMO_SESSIONS:
+    accuracy, speed, runs, complexity, loc = [], [], [], [], []
+    for days_offset, acc, spd, run, cyc, lines in _DEMO_SESSIONS:
         x = (anchor + timedelta(days=days_offset)).isoformat()
         accuracy.append({"x": x, "y": acc})
         speed.append({"x": x, "y": spd})
         runs.append({"x": x, "y": run})
-    return accuracy, speed, runs
+        complexity.append({"x": x, "y": cyc})
+        loc.append({"x": x, "y": lines})
+    return accuracy, speed, runs, complexity, loc
 
 def test_error(request):
     raise(AttributeError('raised as part of rollbar test'))
@@ -99,10 +106,12 @@ class HomeView(TemplateView):
         context["sponsors"] = Sponsor.objects.filter(is_active=True)
         context["contact_email"] = settings.ADMINS[0][1]
 
-        acc, spd, runs = _demo_chart_data()
+        acc, spd, runs, complexity, loc = _demo_chart_data()
         context["accuracy_data"] = json.dumps(acc)
         context["speed_data"] = json.dumps(spd)
         context["runs_data"] = json.dumps(runs)
+        context["complexity_data"] = json.dumps(complexity)
+        context["loc_data"] = json.dumps(loc)
         context["chart_colours"] = json.dumps(_CHART_COLOURS)
         return context
 
@@ -174,6 +183,10 @@ class LoggedInHomeView(LoginRequiredMixin, TemplateView):
 
 class AboutView(TemplateView):
     template_name = "pages/about.html"
+
+
+class VoiceDemoView(TemplateView):
+    template_name = "pages/voice_demo.html"
 
 
 class HowItWorksView(TemplateView):

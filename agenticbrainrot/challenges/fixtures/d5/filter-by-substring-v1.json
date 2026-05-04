@@ -82,5 +82,6 @@
     "complexity_score": 4.86,
     "num_test_cases": 4,
     "function_name": "filter_by_substring"
-  }
+  },
+  "reference_solution": "from typing import List\n\n\ndef filter_by_substring(strings: List[str], substring: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that contain given substring\n    >>> filter_by_substring([], 'a')\n    []\n    >>> filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')\n    ['abc', 'bacd', 'array']\n    \"\"\"\n    return [x for x in strings if substring in x]\n"
 }

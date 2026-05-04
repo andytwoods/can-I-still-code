@@ -66,5 +66,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "parallel_lines"
-  }
+  },
+  "reference_solution": "def parallel_lines(line1, line2):\n  return line1[0]/line1[1] == line2[0]/line2[1]"
 }

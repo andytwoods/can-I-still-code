@@ -1,0 +1,30 @@
+{
+  "external_id": "absolute-values-v1",
+  "title": "Absolute Values",
+  "description": "Write a Python function that returns a new list where every element is replaced with its absolute value.",
+  "skeleton_code": "def absolute_values(numbers):\n    pass\n",
+  "test_cases": [
+    {"input": [[-1, -2, 3]], "expected": [1, 2, 3], "description": "Mixed signs"},
+    {"input": [[1, 2, 3]], "expected": [1, 2, 3], "description": "All positive"},
+    {"input": [[-5, -10]], "expected": [5, 10], "description": "All negative"},
+    {"input": [[0, -3, 3]], "expected": [0, 3, 3], "description": "Includes zero"}
+  ],
+  "difficulty": 0,
+  "tags": ["lists", "math"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "absolute-values-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "absolute_values",
+    "type": "screening"
+  },
+  "reference_solution": "def absolute_values(numbers):\n    return [abs(x) for x in numbers]\n"
+}

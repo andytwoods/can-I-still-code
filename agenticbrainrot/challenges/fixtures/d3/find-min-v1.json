@@ -90,5 +90,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "Find_Min"
-  }
+  },
+  "reference_solution": "def Find_Min(lst): \n    minList = min((x) for x in lst) \n    return minList"
 }

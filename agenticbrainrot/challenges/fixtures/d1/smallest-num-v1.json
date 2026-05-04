@@ -56,5 +56,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "smallest_num"
-  }
+  },
+  "reference_solution": "def smallest_num(xs):\n  return min(xs)\n"
 }

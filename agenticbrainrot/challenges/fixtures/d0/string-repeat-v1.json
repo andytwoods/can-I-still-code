@@ -1,0 +1,52 @@
+{
+  "external_id": "string-repeat-v1",
+  "title": "Repeat a String",
+  "description": "Write a Python function that returns a string repeated n times. If n is 0 or less, return an empty string.",
+  "skeleton_code": "def repeat_string(s, n):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        "ab",
+        3
+      ],
+      "expected": "ababab",
+      "description": "Repeated three times"
+    },
+    {
+      "input": [
+        "hi",
+        1
+      ],
+      "expected": "hi",
+      "description": "Repeated once"
+    },
+    {
+      "input": [
+        "x",
+        0
+      ],
+      "expected": "",
+      "description": "Zero repetitions"
+    }
+  ],
+  "difficulty": 0,
+  "tags": [
+    "strings"
+  ],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "string-repeat-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 3,
+    "function_name": "repeat_string",
+    "type": "screening"
+  },
+  "reference_solution": "def repeat_string(s, n):\n    return s * n if n > 0 else ''\n"
+}

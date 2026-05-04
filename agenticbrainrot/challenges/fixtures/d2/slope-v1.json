@@ -50,5 +50,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "slope"
-  }
+  },
+  "reference_solution": "def slope(x1,y1,x2,y2): \n    return (float)(y2-y1)/(x2-x1)  "
 }

@@ -71,5 +71,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "move_first"
-  }
+  },
+  "reference_solution": "def move_first(test_list):\n  test_list = test_list[-1:] + test_list[:-1]  \n  return test_list"
 }

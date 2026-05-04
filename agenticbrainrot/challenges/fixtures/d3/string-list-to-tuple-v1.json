@@ -68,5 +68,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "string_list_to_tuple"
-  }
+  },
+  "reference_solution": "def string_list_to_tuple(str1):\n    result = tuple(x for x in str1 if not x.isspace()) \n    return result"
 }

@@ -137,5 +137,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "remove_matching_tuple"
-  }
+  },
+  "reference_solution": "def remove_matching_tuple(test_list1, test_list2):\n  res = [sub for sub in test_list1 if sub not in test_list2]\n  return (res) "
 }

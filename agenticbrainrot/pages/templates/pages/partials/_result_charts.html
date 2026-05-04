@@ -1,5 +1,6 @@
 {# Reusable chart canvases. Requires accuracy_data, speed_data, runs_data, chart_colours in context. #}
-{# JS initialisation lives in pages/partials/_result_charts_js.html — include that in extra_js. #}
+{# Optional: complexity_data, loc_data for extra metric charts.                                      #}
+{# JS initialisation lives in pages/partials/_result_charts_js.html — include that in extra_js.     #}
 <div class="columns is-multiline">
   <div class="column is-4">
     <div class="box">
@@ -28,4 +29,24 @@
       <p class="is-size-7 has-text-grey mt-2" id="runs-summary"></p>
     </div>
   </div>
+  {% if complexity_data %}
+  <div class="column is-4">
+    <div class="box">
+      <h2 class="title is-5">{{ complexity_chart_title|default:"Code Complexity" }}</h2>
+      <canvas id="complexity-chart"
+              aria-label="Line chart showing average cyclomatic complexity of submitted code over time"
+              role="img">Average cyclomatic complexity over time.</canvas>
+      <p class="is-size-7 has-text-grey mt-2" id="complexity-summary"></p>
+    </div>
+  </div>
+  <div class="column is-4">
+    <div class="box">
+      <h2 class="title is-5">{{ loc_chart_title|default:"Lines of Code" }}</h2>
+      <canvas id="loc-chart"
+              aria-label="Line chart showing average lines of code in submitted solutions over time"
+              role="img">Average lines of code per submission over time.</canvas>
+      <p class="is-size-7 has-text-grey mt-2" id="loc-summary"></p>
+    </div>
+  </div>
+  {% endif %}
 </div>

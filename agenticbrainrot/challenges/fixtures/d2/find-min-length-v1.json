@@ -77,5 +77,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "Find_Min_Length"
-  }
+  },
+  "reference_solution": "def Find_Min_Length(lst):  \n    minLength = min(len(x) for x in lst )\n    return minLength "
 }

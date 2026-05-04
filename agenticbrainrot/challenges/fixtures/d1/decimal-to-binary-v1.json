@@ -41,5 +41,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "decimal_to_binary"
-  }
+  },
+  "reference_solution": "def decimal_to_binary(n): \n    return bin(n).replace(\"0b\",\"\") "
 }

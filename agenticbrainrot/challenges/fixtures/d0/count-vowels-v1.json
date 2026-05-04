@@ -1,0 +1,50 @@
+{
+  "external_id": "count-vowels-v1",
+  "title": "Count Vowels",
+  "description": "Write a Python function that counts the number of vowels (a, e, i, o, u) in a string. Treat uppercase and lowercase vowels the same.",
+  "skeleton_code": "def count_vowels(s):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        "hello"
+      ],
+      "expected": 2,
+      "description": "Two vowels"
+    },
+    {
+      "input": [
+        "aeiou"
+      ],
+      "expected": 5,
+      "description": "All vowels"
+    },
+    {
+      "input": [
+        "xyz"
+      ],
+      "expected": 0,
+      "description": "No vowels"
+    }
+  ],
+  "difficulty": 0,
+  "tags": [
+    "strings",
+    "loops"
+  ],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "count-vowels-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 3,
+    "function_name": "count_vowels",
+    "type": "screening"
+  },
+  "reference_solution": "def count_vowels(s):\n    return sum(1 for c in s.lower() if c in 'aeiou')\n"
+}

@@ -65,5 +65,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "extract_rear"
-  }
+  },
+  "reference_solution": "def extract_rear(test_tuple):\n  res = list(sub[len(sub) - 1] for sub in test_tuple)\n  return (res) "
 }

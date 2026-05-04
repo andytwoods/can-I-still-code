@@ -58,5 +58,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "odd_position"
-  }
+  },
+  "reference_solution": "def odd_position(nums):\n\treturn all(nums[i]%2==i%2 for i in range(len(nums)))"
 }

@@ -1,7 +1,7 @@
 {
   "external_id": "get-carol-v1",
   "title": "Get Carol",
-  "description": "Write a function to find the n\u2019th carol number.",
+  "description": "Write a function to find the n’th carol number.",
   "skeleton_code": "def get_carol(n):\n    pass\n",
   "test_cases": [
     {
@@ -41,5 +41,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "get_carol"
-  }
+  },
+  "reference_solution": "def get_carol(n): \n\tresult = (2**n) - 1\n\treturn result * result - 2"
 }

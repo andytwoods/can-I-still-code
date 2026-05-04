@@ -1,0 +1,50 @@
+{
+  "external_id": "is-palindrome-v1",
+  "title": "Is Palindrome",
+  "description": "Write a Python function that returns True if a given string reads the same forwards and backwards, and False otherwise. Treat the string case-sensitively.",
+  "skeleton_code": "def is_palindrome(s):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        "racecar"
+      ],
+      "expected": true,
+      "description": "Classic palindrome"
+    },
+    {
+      "input": [
+        "hello"
+      ],
+      "expected": false,
+      "description": "Not a palindrome"
+    },
+    {
+      "input": [
+        "a"
+      ],
+      "expected": true,
+      "description": "Single character"
+    }
+  ],
+  "difficulty": 0,
+  "tags": [
+    "strings"
+  ],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "is-palindrome-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 3,
+    "function_name": "is_palindrome",
+    "type": "screening"
+  },
+  "reference_solution": "def is_palindrome(s):\n    return s == s[::-1]\n",
+  "clarification": "A palindrome reads the same forwards and backwards. The comparison is case-sensitive, so \"Racecar\" is not a palindrome but \"racecar\" is. Example: is_palindrome(\"madam\") \u2192 True, is_palindrome(\"hello\") \u2192 False."
+}

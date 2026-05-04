@@ -1,0 +1,30 @@
+{
+  "external_id": "string-strip-v1",
+  "title": "Strip Whitespace",
+  "description": "Write a Python function that removes leading and trailing whitespace from a string.",
+  "skeleton_code": "def string_strip(s):\n    pass\n",
+  "test_cases": [
+    {"input": ["  hello  "], "expected": "hello", "description": "Both sides"},
+    {"input": ["  leading"], "expected": "leading", "description": "Leading only"},
+    {"input": ["trailing  "], "expected": "trailing", "description": "Trailing only"},
+    {"input": ["no space"], "expected": "no space", "description": "No whitespace"}
+  ],
+  "difficulty": 0,
+  "tags": ["strings"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "string-strip-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "string_strip",
+    "type": "screening"
+  },
+  "reference_solution": "def string_strip(s):\n    return s.strip()\n"
+}

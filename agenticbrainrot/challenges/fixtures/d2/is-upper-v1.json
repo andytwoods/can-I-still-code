@@ -34,5 +34,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 2,
     "function_name": "is_upper"
-  }
+  },
+  "reference_solution": "def is_upper(string):\n  return (string.upper())"
 }

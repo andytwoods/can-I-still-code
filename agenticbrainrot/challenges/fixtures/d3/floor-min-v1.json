@@ -47,5 +47,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "floor_Min"
-  }
+  },
+  "reference_solution": "def floor_Min(A,B,N):\n    x = max(B - 1,N)\n    return (A*x) // B"
 }

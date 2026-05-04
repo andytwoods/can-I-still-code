@@ -101,5 +101,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "rear_extract"
-  }
+  },
+  "reference_solution": "def rear_extract(test_list):\n  res = [lis[-1] for lis in test_list]\n  return (res) "
 }

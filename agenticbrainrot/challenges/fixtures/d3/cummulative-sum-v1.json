@@ -83,5 +83,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "cummulative_sum"
-  }
+  },
+  "reference_solution": "def cummulative_sum(test_list):\n  res = sum(map(sum, test_list))\n  return (res)"
 }

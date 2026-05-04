@@ -68,5 +68,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "check_greater"
-  }
+  },
+  "reference_solution": "def check_greater(test_tup1, test_tup2):\n  res = all(x < y for x, y in zip(test_tup1, test_tup2))\n  return (res) "
 }

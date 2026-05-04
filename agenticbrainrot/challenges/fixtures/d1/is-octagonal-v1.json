@@ -41,5 +41,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "is_octagonal"
-  }
+  },
+  "reference_solution": "def is_octagonal(n): \n\treturn 3 * n * n - 2 * n "
 }

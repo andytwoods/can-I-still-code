@@ -1,7 +1,7 @@
 """
 Seed challenges from JSON fixture files.
 
-Reads individual challenge JSON files from challenges/fixtures/d1/ through d5/.
+Reads individual challenge JSON files from challenges/fixtures/d0/ through d5/.
 Idempotent: skips challenges whose external_id already exists.
 """
 
@@ -22,9 +22,9 @@ class Command(BaseCommand):
         parser.add_argument(
             "--tier",
             type=int,
-            choices=[1, 2, 3, 4, 5],
+            choices=[0, 1, 2, 3, 4, 5],
             default=None,
-            help="Only seed a specific tier (d1-d5).",
+            help="Only seed a specific tier (d0-d5).",
         )
 
     def handle(self, *args, **options):
@@ -33,7 +33,7 @@ class Command(BaseCommand):
         skipped = 0
         errors = 0
 
-        dirs = [FIXTURES_DIR / f"d{tier}"] if tier else sorted(FIXTURES_DIR.glob("d[1-5]"))
+        dirs = [FIXTURES_DIR / f"d{tier}"] if tier is not None else sorted(FIXTURES_DIR.glob("d[0-5]"))
 
         for tier_dir in dirs:
             if not tier_dir.is_dir():
@@ -43,7 +43,7 @@ class Command(BaseCommand):
             for json_file in sorted(tier_dir.glob("*.json")):
                 try:
                     data = json.loads(json_file.read_text())
-                    _, was_created = Challenge.objects.get_or_create(
+                    challenge, was_created = Challenge.objects.get_or_create(
                         external_id=data["external_id"],
                         defaults={
                             "title": data["title"],
@@ -54,9 +54,17 @@ class Command(BaseCommand):
                             "tags": data.get("tags", []),
                             "source": data.get("source", {}),
                             "source_metadata": data.get("metadata", {}),
-                            "is_active": True,
+                            "reference_solution": data.get("reference_solution", ""),
+                            "clarification": data.get("clarification", ""),
+                            "is_active": data.get("is_active", True),
                         },
                     )
+                    # Always sync clarification so it can be added to fixtures post-creation
+                    if not was_created:
+                        new_clarification = data.get("clarification", "")
+                        if challenge.clarification != new_clarification:
+                            challenge.clarification = new_clarification
+                            challenge.save(update_fields=["clarification"])
                     if was_created:
                         created += 1
                     else:

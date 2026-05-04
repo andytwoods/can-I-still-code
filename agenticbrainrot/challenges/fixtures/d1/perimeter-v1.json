@@ -44,5 +44,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "perimeter"
-  }
+  },
+  "reference_solution": "def perimeter(diameter,height) : \n    return 2*(diameter+height)  "
 }

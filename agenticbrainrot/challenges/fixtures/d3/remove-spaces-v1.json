@@ -41,5 +41,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "remove_spaces"
-  }
+  },
+  "reference_solution": "def remove_spaces(str1):\n  str1 = str1.replace(' ','')\n  return str1"
 }

@@ -1,0 +1,30 @@
+{
+  "external_id": "swap-case-v1",
+  "title": "Swap Case",
+  "description": "Write a Python function that returns the string with uppercase letters converted to lowercase and lowercase letters converted to uppercase.",
+  "skeleton_code": "def swap_case(s):\n    pass\n",
+  "test_cases": [
+    {"input": ["Hello"], "expected": "hELLO", "description": "Mixed case"},
+    {"input": ["PYTHON"], "expected": "python", "description": "All uppercase"},
+    {"input": ["python"], "expected": "PYTHON", "description": "All lowercase"},
+    {"input": [""], "expected": "", "description": "Empty string"}
+  ],
+  "difficulty": 0,
+  "tags": ["strings"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "swap-case-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "swap_case",
+    "type": "screening"
+  },
+  "reference_solution": "def swap_case(s):\n    return s.swapcase()\n"
+}

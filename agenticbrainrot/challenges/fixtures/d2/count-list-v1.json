@@ -81,5 +81,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "count_list"
-  }
+  },
+  "reference_solution": "def count_list(input_list): \n    return len(input_list)"
 }

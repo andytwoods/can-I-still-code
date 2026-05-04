@@ -1,0 +1,46 @@
+{
+  "external_id": "join-list-v1",
+  "title": "Join a List",
+  "description": "Write a Python function that joins a list of strings into a single string, with a given separator between each element.",
+  "skeleton_code": "def join_list(items, separator):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [["a", "b", "c"], ","],
+      "expected": "a,b,c",
+      "description": "Comma separator"
+    },
+    {
+      "input": [["hello", "world"], " "],
+      "expected": "hello world",
+      "description": "Space separator"
+    },
+    {
+      "input": [["one", "two", "three"], " - "],
+      "expected": "one - two - three",
+      "description": "Multi-character separator"
+    },
+    {
+      "input": [["only"], ","],
+      "expected": "only",
+      "description": "Single element"
+    }
+  ],
+  "difficulty": 0,
+  "tags": ["strings", "lists"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "join-list-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "join_list",
+    "type": "screening"
+  },
+  "reference_solution": "def join_list(items, separator):\n    return separator.join(items)\n"
+}

@@ -40,5 +40,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 2,
     "function_name": "Convert"
-  }
+  },
+  "reference_solution": "def Convert(string): \n    li = list(string.split(\" \")) \n    return li "
 }

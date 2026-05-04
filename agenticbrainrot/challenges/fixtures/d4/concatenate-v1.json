@@ -50,5 +50,6 @@
     "complexity_score": 4.23,
     "num_test_cases": 3,
     "function_name": "concatenate"
-  }
+  },
+  "reference_solution": "from typing import List\n\n\ndef concatenate(strings: List[str]) -> str:\n    \"\"\" Concatenate list of strings into a single string\n    >>> concatenate([])\n    ''\n    >>> concatenate(['a', 'b', 'c'])\n    'abc'\n    \"\"\"\n    return ''.join(strings)\n"
 }

@@ -1,0 +1,51 @@
+{
+  "external_id": "fizzbuzz-v1",
+  "title": "FizzBuzz",
+  "description": "Write a Python function that takes an integer n and returns 'Fizz' if it is divisible by 3, 'Buzz' if divisible by 5, 'FizzBuzz' if divisible by both, and the number as a string otherwise.",
+  "skeleton_code": "def fizzbuzz(n):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        15
+      ],
+      "expected": "FizzBuzz",
+      "description": "Divisible by both 3 and 5"
+    },
+    {
+      "input": [
+        9
+      ],
+      "expected": "Fizz",
+      "description": "Divisible by 3 only"
+    },
+    {
+      "input": [
+        10
+      ],
+      "expected": "Buzz",
+      "description": "Divisible by 5 only"
+    }
+  ],
+  "difficulty": 0,
+  "tags": [
+    "numbers",
+    "conditionals"
+  ],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "fizzbuzz-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 3,
+    "function_name": "fizzbuzz",
+    "type": "screening"
+  },
+  "reference_solution": "def fizzbuzz(n):\n    if n % 15 == 0:\n        return 'FizzBuzz'\n    if n % 3 == 0:\n        return 'Fizz'\n    if n % 5 == 0:\n        return 'Buzz'\n    return str(n)\n",
+  "clarification": "Return \"FizzBuzz\" for multiples of both 3 and 5, \"Fizz\" for multiples of 3 only, \"Buzz\" for multiples of 5 only, and the number as a string otherwise. Example: fizzbuzz(15) \u2192 \"FizzBuzz\", fizzbuzz(9) \u2192 \"Fizz\", fizzbuzz(10) \u2192 \"Buzz\", fizzbuzz(7) \u2192 \"7\"."
+}

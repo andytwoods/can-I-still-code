@@ -1,0 +1,30 @@
+{
+  "external_id": "average-v1",
+  "title": "Average of a List",
+  "description": "Write a Python function that returns the average (mean) of a list of numbers. You can assume the list is non-empty.",
+  "skeleton_code": "def average(numbers):\n    pass\n",
+  "test_cases": [
+    {"input": [[1, 2, 3]], "expected": 2.0, "description": "Simple average"},
+    {"input": [[10, 20]], "expected": 15.0, "description": "Two numbers"},
+    {"input": [[5]], "expected": 5.0, "description": "Single number"},
+    {"input": [[1, 2, 3, 4, 5]], "expected": 3.0, "description": "Five numbers"}
+  ],
+  "difficulty": 0,
+  "tags": ["lists", "math"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "average-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "average",
+    "type": "screening"
+  },
+  "reference_solution": "def average(numbers):\n    return sum(numbers) / len(numbers)\n"
+}

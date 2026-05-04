@@ -92,5 +92,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "max_of_nth"
-  }
+  },
+  "reference_solution": "def max_of_nth(test_list, N):\n  res = max([sub[N] for sub in test_list])\n  return (res) "
 }

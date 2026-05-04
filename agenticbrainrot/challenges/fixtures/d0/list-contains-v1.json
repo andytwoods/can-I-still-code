@@ -1,0 +1,30 @@
+{
+  "external_id": "list-contains-v1",
+  "title": "Check if List Contains a Value",
+  "description": "Write a Python function that returns True if the given value is in the list, and False otherwise.",
+  "skeleton_code": "def list_contains(lst, value):\n    pass\n",
+  "test_cases": [
+    {"input": [[1, 2, 3], 2], "expected": true, "description": "Value present"},
+    {"input": [[1, 2, 3], 5], "expected": false, "description": "Value absent"},
+    {"input": [[], 1], "expected": false, "description": "Empty list"},
+    {"input": [["a", "b", "c"], "b"], "expected": true, "description": "String value"}
+  ],
+  "difficulty": 0,
+  "tags": ["lists"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "list-contains-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "list_contains",
+    "type": "screening"
+  },
+  "reference_solution": "def list_contains(lst, value):\n    return value in lst\n"
+}

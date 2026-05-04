@@ -71,5 +71,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "lcopy"
-  }
+  },
+  "reference_solution": "def lcopy(xs):\n  return xs[:]\n"
 }

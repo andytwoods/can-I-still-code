@@ -1,12 +1,15 @@
 {# Chart.js initialisation. Requires Chart.js + chartjs-adapter-date-fns already loaded. #}
 {# Requires accuracy_data, speed_data, runs_data, chart_colours in context.              #}
+{# Optional: complexity_data, loc_data for extra metric charts.                          #}
 <script>
   (function () {
     {# djlint:off #}
-    var accuracyData = {{ accuracy_data|safe }};
-    var speedData    = {{ speed_data|safe }};
-    var runsData     = {{ runs_data|safe }};
-    var colours      = {{ chart_colours|safe }};
+    var accuracyData   = {{ accuracy_data|safe }};
+    var speedData      = {{ speed_data|safe }};
+    var runsData       = {{ runs_data|safe }};
+    var complexityData = {{ complexity_data|default:"null"|safe }};
+    var locData        = {{ loc_data|default:"null"|safe }};
+    var colours        = {{ chart_colours|safe }};
     {# djlint:on #}
 
     var accValues = accuracyData.map(function(d) { return d.y; });
@@ -58,6 +61,12 @@
     makeChart("accuracy-chart", accuracyData, colours.accuracy, colours.accuracy_bg, 100);
     makeChart("speed-chart",    speedData,    colours.speed,    colours.speed_bg);
     makeChart("runs-chart",     runsData,     colours.runs,     colours.runs_bg);
+    if (complexityData) {
+      makeChart("complexity-chart", complexityData, colours.complexity, colours.complexity_bg);
+    }
+    if (locData) {
+      makeChart("loc-chart", locData, colours.loc, colours.loc_bg);
+    }
 
     function setSummary(id, values, unit) {
       var el = document.getElementById(id);
@@ -72,8 +81,14 @@
       el.textContent = txt;
     }
 
-    setSummary("accuracy-summary", accValues, "%");
-    setSummary("speed-summary",    spdValues, "s");
-    setSummary("runs-summary",     runValues, "");
+    setSummary("accuracy-summary",   accValues, "%");
+    setSummary("speed-summary",      spdValues, "s");
+    setSummary("runs-summary",       runValues, "");
+    if (complexityData) {
+      setSummary("complexity-summary", complexityData.map(function(d) { return d.y; }), "");
+    }
+    if (locData) {
+      setSummary("loc-summary", locData.map(function(d) { return d.y; }), " lines");
+    }
   })();
 </script>

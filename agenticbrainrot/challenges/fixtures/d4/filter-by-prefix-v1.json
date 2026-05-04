@@ -46,5 +46,6 @@
     "complexity_score": 4.41,
     "num_test_cases": 2,
     "function_name": "filter_by_prefix"
-  }
+  },
+  "reference_solution": "from typing import List\n\n\ndef filter_by_prefix(strings: List[str], prefix: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that start with a given prefix.\n    >>> filter_by_prefix([], 'a')\n    []\n    >>> filter_by_prefix(['abc', 'bcd', 'cde', 'array'], 'a')\n    ['abc', 'array']\n    \"\"\"\n    return [x for x in strings if x.startswith(prefix)]\n"
 }

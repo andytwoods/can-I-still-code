@@ -1,0 +1,30 @@
+{
+  "external_id": "list-first-n-v1",
+  "title": "First N Elements",
+  "description": "Write a Python function that returns the first `n` elements of a list.",
+  "skeleton_code": "def list_first_n(lst, n):\n    pass\n",
+  "test_cases": [
+    {"input": [[1, 2, 3, 4, 5], 3], "expected": [1, 2, 3], "description": "First three"},
+    {"input": [[1, 2, 3], 0], "expected": [], "description": "Zero elements"},
+    {"input": [["a", "b", "c"], 2], "expected": ["a", "b"], "description": "Strings"},
+    {"input": [[1, 2, 3], 3], "expected": [1, 2, 3], "description": "All elements"}
+  ],
+  "difficulty": 0,
+  "tags": ["lists"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "list-first-n-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "list_first_n",
+    "type": "screening"
+  },
+  "reference_solution": "def list_first_n(lst, n):\n    return lst[:n]\n"
+}

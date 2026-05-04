@@ -54,5 +54,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "big_diff"
-  }
+  },
+  "reference_solution": "def big_diff(nums):\n     diff= max(nums)-min(nums)\n     return diff"
 }

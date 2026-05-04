@@ -127,5 +127,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "merge"
-  }
+  },
+  "reference_solution": "def merge(lst):  \n    return [list(ele) for ele in list(zip(*lst))] "
 }

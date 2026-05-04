@@ -1,0 +1,59 @@
+{
+  "external_id": "list-sum-v1",
+  "title": "Sum a List",
+  "description": "Write a Python function that returns the sum of all numbers in a list. Return 0 for an empty list.",
+  "skeleton_code": "def list_sum(lst):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expected": 6,
+      "description": "Three positive integers"
+    },
+    {
+      "input": [
+        [
+          10,
+          -5,
+          3
+        ]
+      ],
+      "expected": 8,
+      "description": "Mixed positive and negative"
+    },
+    {
+      "input": [
+        []
+      ],
+      "expected": 0,
+      "description": "Empty list returns 0"
+    }
+  ],
+  "difficulty": 0,
+  "tags": [
+    "lists",
+    "numbers"
+  ],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "list-sum-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 3,
+    "function_name": "list_sum",
+    "type": "screening"
+  },
+  "reference_solution": "def list_sum(lst):\n    return sum(lst)\n",
+  "is_active": false
+}

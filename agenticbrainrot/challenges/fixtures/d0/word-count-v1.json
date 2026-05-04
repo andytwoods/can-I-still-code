@@ -1,0 +1,49 @@
+{
+  "external_id": "word-count-v1",
+  "title": "Word Count",
+  "description": "Write a Python function that returns the number of words in a sentence. Words are separated by spaces. An empty string has zero words.",
+  "skeleton_code": "def word_count(sentence):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        "hello world"
+      ],
+      "expected": 2,
+      "description": "Two words"
+    },
+    {
+      "input": [
+        "one two three four"
+      ],
+      "expected": 4,
+      "description": "Four words"
+    },
+    {
+      "input": [
+        ""
+      ],
+      "expected": 0,
+      "description": "Empty string"
+    }
+  ],
+  "difficulty": 0,
+  "tags": [
+    "strings"
+  ],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "word-count-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 3,
+    "function_name": "word_count",
+    "type": "screening"
+  },
+  "reference_solution": "def word_count(sentence):\n    return len(sentence.split())\n"
+}

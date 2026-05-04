@@ -312,6 +312,24 @@ def session_view(request, session_id):
     return _render_session_get(request, session)
 
 
+def _parse_complexity(raw):
+    if not raw:
+        return None
+    try:
+        return json.loads(raw)
+    except (ValueError, TypeError):
+        return None
+
+
+def _parse_float_or_none(raw):
+    if not raw:
+        return None
+    try:
+        return float(raw)
+    except (ValueError, TypeError):
+        return None
+
+
 def _handle_submit(request, session, participant):
     """Handle challenge submission."""
     attempt_uuid = request.POST.get("attempt_uuid", "")
@@ -353,6 +371,8 @@ def _handle_submit(request, session, participant):
         keystroke_count=int(request.POST.get("keystroke_count", 0)),
         tab_blur_count=int(request.POST.get("tab_blur_count", 0)),
         run_count=int(request.POST.get("run_count", 0)),
+        complexity_metrics=_parse_complexity(request.POST.get("complexity_metrics", "")),
+        efficiency_ratio=_parse_float_or_none(request.POST.get("efficiency_ratio", "")),
         submitted_at=timezone.now(),
         skipped=False,
     )

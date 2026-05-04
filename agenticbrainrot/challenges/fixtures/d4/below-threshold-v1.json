@@ -71,5 +71,6 @@
     "complexity_score": 4.64,
     "num_test_cases": 4,
     "function_name": "below_threshold"
-  }
+  },
+  "reference_solution": "\n\ndef below_threshold(l: list, t: int):\n    \"\"\"Return True if all numbers in the list l are below threshold t.\n    >>> below_threshold([1, 2, 4, 10], 100)\n    True\n    >>> below_threshold([1, 20, 4, 10], 5)\n    False\n    \"\"\"\n    for e in l:\n        if e >= t:\n            return False\n    return True\n"
 }

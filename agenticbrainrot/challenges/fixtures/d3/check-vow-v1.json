@@ -36,5 +36,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 2,
     "function_name": "Check_Vow"
-  }
+  },
+  "reference_solution": "def Check_Vow(string, vowels): \n    final = [each for each in string if each in vowels] \n    return(len(final)) \n"
 }

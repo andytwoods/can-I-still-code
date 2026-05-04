@@ -47,5 +47,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "find_Volume"
-  }
+  },
+  "reference_solution": "def find_Volume(l,b,h) : \n    return ((l * b * h) / 2) "
 }

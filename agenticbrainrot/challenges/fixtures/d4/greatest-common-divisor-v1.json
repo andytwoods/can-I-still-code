@@ -51,5 +51,6 @@
     "complexity_score": 4.53,
     "num_test_cases": 4,
     "function_name": "greatest_common_divisor"
-  }
+  },
+  "reference_solution": "\n\ndef greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\" Return a greatest common divisor of two integers a and b\n    >>> greatest_common_divisor(3, 5)\n    1\n    >>> greatest_common_divisor(25, 15)\n    5\n    \"\"\"\n    while b:\n        a, b = b, a % b\n    return a\n"
 }

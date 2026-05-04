@@ -40,5 +40,6 @@
     "complexity_score": 4.01,
     "num_test_cases": 3,
     "function_name": "strlen"
-  }
+  },
+  "reference_solution": "\n\ndef strlen(string: str) -> int:\n    \"\"\" Return length of given string\n    >>> strlen('')\n    0\n    >>> strlen('abc')\n    3\n    \"\"\"\n    return len(string)\n"
 }

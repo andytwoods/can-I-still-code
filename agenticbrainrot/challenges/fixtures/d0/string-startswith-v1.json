@@ -1,0 +1,30 @@
+{
+  "external_id": "string-startswith-v1",
+  "title": "Check String Start",
+  "description": "Write a Python function that returns True if the string `s` starts with `prefix`, and False otherwise.",
+  "skeleton_code": "def string_startswith(s, prefix):\n    pass\n",
+  "test_cases": [
+    {"input": ["hello world", "hello"], "expected": true, "description": "Matches"},
+    {"input": ["hello world", "world"], "expected": false, "description": "Does not match"},
+    {"input": ["Python", "Py"], "expected": true, "description": "Short prefix"},
+    {"input": ["", "a"], "expected": false, "description": "Empty string"}
+  ],
+  "difficulty": 0,
+  "tags": ["strings"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "string-startswith-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "string_startswith",
+    "type": "screening"
+  },
+  "reference_solution": "def string_startswith(s, prefix):\n    return s.startswith(prefix)\n"
+}

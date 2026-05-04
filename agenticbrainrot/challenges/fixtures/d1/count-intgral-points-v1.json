@@ -50,5 +50,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "count_Intgral_Points"
-  }
+  },
+  "reference_solution": "def count_Intgral_Points(x1,y1,x2,y2): \n    return ((y2 - y1 - 1) * (x2 - x1 - 1)) "
 }

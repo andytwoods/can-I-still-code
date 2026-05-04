@@ -54,5 +54,6 @@
     "complexity_score": 4.47,
     "num_test_cases": 5,
     "function_name": "fib"
-  }
+  },
+  "reference_solution": "\n\ndef fib(n: int):\n    \"\"\"Return n-th Fibonacci number.\n    >>> fib(10)\n    55\n    >>> fib(1)\n    1\n    >>> fib(8)\n    21\n    \"\"\"\n    if n == 0:\n        return 0\n    if n == 1:\n        return 1\n    return fib(n - 1) + fib(n - 2)\n"
 }

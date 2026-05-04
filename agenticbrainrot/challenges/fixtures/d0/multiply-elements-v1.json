@@ -1,0 +1,30 @@
+{
+  "external_id": "multiply-elements-v1",
+  "title": "Multiply List Elements",
+  "description": "Write a Python function that returns a new list where every element has been multiplied by `factor`.",
+  "skeleton_code": "def multiply_elements(lst, factor):\n    pass\n",
+  "test_cases": [
+    {"input": [[1, 2, 3], 2], "expected": [2, 4, 6], "description": "Multiply by 2"},
+    {"input": [[5, 10], 3], "expected": [15, 30], "description": "Multiply by 3"},
+    {"input": [[1, 2, 3], 0], "expected": [0, 0, 0], "description": "Multiply by 0"},
+    {"input": [[], 5], "expected": [], "description": "Empty list"}
+  ],
+  "difficulty": 0,
+  "tags": ["lists"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "multiply-elements-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "multiply_elements",
+    "type": "screening"
+  },
+  "reference_solution": "def multiply_elements(lst, factor):\n    return [x * factor for x in lst]\n"
+}

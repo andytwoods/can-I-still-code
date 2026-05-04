@@ -152,5 +152,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "maximum_value"
-  }
+  },
+  "reference_solution": "def maximum_value(test_list):\n  res = [(key, max(lst)) for key, lst in test_list]\n  return (res) "
 }

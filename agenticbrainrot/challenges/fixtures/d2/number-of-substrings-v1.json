@@ -41,5 +41,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "number_of_substrings"
-  }
+  },
+  "reference_solution": "def number_of_substrings(str): \n\tstr_len = len(str); \n\treturn int(str_len * (str_len + 1) / 2); "
 }

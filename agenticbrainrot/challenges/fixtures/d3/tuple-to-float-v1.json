@@ -50,5 +50,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "tuple_to_float"
-  }
+  },
+  "reference_solution": "def tuple_to_float(test_tup):\n  res = float('.'.join(str(ele) for ele in test_tup))\n  return (res) "
 }

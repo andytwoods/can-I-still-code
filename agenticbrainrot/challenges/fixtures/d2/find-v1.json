@@ -44,5 +44,6 @@
     "complexity_score": 0.75,
     "num_test_cases": 3,
     "function_name": "find"
-  }
+  },
+  "reference_solution": "def find(n,m):  \n    q = n//m \n    return (q)"
 }

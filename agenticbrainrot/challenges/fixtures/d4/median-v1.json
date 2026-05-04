@@ -80,5 +80,6 @@
     "complexity_score": 4.64,
     "num_test_cases": 5,
     "function_name": "median"
-  }
+  },
+  "reference_solution": "\n\ndef median(l: list):\n    \"\"\"Return median of elements in the list l.\n    >>> median([3, 1, 2, 4, 5])\n    3\n    >>> median([-10, 4, 6, 1000, 10, 20])\n    15.0\n    \"\"\"\n    l = sorted(l)\n    if len(l) % 2 == 1:\n        return l[len(l) // 2]\n    else:\n        return (l[len(l) // 2 - 1] + l[len(l) // 2]) / 2.0\n"
 }

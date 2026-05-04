@@ -1,0 +1,30 @@
+{
+  "external_id": "string-replace-v1",
+  "title": "Replace in a String",
+  "description": "Write a Python function that returns a new string with all occurrences of `old` replaced by `new`.",
+  "skeleton_code": "def string_replace(s, old, new):\n    pass\n",
+  "test_cases": [
+    {"input": ["hello world", "world", "Python"], "expected": "hello Python", "description": "Basic replace"},
+    {"input": ["aabbaa", "a", "x"], "expected": "xxbbxx", "description": "Multiple occurrences"},
+    {"input": ["no match", "z", "y"], "expected": "no match", "description": "No match"},
+    {"input": ["", "a", "b"], "expected": "", "description": "Empty string"}
+  ],
+  "difficulty": 0,
+  "tags": ["strings"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "string-replace-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "string_replace",
+    "type": "screening"
+  },
+  "reference_solution": "def string_replace(s, old, new):\n    return s.replace(old, new)\n"
+}

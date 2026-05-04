@@ -1,0 +1,57 @@
+{
+  "external_id": "clamp-v1",
+  "title": "Clamp a Number",
+  "description": "Write a Python function that clamps a number between a minimum and maximum value. If the number is below min_val, return min_val. If it is above max_val, return max_val. Otherwise return the number unchanged.",
+  "skeleton_code": "def clamp(n, min_val, max_val):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        5,
+        1,
+        10
+      ],
+      "expected": 5,
+      "description": "Within range"
+    },
+    {
+      "input": [
+        0,
+        1,
+        10
+      ],
+      "expected": 1,
+      "description": "Below minimum"
+    },
+    {
+      "input": [
+        15,
+        1,
+        10
+      ],
+      "expected": 10,
+      "description": "Above maximum"
+    }
+  ],
+  "difficulty": 0,
+  "tags": [
+    "numbers",
+    "conditionals"
+  ],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "clamp-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 3,
+    "function_name": "clamp",
+    "type": "screening"
+  },
+  "reference_solution": "def clamp(n, min_val, max_val):\n    return max(min_val, min(max_val, n))\n",
+  "clarification": "Return the number unchanged if it falls within [min_val, max_val]. If it is below min_val, return min_val; if above max_val, return max_val. Example: clamp(5, 1, 10) \u2192 5, clamp(0, 1, 10) \u2192 1, clamp(15, 1, 10) \u2192 10."
+}

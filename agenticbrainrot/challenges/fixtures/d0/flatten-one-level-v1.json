@@ -1,0 +1,81 @@
+{
+  "external_id": "flatten-one-level-v1",
+  "title": "Flatten One Level",
+  "description": "Write a Python function that flattens a list of lists by one level, returning a single list containing all the elements of the inner lists.",
+  "skeleton_code": "def flatten(lst):\n    pass\n",
+  "test_cases": [
+    {
+      "input": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expected": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "description": "Two inner lists"
+    },
+    {
+      "input": [
+        [
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ]
+        ]
+      ],
+      "expected": [
+        1,
+        2,
+        3
+      ],
+      "description": "Three single-element lists"
+    },
+    {
+      "input": [
+        [
+          []
+        ]
+      ],
+      "expected": [],
+      "description": "Single empty inner list"
+    }
+  ],
+  "difficulty": 0,
+  "tags": [
+    "lists",
+    "loops"
+  ],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "flatten-one-level-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 3,
+    "function_name": "flatten",
+    "type": "screening"
+  },
+  "clarification": "Only go one level deep — each element of the outer list is assumed to be a list, and you collect their contents. Example: flatten([[1, 2], [3, 4]]) → [1, 2, 3, 4]. If an inner list contains further lists, leave them as-is: flatten([[1, [2]], [3]]) → [1, [2], 3].",
+  "reference_solution": "def flatten(lst):\n    return [item for sublist in lst for item in sublist]\n"
+}

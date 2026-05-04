@@ -1,0 +1,30 @@
+{
+  "external_id": "list-length-v1",
+  "title": "Length of a List",
+  "description": "Write a Python function that returns the number of elements in a list.",
+  "skeleton_code": "def list_length(lst):\n    pass\n",
+  "test_cases": [
+    {"input": [[1, 2, 3]], "expected": 3, "description": "Three elements"},
+    {"input": [[]], "expected": 0, "description": "Empty list"},
+    {"input": [["a"]], "expected": 1, "description": "Single element"},
+    {"input": [[1, 2, 3, 4, 5, 6]], "expected": 6, "description": "Six elements"}
+  ],
+  "difficulty": 0,
+  "tags": ["lists"],
+  "source": {
+    "dataset": "agenticbrainrot-level0",
+    "paper": null,
+    "paper_url": null,
+    "license": "CC-BY-4.0",
+    "repository": "https://github.com/andytwoods/agenticbrainrot",
+    "dataset_id": "list-length-v1",
+    "dataset_split": "screening"
+  },
+  "metadata": {
+    "complexity_score": 0.1,
+    "num_test_cases": 4,
+    "function_name": "list_length",
+    "type": "screening"
+  },
+  "reference_solution": "def list_length(lst):\n    return len(lst)\n"
+}

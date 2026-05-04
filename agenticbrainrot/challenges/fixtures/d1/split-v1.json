@@ -61,5 +61,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "split"
-  }
+  },
+  "reference_solution": "def split(word): \n    return [char for char in word] "
 }

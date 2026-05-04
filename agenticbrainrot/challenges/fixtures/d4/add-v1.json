@@ -59,5 +59,6 @@
     "complexity_score": 4.36,
     "num_test_cases": 5,
     "function_name": "add"
-  }
+  },
+  "reference_solution": "\n\ndef add(x: int, y: int):\n    \"\"\"Add two numbers x and y\n    >>> add(2, 3)\n    5\n    >>> add(5, 7)\n    12\n    \"\"\"\n    return x + y\n"
 }

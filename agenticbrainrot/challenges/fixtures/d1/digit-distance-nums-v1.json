@@ -44,5 +44,6 @@
     "complexity_score": 0.5,
     "num_test_cases": 3,
     "function_name": "digit_distance_nums"
-  }
+  },
+  "reference_solution": "def digit_distance_nums(n1, n2):\n         return sum(map(int,str(abs(n1-n2))))"
 }

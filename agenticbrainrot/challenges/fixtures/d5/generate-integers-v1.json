@@ -78,5 +78,6 @@
     "complexity_score": 5.01,
     "num_test_cases": 4,
     "function_name": "generate_integers"
-  }
+  },
+  "reference_solution": "\ndef generate_integers(a, b):\n    \"\"\"\n    Given two positive integers a and b, return the even digits between a\n    and b, in ascending order.\n\n    For example:\n    generate_integers(2, 8) => [2, 4, 6, 8]\n    generate_integers(8, 2) => [2, 4, 6, 8]\n    generate_integers(10, 14) => []\n    \"\"\"\n    lower = max(2, min(a, b))\n    upper = min(8, max(a, b))\n\n    return [i for i in range(lower, upper+1) if i % 2 == 0]\n"
 }

@@ -31,25 +31,18 @@ def select_challenges_for_session(participant):
     tier_distribution = study["TIER_DISTRIBUTION"]
     challenges_per_session = study["CHALLENGES_PER_SESSION"]
 
-    # Get all already-seen challenge IDs for this participant
     seen_ids = set(
         ChallengeAttempt.objects.filter(
             participant=participant,
         ).values_list("challenge_id", flat=True),
     )
 
-    # Get available challenges by tier
+    # Get available unseen challenges by tier
     available_by_tier = {}
     for tier_str in sorted(tier_distribution.keys()):
         tier = int(tier_str)
-        available_by_tier[tier] = list(
-            Challenge.objects.filter(
-                difficulty=tier,
-                is_active=True,
-            )
-            .exclude(pk__in=seen_ids)
-            .values_list("pk", flat=True),
-        )
+        qs = Challenge.objects.filter(difficulty=tier, is_active=True).exclude(pk__in=seen_ids)
+        available_by_tier[tier] = list(qs.values_list("pk", flat=True))
 
     total_available = sum(len(v) for v in available_by_tier.values())
 
