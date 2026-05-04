@@ -7,6 +7,15 @@
   <div class="columns is-centered">
     <div class="column is-10">
       <h1 class="title">My Results</h1>
+      {% if resumable_session %}
+        <div class="notification is-warning is-light mb-4">
+          <p class="is-size-5">You have an unfinished session.</p>
+          <p class="mt-2">
+            <a href="{% url 'coding_sessions:session_view' resumable_session.pk %}"
+               class="button is-warning">Resume and complete survey</a>
+          </p>
+        </div>
+      {% endif %}
       {% if not has_sessions %}
         <div class="notification is-info is-light">
           <p class="is-size-5">You haven't completed any sessions yet.</p>

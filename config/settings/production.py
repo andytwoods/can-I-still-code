@@ -95,6 +95,7 @@ EMAIL_SUBJECT_PREFIX = env(
     default="[Can I Still CFode] ",
 )
 ACCOUNT_EMAIL_SUBJECT_PREFIX = EMAIL_SUBJECT_PREFIX
+MFA_PASSKEY_SIGNUP_ENABLED = True
 
 # ADMIN
 # ------------------------------------------------------------------------------

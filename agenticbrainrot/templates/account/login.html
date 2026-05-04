@@ -1,0 +1,160 @@
+{% extends "account/base_entrance.html" %}
+{% load i18n %}
+{% load allauth account %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock head_title %}
+
+{% block content %}
+  <h1 class="title">{% trans "Sign In" %}</h1>
+
+  {# ── Passkey (primary method) ─────────────────────────────────────────── #}
+  {% if PASSKEY_LOGIN_ENABLED %}
+    <div class="mb-4">
+      <button id="passkey_login"
+              form="mfa_login"
+              class="button is-primary is-fullwidth is-medium"
+              type="button">
+        <span class="icon"><i class="fas fa-fingerprint"></i></span>
+        <span>{% trans "Sign in with passkey" %}</span>
+      </button>
+      <p class="help has-text-centered mt-1">
+        {% trans "Use your device biometrics or PIN — no password needed." %}
+      </p>
+    </div>
+  {% endif %}
+
+  {# ── Social login ─────────────────────────────────────────────────────── #}
+  {% if SOCIALACCOUNT_ENABLED %}
+    {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+  {% endif %}
+
+  {# ── Email / password (secondary, collapsed) ──────────────────────────── #}
+  {% if not SOCIALACCOUNT_ONLY %}
+    <details class="mt-4">
+      <summary class="has-text-grey is-size-7" style="cursor:pointer;list-style:none;">
+        <span class="icon-text">
+          <span class="icon"><i class="fas fa-chevron-right fa-xs"></i></span>
+          <span>{% trans "Sign in with email and password instead" %}</span>
+        </span>
+      </summary>
+      <div class="box mt-3">
+        {% url 'account_login' as login_url %}
+        <form method="post" action="{{ login_url }}">
+          {% csrf_token %}
+          {{ redirect_field }}
+          <div class="field">
+            <label class="label" for="{{ form.login.id_for_label }}">{% trans "Email" %}</label>
+            <div class="control has-icons-left">
+              <input id="{{ form.login.id_for_label }}"
+                     name="{{ form.login.html_name }}"
+                     type="email"
+                     class="input{% if form.login.errors %} is-danger{% endif %}"
+                     placeholder="{% trans 'you@example.com' %}"
+                     autocomplete="username webauthn"
+                     value="{{ form.login.value|default:'' }}"
+                     required />
+              <span class="icon is-left"><i class="fas fa-envelope"></i></span>
+            </div>
+            {% for error in form.login.errors %}
+              <p class="help is-danger">{{ error }}</p>
+            {% endfor %}
+          </div>
+          <div class="field">
+            <label class="label" for="{{ form.password.id_for_label }}">{% trans "Password" %}</label>
+            <div class="control has-icons-left">
+              <input id="{{ form.password.id_for_label }}"
+                     name="{{ form.password.html_name }}"
+                     type="password"
+                     class="input{% if form.password.errors %} is-danger{% endif %}"
+                     placeholder="{% trans 'Password' %}"
+                     autocomplete="current-password"
+                     required />
+              <span class="icon is-left"><i class="fas fa-lock"></i></span>
+            </div>
+            {% for error in form.password.errors %}
+              <p class="help is-danger">{{ error }}</p>
+            {% endfor %}
+          </div>
+          {% if form.remember %}
+            <div class="field">
+              <label class="checkbox">
+                <input type="checkbox"
+                       name="{{ form.remember.html_name }}"
+                       {% if form.remember.value %}checked{% endif %} />
+                {% trans "Remember me" %}
+              </label>
+            </div>
+          {% endif %}
+          {% if form.non_field_errors %}
+            <div class="notification is-danger is-light">
+              {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+          <div class="field">
+            <div class="control">
+              <button type="submit" class="button is-primary is-fullwidth">
+                {% trans "Sign In" %}
+              </button>
+            </div>
+          </div>
+          <div class="level is-mobile mt-2">
+            <div class="level-left">
+              <a class="level-item is-size-7" href="{% url 'account_reset_password' %}">
+                {% trans "Forgot password?" %}
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </details>
+  {% endif %}
+{% endblock content %}
+
+{% block extra_body %}
+  {{ block.super }}
+  {% if PASSKEY_LOGIN_ENABLED %}
+    {% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}
+    <script>
+      (function () {
+        // Conditional UI: surface stored passkeys in the email autofill
+        var emailInput = document.querySelector('input[autocomplete~="webauthn"]');
+        if (!emailInput || !window.PublicKeyCredential) return;
+        PublicKeyCredential.isConditionalMediationAvailable &&
+          PublicKeyCredential.isConditionalMediationAvailable().then(function (available) {
+            if (!available) return;
+            var abortCtrl = new AbortController();
+            // Abort conditional request before the explicit passkey button fires
+            document.getElementById("passkey_login").addEventListener(
+              "click", function () { abortCtrl.abort(); }, { capture: true }
+            );
+            // Kick off background conditional credential request
+            var passkeyForm = document.getElementById("mfa_login");
+            var actionUrl = passkeyForm ? passkeyForm.action : "/allauth/2fa/authenticate/webauthn/";
+            fetch(actionUrl, {
+              method: "GET",
+              headers: { "Accept": "application/json" },
+            }).then(function (r) { return r.json(); })
+              .then(function (opts) {
+                if (!opts.publicKey) return;
+                opts.publicKey.challenge = Uint8Array.from(atob(opts.publicKey.challenge), function (c) { return c.charCodeAt(0); });
+                return navigator.credentials.get({
+                  publicKey: opts.publicKey,
+                  mediation: "conditional",
+                  signal: abortCtrl.signal,
+                });
+              })
+              .then(function (credential) {
+                if (!credential) return;
+                passkeyForm.submit();
+              })
+              .catch(function (err) {
+                if (err && (err.name === "AbortError" || err.name === "NotAllowedError")) return;
+                console.error("Passkey conditional UI error:", err);
+              });
+          });
+      })();
+    </script>
+  {% endif %}
+{% endblock extra_body %}

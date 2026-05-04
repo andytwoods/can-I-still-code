@@ -18,6 +18,7 @@ from agenticbrainrot.accounts.models import Participant
 from agenticbrainrot.accounts.models import log_audit_event
 from agenticbrainrot.challenges.models import ChallengeAttempt
 from agenticbrainrot.challenges.services import PoolExhaustedError
+from agenticbrainrot.challenges.services import select_additional_challenges
 from agenticbrainrot.challenges.services import select_challenges_for_session
 from agenticbrainrot.surveys.forms import build_survey_form
 from agenticbrainrot.surveys.models import SurveyQuestion
@@ -252,6 +253,8 @@ def _handle_session_post(request, session, participant):  # noqa: PLR0911
         return _render_post_session_survey(request, session)
     if action == "submit_post_session":
         return _handle_post_session_submit(request, session, participant)
+    if action == "choose_difficulty":
+        return _handle_choose_difficulty(request, session, participant)
 
     return HttpResponse("Unknown action.", status=HTTP_BAD_REQUEST)
 
@@ -262,7 +265,7 @@ def _render_session_get(request, session):
     current_sc, total = _get_current_challenge(session)
 
     if current_sc is None:
-        if is_htmx:
+        if session.status == CodeSession.Status.IN_PROGRESS:
             return _render_post_session_survey(request, session)
         return render(
             request,
@@ -396,7 +399,7 @@ def _handle_skip(request, session, participant):
         submitted_at=timezone.now(),
     )
 
-    return _render_reflection(request, session, attempt)
+    return _render_another_prompt(request, session)
 
 
 def _handle_stop(request, session, participant):
@@ -470,12 +473,19 @@ def _handle_skip_reflection(request, session, participant):
 
 
 def _render_another_prompt(request, session):
-    """Render the 'another challenge?' prompt or session complete."""
+    """Render the 'another challenge?' prompt, difficulty choice, or session complete."""
     current_sc, total = _get_current_challenge(session)
     challenges_done = session.challenge_attempts.count()
 
+    # Mandatory block done but difficulty preference not yet asked
+    if current_sc is None and session.wants_harder is None and not session.is_mock:
+        return render(
+            request,
+            "coding_sessions/partials/_difficulty_prompt.html",
+            {"session": session, "challenges_done": challenges_done},
+        )
+
     if current_sc is None or challenges_done >= total:
-        # All challenges attempted
         return _render_post_session_survey(request, session)
 
     return render(
@@ -487,6 +497,24 @@ def _render_another_prompt(request, session):
             "total_challenges": total,
         },
     )
+
+
+def _handle_choose_difficulty(request, session, participant):
+    """Handle the participant's difficulty preference and add remaining challenges."""
+    wants_harder = request.POST.get("wants_harder") == "true"
+    session.wants_harder = wants_harder
+    session.save(update_fields=["wants_harder"])
+
+    additional = select_additional_challenges(participant, session, harder=wants_harder)
+    next_position = session.session_challenges.count()
+    for i, challenge in enumerate(additional):
+        CodeSessionChallenge.objects.get_or_create(
+            session=session,
+            challenge=challenge,
+            defaults={"position": next_position + i},
+        )
+
+    return _render_another_prompt(request, session)
 
 
 def _render_next_challenge(request, session):
@@ -513,7 +541,7 @@ def _render_next_challenge(request, session):
 
 
 def _render_post_session_survey(request, session):
-    """Render the post-session survey partial."""
+    """Render the post-session survey (partial for HTMX, full page for direct GET)."""
     questions = SurveyQuestion.objects.filter(
         context=SurveyQuestion.Context.POST_SESSION,
         is_active=True,
@@ -522,14 +550,14 @@ def _render_post_session_survey(request, session):
     form_class = build_survey_form(questions)
     form = form_class()
 
-    return render(
-        request,
-        "coding_sessions/partials/_post_session_survey.html",
-        {
-            "session": session,
-            "form": form,
-        },
+    ctx = {"session": session, "form": form}
+    is_htmx = request.headers.get("HX-Request")
+    template = (
+        "coding_sessions/partials/_post_session_survey.html"
+        if is_htmx
+        else "coding_sessions/session_survey.html"
     )
+    return render(request, template, ctx)
 
 
 def _handle_post_session_submit(request, session, participant):

@@ -62,6 +62,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.mfa",
+    "allauth.mfa.webauthn",
     "allauth.socialaccount",
     "csp",
     "hijack",
@@ -280,6 +281,7 @@ ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_ADAPTER = "agenticbrainrot.accounts.adapters.AccountAdapter"
 # https://docs.allauth.org/en/latest/account/forms.html
@@ -291,6 +293,11 @@ ACCOUNT_FORMS = {
 SOCIALACCOUNT_ADAPTER = "agenticbrainrot.accounts.adapters.SocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_FORMS = {"signup": "agenticbrainrot.accounts.forms.UserSocialSignupForm"}
+
+# django-allauth MFA / Passkeys
+# ------------------------------------------------------------------------------
+MFA_SUPPORTED_TYPES = ["webauthn", "recovery_codes"]
+MFA_PASSKEY_LOGIN_ENABLED = True
 
 # django-hijack
 # ------------------------------------------------------------------------------

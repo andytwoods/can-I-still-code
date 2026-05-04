@@ -23,9 +23,13 @@ CHART_COLOURS = {
     "accuracy": "rgb(0, 114, 178)",
     "speed": "rgb(230, 159, 0)",
     "runs": "rgb(0, 158, 115)",
+    "complexity": "rgb(204, 121, 167)",
+    "efficiency": "rgb(86, 180, 233)",
     "accuracy_bg": "rgba(0, 114, 178, 0.1)",
     "speed_bg": "rgba(230, 159, 0, 0.1)",
     "runs_bg": "rgba(0, 158, 115, 0.1)",
+    "complexity_bg": "rgba(204, 121, 167, 0.1)",
+    "efficiency_bg": "rgba(86, 180, 233, 0.1)",
 }
 
 
@@ -40,6 +44,8 @@ def _build_session_data(participant):
     accuracy_points = []
     speed_points = []
     runs_points = []
+    complexity_points = []
+    efficiency_points = []
 
     for i, session in enumerate(sessions, 1):
         attempts = ChallengeAttempt.objects.filter(
@@ -55,14 +61,25 @@ def _build_session_data(participant):
                 ),
                 avg_time=Avg("time_taken_seconds"),
                 avg_runs=Avg("run_count"),
+                avg_efficiency=Avg("efficiency_ratio"),
             )
             avg_accuracy = round(agg["avg_accuracy"] or 0, 1)
             avg_time = round(agg["avg_time"] or 0, 1)
             avg_runs = round(agg["avg_runs"] or 0, 1)
+            avg_efficiency = round(agg["avg_efficiency"], 2) if agg["avg_efficiency"] is not None else None
+
+            cyc_values = [
+                a.complexity_metrics["cyclomatic_complexity"]
+                for a in attempts
+                if a.complexity_metrics and "cyclomatic_complexity" in a.complexity_metrics
+            ]
+            avg_complexity = round(sum(cyc_values) / len(cyc_values), 1) if cyc_values else None
         else:
             avg_accuracy = 0
             avg_time = 0
             avg_runs = 0
+            avg_efficiency = None
+            avg_complexity = None
 
         date_str = session.completed_at.strftime("%d %b %Y")
 
@@ -76,12 +93,15 @@ def _build_session_data(participant):
                 "avg_runs": avg_runs,
             },
         )
-        x = session.completed_at.isoformat()
-        accuracy_points.append({"x": x, "y": avg_accuracy})
-        speed_points.append({"x": x, "y": avg_time})
-        runs_points.append({"x": x, "y": avg_runs})
+        accuracy_points.append({"x": i, "y": avg_accuracy, "date": date_str})
+        speed_points.append({"x": i, "y": avg_time, "date": date_str})
+        runs_points.append({"x": i, "y": avg_runs, "date": date_str})
+        if avg_complexity is not None:
+            complexity_points.append({"x": i, "y": avg_complexity, "date": date_str})
+        if avg_efficiency is not None:
+            efficiency_points.append({"x": i, "y": avg_efficiency, "date": date_str})
 
-    return session_rows, accuracy_points, speed_points, runs_points
+    return session_rows, accuracy_points, speed_points, runs_points, complexity_points, efficiency_points
 
 
 @login_required
@@ -89,8 +109,17 @@ def personal_results(request):
     """Personal results dashboard for the participant."""
     participant = get_object_or_404(Participant, user=request.user)
 
-    session_rows, accuracy_points, speed_points, runs_points = _build_session_data(
+    session_rows, accuracy_points, speed_points, runs_points, complexity_points, efficiency_points = _build_session_data(
         participant,
+    )
+
+    resumable_session = (
+        CodeSession.objects.filter(
+            participant=participant,
+            status=CodeSession.Status.IN_PROGRESS,
+        )
+        .order_by("-started_at")
+        .first()
     )
 
     context = {
@@ -99,7 +128,11 @@ def personal_results(request):
         "accuracy_data": json.dumps(accuracy_points),
         "speed_data": json.dumps(speed_points),
         "runs_data": json.dumps(runs_points),
+        "complexity_data": json.dumps(complexity_points) if complexity_points else None,
+        "loc_data": None,
+        "efficiency_data": json.dumps(efficiency_points) if efficiency_points else None,
         "chart_colours": json.dumps(CHART_COLOURS),
+        "resumable_session": resumable_session,
     }
 
     return render(request, "dashboard/personal_results.html", context)

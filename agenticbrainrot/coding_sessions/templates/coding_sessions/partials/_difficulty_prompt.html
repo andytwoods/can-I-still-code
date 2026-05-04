@@ -1,0 +1,28 @@
+<div class="box has-text-centered">
+  <h3 class="title is-5">Great work completing the core set!</h3>
+  <p class="mb-2">You've worked through one challenge from each difficulty level.</p>
+  <p class="mb-4">Would you like to continue with harder challenges?</p>
+  <div class="buttons is-centered">
+    <button class="button is-primary is-medium"
+            hx-post="{% url 'coding_sessions:session_view' session.pk %}"
+            hx-target="#session-container"
+            hx-swap="innerHTML"
+            hx-vals='{"action": "choose_difficulty", "wants_harder": "true"}'>
+      Yes, bring on the harder ones
+    </button>
+    <button class="button is-light is-medium"
+            hx-post="{% url 'coding_sessions:session_view' session.pk %}"
+            hx-target="#session-container"
+            hx-swap="innerHTML"
+            hx-vals='{"action": "choose_difficulty", "wants_harder": "false"}'>
+      No, keep the same level
+    </button>
+    <button class="button is-light is-medium"
+            hx-post="{% url 'coding_sessions:session_view' session.pk %}"
+            hx-target="#session-container"
+            hx-swap="innerHTML"
+            hx-vals='{"action": "done"}'>
+      I'm done for today
+    </button>
+  </div>
+</div>

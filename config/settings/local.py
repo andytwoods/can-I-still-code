@@ -43,6 +43,8 @@ EMAIL_BACKEND = env(
     default="django.core.mail.backends.console.EmailBackend",
 )
 
+ACCOUNT_ALLOW_REGISTRATION = True
+MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = True
 # WhiteNoise
 # ------------------------------------------------------------------------------
 # http://whitenoise.evans.io/en/latest/django.html#using-whitenoise-in-development

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Post-Session Survey – Can I Still Code{% endblock title %}
+
+{% block content %}
+  <div class="columns">
+    <div class="column is-12">
+      <div id="session-container">
+        {% include "coding_sessions/partials/_post_session_survey.html" %}
+      </div>
+    </div>
+  </div>
+{% endblock content %}

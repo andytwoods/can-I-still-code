@@ -1,0 +1,55 @@
+{% extends "account/base_entrance.html" %}
+{% load allauth i18n static %}
+
+{% block head_title %}{% trans "Sign Up" %}{% endblock %}
+
+{% block content %}
+  {% element h1 %}{% trans "Sign Up" %}{% endelement %}
+
+  {% setvar link %}<a href="{{ login_url }}">{% endsetvar %}
+  {% setvar end_link %}</a>{% endsetvar %}
+  {% element p %}
+    {% blocktranslate %}Already have an account? Then please {{ link }}sign in{{ end_link }}.{% endblocktranslate %}
+  {% endelement %}
+
+  {% if PASSKEY_SIGNUP_ENABLED %}
+    <div class="mb-4">
+      {% element button href=signup_by_passkey_url tags="prominent,signup,primary" %}
+        <span class="icon"><i class="fas fa-fingerprint"></i></span>
+        <span>{% trans "Sign up with a passkey" %}</span>
+      {% endelement %}
+      <p class="is-size-7 has-text-grey mt-2">{% trans "fingerprint / device PIN" %}</p>
+    </div>
+  {% endif %}
+
+  {% if SOCIALACCOUNT_ENABLED %}
+    {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+  {% endif %}
+
+  {% if PASSKEY_SIGNUP_ENABLED or SOCIALACCOUNT_ENABLED %}
+    {% element hr %}{% endelement %}
+  {% endif %}
+
+  {% if not SOCIALACCOUNT_ONLY %}
+    <details>
+      <summary class="has-text-grey is-size-6" style="cursor:pointer; margin-bottom:1rem;">
+        {% trans "Sign up with email &amp; password instead" %}
+      </summary>
+      <div class="mt-3">
+        {% url 'account_signup' as action_url %}
+        {% element form form=form method="post" action=action_url tags="entrance,signup" %}
+          {% slot body %}
+            {% csrf_token %}
+            {% element fields form=form unlabeled=True %}{% endelement %}
+            {{ redirect_field }}
+          {% endslot %}
+          {% slot actions %}
+            {% element button tags="prominent,signup" type="submit" %}
+              {% trans "Sign Up" %}
+            {% endelement %}
+          {% endslot %}
+        {% endelement %}
+      </div>
+    </details>
+  {% endif %}
+{% endblock content %}

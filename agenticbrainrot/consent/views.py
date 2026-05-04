@@ -48,21 +48,6 @@ def give_consent(request):
                 consent_document_version=active_doc.version,
             )
 
-            # Process optional consent choices
-            for field_name, consent_type in ConsentForm.OPTIONAL_CONSENT_FIELDS.items():
-                consented = form.cleaned_data.get(field_name, False)
-                OptionalConsentRecord.objects.create(
-                    participant=participant,
-                    consent_type=consent_type,
-                    consented=consented,
-                )
-                if consented:
-                    log_audit_event(
-                        "optional_consent_given",
-                        participant=participant,
-                        actor=request.user,
-                        consent_type=consent_type,
-                    )
 
             if participant.profile_completed:
                 return redirect("home")

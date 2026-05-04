@@ -7,8 +7,9 @@
     var accuracyData   = {{ accuracy_data|safe }};
     var speedData      = {{ speed_data|safe }};
     var runsData       = {{ runs_data|safe }};
-    var complexityData = {{ complexity_data|default:"null"|safe }};
-    var locData        = {{ loc_data|default:"null"|safe }};
+    var complexityData   = {{ complexity_data|default:"null"|safe }};
+    var locData          = {{ loc_data|default:"null"|safe }};
+    var efficiencyData   = {{ efficiency_data|default:"null"|safe }};
     var colours        = {{ chart_colours|safe }};
     {# djlint:on #}
 
@@ -20,14 +21,14 @@
     var textColor = isDark ? "#e0e0e0" : "#363636";
     var gridColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
 
-    var timeAxis = {
-      type: "time",
-      time: {
-        displayFormats: { day: "d MMM", week: "d MMM", month: "MMM yyyy", quarter: "MMM yyyy", year: "yyyy" },
-        tooltipFormat: "d MMM yyyy"
+    var sessionAxis = {
+      type: "linear",
+      ticks: {
+        color: textColor,
+        stepSize: 1,
+        callback: function(v) { return Number.isInteger(v) ? "S" + v : ""; }
       },
-      ticks: { color: textColor },
-      grid:  { color: gridColor }
+      grid: { color: gridColor }
     };
 
     function makeChart(id, data, colour, colourBg, yMax) {
@@ -35,9 +36,19 @@
         responsive: true,
         scales: {
           y: { beginAtZero: true, ticks: { color: textColor }, grid: { color: gridColor } },
-          x: timeAxis
+          x: sessionAxis
         },
-        plugins: { legend: { display: false } }
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              title: function(items) {
+                var pt = data[items[0].dataIndex];
+                return pt && pt.date ? pt.date : "Session " + items[0].parsed.x;
+              }
+            }
+          }
+        }
       };
       if (yMax !== undefined) { opts.scales.y.max = yMax; }
       new Chart(document.getElementById(id), {
@@ -67,6 +78,9 @@
     if (locData) {
       makeChart("loc-chart", locData, colours.loc, colours.loc_bg);
     }
+    if (efficiencyData) {
+      makeChart("efficiency-chart", efficiencyData, colours.efficiency, colours.efficiency_bg);
+    }
 
     function setSummary(id, values, unit) {
       var el = document.getElementById(id);
@@ -89,6 +103,9 @@
     }
     if (locData) {
       setSummary("loc-summary", locData.map(function(d) { return d.y; }), " lines");
+    }
+    if (efficiencyData) {
+      setSummary("efficiency-summary", efficiencyData.map(function(d) { return d.y; }), "x");
     }
   })();
 </script>

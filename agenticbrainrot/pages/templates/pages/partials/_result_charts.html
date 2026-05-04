@@ -1,10 +1,13 @@
 {# Reusable chart canvases. Requires accuracy_data, speed_data, runs_data, chart_colours in context. #}
-{# Optional: complexity_data, loc_data for extra metric charts.                                      #}
+{# Optional: complexity_data, loc_data, efficiency_data for extra metric charts.                     #}
 {# JS initialisation lives in pages/partials/_result_charts_js.html — include that in extra_js.     #}
 <div class="columns is-multiline">
   <div class="column is-4">
     <div class="box">
-      <h2 class="title is-5">{{ accuracy_chart_title|default:"Accuracy" }}</h2>
+      <h2 class="title is-5">
+        {{ accuracy_chart_title|default:"Accuracy" }}
+        <span class="stat-info" data-tooltip="Percentage of test cases passed, averaged across all challenges in the session.">ⓘ</span>
+      </h2>
       <canvas id="accuracy-chart"
               aria-label="Line chart showing accuracy percentage over time"
               role="img">Accuracy percentage over time.</canvas>
@@ -13,7 +16,10 @@
   </div>
   <div class="column is-4">
     <div class="box">
-      <h2 class="title is-5">{{ speed_chart_title|default:"Time Taken" }}</h2>
+      <h2 class="title is-5">
+        {{ speed_chart_title|default:"Time Taken" }}
+        <span class="stat-info" data-tooltip="Average wall-clock time in seconds from challenge load to submission, across all challenges in the session.">ⓘ</span>
+      </h2>
       <canvas id="speed-chart"
               aria-label="Line chart showing average time in seconds over time"
               role="img">Average time per challenge in seconds over time.</canvas>
@@ -22,7 +28,10 @@
   </div>
   <div class="column is-4">
     <div class="box">
-      <h2 class="title is-5">{{ runs_chart_title|default:"Submissions Per Challenge" }}</h2>
+      <h2 class="title is-5">
+        {{ runs_chart_title|default:"Submissions Per Challenge" }}
+        <span class="stat-info" data-tooltip="Average number of times you ran your code before a final submission, per challenge. Fewer runs may indicate greater confidence.">ⓘ</span>
+      </h2>
       <canvas id="runs-chart"
               aria-label="Line chart showing average number of code runs per challenge over time"
               role="img">Average runs per challenge over time.</canvas>
@@ -32,20 +41,42 @@
   {% if complexity_data %}
   <div class="column is-4">
     <div class="box">
-      <h2 class="title is-5">{{ complexity_chart_title|default:"Code Complexity" }}</h2>
+      <h2 class="title is-5">
+        {{ complexity_chart_title|default:"Code Complexity" }}
+        <span class="stat-info" data-tooltip="Average cyclomatic complexity of your submitted solutions. Counts independent decision paths (if/elif/for/while/and/or each add 1). Higher scores mean more branching logic.">ⓘ</span>
+      </h2>
       <canvas id="complexity-chart"
               aria-label="Line chart showing average cyclomatic complexity of submitted code over time"
               role="img">Average cyclomatic complexity over time.</canvas>
       <p class="is-size-7 has-text-grey mt-2" id="complexity-summary"></p>
     </div>
   </div>
+  {% endif %}
+  {% if loc_data %}
   <div class="column is-4">
     <div class="box">
-      <h2 class="title is-5">{{ loc_chart_title|default:"Lines of Code" }}</h2>
+      <h2 class="title is-5">
+        {{ loc_chart_title|default:"Lines of Code" }}
+        <span class="stat-info" data-tooltip="Average number of non-blank lines across your submitted solutions in the session.">ⓘ</span>
+      </h2>
       <canvas id="loc-chart"
               aria-label="Line chart showing average lines of code in submitted solutions over time"
               role="img">Average lines of code per submission over time.</canvas>
       <p class="is-size-7 has-text-grey mt-2" id="loc-summary"></p>
+    </div>
+  </div>
+  {% endif %}
+  {% if efficiency_data %}
+  <div class="column is-4">
+    <div class="box">
+      <h2 class="title is-5">
+        {{ efficiency_chart_title|default:"Efficiency Ratio" }}
+        <span class="stat-info" data-tooltip="Your solution's execution time divided by a reference solution's time, averaged across the session. 1.0× = matched reference speed; below 1.0× = faster; above 1.0× = slower.">ⓘ</span>
+      </h2>
+      <canvas id="efficiency-chart"
+              aria-label="Line chart showing average efficiency ratio over time"
+              role="img">Average efficiency ratio over time.</canvas>
+      <p class="is-size-7 has-text-grey mt-2" id="efficiency-summary"></p>
     </div>
   </div>
   {% endif %}

@@ -59,10 +59,18 @@ def build_survey_form(questions_qs):
                 **common,
             )
 
+        elif q.question_type == "textarea":
+            fields[field_name] = forms.CharField(
+                widget=forms.Textarea(attrs={"class": "textarea", "rows": 4}),
+                **common,
+            )
+
         elif q.question_type == "number":
             fields[field_name] = forms.IntegerField(
+                min_value=q.scale_min if q.scale_min is not None else None,
+                max_value=q.scale_max if q.scale_max is not None else None,
                 widget=forms.NumberInput(
-                    attrs={"class": "input", "style": "width: 50px;"},
+                    attrs={"class": "input", "style": "width: 70px;"},
                 ),
                 **common,
             )

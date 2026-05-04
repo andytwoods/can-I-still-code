@@ -141,3 +141,17 @@
     });
   });
 }());
+
+// Stat-info tooltip click toggle
+document.addEventListener("click", function (e) {
+  var el = e.target.closest(".stat-info");
+  if (el) {
+    e.stopPropagation();
+    el.classList.toggle("is-open");
+    return;
+  }
+  // Click anywhere else closes all open tooltips
+  document.querySelectorAll(".stat-info.is-open").forEach(function (t) {
+    t.classList.remove("is-open");
+  });
+});

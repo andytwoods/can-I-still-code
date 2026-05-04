@@ -171,7 +171,7 @@ dependencies = [
     "argon2-cffi==25.1.0",
     "crispy-bulma>=0.12.0",
     "django==6.0.2",
-    "django-allauth[mfa]==65.16.1",
+    "django-allauth[mfa,webauthn]==65.16.1",
     "django-crispy-forms==2.6",
     "django-csp>=4.0",
     "django-environ==0.13.0",
@@ -191,4 +191,5 @@ dependencies = [
     "whitenoise==6.12.0",
     "anthropic>=0.96.0",
     "django-simple-captcha>=0.6.3",
+    "webauthn>=2.7.1",
 ]

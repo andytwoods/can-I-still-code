@@ -55,16 +55,16 @@ _DEMO_SESSIONS = [
 
 
 def _demo_chart_data():
-    """Return demo chart data anchored to today minus ~5 months."""
+    """Return demo chart data using session numbers as x-axis."""
     anchor = timezone.now() - timedelta(days=151)
     accuracy, speed, runs, complexity, loc = [], [], [], [], []
-    for days_offset, acc, spd, run, cyc, lines in _DEMO_SESSIONS:
-        x = (anchor + timedelta(days=days_offset)).isoformat()
-        accuracy.append({"x": x, "y": acc})
-        speed.append({"x": x, "y": spd})
-        runs.append({"x": x, "y": run})
-        complexity.append({"x": x, "y": cyc})
-        loc.append({"x": x, "y": lines})
+    for i, (days_offset, acc, spd, run, cyc, lines) in enumerate(_DEMO_SESSIONS, 1):
+        date_str = (anchor + timedelta(days=days_offset)).strftime("%d %b %Y")
+        accuracy.append({"x": i, "y": acc, "date": date_str})
+        speed.append({"x": i, "y": spd, "date": date_str})
+        runs.append({"x": i, "y": run, "date": date_str})
+        complexity.append({"x": i, "y": cyc, "date": date_str})
+        loc.append({"x": i, "y": lines, "date": date_str})
     return accuracy, speed, runs, complexity, loc
 
 def test_error(request):

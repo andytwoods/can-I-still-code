@@ -30,8 +30,8 @@ class SurveyQuestion(models.Model):
         blank=True,
         help_text="Choices for single/multi_choice or scale.",
     )
-    scale_min = models.IntegerField(null=True, blank=True)
-    scale_max = models.IntegerField(null=True, blank=True)
+    scale_min = models.IntegerField(null=True, blank=True, help_text="Min value (for scale or number).")
+    scale_max = models.IntegerField(null=True, blank=True, help_text="Max value (for scale or number).")
     min_label = models.CharField(max_length=100, blank=True)
     max_label = models.CharField(max_length=100, blank=True)
     mid_label = models.CharField(max_length=100, blank=True)

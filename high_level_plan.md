@@ -458,8 +458,7 @@ This means:
 | 2 | *How do you describe your gender?* | single_choice | "Man", "Woman", "Non-binary", "Prefer to self-describe" (free text), "Prefer not to say". Following [inclusive survey best practices](https://www.alchemer.com/resources/blog/how-to-write-survey-gender-questions/)  –  not a binary M/F, includes self-describe option, never mandatory. |
 | 3 | *Where are you based?* | single_choice | Country dropdown. Useful for controlling for regional tech culture differences. |
 | 4 | *Is English your first language?* | single_choice | "Yes", "No  –  but I'm fluent", "No  –  I'm conversational", "No  –  I find English challenging". Important because challenge descriptions are in English; language barrier could confound difficulty ratings. |
-| 5 | *What is your highest level of education?* | single_choice | "Self-taught / no formal education", "High school", "Bootcamp / vocational", "Bachelor's degree", "Master's degree", "PhD / Doctorate", "Prefer not to say". |
-| 6 | *Is your educational background in computer science or a related field?* | single_choice | "Yes", "No  –  different STEM field", "No  –  non-STEM field". |
+| 5 | *Is your educational background in computer science or a related field?* | single_choice | "Yes", "No  –  different STEM field", "No  –  non-STEM field" | ✓ |
 
 #### Coding Background
 

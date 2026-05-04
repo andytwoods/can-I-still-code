@@ -200,7 +200,7 @@
         var toast = document.createElement("div");
         toast.className = "notification " + type;
         toast.style.cssText =
-            "position:fixed;top:1rem;right:1rem;z-index:9999;min-width:280px;" +
+            "position:fixed;bottom:1rem;right:1rem;z-index:9999;min-width:280px;" +
             "max-width:400px;opacity:0;transition:opacity 0.3s ease;box-shadow:0 4px 12px rgba(0,0,0,0.15);";
         toast.innerHTML = message;
 
@@ -286,11 +286,11 @@
 
                 case "result":
                     clearRunTimeout();
-                    displayTestResults(msg.results);
                     if (msg.complexity) lastComplexity = msg.complexity;
                     if (msg.efficiencyRatio !== null && msg.efficiencyRatio !== undefined) {
                         lastEfficiencyRatio = msg.efficiencyRatio;
                     }
+                    displayTestResults(msg.results);
                     enableButtons();
                     break;
 
@@ -404,6 +404,8 @@
         var testsTotal = document.getElementById("tests-total");
         if (testsPassed) testsPassed.value = passed;
         if (testsTotal) testsTotal.value = total;
+
+        stopTimer();
     }
 
     // -- Tab blur tracking --
@@ -503,6 +505,11 @@
             runBtn.disabled = !pyodideReady;
             runBtn.onclick = runCode;
         }
+        var skipBtn = document.getElementById("skip-btn");
+        if (skipBtn) {
+            skipBtn.addEventListener("click", stopTimer, { once: true });
+        }
+
         if (submitBtn) {
             submitBtn.disabled = !pyodideReady;
             submitBtn.onclick = function () {

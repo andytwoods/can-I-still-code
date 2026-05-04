@@ -425,7 +425,7 @@ body {
 /* ── Toast notifications ───────────────────────────────────────────────────── */
 .toast-container {
   position: fixed;
-  top: 1rem;
+  bottom: 1rem;
   right: 1rem;
   z-index: 1000;
   display: flex;
@@ -635,4 +635,38 @@ textarea:focus-visible,
 [tabindex]:focus-visible {
   outline: 2px solid var(--theme-primary, #485fc7);
   outline-offset: 2px;
+}
+
+/* Stat info tooltips */
+.stat-info {
+  display: inline-block;
+  cursor: help;
+  color: #aaa;
+  font-size: 0.8em;
+  position: relative;
+  margin-left: 0.25em;
+}
+
+.stat-info::after {
+  content: attr(data-tooltip);
+  display: none;
+  position: absolute;
+  left: 1.2em;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #363636;
+  color: #fff;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  padding: 0.5em 0.75em;
+  border-radius: 4px;
+  width: 260px;
+  z-index: 100;
+  white-space: normal;
+  pointer-events: none;
+}
+
+.stat-info:hover::after,
+.stat-info.is-open::after {
+  display: block;
 }
