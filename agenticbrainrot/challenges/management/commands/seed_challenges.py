@@ -31,6 +31,7 @@ class Command(BaseCommand):
         tier = options["tier"]
         created = 0
         skipped = 0
+        updated = 0
         errors = 0
 
         dirs = [FIXTURES_DIR / f"d{tier}"] if tier is not None else sorted(FIXTURES_DIR.glob("d[0-5]"))
@@ -59,16 +60,24 @@ class Command(BaseCommand):
                             "is_active": data.get("is_active", True),
                         },
                     )
-                    # Always sync clarification so it can be added to fixtures post-creation
+                    # Always sync clarification and reference_solution so they can be updated post-creation
                     if not was_created:
+                        update_fields = []
                         new_clarification = data.get("clarification", "")
                         if challenge.clarification != new_clarification:
                             challenge.clarification = new_clarification
-                            challenge.save(update_fields=["clarification"])
+                            update_fields.append("clarification")
+                        new_ref = data.get("reference_solution", "")
+                        if challenge.reference_solution != new_ref:
+                            challenge.reference_solution = new_ref
+                            update_fields.append("reference_solution")
+                        if update_fields:
+                            challenge.save(update_fields=update_fields)
+                            updated += 1
                     if was_created:
                         created += 1
                     else:
-                        skipped += 1
+                        skipped += 1  # exists; may have been updated above
                 except Exception as exc:  # noqa: BLE001
                     errors += 1
                     self.stderr.write(
@@ -77,6 +86,6 @@ class Command(BaseCommand):
 
         self.stdout.write(
             self.style.SUCCESS(
-                f"Done. Created: {created}, Skipped: {skipped}, Errors: {errors}",
+                f"Done. Created: {created}, Updated: {updated}, Skipped (no change): {skipped - updated}, Errors: {errors}",
             ),
         )
