@@ -9,7 +9,7 @@ from agenticbrainrot.utils.rollbar_utils import transform_rollbar_payload
 os.environ.setdefault('DJANGO_SECRET_KEY', 'test-secret-key-123')
 os.environ.setdefault('DATABASE_URL', 'sqlite:///:memory:')
 os.environ.setdefault('REDIS_URL', 'redis://localhost:6379/0')
-os.environ.setdefault('ROLLBAR_ENABLED', False)
+os.environ.setdefault('ROLLBAR_ENABLED', 'True')
 os.environ.setdefault('ROLLBAR_ACCESS_TOKEN', 'test-token')
 
 
