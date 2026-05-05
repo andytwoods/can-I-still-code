@@ -7,7 +7,27 @@ from django.utils import timezone
 from agenticbrainrot.accounts.models import Participant
 from agenticbrainrot.accounts.models import User
 from agenticbrainrot.coding_sessions.models import CodeSession
+from agenticbrainrot.consent.models import ConsentDocument
+from agenticbrainrot.consent.models import ConsentRecord
 from agenticbrainrot.dashboard.models import DatasetAccessGrant
+
+
+def _give_consent(participant):
+    """Create a ConsentRecord for the active document so the middleware is satisfied."""
+    doc = ConsentDocument.objects.filter(is_active=True).order_by("-version").first()
+    if not doc:
+        doc = ConsentDocument.objects.create(
+            version=1,
+            title="Study Consent",
+            body="Consent for research participation.",
+            is_active=True,
+            published_at=timezone.now(),
+        )
+    ConsentRecord.objects.get_or_create(
+        participant=participant,
+        consent_document=doc,
+        defaults={"consented": True},
+    )
 
 
 class TestDatasetList(TestCase):
@@ -21,6 +41,7 @@ class TestDatasetList(TestCase):
         )
         self.participant.has_active_consent = True
         self.participant.save()
+        _give_consent(self.participant)
 
     def test_requires_login(self):
         url = reverse("dashboard:dataset_list")
@@ -69,6 +90,7 @@ class TestDatasetDownload(TestCase):
         """After embargo lifts, missing version returns 404."""
         self.participant.has_active_consent = True
         self.participant.save()
+        _give_consent(self.participant)
         # Create old completed session so embargo has lifted
         session = CodeSession.objects.create(
             participant=self.participant,
@@ -93,6 +115,7 @@ class TestDatasetDownload(TestCase):
         # Create a completed session to set embargo start
         self.participant.has_active_consent = True
         self.participant.save()
+        _give_consent(self.participant)
         CodeSession.objects.create(
             participant=self.participant,
             status=CodeSession.Status.COMPLETED,
@@ -112,6 +135,7 @@ class TestDatasetDownload(TestCase):
         """User with DatasetAccessGrant can download during embargo."""
         self.participant.has_active_consent = True
         self.participant.save()
+        _give_consent(self.participant)
         CodeSession.objects.create(
             participant=self.participant,
             status=CodeSession.Status.COMPLETED,

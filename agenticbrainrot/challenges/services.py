@@ -75,6 +75,59 @@ def select_challenges_for_session(participant):
     )
 
 
+def select_challenges_for_session_full(participant):
+    """
+    Select the full session of challenges according to the tier distribution.
+    1 mandatory block (one per tier) + additional challenges to reach CHALLENGES_PER_SESSION.
+    """
+    mandatory = select_challenges_for_session(participant)
+
+    # We need a session object to use select_additional_challenges,
+    # but that helper is designed to work with existing sessions.
+    # For simple selection, let's just use the logic directly.
+
+    study = settings.STUDY
+    tier_distribution = study["TIER_DISTRIBUTION"]
+    challenges_per_session = study["CHALLENGES_PER_SESSION"]
+
+    selected_challenges = list(mandatory)
+    already_assigned = {c.pk for c in selected_challenges}
+
+    available_by_tier = _get_available_by_tier(
+        participant, tier_distribution, exclude_ids=already_assigned
+    )
+
+    remaining_slots = challenges_per_session - len(selected_challenges)
+
+    # Fill according to tier weights
+    for tier_str, count in sorted(tier_distribution.items()):
+        if remaining_slots <= 0:
+            break
+        tier = int(tier_str)
+        pool = available_by_tier.get(tier, [])
+        # Subtract what we already took for the mandatory block if it was from this tier
+        # (Though mandatory is 1 per tier, and distribution counts might be higher)
+        # Actually, let's just take 'count' more if available, up to remaining_slots.
+        take = min(count, len(pool), remaining_slots)
+        selected_challenges.extend(Challenge.objects.filter(pk__in=pool[:take]))
+        already_assigned.update(pool[:take])
+        remaining_slots -= take
+
+    # Top up if still short
+    if remaining_slots > 0:
+        for tier in sorted(available_by_tier.keys()):
+            if remaining_slots <= 0:
+                break
+            pool = available_by_tier[tier]
+            extras = [pk for pk in pool if pk not in already_assigned]
+            take = min(remaining_slots, len(extras))
+            selected_challenges.extend(Challenge.objects.filter(pk__in=extras[:take]))
+            already_assigned.update(extras[:take])
+            remaining_slots -= take
+
+    return sorted(selected_challenges, key=lambda c: c.difficulty)
+
+
 def select_additional_challenges(participant, session, harder=False):
     """
     Select additional challenges after the mandatory block.
@@ -96,7 +149,7 @@ def select_additional_challenges(participant, session, harder=False):
 
     mandatory_count = session.session_challenges.count()
     remaining_slots = challenges_per_session - mandatory_count
-    if wants_harder:
+    if harder:
         remaining_slots = max(remaining_slots, 6)
 
     selected_ids = []

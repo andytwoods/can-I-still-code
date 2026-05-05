@@ -308,7 +308,7 @@
     function enableButtons() {
         var runBtn = document.getElementById("run-btn");
         var submitBtn = document.getElementById("submit-btn");
-        if (runBtn) runBtn.disabled = false;
+        if (runBtn) { runBtn.disabled = false; runBtn.textContent = "Run Code"; }
         if (submitBtn) submitBtn.disabled = false;
     }
 
@@ -432,7 +432,7 @@
         clearOutput();
         var runBtn = document.getElementById("run-btn");
         var submitBtn = document.getElementById("submit-btn");
-        if (runBtn) runBtn.disabled = true;
+        if (runBtn) { runBtn.disabled = true; runBtn.textContent = "Analysing…"; }
         if (submitBtn) submitBtn.disabled = true;
 
         var testCasesEl = document.getElementById("test-cases-data");

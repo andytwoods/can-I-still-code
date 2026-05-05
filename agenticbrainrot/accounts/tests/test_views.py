@@ -78,7 +78,7 @@ class TestUserRedirectView:
         request.user = user
 
         view.request = request
-        assert view.get_redirect_url() == f"/accounts/{user.pk}/"
+        assert view.get_redirect_url() == reverse("dashboard:personal_results")
 
 
 class TestUserDetailView:

@@ -49,7 +49,6 @@ def give_consent(request):
                 consent_document_version=active_doc.version,
             )
 
-
             if participant.profile_completed:
                 return redirect("home")
             return redirect("surveys:profile_intake")

@@ -29,6 +29,7 @@ def participant(user):
 
 @pytest.fixture
 def consent_doc(db):
+    ConsentDocument.objects.update(is_active=False)
     return ConsentDocument.objects.create(
         version=1,
         title="Study Consent",
@@ -165,6 +166,7 @@ class TestConsentView:
         participant,
     ):
         """If no consent doc exists, show unavailable message."""
+        ConsentDocument.objects.update(is_active=False)
         url = reverse("consent:give_consent")
         response = authenticated_client.get(url)
         assert response.status_code == HTTPStatus.OK
@@ -176,14 +178,11 @@ class TestConsentView:
         participant,
         consent_doc,
     ):
-        """Submitting consent creates all expected records."""
+        """Submitting consent creates expected records."""
         response = authenticated_client.post(
             reverse("consent:give_consent"),
             data={
                 "consent": "on",
-                "reminder_emails": "on",
-                "think_aloud_audio": "",
-                "transcript_sharing": "on",
             },
         )
         assert response.status_code == HTTPStatus.FOUND
@@ -197,29 +196,10 @@ class TestConsentView:
         participant.refresh_from_db()
         assert participant.has_active_consent is True
 
-        # Optional consent records created
-        opt_records = OptionalConsentRecord.objects.filter(
-            participant=participant,
-        )
-        assert opt_records.count() == len(
-            OptionalConsentRecord.ConsentType.choices,
-        )
-        reminder = opt_records.get(consent_type="reminder_emails")
-        assert reminder.consented is True
-        audio = opt_records.get(consent_type="think_aloud_audio")
-        assert audio.consented is False
-        sharing = opt_records.get(consent_type="transcript_sharing")
-        assert sharing.consented is True
-
         # Audit events created
         events = AuditEvent.objects.filter(participant=participant)
         consent_event = events.filter(event_type="consent_given")
         assert consent_event.exists()
-
-        optional_events = events.filter(
-            event_type="optional_consent_given",
-        )
-        assert optional_events.exists()
 
     def test_consent_without_checkbox_fails(
         self,

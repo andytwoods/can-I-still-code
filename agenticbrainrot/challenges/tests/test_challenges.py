@@ -12,18 +12,20 @@ from agenticbrainrot.challenges.models import Challenge
 from agenticbrainrot.challenges.models import ChallengeAttempt
 from agenticbrainrot.challenges.services import PoolExhaustedError
 from agenticbrainrot.challenges.services import select_challenges_for_session
+from agenticbrainrot.challenges.services import select_challenges_for_session_full
 from agenticbrainrot.coding_sessions.models import CodeSession
 from agenticbrainrot.coding_sessions.models import CodeSessionChallenge
 from agenticbrainrot.consent.models import ConsentDocument
 from agenticbrainrot.consent.models import ConsentRecord
 
-EXPECTED_TOTAL_CHALLENGES = 150
+EXPECTED_TOTAL_CHALLENGES = 182
+EXPECTED_TIER_0 = 34
 EXPECTED_TIER_1 = 30
-EXPECTED_TIER_2 = 30
+EXPECTED_TIER_2 = 29
 EXPECTED_TIER_3 = 30
 EXPECTED_TIER_4 = 30
-EXPECTED_TIER_5 = 30
-CHALLENGES_PER_SESSION = 10
+EXPECTED_TIER_5 = 29
+MANDATORY_BLOCK_SIZE = 5  # 1 per tier; small_challenge_set has tiers 1-5 only
 
 
 @pytest.fixture
@@ -130,7 +132,7 @@ class TestChallengeSelection:
         selected = select_challenges_for_session(
             consented_participant,
         )
-        assert len(selected) == CHALLENGES_PER_SESSION
+        assert len(selected) == MANDATORY_BLOCK_SIZE
 
     def test_ascending_difficulty(
         self,
@@ -202,7 +204,7 @@ class TestChallengeSelection:
         consented_participant,
         db,
     ):
-        """When fewer than 10 challenges are available, returns what's available."""
+        """When only one tier has challenges, returns one challenge (1 per tier)."""
         for i in range(3):
             Challenge.objects.create(
                 external_id=f"sparse-{i}-v1",
@@ -215,17 +217,15 @@ class TestChallengeSelection:
         selected = select_challenges_for_session(
             consented_participant,
         )
-        expected_sparse_count = 3
-        assert len(selected) == expected_sparse_count
+        assert len(selected) == 1  # only tier 1 available → 1 mandatory challenge
 
-    def test_tier_fill_from_adjacent(
+    def test_single_tier_returns_one(
         self,
         consented_participant,
         db,
     ):
-        """When a tier is exhausted, fills from adjacent tiers."""
-        # Only create tier 1 challenges (no tier 2-5)
-        for i in range(CHALLENGES_PER_SESSION):
+        """When only tier 1 challenges exist, mandatory block has 1 challenge."""
+        for i in range(5):
             Challenge.objects.create(
                 external_id=f"only-t1-{i}-v1",
                 title=f"T1 #{i}",
@@ -237,7 +237,7 @@ class TestChallengeSelection:
         selected = select_challenges_for_session(
             consented_participant,
         )
-        assert len(selected) == CHALLENGES_PER_SESSION
+        assert len(selected) == 1
         assert all(c.difficulty == 1 for c in selected)
 
 

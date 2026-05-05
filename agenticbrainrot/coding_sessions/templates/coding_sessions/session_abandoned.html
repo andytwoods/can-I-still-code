@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Session Timed Out – Can I Still Code{% endblock title %}
+
+{% block content %}
+  <div class="columns is-centered">
+    <div class="column is-6 has-text-centered">
+      <h1 class="title">Session Timed Out</h1>
+      <div class="content">
+        <p>This session was open for too long without being completed, so it has been closed automatically.</p>
+        <p>Your progress on any challenges you submitted has been saved.</p>
+        <a href="{% url 'home' %}" class="button is-primary mt-4">Back to Home</a>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

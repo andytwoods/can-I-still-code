@@ -223,11 +223,13 @@ def _create_session(request, participant, form):
 
 def _handle_session_post(request, session, participant):  # noqa: PLR0911
     """Dispatch POST actions for the session view."""
-    # Reject attempts on ended sessions
-    if session.status in (
-        CodeSession.Status.COMPLETED,
-        CodeSession.Status.ABANDONED,
-    ):
+    # Redirect to GET so the abandoned/complete page is shown
+    if session.status == CodeSession.Status.ABANDONED:
+        response = HttpResponse(status=200)
+        response["HX-Redirect"] = request.path
+        return response
+
+    if session.status == CodeSession.Status.COMPLETED:
         return render(
             request,
             "coding_sessions/partials/_session_ended.html",
@@ -262,6 +264,10 @@ def _handle_session_post(request, session, participant):  # noqa: PLR0911
 def _render_session_get(request, session):
     """Render the session page for GET requests."""
     is_htmx = request.headers.get("HX-Request")
+
+    if session.status == CodeSession.Status.ABANDONED:
+        return render(request, "coding_sessions/session_abandoned.html", {"session": session})
+
     current_sc, total = _get_current_challenge(session)
 
     if current_sc is None:

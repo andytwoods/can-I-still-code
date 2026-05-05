@@ -145,22 +145,31 @@ def analyze_complexity(code):
         "function_count": func_count,
     }
 
-def measure_median_us(fn, inputs_list, n=200, timeout_s=2.0):
-    """Run fn(*args) n times cycling through inputs_list. Returns median microseconds or None."""
+def measure_median_us(fn, inputs_list, samples=15, window_s=0.05, timeout_s=2.0):
+    """Time fn using fixed-window sampling. Runs fn for window_s seconds per sample,
+    divides elapsed by call count. Robust against low timer resolution. Returns median us or None."""
     if not inputs_list or not callable(fn):
         return None
     times = []
     deadline = time.monotonic() + timeout_s
     i = 0
-    while len(times) < n:
+    while len(times) < samples:
         if time.monotonic() > deadline:
-            return None
+            break
+        count = 0
         t0 = time.monotonic()
-        fn(*inputs_list[i % len(inputs_list)])
-        times.append((time.monotonic() - t0) * 1_000_000)
-        i += 1
+        t_end = t0 + window_s
+        while time.monotonic() < t_end:
+            fn(*inputs_list[i % len(inputs_list)])
+            i += 1
+            count += 1
+        elapsed_us = (time.monotonic() - t0) * 1_000_000
+        if count > 0:
+            times.append(elapsed_us / count)
+    if not times:
+        return None
     times.sort()
-    return times[n // 2]
+    return times[len(times) // 2]
 `);
             self.postMessage({ type: "ready" });
         } catch (err) {
@@ -268,6 +277,7 @@ json.dumps(_result) if not isinstance(_result, (int, float, bool, type(None))) e
                     // Only time standard function calls; skip class/operations-based tests
                     const timingInputs = msg.testCases.filter(tc => Array.isArray(tc.input)).map(tc => tc.input);
 
+                    console.log("[efficiency] funcName:", funcName, "timingInputs:", timingInputs.length);
                     if (timingInputs.length > 0) {
                         const inputsJson = JSON.stringify(JSON.stringify(timingInputs));
 
@@ -276,6 +286,7 @@ json.dumps(_result) if not isinstance(_result, (int, float, bool, type(None))) e
                             `import json; _ti = json.loads(${inputsJson}); json.dumps(measure_median_us(globals().get(${JSON.stringify(funcName)}), _ti))`
                         );
                         const participantUs = JSON.parse(ptRaw);
+                        console.log("[efficiency] participantUs:", participantUs);
 
                         // Exec reference solution -- overwrites participant function, tests already ran
                         pyodide.runPython(msg.referenceSolution);
@@ -284,12 +295,19 @@ json.dumps(_result) if not isinstance(_result, (int, float, bool, type(None))) e
                             `import json; json.dumps(measure_median_us(globals().get(${JSON.stringify(funcName)}), _ti))`
                         );
                         const refUs = JSON.parse(rtRaw);
+                        console.log("[efficiency] refUs:", refUs);
 
-                        if (participantUs !== null && refUs !== null && refUs > 0) {
-                            efficiencyRatio = Math.round((participantUs / refUs) * 100) / 100;
+                        if (participantUs !== null && refUs !== null) {
+                            if (refUs === 0 && participantUs === 0) {
+                                efficiencyRatio = 1.0;
+                            } else if (refUs > 0) {
+                                efficiencyRatio = Math.round((participantUs / refUs) * 100) / 100;
+                            }
                         }
                     }
-                } catch (_) { /* non-fatal */ }
+                } catch (effErr) {
+                    console.warn("[efficiency]", effErr);
+                }
             }
 
             self.postMessage({ type: "result", results, complexity, efficiencyRatio });

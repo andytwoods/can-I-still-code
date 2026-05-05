@@ -523,8 +523,8 @@ class TestSessionView:
             {"action": "submit", "submitted_code": "pass"},
             HTTP_HX_REQUEST="true",
         )
-        assert response.status_code == HTTPStatus.CONFLICT
-        assert b"session has ended" in response.content
+        assert response.status_code == HTTPStatus.OK
+        assert response.headers.get("HX-Redirect")
 
     def test_forbidden_for_other_user(
         self,
