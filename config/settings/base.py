@@ -61,7 +61,6 @@ THIRD_PARTY_APPS = [
     "crispy_bulma",
     "allauth",
     "allauth.account",
-    "allauth.mfa",
     "allauth.mfa.webauthn",
     "allauth.socialaccount",
     "csp",

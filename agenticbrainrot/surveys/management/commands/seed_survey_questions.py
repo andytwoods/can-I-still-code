@@ -358,11 +358,11 @@ class Command(BaseCommand):
                 "category": q_data.get("category", ""),
                 "is_required": q_data.get("is_required", True),
                 "is_active": True,
+                "display_order": q_data["display_order"],
             }
-            _, created = SurveyQuestion.objects.get_or_create(
+            q, created = SurveyQuestion.objects.update_or_create(
                 text=q_data["text"],
                 context=q_data["context"],
-                display_order=q_data["display_order"],
                 defaults=defaults,
             )
             if created:
