@@ -6,8 +6,8 @@ from django.db.models import Count
 
 def remove_duplicate_survey_questions(apps, schema_editor):
     SurveyQuestion = apps.get_model("surveys", "SurveyQuestion")
+    SurveyResponse = apps.get_model("surveys", "SurveyResponse")
 
-    # Find duplicates based on text and context
     duplicates = (
         SurveyQuestion.objects.values("text", "context")
         .annotate(count=Count("id"))
@@ -15,15 +15,14 @@ def remove_duplicate_survey_questions(apps, schema_editor):
     )
 
     for dup in duplicates:
-        # Get all instances of this duplicate
         questions = SurveyQuestion.objects.filter(
             text=dup["text"],
             context=dup["context"]
         ).order_by("id")
 
-        # Keep the first one, delete the rest
-        to_delete = questions[1:]
-        for q in to_delete:
+        canonical = questions[0]
+        for q in questions[1:]:
+            SurveyResponse.objects.filter(question=q).update(question=canonical)
             q.delete()
 
 
