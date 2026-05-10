@@ -16,6 +16,13 @@ class AccountsConfig(AppConfig):
         def create_participant(sender, instance, created, **kwargs):
             if created:
                 Participant.objects.create(user=instance)
+                from django.conf import settings  # noqa: PLC0415
+                from django.core.mail import mail_admins  # noqa: PLC0415
+                if getattr(settings, "EMAIL_ADMIN_ON_SIGNUP", False):
+                    mail_admins(
+                        subject="New signup",
+                        message=f"New user signed up: {instance.email}",
+                    )
 
         post_save.connect(
             create_participant,

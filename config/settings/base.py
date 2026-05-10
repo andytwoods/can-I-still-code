@@ -230,6 +230,8 @@ ADMINS = [("""Andy T Woods""", "andytwoods@gmail.com")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 
+EMAIL_ADMIN_ON_SIGNUP = True
+
 # CONTACT EMAILS
 # ------------------------------------------------------------------------------
 PRIVACY_EMAIL = "privacy@canistillcode.org"
