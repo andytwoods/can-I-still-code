@@ -55,6 +55,8 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
     permanent = False
 
     def get_redirect_url(self) -> str:
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            return reverse("logged_in_home")
         return reverse("dashboard:personal_results")
 
 
