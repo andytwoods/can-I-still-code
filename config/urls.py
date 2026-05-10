@@ -15,6 +15,7 @@ from agenticbrainrot.pages.views import HomeView
 from agenticbrainrot.pages.views import HowItWorksView
 from agenticbrainrot.pages.views import LoggedInHomeView
 from agenticbrainrot.pages.views import PrivacyView
+from agenticbrainrot.pages.views import StaffStatsView
 from agenticbrainrot.pages.views import TermsView
 from agenticbrainrot.pages.views import waitlist_signup
 from agenticbrainrot.pages.views import waitlist_unsubscribe
@@ -30,6 +31,7 @@ urlpatterns = [
     path("code-of-conduct/", CoCView.as_view(), name="code_of_conduct"),
     path("waitlist/", waitlist_signup, name="waitlist_signup"),
     path("waitlist/unsubscribe/<uuid:token>/", waitlist_unsubscribe, name="waitlist_unsubscribe"),
+    path("staff/stats/", StaffStatsView.as_view(), name="staff_stats"),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management

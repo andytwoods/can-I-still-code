@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import AboutView
 from .views import HomeView
+from .views import StaffStatsView
 from .views import waitlist_signup
 from .views import waitlist_unsubscribe
 
@@ -11,4 +12,5 @@ urlpatterns = [
     path("about/", AboutView.as_view(), name="about"),
     path("waitlist/", waitlist_signup, name="waitlist_signup"),
     path("waitlist/unsubscribe/<uuid:token>/", waitlist_unsubscribe, name="waitlist_unsubscribe"),
+    path("staff/stats/", StaffStatsView.as_view(), name="staff_stats"),
 ]

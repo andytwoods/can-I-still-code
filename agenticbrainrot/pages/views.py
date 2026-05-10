@@ -181,6 +181,28 @@ class LoggedInHomeView(LoginRequiredMixin, TemplateView):
         return context
 
 
+class StaffStatsView(LoginRequiredMixin, TemplateView):
+    template_name = "pages/partials/staff_stats.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            from django.http import HttpResponseForbidden
+            return HttpResponseForbidden()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["participant_count"] = Participant.objects.count()
+        completed_qs = CodeSession.objects.filter(status=CodeSession.Status.COMPLETED)
+        ctx["session_count"] = completed_qs.count()
+        total_challenges = completed_qs.aggregate(total=Sum("challenges_attempted"))["total"] or 0
+        ctx["challenges_completed"] = total_challenges
+        ctx["avg_challenges_per_session"] = (
+            round(total_challenges / ctx["session_count"], 1) if ctx["session_count"] else 0
+        )
+        return ctx
+
+
 class AboutView(TemplateView):
     template_name = "pages/about.html"
 

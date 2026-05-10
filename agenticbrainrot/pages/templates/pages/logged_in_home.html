@@ -162,6 +162,15 @@
             </div>
 
           </div>
+
+          <h3 class="title is-6 has-text-grey mt-4">Stats</h3>
+          <div id="staff-stats"
+               hx-get="{% url 'staff_stats' %}"
+               hx-trigger="load"
+               hx-swap="innerHTML">
+            <span class="has-text-grey-light">Loading&hellip;</span>
+          </div>
+
         {% endif %}
 
       {% endif %}
