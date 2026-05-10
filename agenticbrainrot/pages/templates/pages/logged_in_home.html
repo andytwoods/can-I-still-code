@@ -135,7 +135,7 @@
         </div>
 
         {# Staff admin tools row #}
-        {% if request.user.is_staff %}
+        {% if request.user.is_staff or request.user.is_superuser %}
           <hr>
           <h2 class="title is-5 has-text-grey">Staff Tools</h2>
           <div class="columns">

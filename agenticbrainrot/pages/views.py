@@ -185,7 +185,7 @@ class StaffStatsView(LoginRequiredMixin, TemplateView):
     template_name = "pages/partials/staff_stats.html"
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_staff:
+        if not (request.user.is_staff or request.user.is_superuser):
             from django.http import HttpResponseForbidden
             return HttpResponseForbidden()
         return super().dispatch(request, *args, **kwargs)
