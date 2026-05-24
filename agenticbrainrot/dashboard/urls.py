@@ -5,6 +5,11 @@ from . import views
 app_name = "dashboard"
 urlpatterns = [
     path(
+        "stats/",
+        views.study_stats,
+        name="study_stats",
+    ),
+    path(
         "results/",
         views.personal_results,
         name="personal_results",

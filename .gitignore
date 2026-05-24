@@ -330,3 +330,4 @@ agenticbrainrot/media/
 /ethics/examples/
 /.idea/deployment.xml
 /.claude/settings.local.json
+/.env

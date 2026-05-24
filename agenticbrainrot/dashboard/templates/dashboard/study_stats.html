@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Study Stats – Can I Still Code{% endblock title %}
+
+{% block content %}
+  <div class="columns is-centered">
+    <div class="column is-10">
+      <h1 class="title">Study Stats</h1>
+
+      <div class="columns">
+        <div class="column">
+          <div class="box">
+            <p class="heading">Registered</p>
+            <p class="title">{{ total_participants }}</p>
+            <p class="help">{{ consented_participants }} consented &amp; active</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="box">
+            <p class="heading">Started a Session</p>
+            <p class="title">{{ participants_with_sessions }}</p>
+            <p class="help">of {{ consented_participants }} consented</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="box">
+            <p class="heading">Total Sessions</p>
+            <p class="title">{{ total_sessions }}</p>
+            <p class="help">
+              {{ completed_sessions }} completed &middot;
+              {{ in_progress_sessions }} in progress &middot;
+              {{ abandoned_sessions }} abandoned
+            </p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="box">
+            <p class="heading">Completion Rate</p>
+            <p class="title">{{ completion_rate }}%</p>
+            <p class="help">of sessions started</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="column">
+          <div class="box">
+            <p class="heading">Avg Sessions / Participant</p>
+            <p class="title">{{ avg_sessions_started }}</p>
+            <p class="help">{{ avg_sessions_all }} including non-starters</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="box">
+            <p class="heading">Avg Challenges Passed / Session</p>
+            <p class="title">{{ avg_challenges_all }}</p>
+            <p class="help">{{ avg_challenges_completed }} for completed sessions only</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2 class="title is-5">Per-Participant Breakdown</h2>
+        <div class="table-container">
+          <table class="table is-fullwidth is-striped is-hoverable">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th class="has-text-centered">Sessions</th>
+                <th class="has-text-centered">Completed</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in per_participant %}
+                <tr>
+                  <td>{{ row.participant__user__email }}</td>
+                  <td class="has-text-centered">{{ row.session_count }}</td>
+                  <td class="has-text-centered">{{ row.completed_count }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+{% endblock content %}

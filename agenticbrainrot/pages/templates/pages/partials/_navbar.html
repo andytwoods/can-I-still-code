@@ -25,7 +25,18 @@
   </div>
   <div id="navbarMain" class="navbar-menu">
     <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'blog:post_list' %}">Blog</a>
       {% if request.user.is_authenticated %}
+        {% if request.user.is_staff %}
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">Admin</a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="{% url 'dashboard:study_stats' %}">Study Stats</a>
+              <a class="navbar-item" href="{% url 'admin:index' %}">Django Admin</a>
+              <a class="navbar-item" href="{% url 'dashboard:dataset_list' %}">Datasets</a>
+            </div>
+          </div>
+        {% endif %}
         <a class="navbar-item" href="{% url 'dashboard:personal_results' %}">My Results</a>
         <a class="navbar-item"
            href="{% url 'accounts:detail' request.user.pk %}">My Profile</a>

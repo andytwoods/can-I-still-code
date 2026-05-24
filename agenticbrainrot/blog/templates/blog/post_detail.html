@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}{{ meta.title }} – Can I Still Code{% endblock title %}
+
+{% block extra_head %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script>
+    function whenInView(id, fn) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      new IntersectionObserver(function(entries, obs) {
+        if (!entries[0].isIntersecting) return;
+        obs.disconnect();
+        fn();
+      }, { threshold: 0.15 }).observe(el);
+    }
+  </script>
+  <style>
+    .blog-content h2 { font-size: 1.4rem; font-weight: 700; margin: 2rem 0 0.75rem; color: var(--theme-text-strong); }
+    .blog-content h3 { font-size: 1.15rem; font-weight: 600; margin: 1.5rem 0 0.5rem; color: var(--theme-text-strong); }
+    .blog-content p { margin-bottom: 1rem; line-height: 1.75; color: var(--theme-text); }
+    .blog-content table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+    .blog-content th, .blog-content td { border: 1px solid var(--theme-border); padding: 0.5rem 0.75rem; color: var(--theme-text); }
+    .blog-content th { background: var(--theme-bg-bis); font-weight: 600; color: var(--theme-text-strong); }
+    .blog-content pre { background: var(--theme-bg-bis); border-radius: 6px; padding: 1rem; overflow-x: auto; margin-bottom: 1rem; border: 1px solid var(--theme-border); }
+    .blog-content code { font-size: 0.875em; color: var(--theme-text); }
+    .blog-content blockquote { border-left: 4px solid var(--theme-primary); padding: 0.5rem 1rem; margin: 1rem 0; color: var(--theme-text-weak); }
+    .blog-content .chart-wrap { margin: 1.5rem 0; }
+    .blog-content hr { margin: 2rem 0; border-color: var(--theme-border); }
+    .blog-content ul, .blog-content ol { margin: 0 0 1rem 1.5rem; }
+    .blog-content li { margin-bottom: 0.3rem; line-height: 1.7; color: var(--theme-text); }
+    .blog-content a { color: var(--theme-link); }
+  </style>
+{% endblock extra_head %}
+
+{% block content %}
+  <div class="columns is-centered">
+    <div class="column is-8">
+      <nav class="breadcrumb mb-4" aria-label="breadcrumbs">
+        <ul>
+          <li><a href="{% url 'blog:post_list' %}">Blog</a></li>
+          <li class="is-active"><a aria-current="page">{{ meta.title }}</a></li>
+        </ul>
+      </nav>
+
+      <h1 class="title">{{ meta.title }}</h1>
+      <p class="is-size-7 mb-6" style="color: var(--theme-text-weak);">
+        {{ meta.date }}{% if meta.author %} &middot; {{ meta.author }}{% endif %}
+        {% if meta.analysis_ref %}
+          &middot; <a href="https://github.com/andytwoods/agenticbrainrot/tree/master/analysis/{{ meta.analysis_ref }}" target="_blank" rel="noopener">Analysis log &nearr;</a>
+        {% endif %}
+      </p>
+
+      <div class="content blog-content">
+        {{ content|safe }}
+      </div>
+
+      <hr>
+      <p class="is-size-7" style="color: var(--theme-text-weak);">
+        <a href="{% url 'blog:post_list' %}">&larr; All posts</a>
+      </p>
+    </div>
+  </div>
+{% endblock content %}

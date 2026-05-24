@@ -3,9 +3,12 @@ import zipfile
 from io import BytesIO
 from pathlib import Path
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
+from django.db.models import Count
 from django.db.models import F
+from django.db.models import Q
 from django.http import FileResponse
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -102,6 +105,69 @@ def _build_session_data(participant):
             efficiency_points.append({"x": i, "y": avg_efficiency, "date": date_str})
 
     return session_rows, accuracy_points, speed_points, runs_points, complexity_points, efficiency_points
+
+
+@staff_member_required
+def study_stats(request):
+    """Study-wide stats for staff/admins."""
+    real_sessions = CodeSession.objects.filter(is_mock=False)
+
+    total_participants = Participant.objects.count()
+    consented_participants = Participant.objects.filter(has_active_consent=True, deleted_at__isnull=True).count()
+    participants_with_sessions = real_sessions.values("participant").distinct().count()
+
+    total_sessions = real_sessions.count()
+    completed_sessions = real_sessions.filter(status=CodeSession.Status.COMPLETED).count()
+    in_progress_sessions = real_sessions.filter(status=CodeSession.Status.IN_PROGRESS).count()
+    abandoned_sessions = real_sessions.filter(status=CodeSession.Status.ABANDONED).count()
+
+    avg_sessions_all = real_sessions.values("participant").annotate(n=Count("id")).aggregate(avg=Avg("n"))["avg"] or 0
+    avg_sessions_started = (total_sessions / participants_with_sessions) if participants_with_sessions else 0
+
+    session_stats = list(
+        real_sessions.annotate(
+            passed=Count(
+                "challenge_attempts",
+                filter=Q(
+                    challenge_attempts__tests_total__gt=0,
+                    challenge_attempts__tests_passed=F("challenge_attempts__tests_total"),
+                    challenge_attempts__skipped=False,
+                ),
+            ),
+        ).values("passed", "status")
+    )
+
+    all_passed = [s["passed"] for s in session_stats]
+    completed_passed = [s["passed"] for s in session_stats if s["status"] == CodeSession.Status.COMPLETED]
+
+    avg_challenges_all = sum(all_passed) / len(all_passed) if all_passed else 0
+    avg_challenges_completed = sum(completed_passed) / len(completed_passed) if completed_passed else 0
+
+    per_participant = list(
+        real_sessions.values("participant__user__email")
+        .annotate(
+            session_count=Count("id"),
+            completed_count=Count("id", filter=Q(status=CodeSession.Status.COMPLETED)),
+        )
+        .order_by("-session_count", "participant__user__email")
+    )
+
+    context = {
+        "total_participants": total_participants,
+        "consented_participants": consented_participants,
+        "participants_with_sessions": participants_with_sessions,
+        "total_sessions": total_sessions,
+        "completed_sessions": completed_sessions,
+        "in_progress_sessions": in_progress_sessions,
+        "abandoned_sessions": abandoned_sessions,
+        "avg_sessions_all": round(avg_sessions_all, 2),
+        "avg_sessions_started": round(avg_sessions_started, 2),
+        "avg_challenges_all": round(avg_challenges_all, 2),
+        "avg_challenges_completed": round(avg_challenges_completed, 2),
+        "completion_rate": round(completed_sessions / total_sessions * 100) if total_sessions else 0,
+        "per_participant": per_participant,
+    }
+    return render(request, "dashboard/study_stats.html", context)
 
 
 @login_required

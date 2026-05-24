@@ -56,6 +56,11 @@ urlpatterns = [
         "",
         include("agenticbrainrot.dashboard.urls", namespace="dashboard"),
     ),
+    # Blog
+    path(
+        "blog/",
+        include("agenticbrainrot.blog.urls", namespace="blog"),
+    ),
     # API
     path("api/stats/summary/", stats_summary, name="api_stats_summary"),
     path(
