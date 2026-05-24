@@ -2,15 +2,31 @@
 title: Early Signals: AI Usage and Coding Performance
 date: 2026-05-24
 author: Andy T Woods
-summary: A first look at how self-reported AI usage correlates with challenge accuracy, completion rate, speed, and code efficiency across our first 20 sessions — and why the most interesting finding isn't the one you'd expect.
+summary: High AI users outperform low AI users in our first 20 sessions. That sounds like the wrong result — and it's exactly why longitudinal design matters. A cross-sectional snapshot can't separate skill from selection bias; only within-person tracking over time can.
 analysis_ref: 2026-05-24-ai-usage-correlation
 ---
 
 ## 20 sessions in. Here's what the data looks like — and why you shouldn't read too much into it yet.
 
-This study is built around one core question: does heavy use of AI coding tools affect your ability to write code without them? We're not going to answer that today. But we do have enough early data to run a first sanity check, and we want to be transparent about what we're seeing from the start.
+This study is built around one core question: does heavy use of AI coding tools affect your ability to write code without them? We're not going to answer that today. But we do have enough early data to run a first sanity check — and the early data already illustrates perfectly why the study is designed the way it is.
 
 All numbers in this post are reproducible from the [analysis log](https://github.com/andytwoods/agenticbrainrot/tree/master/analysis/2026-05-24-ai-usage-correlation).
+
+---
+
+## Why longitudinal design matters — and why this data shows it
+
+The headline finding from our first 20 sessions is that higher self-reported AI usage correlates *positively* with coding accuracy (r = +0.48). In other words: the more AI a participant uses day-to-day, the better they tend to perform on our challenges.
+
+If you came here expecting to see evidence that AI is rotting people's coding skills, that looks like the opposite of what you'd predict.
+
+But here is the problem: **we are only observing each person at a single point in time.** We cannot yet tell whether a high-AI user is performing well *because* of their AI habits, *despite* them, or — most likely — because they were already a stronger programmer before AI tools even entered the picture. More experienced developers adopted AI coding tools earlier and more heavily. Those same developers also perform better on coding challenges. Both things are downstream of programming experience; AI usage may be doing no causal work at all.
+
+This is the textbook case for why cross-sectional data cannot answer causal questions about skill change. When you compare people to each other at a single timepoint, you are measuring *who they already are*, not *what is happening to them*. The only way to separate the effect of AI tool use from pre-existing ability is to track the **same person over time** — watching whether their performance rises or falls as their AI habits change. That is exactly what this study is designed to do.
+
+Right now we have 19 participants with exactly one completed session. That is not enough longitudinal data to say anything about the main hypothesis. What we can do is show you the cross-sectional picture in full, flag where it is and isn't trustworthy, and set up the baseline for what comes next.
+
+---
 
 ---
 
