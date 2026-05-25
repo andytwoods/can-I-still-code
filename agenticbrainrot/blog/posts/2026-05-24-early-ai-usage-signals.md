@@ -8,7 +8,7 @@ analysis_ref: 2026-05-24-ai-usage-correlation
 
 ## 20 sessions in. An unexpected twist, and why you shouldn't read too much into it just yet.
 
-An aim of this project is to test whether heavy use of AI coding tools impact our ability to code. We don't have enough data to answer that just yet. But we do have enough early data to run a sanity check – and the early data at first glance is quite surprising! With some deliberation, though, the unexpected findings nicely demonstrate the importance of a more robust design, that factors in coding ability change over time – which we can test when enough people have signed up :)
+An aim of this project is to test whether heavy use of AI coding tools impact our ability to code. We don't have enough data to answer that just yet. But we do have enough early data to run a sanity check – and the early data at first glance is quite surprising! With some deliberation, though, the unexpected findings nicely demonstrate the importance of a more robust design, that factors in coding ability change over time – which we can test when enough people have signed up ([please do!](/allauth/signup/)) :)
 
 All numbers in this post are reproducible from the [analysis log](https://github.com/andytwoods/can-I-still-code/tree/master/analysis/2026-05-24-ai-usage-correlation).
 
@@ -24,7 +24,7 @@ All numbers in this post are reproducible from the [analysis log](https://github
 
 ## Why longitudinal design matters – and why this data shows it
 
-The surprising finding: higher AI usage correlates *positively* with accuracy (r = +0.48). The more AI someone uses day-to-day, the better they do on our challenges.
+The surprising finding: higher AI usage correlates *positively* with accuracy (r = +0.48). In this very early cross-sectional snapshot, people reporting higher AI usage also tended to score higher on the challenges.
 
 The issue though is that we're only seeing most people once and we can't tell yet whether high-AI users are doing well *because* of their habits, *despite* them, or simply because they were already stronger coders before any of this started. Early adopters of AI tools potentially also could be experienced developers – and experienced developers will do better at coding challenges. 
 
@@ -41,7 +41,7 @@ As of May 2026 we have **20 completed sessions** from **19 participants**. Each 
 
 ### Who took part
 
-All 19 participants are adults aged 25–54: nine in the 25–34 bracket, seven in 35–44, four in 45–54. This is an experienced group – average programming experience is around **14 years** (range 4–30), with roughly **9 years using Python** specifically. Self-rated proficiency skews intermediate to advanced: 9 intermediate, 8 advanced, 2 somewhat beginner, 1 expert. Exactly half have a CS or related degree; half don't. Most are based in the UK (14 of 19), with the remainder spread across Germany, Switzerland, and Sweden.
+All participants are adults aged 25–54. Across the 20 sessions: nine from participants in the 25–34 age bracket, seven in 35–44, four in 45–54. (One participant has completed two sessions, so session counts exceed the 19 unique individuals by one.) This is an experienced group – average programming experience is around **14 years** (range 4–30), with roughly **9 years using Python** specifically. Self-rated proficiency skews intermediate to advanced: 9 sessions from intermediate-rated participants, 8 advanced, 2 somewhat beginner, 1 expert. Exactly half have a CS or related degree; half don't. Most are based in the UK (14 of 19 unique participants), with the remainder spread across Germany, Switzerland, and Sweden.
 
 On average participants attempted **4.8 challenges per session** (range 1–12 – the maximum per session is 12).
 
@@ -79,7 +79,9 @@ Simple Pearson correlations between reported AI usage percentage and each outcom
 | Time per challenge | **+0.31** | 20 | Weak positive |
 | Efficiency ratio | **–0.10** | 19 | Negligible |
 
-*p-values are not reported. With n=20, they would be misleading – a correlation of r=0.48 scrapes past p<0.05, but that threshold tells you almost nothing useful at this sample size. The r values and confidence intervals are what matter here.*
+*p-values are not emphasised. At this sample size and with exploratory analyses, they would invite over-interpretation – r=0.48 scrapes past p<0.05, but that threshold carries almost no weight with n=20. The r values and 95% CIs are what matter.*
+
+*Two further limitations on these correlations: (a) accuracy and completion rate are bounded at 0–100% and already show ceiling effects for high-AI users, so Pearson r is a brittle summary even as a descriptive measure; (b) each session contributes equally to the correlation regardless of how many challenges were attempted – a 1-challenge session carries the same weight as a 12-challenge session.*
 
 Three of the four correlations are positive – higher AI use goes with better accuracy, more completions, and (oddly) more time taken. We'll come back to why "AI users are better coders" is almost certainly the wrong read.
 
@@ -141,7 +143,7 @@ Splitting sessions into three bands by reported AI usage:
 })();
 </script>
 
-Note the rather striking gap between the low and high AI usage groups – accuracy jumps from 62% to 99.5%. The low-AI group average is pulled down by one session where a participant passed zero challenges (see the raw data in the [analysis log](https://github.com/andytwoods/can-I-still-code/tree/master/analysis/2026-05-24-ai-usage-correlation)). We may want to consider breaking from our registered analysis and exclude inviduals who dont pass any sessions.
+This grouping is purely illustrative – with only four sessions in the low-AI band (one of which scored 0%), the apparent accuracy jump from 62% to 99.5% should not be read as a stable group difference. It is a descriptive split on a very small sample.
 
 ### AI Usage vs Accuracy (per session)
 
@@ -251,6 +253,8 @@ At AI% = 0 there's a lot of spread – some zero-AI participants did really well
 ### The Speed Paradox
 
 Here's an interesting finding. If AI dependency were degrading coding ability, you might expect high-AI users to take longer, and indeed they do! But they're *also* more accurate. So what's going on?
+
+*Note: this uses raw wall-clock time, not the pre-registered active-time measure (log of active completion time). Wall-clock time can include reading, pausing, and tab switching, so treat it as a noisy behavioural indicator rather than a precise measure.*
 
 <div class="chart-wrap">
   <canvas id="chart-scatter-speed" style="width:100%;height:100%"></canvas>
@@ -455,7 +459,7 @@ We also track how fast participants' code actually runs – the **efficiency rat
 })();
 </script>
 
-The correlation is **r = –0.10** – basically flat. High-AI users aren't writing slower code, and they're not writing faster code. That's actually a useful thing to know.
+The correlation is **r = –0.10** – basically flat. In this tiny snapshot, there's no visible evidence that high-AI users write slower-running code than low-AI users. That's actually a useful early signal.
 
 The red point is one person who solved 11 challenges correctly but ran about twice as slow as the reference. Remove them and the correlation shifts to –0.18 – still nothing. Flagged for transparency, not excluded (same timing-based rule applies). One to revisit if they come back for a second session.
 
