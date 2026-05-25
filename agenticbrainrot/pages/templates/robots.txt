@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /allauth/
+Disallow: /dashboard/
+Disallow: /consent/
+Disallow: /surveys/
+Disallow: /sessions/
+Disallow: /captcha/
+Disallow: /hijack/
+Disallow: /staff/
+
+Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml

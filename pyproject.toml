@@ -153,6 +153,7 @@ dev = [
     "pytest-django==4.12.0",
     "pytest-sugar==1.1.1",
     "ruff==0.15.11",
+    "scipy>=1.17.1",
     "werkzeug[watchdog]==3.1.8",
 ]
 
@@ -192,4 +193,5 @@ dependencies = [
     "anthropic>=0.96.0",
     "django-simple-captcha>=0.6.3",
     "webauthn>=2.7.1",
+    "scipy-stubs~=1.17.1",
 ]

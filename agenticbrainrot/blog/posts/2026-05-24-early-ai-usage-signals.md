@@ -2,148 +2,62 @@
 title: "Early results: AI Users Code Better by Hand – But It's Very Likely Not Why You Think"
 date: 2026-05-24
 author: Andy T Woods
-summary: "High AI users outperform low AI users in our first 20 sessions. That sounds like the exact opposite to <a href=\"https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md\">our predictions</a>! But this exemplifies why longitudinal design matters. An across-person snapshot can&#39;t separate skill from selection bias; only within-person tracking over time can."
+summary: "High AI users outperform low AI users in our first 19 sessions. That sounds like the exact opposite of <a href=\"https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md\">our predictions</a>! But this exemplifies why longitudinal design matters. An across-person snapshot can't separate skill from selection bias; only within-person tracking over time can."
 analysis_ref: 2026-05-24-ai-usage-correlation
+og_image: 2026-05-24-early-ai-usage-signals.png
 ---
 
-## 20 sessions in. An unexpected twist, and why you shouldn't read too much into it just yet.
+One aim of this project is to test whether heavy use of AI coding tools affects our ability to code. We don't have enough data to answer that just yet. But we can eyeball our data, and the first-glance results are surprising: participants who reported higher AI usage performed better on the coding challenges (r = +0.39 with accuracy) – but were also slower (r = +0.23 with active time per challenge).
 
-An aim of this project is to test whether heavy use of AI coding tools impact our ability to code. We don't have enough data to answer that just yet. But we do have enough early data to run a sanity check – and the early data at first glance is quite surprising! With some deliberation, though, the unexpected findings nicely demonstrate the importance of a more robust design, that factors in coding ability change over time – which we can test when enough people have signed up – ([please do!](/allauth/signup/) :)
+**This is almost certainly not evidence that AI use improves unaided coding skill!** 
 
-All numbers in this post are reproducible from the [analysis log](https://github.com/andytwoods/can-I-still-code/tree/master/analysis/2026-05-24-ai-usage-correlation).
+With such a tiny sample size (19 people) we can't make any conclusions. But we can still ponder what is going on. One explanation could be that we have confounding factors at play, for example, that early AI adopters in this sample may be stronger coders in ways not captured cleanly by years of experience. We can test this by checking whether experience drives AI adoption directly: the correlation between programming years and AI usage is r = −0.21, and between Python-specific years and AI usage r = +0.25. Both are weak and point in opposite directions, so experience doesn't cleanly explain the pattern. Another idea is that our average number of years coding is very high (approx 14). We may need to recruit participants with a broader range of coding abilities before we can properly test our hypotheses.
+
+We don't know what's going on yet – it's far too early and with too few people to make any conclusions.
 
 <div class="notification is-info is-light">
-<strong><u>Key terms used in this post</u></strong><br>
-<strong>Challenge</strong> – a single Python coding problem. Participants write code in the browser; automated tests check whether it works.<br>
-<strong>Session</strong> – one sitting in which a participant completes a batch of up to 12 challenges. Sessions are separated by at least 28 days.<br>
-<strong>Participant</strong> – one person enrolled in the study. A participant may have one or more sessions over time.<br>
-<strong>AI usage %</strong> – self-reported answer to: <em>"In the past month, roughly what percentage of the code you wrote was AI-generated?"</em> (0–100).
+<strong>Can you help?</strong> If you write Python, please <a href="/allauth/signup/">sign up</a>, or share this with someone who might :)
 </div>
 
----
-
-## Why longitudinal design matters – and why this data shows it
-
-The surprising finding: higher AI usage correlates *positively* with accuracy (r = +0.48). In this very early cross-sectional snapshot, people reporting higher AI usage also tended to score higher on the challenges.
-
-The issue though is that we're only seeing most people once and we can't tell yet whether high-AI users are doing well *because* of their habits, *despite* them, or simply because they were already stronger coders before any of this started. Early adopters of AI tools potentially also could be experienced developers – and experienced developers will do better at coding challenges. 
-
-To untangle this we need to follow the same people over time – the plan is that participants come back several times during the year to do further tests so we can observe if heavy AI usage is impacting individuals over time. 
+All numbers in this post are reproducible from the [analysis script](https://github.com/andytwoods/can-I-still-code/blob/master/analysis/2026-05-24-ai-usage-correlation/analyse.py).
 
 ---
+**Key terms used in this post**
 
-## What We Have
-
-As of May 2026 we have **20 completed sessions** from **19 participants**. Each session involves solving Python challenges without AI assistance, followed by a short post-session survey. That survey includes the key question:
-
-> *In the past month, roughly what percentage of the code you wrote was AI-generated?*
-
-
-### Who took part
-
-All participants are adults aged 25–54. Across the 20 sessions: nine from participants in the 25–34 age bracket, seven in 35–44, four in 45–54. (One participant has completed two sessions, so session count is 20) This is an experienced group – average programming experience is around **14 years** (range 4–30), with roughly **9 years using Python** specifically. Self-rated proficiency skews intermediate to advanced: 9 sessions from intermediate-rated participants, 8 advanced, 2 somewhat beginner, 1 expert. Exactly half have a CS or related degree; half don't. Most are based in the UK (14 of 19 unique participants), with the remainder spread across Germany, Switzerland, and Sweden.
-
-On average participants attempted **4.8 challenges per session** (range 1–12 – the maximum per session is 12).
-
-### The Four Outcome Variables
-
-For each session we collect/compute:
-
-| Variable | Definition |
+| Term | Definition |
 |---|---|
-| **Accuracy** | Average `tests_passed / tests_total` across challenges, expressed as a % |
-| **Completion rate** | % of attempted challenges where *all* test cases passed |
-| **Speed** | Average wall-clock time in seconds per challenge |
-| **Efficiency ratio** | Participant solution runtime ÷ reference solution runtime. 1.0 = matched canonical; >1 = slower-running code |
-
-The first three map directly to the primary outcomes in the [study design](/about): accuracy, speed, and completion as a proxy for overall success. Efficiency ratio is a secondary measure of code quality – whether participants write solutions that run snappily!
+| **Challenge** | A single Python coding problem. Participants write code in the browser; automated tests check whether it works. |
+| **Session** | One sitting in which a participant completes a batch of up to 12 challenges. Sessions are separated by at least 28 days. |
+| **Participant** | One person enrolled in the study. A participant may have one or more sessions over time. |
+| **AI usage %** | Self-reported answer to: *"In the past month, roughly what percentage of the code you wrote was AI-generated?"* (0–100). |
 
 ---
-
-## What We Found
+## What we found
 
 <div class="notification is-warning is-light">
-<strong>Important caveat before the charts:</strong> this is a cross-sectional snapshot of 20 sessions, mostly single observations per person. The correlations tell us about the relationship between AI usage and <em>current</em> performance – they say nothing about how performance <em>changes over time</em> as AI usage changes. That question requires longitudinal data, which we don't have yet.
+<strong>Important caveat before the charts:</strong> this is a cross-sectional snapshot of 19 sessions, mostly single observations per person. The correlations tell us about the relationship between AI usage and <em>current</em> performance – they say nothing about how performance <em>changes over time</em> as AI usage changes. That question requires longitudinal data, which we don't have yet.
 </div>
 
-### Correlations with AI Usage
+### Correlations with AI usage
 
-Simple Pearson correlations between reported AI usage percentage and each outcome:
+Pearson correlations between reported AI usage percentage and each outcome:
 
 | Outcome | r | n | Rough interpretation |
 |---|---|---|---|
-| Accuracy | **+0.48** | 20 | Moderate positive |
-| Completion rate | **+0.32** | 20 | Weak-to-moderate positive |
-| Time per challenge | **+0.31** | 20 | Weak positive |
+| Accuracy | **+0.39** | 19 | Weak-to-moderate positive |
+| Completion rate | **+0.13** | 19 | Negligible |
+| Active time per challenge | **+0.23** | 19 | Weak positive |
 | Efficiency ratio | **–0.10** | 19 | Negligible |
 
-*p-values are not added. At this sample size and with exploratory analyses, they would invite over-interpretation – r=0.48 scrapes past p<0.05, but that threshold carries almost no weight with n=20. The r values and 95% CIs are what matter.*
+*p-values are not added, because at this sample size, they would invite over-interpretation.* 
 
-*Two further limitations on these correlations: (a) accuracy and completion rate are bounded at 0–100% and already show ceiling effects for high-AI users, so Pearson r is a brittle summary even as a descriptive measure; (b) each session contributes equally to the correlation regardless of how many challenges were attempted – a 1-challenge session carries the same weight as a 12-challenge session.*
+Three of the four correlations are positive – higher AI use goes with better accuracy, a tiny positive association with completions, and, oddly, more time taken.
 
-Three of the four correlations are positive – higher AI use goes with better accuracy, more completions, and (oddly) more time taken. We'll come back to why "AI users are better coders" is almost certainly the wrong read.
+It is worth flagging that Pearson r is the wrong tool for the actual research question. It describes a between-person relationship – do high-AI users score higher than low-AI users? – but what we care about is within-person change: does *your* performance shift as *your* AI usage shifts? Those are completely different questions, and the between-person version is hopelessly confounded by experience.
 
-Worth flagging upfront: Pearson r is also the wrong tool for the actual research question. It describes a between-person relationship – do high-AI users score higher than low-AI users? – but what we care about is within-person change: does *your* performance shift as *your* AI usage shifts? Those are completely different questions, and the between-person version is hopelessly confounded by experience. The [planned analysis](https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md) uses mixed-effects models with person-mean centring, so each participant acts as their own control – a much more powerful approach, but one that requires multiple sessions per person.
+The [planned analysis](https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md) uses mixed-effects models with person-mean centring, so each participant acts as their own control. That is a much more powerful approach, but it requires multiple sessions per person.
 
-### Performance by AI Usage Group
-
-Splitting sessions into three bands by reported AI usage:
-
-<div class="chart-wrap">
-  <canvas id="chart-groups" style="max-height:380px"></canvas>
-</div>
-
-<script>
-(function () {
-  var isMobile = window.innerWidth < 768;
-  function init() {
-    new Chart(document.getElementById('chart-groups'), {
-      type: 'bar',
-      data: {
-        labels: ['Low (≤25% AI, n=4)', 'Mid (26–75%, n=10)', 'High (>75% AI, n=6)'],
-        datasets: [
-          {
-            label: 'Accuracy %',
-            data: [61.9, 94.8, 99.5],
-            backgroundColor: 'rgba(0, 114, 178, 0.85)',
-            borderColor: 'rgb(0, 114, 178)',
-            borderWidth: 1,
-          },
-          {
-            label: 'Completion rate %',
-            data: [54.4, 86.6, 97.2],
-            backgroundColor: 'rgba(0, 158, 115, 0.85)',
-            borderColor: 'rgb(0, 158, 115)',
-            borderWidth: 1,
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { position: isMobile ? 'bottom' : 'top' },
-          title: { display: true, text: 'Performance by AI Usage Group (n=20 sessions)' }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: 115,
-            ticks: { callback: function(v) { return v + '%'; } },
-            title: { display: true, text: 'Score (%)' }
-          },
-          x: { title: { display: true, text: 'Self-reported AI usage (% of code AI-generated)' } }
-        }
-      }
-    });
-  }
-  whenInView('chart-groups', init);
-})();
-</script>
-
-This grouping is purely illustrative – with only four sessions in the low-AI band (one of which scored 0%), the apparent accuracy jump from 62% to 99.5% should not be read as a stable group difference. It is a descriptive split on a very small sample.
-
-### AI Usage vs Accuracy (per session)
+### AI usage vs accuracy, per session
 
 Each bubble below is one session. Bubble size is proportional to the number of challenges attempted.
 
@@ -165,13 +79,9 @@ Each bubble below is one session. Bubble size is proportional to the number of c
   function init() {
     var ctx = document.getElementById('chart-scatter-accuracy');
     if (!ctx) return;
-    var OUTLIER_IDX = 0;
     var defaultBg = 'rgba(0, 114, 178, 0.55)';
     var defaultBorder = 'rgba(0, 114, 178, 0.9)';
-    var outlierBg = 'rgba(213, 94, 0, 0.7)';
-    var outlierBorder = 'rgba(213, 94, 0, 1)';
     var bubbles = [
-      {x: 0,  y: 0.0,  r: 4,  n: 1},
       {x: 0,  y: 77.8, r: 7,  n: 6},
       {x: 0,  y: 73.3, r: 7,  n: 5},
       {x: 0,  y: 96.4, r: 10, n: 11},
@@ -193,8 +103,6 @@ Each bubble below is one session. Bubble size is proportional to the number of c
       {x: 95, y: 96.7, r: 10, n: 12}
     ];
     var scaled = bubbles.map(function(p) { return {x: p.x, y: p.y, r: p.r * rScale, n: p.n}; });
-    var bgColors = scaled.map(function(_, i) { return i === OUTLIER_IDX ? outlierBg : defaultBg; });
-    var borderColors = scaled.map(function(_, i) { return i === OUTLIER_IDX ? outlierBorder : defaultBorder; });
     new Chart(ctx, {
       type: 'bubble',
       data: {
@@ -202,8 +110,8 @@ Each bubble below is one session. Bubble size is proportional to the number of c
           {
             label: 'Session',
             data: scaled,
-            backgroundColor: bgColors,
-            borderColor: borderColors,
+            backgroundColor: defaultBg,
+            borderColor: defaultBorder,
             borderWidth: 1,
           },
           {
@@ -229,8 +137,7 @@ Each bubble below is one session. Bubble size is proportional to the number of c
             filter: function(item) { return item.datasetIndex === 0; },
             callbacks: {
               label: function(c) {
-                var base = 'AI: ' + c.raw.x + '%  |  Accuracy: ' + c.raw.y + '%  |  n=' + c.raw.n;
-                return c.dataIndex === OUTLIER_IDX ? base + '  ⚑ flagged' : base;
+                return 'AI: ' + c.raw.x + '%  |  Accuracy: ' + c.raw.y + '%  |  n=' + c.raw.n;
               }
             }
           }
@@ -246,13 +153,71 @@ Each bubble below is one session. Bubble size is proportional to the number of c
 })();
 </script>
 
-At AI% = 0 there's a lot of spread – some zero-AI participants did really well, others didn't. The red point is one person who passed zero challenges in their only attempt, the worst result in the dataset. It drags the low-AI group average down and nudges the correlation up. We've flagged it but not removed it: our pre-registered rules only exclude sessions on timing grounds, and this one is fine. Up at high AI usage the sessions clump near 100% with almost no spread. Whether that's genuine ability or something else is what the longitudinal data will eventually tell us.
+One session where the participant passed zero challenges in their only attempt has been excluded.
 
-### The Speed Paradox
+### Performance by AI usage group
 
-Here's an interesting finding. If AI dependency were degrading coding ability, you might expect high-AI users to take longer, and indeed they do! But they're *also* more accurate. So what's going on?
+Splitting sessions into three bands by reported AI usage:
 
-*Note: this uses raw wall-clock time, not the pre-registered active-time measure (log of active completion time). Wall-clock time can include reading, pausing, and tab switching, so treat it as a noisy behavioural indicator rather than a precise measure.*
+<div class="chart-wrap">
+  <canvas id="chart-groups" style="max-height:380px"></canvas>
+</div>
+
+<script>
+(function () {
+  var isMobile = window.innerWidth < 768;
+  function init() {
+    new Chart(document.getElementById('chart-groups'), {
+      type: 'bar',
+      data: {
+        labels: ['Low (≤25% AI, n=3)', 'Mid (26–75%, n=10)', 'High (>75% AI, n=6)'],
+        datasets: [
+          {
+            label: 'Accuracy %',
+            data: [82.5, 94.8, 99.5],
+            backgroundColor: 'rgba(0, 114, 178, 0.85)',
+            borderColor: 'rgb(0, 114, 178)',
+            borderWidth: 1,
+          },
+          {
+            label: 'Completion rate %',
+            data: [72.5, 86.6, 97.2],
+            backgroundColor: 'rgba(0, 158, 115, 0.85)',
+            borderColor: 'rgb(0, 158, 115)',
+            borderWidth: 1,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: isMobile ? 'bottom' : 'top' },
+          title: { display: true, text: 'Performance by AI Usage Group (n=19 sessions)' }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 115,
+            ticks: { callback: function(v) { return v + '%'; } },
+            title: { display: true, text: 'Score (%)' }
+          },
+          x: { title: { display: true, text: 'Self-reported AI usage (% of code AI-generated)' } }
+        }
+      }
+    });
+  }
+  whenInView('chart-groups', init);
+})();
+</script>
+
+This grouping is purely illustrative. With only three sessions in the low-AI band, the apparent accuracy gap should not be read as a stable group difference. It is simply a descriptive split on a very small sample.
+
+### The speed paradox
+
+Here's an interesting finding. If AI dependency were reducing coding ability, you might expect high-AI users to take longer. In this early snapshot, they do. But they are *also* more accurate. So what's going on?
+
+*Note: active time is seconds of keystroke activity, not raw wall-clock time. The primary mixed model will use log-transformed active time; values here are untransformed.*
 
 <div class="chart-wrap">
   <canvas id="chart-scatter-speed" style="width:100%;height:100%"></canvas>
@@ -273,26 +238,25 @@ Here's an interesting finding. If AI dependency were degrading coding ability, y
     var ctx = document.getElementById('chart-scatter-speed');
     if (!ctx) return;
     var bubbles = [
-      {x: 0,  y: 81.0,  r: 4,  n: 1},
-      {x: 0,  y: 77.5,  r: 7,  n: 6},
+      {x: 0,  y: 72.0,  r: 7,  n: 6},
       {x: 0,  y: 88.4,  r: 7,  n: 5},
-      {x: 0,  y: 202.5, r: 10, n: 11},
-      {x: 30, y: 124.4, r: 7,  n: 5},
+      {x: 0,  y: 198.5, r: 10, n: 11},
+      {x: 30, y: 123.8, r: 7,  n: 5},
       {x: 30, y: 114.0, r: 4,  n: 1},
-      {x: 33, y: 103.8, r: 6,  n: 4},
-      {x: 50, y: 230.6, r: 10, n: 11},
+      {x: 33, y: 103.0, r: 6,  n: 4},
+      {x: 50, y: 254.5, r: 10, n: 11},
       {x: 50, y: 136.5, r: 5,  n: 2},
-      {x: 50, y: 292.0, r: 5,  n: 3},
-      {x: 50, y: 63.6,  r: 8,  n: 7},
-      {x: 50, y: 37.5,  r: 6,  n: 4},
+      {x: 50, y: 193.3, r: 5,  n: 3},
+      {x: 50, y: 60.7,  r: 8,  n: 7},
+      {x: 50, y: 37.0,  r: 6,  n: 4},
       {x: 75, y: 128.0, r: 4,  n: 1},
       {x: 75, y: 116.3, r: 7,  n: 6},
       {x: 85, y: 168.0, r: 4,  n: 1},
-      {x: 90, y: 238.1, r: 10, n: 10},
+      {x: 90, y: 201.3, r: 10, n: 10},
       {x: 90, y: 66.0,  r: 4,  n: 1},
       {x: 90, y: 33.8,  r: 6,  n: 4},
-      {x: 95, y: 369.0, r: 4,  n: 1},
-      {x: 95, y: 223.8, r: 10, n: 12}
+      {x: 95, y: 393.0, r: 4,  n: 1},
+      {x: 95, y: 149.2, r: 10, n: 12}
     ];
     var scaled = bubbles.map(function(p) { return {x: p.x, y: p.y, r: p.r * rScale, n: p.n}; });
     new Chart(ctx, {
@@ -324,19 +288,19 @@ Here's an interesting finding. If AI dependency were degrading coding ability, y
         maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
-          title: { display: true, text: 'AI Usage % vs Time per Challenge (bubble size = challenges attempted)' },
+          title: { display: true, text: 'AI Usage % vs Active Time per Challenge (bubble size = challenges attempted)' },
           tooltip: {
             filter: function(item) { return item.datasetIndex === 0; },
             callbacks: {
               label: function(c) {
-                return 'AI: ' + c.raw.x + '%  |  ' + c.raw.y + 's per challenge  |  n=' + c.raw.n;
+                return 'AI: ' + c.raw.x + '%  |  active: ' + c.raw.y + 's  |  n=' + c.raw.n;
               }
             }
           }
         },
         scales: {
           x: { min: -5, max: 105, title: { display: true, text: 'Self-reported AI usage (% of code AI-generated)' } },
-          y: { min: 0, title: { display: true, text: 'Average seconds per challenge' } }
+          y: { min: 0, title: { display: true, text: 'Active seconds per challenge' } }
         }
       }
     });
@@ -345,15 +309,15 @@ Here's an interesting finding. If AI dependency were degrading coding ability, y
 })();
 </script>
 
-High AI users (>75%) average **183 seconds** per challenge versus 112 seconds for low AI users – they're slower *and* more accurate. Three possible explanations, each worth tracking as data accumulates:
+High AI users (>75%) average **169 seconds** of active time per challenge versus 120 seconds for low AI users. They are slower *and* more accurate. Three possible explanations are worth tracking as data accumulates:
 
-1. **Challenge difficulty confound.** Challenges are randomly assigned and vary in difficulty; sessions are not matched. If high-AI users (who are generally more experienced) attempt more challenges per session – including harder, more time-consuming ones that less experienced participants might skip or abandon early – their average time goes up purely because of what they chose to attempt. This is probably the most mundane explanation.
-2. **Heavy AI users tackle harder challenges more persistently** – instead of giving up quickly, they grind through. We can check this against challenge difficulty tier data once we have more sessions.
-3. **Pacing habits transferred from AI-assisted work** – people used to iterating with AI feedback may naturally take more time verifying their solutions manually, even though they're ultimately right.
+1. **Challenge difficulty confound.** Challenges are randomly assigned and vary in difficulty; sessions are not matched. If high-AI users, who are generally more experienced in this early sample, attempt more challenges per session – including harder, more time-consuming ones that less experienced participants might skip or abandon early – their average time goes up because of what they chose to attempt. 
+2. **Heavy AI users tackle harder challenges more persistently.** Instead of giving up quickly, they may persist. We can check this against challenge difficulty tier data once we have more sessions.
+3. **People used to AI feedback may take more time verifying their solutions manually**, even though they ultimately get them right.
 
-### Code Efficiency: A Null Result
+### Code efficiency: a null result
 
-We also track how fast participants' code actually runs – the **efficiency ratio** is execution time relative to a reference solution (1.0 = matched; above 1 = slower). Coverage is good: 94 of 96 attempts have a value.
+We also track how fast participants' code actually runs. The **efficiency ratio** is execution time relative to a reference solution: 1.0 means matched; above 1 means slower. Coverage is good: 94 of 95 attempts have a value.
 
 <div class="notification is-success is-light">
 <strong>How it works:</strong> when you submit a solution, both your code <em>and</em> the reference answer are executed in the browser via <a href="https://pyodide.org/">Pyodide</a>. We take a median over 15 timing samples for each, divide participant time by reference time, and send only that ratio to the server. No submitted code is ever executed on our infrastructure. Reference solutions come from the original published benchmarks (MBPP, HumanEval) where available. <a href="https://github.com/andytwoods/can-I-still-code/tree/master/analysis/2026-05-24-ai-usage-correlation#efficiency-ratio-methodology">Full methodology in the analysis log &nearr;</a>
@@ -457,52 +421,65 @@ We also track how fast participants' code actually runs – the **efficiency rat
 })();
 </script>
 
-The correlation is **r = –0.10** – basically flat. In this tiny snapshot, there's no visible evidence that high-AI users write slower-running code than low-AI users. That's actually a useful early signal.
+The correlation is **r = –0.10**. There is no visible evidence that high-AI users write slower-running code than low-AI users. 
 
-The red point is one person who solved 11 challenges correctly but ran about twice as slow as the reference. Remove them and the correlation shifts to –0.18 – still nothing. Flagged for transparency, not excluded (same timing-based rule applies). One to revisit if they come back for a second session.
+The red point is one person who solved 11 challenges correctly but ran about twice as slow as the reference. They reported 0% AI usage. Remove them and the correlation shifts to **+0.33** – because this low-AI, high-efficiency-ratio person was pulling the correlation negative. The point is flagged for transparency, not excluded, because the pre-registered rules only remove sessions on timing grounds. This is one to revisit if they return for a second session.
 
 ---
 
-## A Few Caveats
+## In more detail
 
-As covered above, the positive correlations almost certainly reflect selection bias rather than anything causal – experienced developers adopted AI tools early *and* score higher on challenges. Both trace back to experience. The longitudinal design is how we get past this.
+As of May 2026 we have **19 completed sessions** from **19 participants**. Each session involves solving Python challenges without AI assistance, followed by a short post-session survey. That survey includes the key question:
 
-A few other things worth bearing in mind:
+> *In the past month, roughly what percentage of the code you wrote was AI-generated?*
+
+### Who took part
+
+All participants are adults aged 25–54. Across the 19 sessions, nine are from participants in the 25–34 age bracket, seven in 35–44, and three in 45–54.
+
+This is an experienced group. Average programming experience is around **14 years** (range 4–30), with roughly **9 years using Python** specifically. Self-rated proficiency skews intermediate to advanced: 9 sessions from intermediate-rated participants, 8 advanced, 2 somewhat beginner, and 1 expert. Exactly half have a CS or related degree; half don't. Most are based in the UK (14 of 19 unique participants), with the remainder spread across Germany, Switzerland, and Sweden.
+
+On average, participants attempted **5.0 challenges per session** (range 1–12; the maximum per session is 12).
+
+### The four outcome variables
+
+For each session we collect or compute:
+
+| Variable | Definition |
+|---|---|
+| **Accuracy** | Average `tests_passed / tests_total` across challenges, expressed as a % |
+| **Completion rate** | % of attempted challenges where *all* test cases passed |
+| **Speed** | Average active time (seconds of keystroke activity) per challenge |
+| **Efficiency ratio** | Participant solution runtime ÷ reference solution runtime. 1.0 = matched canonical; >1 = slower-running code |
+
+The first three map directly to the primary outcomes in the [study design](/about): accuracy, speed, and completion as a proxy for overall success. Efficiency ratio is a secondary measure of code quality – whether participants write solutions that run snappily.
+
+---
+
+## A few caveats
+
+The positive correlations almost certainly reflect selection bias rather than anything causal. The experience confound is less clear than it first appears; programming years and AI usage correlate at r = −0.21, Python years at r = +0.25. So experience alone doesn't account for the pattern, but we can't rule out other effects. The longitudinal design is how we get past this.
+
+A few other things are worth bearing in mind:
 
 - **Self-report noise.** AI usage % is a rough estimate, not a measured one. People's sense of how much AI they use varies a lot by task and by how far back they're trying to recall.
-- **Habits vs. the session.** The survey asks about the *past month*, not the session itself. Someone who normally uses AI 90% of the time is describing their habits – they weren't using AI during the challenge (we ask them not to).
+- **Habits vs. the session.** The survey asks about the *past month*, not the session itself. Someone who normally uses AI 90% of the time is describing their habits – they weren't using AI during the challenge, because we ask them not to.
 - **Challenge difficulty varies.** Challenges are assigned randomly, so a session with harder problems will naturally score lower. We're not matching difficulty across participants at this stage.
-- **Tiny N.** 20 sessions. r = 0.48 at n=20 has a 95% CI of roughly 0.05 to 0.74. The number itself should be taken loosely.
+- **Tiny n.** 19 sessions. r = 0.39. Too early to draw conclusions.
 
 ---
 
-## What to Watch For
+## What's next
 
-The signal we actually care about won't appear until people have done multiple sessions. We're looking for whether someone's accuracy *shifts* when their AI use goes up or down – that within-person change is the whole point. One session per person tells us nothing about that.
-
-Speed is the one thing worth keeping an eye on for now. High-AI users are slower but more accurate, which doesn't fit the obvious story of AI dependency making people give up sooner. That's worth tracking.
+We won't be able to get a robust, more accurate, picture until far more people have completed multiple sessions. 
 
 **If you want to help answer the question, take part.** The more participants who complete multiple sessions, the faster the longitudinal signal emerges. Each session takes around 30–60 minutes and can be done entirely in your browser – no setup needed.
+
+---
 
 <div class="notification is-primary is-light">
   <strong>Take part in the study</strong><br>
   <a href="/allauth/signup/" class="button is-primary mt-2 mr-2">Create an account &rarr;</a>
   <a href="/waitlist/" class="button is-light mt-2">Join the waitlist</a>
 </div>
-
----
-
-## Pre-registration and Deviations
-
-This study is pre-registered on AsPredicted – the full protocol is [on GitHub](https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md). Pre-registration means we committed our hypotheses, analysis plan, and exclusion rules to a timestamped public record *before* collecting data, so there is no ambiguity about what was predicted in advance versus what was noticed after the fact. **[This blog post is not the pre-registered analysis.](https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md)** It is an exploratory cross-sectional snapshot run at 20 sessions to establish a baseline and demonstrate the study's data pipeline. The pre-registered primary analysis – a within-person longitudinal mixed model – will run when at least 100 participants have completed three or more sessions.
-
-Two sessions are flagged in red (0% accuracy and efficiency ratio ≈ 2.1). Neither is excluded – the pre-registration only removes sessions on timing grounds, and both are fine on that score. The red dots are just there so you know we've seen them.
-
-**One potential future deviation under consideration:** we may want to exclude participants who pass zero challenges across all sessions – essentially a failed engagement screen, not a true study observation. The [pre-registered exclusion rules](https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md) don't cover this case. If we decide to apply it, it will be logged here as a formal deviation before any primary analysis runs.
-**One potential future deviation under consideration:** we may want to exclude participants who pass zero challenges across all sessions – essentially a failed engagement screen, not a true study observation. The [pre-registered exclusion rules](https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md) don't cover this case. If we decide to apply it, it will be logged here as a formal deviation before any primary analysis runs.
-
----
-
-## Reproducibility
-
-Every number here was pulled from the production database on 2026-05-24. Methodology and anonymised session data are in [`analysis/2026-05-24-ai-usage-correlation/`](https://github.com/andytwoods/can-I-still-code/tree/master/analysis/2026-05-24-ai-usage-correlation) on GitHub.
+    
