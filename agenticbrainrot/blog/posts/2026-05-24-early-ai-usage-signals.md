@@ -473,7 +473,7 @@ A few other things are worth bearing in mind:
 
 We won't be able to get a robust, more accurate, picture until far more people have completed multiple sessions. 
 
-**If you want to help answer the question, take part.** The more participants who complete multiple sessions, the faster the longitudinal signal emerges. Each session takes around 30–60 minutes and can be done entirely in your browser – no setup needed.
+**If you want to help answer the question, please take part :).** The more participants who complete multiple sessions, the faster the longitudinal signal emerges. 
 
 ---
 
