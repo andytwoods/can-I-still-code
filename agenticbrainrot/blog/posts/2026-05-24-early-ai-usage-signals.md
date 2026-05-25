@@ -211,7 +211,7 @@ Splitting sessions into three bands by reported AI usage:
 })();
 </script>
 
-This grouping is purely illustrative. With only three sessions in the low-AI band, the apparent accuracy gap should not be read as a stable group difference. It is simply a descriptive split on a very small sample.
+This grouping is purely illustrative. With only three sessions in the low-AI band, the difference is most likely only a descriptive split on a very small sample.
 
 ### The speed paradox
 
