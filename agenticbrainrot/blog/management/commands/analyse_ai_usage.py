@@ -70,7 +70,12 @@ class Command(BaseCommand):
         sessions_data = []
         excluded = 0
 
-        for sess in CodeSession.objects.filter(is_mock=False, status="completed").order_by("id"):
+        for sess in CodeSession.objects.filter(
+            is_mock=False,
+            status="completed",
+            participant__user__is_staff=False,
+            participant__user__is_superuser=False,
+        ).order_by("id"):
             ai = session_ai_pct.get(sess.id) or ai_pct_by_participant.get(sess.participant_id)
             if ai is None:
                 excluded += 1

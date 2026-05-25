@@ -16,7 +16,7 @@
           <p class="is-size-7 mb-3" style="color: var(--color-text-muted, #888);">
             {{ post.date }}{% if post.author %} &middot; {{ post.author }}{% endif %}
           </p>
-          {% if post.summary %}<p class="mb-4">{{ post.summary }}</p>{% endif %}
+          {% if post.summary %}<p class="mb-4">{{ post.summary|safe }}</p>{% endif %}
           <a href="{% url 'blog:post_detail' post.slug %}" class="button is-small is-primary">Read &rarr;</a>
         </div>
       {% empty %}

@@ -112,3 +112,36 @@ See `data.json` for full per-session values. Sessions are identified by an anony
 
 - The `accuracy ~ vibe_coding_pct × months_since_baseline` interaction (the primary study hypothesis) requires multiple sessions per participant.
 - The positive speed correlation (high AI users are slower but more accurate) is the most unexpected finding; worth tracking.
+
+## Efficiency Ratio Methodology
+
+The efficiency ratio is computed **client-side in the browser** using [Pyodide](https://pyodide.org/) — CPython compiled to WebAssembly, running inside a dedicated Web Worker. No participant code is executed on the server.
+
+### Computation steps
+
+1. After a participant submits their solution and all test cases pass, the web worker runs a timing routine.
+2. The participant's function and the challenge's `reference_solution` are each timed using `time.monotonic()` inside Pyodide.
+3. Each solution is called repeatedly in a tight loop with the same test-case inputs, for up to 2 seconds or 15 collected samples (whichever comes first).
+4. The **median** of collected per-call timings (in microseconds) is used for each solution to reduce variance from JIT warm-up and garbage collection.
+5. `efficiency_ratio = participant_median_µs / reference_median_µs` — rounded to 2 decimal places.
+6. Only this ratio (a single float) is sent to the server via the challenge submission POST request.
+
+### Edge cases
+
+- **Class-based or stateful challenges** are skipped (ratio recorded as `null`); only standard function-call test cases are timed.
+- If either solution times out or throws during timing (not during testing), ratio is `null`.
+- A ratio of exactly `1.0` is recorded when the reference runtime is zero (degenerate case).
+
+### Reference solutions
+
+For benchmark fixtures (MBPP, HumanEval), the reference solution is drawn directly from the published dataset and stored in `Challenge.reference_solution`. Screening fixtures have researcher-written reference solutions. In both cases the reference is the same for every participant attempting that challenge, so comparisons are fair within-challenge.
+
+### Interpretation
+
+| Ratio | Meaning |
+|---|---|
+| < 1.0 | Participant code runs faster than the reference |
+| 1.0 | Matched |
+| > 1.0 | Participant code runs slower (e.g. 2.0 = twice as slow) |
+
+A ratio > 1 does not imply "wrong" — many valid solutions are less optimised than the canonical answer. The ratio is a measure of computational efficiency, not correctness (correctness is determined by whether all tests pass).
