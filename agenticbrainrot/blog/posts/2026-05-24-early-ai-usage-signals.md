@@ -480,6 +480,5 @@ We won't be able to get a robust, more accurate, picture until far more people h
 <div class="notification is-primary is-light">
   <strong>Take part in the study</strong><br>
   <a href="/allauth/signup/" class="button is-primary mt-2 mr-2">Create an account &rarr;</a>
-  <a href="/waitlist/" class="button is-light mt-2">Join the waitlist</a>
 </div>
     
