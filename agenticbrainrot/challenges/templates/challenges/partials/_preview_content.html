@@ -137,13 +137,9 @@
   </div>
 </div>
 <!-- Test cases data for JS -->
-<script id="test-cases-data" type="application/json">
-  {
-    {
-      test_cases_json | safe
-    }
-  }
-</script>
+{# djlint:off #}
+<script id="test-cases-data" type="application/json">{{ test_cases_json|safe }}</script>
+{# djlint:on #}
 <input type="hidden" id="pyodide-load-ms" value="" />
 <input type="hidden" id="editor-ready" value="" />
 <input type="hidden" id="tests-passed" value="" />
