@@ -11,12 +11,12 @@ One aim of this project is to test whether heavy use of AI coding tools affects 
 
 **This is almost certainly not evidence that AI use improves unaided coding skill!** 
 
-With such a tiny sample size (19 people) we can't make any conclusions. But we can still ponder what is going on. One explanation could be that we have confounding factors at play, for example, that early AI adopters in this sample may be stronger coders in ways not captured cleanly by years of experience. We can test this by checking whether experience drives AI adoption directly: the correlation between programming years and AI usage is r = −0.21, and between Python-specific years and AI usage r = +0.25. Both are weak and point in opposite directions, so experience doesn't cleanly explain the pattern. Another idea is that our average number of years coding is very high (approx 14). We may need to recruit participants with a broader range of coding abilities before we can properly test our hypotheses.
+With such a tiny sample size (19 people) we can't make any conclusions. But we can still ponder what is going on if the pattern of results we observe here holds with more participants. One explanation could be that we have confounding factors at play, for example, that early AI adopters in this sample may be stronger coders in ways not captured cleanly by years of experience. We can test this by checking whether experience drives AI adoption directly: the correlation between programming years and AI usage is r = −0.21, and between Python-specific years and AI usage r = +0.25. Both are weak and point in opposite directions, so experience doesn't cleanly explain the pattern. Another idea is that our average number of years coding is very high (approx 14). We may need to recruit participants with a broader range of coding abilities before we can properly test our hypotheses.
 
 We don't know what's going on yet – it's far too early and with too few people to make any conclusions.
 
 <div class="notification is-info is-light">
-<strong>Can you help?</strong> If you write Python, please <a href="/allauth/signup/">sign up</a>, or share this with someone who might :)
+<strong>Can you help?</strong> If you write Python, please <a href="/allauth/signup/">sign up</a>! And please spread the word :)
 </div>
 
 All numbers in this post are reproducible from the [analysis script](https://github.com/andytwoods/can-I-still-code/blob/master/analysis/2026-05-24-ai-usage-correlation/analyse.py).
@@ -309,7 +309,7 @@ Here's an interesting finding. If AI dependency were reducing coding ability, yo
 
 High AI users (>75%) average **169 seconds** of active time per challenge versus 120 seconds for low AI users. They are slower *and* more accurate. Three possible explanations are worth tracking as data accumulates:
 
-1. **Challenge difficulty confound.** Challenges are randomly assigned and vary in difficulty; sessions are not matched. If high-AI users, who are generally more experienced in this early sample, attempt more challenges per session – including harder, more time-consuming ones that less experienced participants might skip or abandon early – their average time goes up because of what they chose to attempt. 
+1. **Challenge difficulty confound.** Challenges are randomly assigned and vary in difficulty; sessions are not matched. If high-AI users attempt more challenges per session – including harder, more time-consuming ones that less experienced participants might skip or abandon early – their average time goes up because of what they chose to attempt. 
 2. **Heavy AI users tackle harder challenges more persistently.** Instead of giving up quickly, they may persist. We can check this against challenge difficulty tier data once we have more sessions.
 3. **People used to AI feedback may take more time verifying their solutions manually**, even though they ultimately get them right.
 
@@ -425,7 +425,7 @@ The red point is one person who solved 11 challenges correctly but ran about twi
 
 ---
 
-## In more detail
+## More details
 
 As of May 2026 we have **19 completed sessions** from **19 participants**. Each session involves solving Python challenges without AI assistance, followed by a short post-session survey. That survey includes the key question:
 
@@ -435,7 +435,7 @@ As of May 2026 we have **19 completed sessions** from **19 participants**. Each 
 
 All participants are adults aged 25–54. Across the 19 sessions, nine are from participants in the 25–34 age bracket, seven in 35–44, and three in 45–54.
 
-This is an experienced group. Average programming experience is around **14 years** (range 4–30), with roughly **9 years using Python** specifically. Self-rated proficiency skews intermediate to advanced: 9 sessions from intermediate-rated participants, 8 advanced, 2 somewhat beginner, and 1 expert. Exactly half have a CS or related degree; half don't. Most are based in the UK (14 of 19 unique participants), with the remainder spread across Germany, Switzerland, and Sweden.
+This is an experienced group. Average programming experience is around **14 years** (range 4–30), with roughly **9 years using Python** specifically. Self-rated proficiency skews intermediate to advanced: 9 sessions from intermediate-rated participants, 8 advanced, 2 somewhat beginner, and 1 expert. Exactly half have a CS or related degree; half don't. Most are based in the UK (14 of 19 unique participants), with the remainder spread across Germany, Switzerland, and Sweden. Note that we excluded one person from all analyses as they completed no challenges. 
 
 On average, participants attempted **5.0 challenges per session** (range 1–12; the maximum per session is 12).
 
