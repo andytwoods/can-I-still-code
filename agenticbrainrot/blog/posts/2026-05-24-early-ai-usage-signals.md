@@ -217,8 +217,6 @@ This grouping is purely illustrative. With only three sessions in the low-AI ban
 
 Here's an interesting finding. If AI dependency were reducing coding ability, you might expect high-AI users to take longer. In this early snapshot, they do. But they are *also* more accurate. So what's going on?
 
-*Note: active time is seconds of keystroke activity, not raw wall-clock time. The primary mixed model will use log-transformed active time; values here are untransformed.*
-
 <div class="chart-wrap">
   <canvas id="chart-scatter-speed" style="width:100%;height:100%"></canvas>
 </div>
