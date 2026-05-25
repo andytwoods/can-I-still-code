@@ -1,5 +1,5 @@
 ---
-title: Early Signals: AI Usage and Coding Performance
+title: "Early results: AI Users Code Better by Hand – But It's Very Likely Not Why You Think"
 date: 2026-05-24
 author: Andy T Woods
 summary: "High AI users outperform low AI users in our first 20 sessions. That sounds like the exact opposite to <a href=\"https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md\">our predictions</a>! But this exemplifies why longitudinal design matters. An across-person snapshot can&#39;t separate skill from selection bias; only within-person tracking over time can."
@@ -8,12 +8,12 @@ analysis_ref: 2026-05-24-ai-usage-correlation
 
 ## 20 sessions in. An unexpected twist, and why you shouldn't read too much into it just yet.
 
-An aim of this project is to test whether heavy use of AI coding tools impact our ability to code. We don't have enough data to answer that just yet. But we do have enough early data to run a sanity check – and the early data at first glance is quite surprising! With some deliberation, though, the unexpected findings nicely demonstrate the importance of a more robust design, that factors in coding ability change over time – which we can test when enough people have signed up ([please do!](/allauth/signup/)) :)
+An aim of this project is to test whether heavy use of AI coding tools impact our ability to code. We don't have enough data to answer that just yet. But we do have enough early data to run a sanity check – and the early data at first glance is quite surprising! With some deliberation, though, the unexpected findings nicely demonstrate the importance of a more robust design, that factors in coding ability change over time – which we can test when enough people have signed up – ([please do!](/allauth/signup/) :)
 
 All numbers in this post are reproducible from the [analysis log](https://github.com/andytwoods/can-I-still-code/tree/master/analysis/2026-05-24-ai-usage-correlation).
 
 <div class="notification is-info is-light">
-<strong>Key terms used in this post</strong><br>
+<strong><u>Key terms used in this post</u></strong><br>
 <strong>Challenge</strong> – a single Python coding problem. Participants write code in the browser; automated tests check whether it works.<br>
 <strong>Session</strong> – one sitting in which a participant completes a batch of up to 12 challenges. Sessions are separated by at least 28 days.<br>
 <strong>Participant</strong> – one person enrolled in the study. A participant may have one or more sessions over time.<br>
@@ -41,11 +41,9 @@ As of May 2026 we have **20 completed sessions** from **19 participants**. Each 
 
 ### Who took part
 
-All participants are adults aged 25–54. Across the 20 sessions: nine from participants in the 25–34 age bracket, seven in 35–44, four in 45–54. (One participant has completed two sessions, so session counts exceed the 19 unique individuals by one.) This is an experienced group – average programming experience is around **14 years** (range 4–30), with roughly **9 years using Python** specifically. Self-rated proficiency skews intermediate to advanced: 9 sessions from intermediate-rated participants, 8 advanced, 2 somewhat beginner, 1 expert. Exactly half have a CS or related degree; half don't. Most are based in the UK (14 of 19 unique participants), with the remainder spread across Germany, Switzerland, and Sweden.
+All participants are adults aged 25–54. Across the 20 sessions: nine from participants in the 25–34 age bracket, seven in 35–44, four in 45–54. (One participant has completed two sessions, so session count is 20) This is an experienced group – average programming experience is around **14 years** (range 4–30), with roughly **9 years using Python** specifically. Self-rated proficiency skews intermediate to advanced: 9 sessions from intermediate-rated participants, 8 advanced, 2 somewhat beginner, 1 expert. Exactly half have a CS or related degree; half don't. Most are based in the UK (14 of 19 unique participants), with the remainder spread across Germany, Switzerland, and Sweden.
 
 On average participants attempted **4.8 challenges per session** (range 1–12 – the maximum per session is 12).
-
-We don't currently collect gender data, which is a gap we're aware of.
 
 ### The Four Outcome Variables
 
@@ -79,7 +77,7 @@ Simple Pearson correlations between reported AI usage percentage and each outcom
 | Time per challenge | **+0.31** | 20 | Weak positive |
 | Efficiency ratio | **–0.10** | 19 | Negligible |
 
-*p-values are not emphasised. At this sample size and with exploratory analyses, they would invite over-interpretation – r=0.48 scrapes past p<0.05, but that threshold carries almost no weight with n=20. The r values and 95% CIs are what matter.*
+*p-values are not added. At this sample size and with exploratory analyses, they would invite over-interpretation – r=0.48 scrapes past p<0.05, but that threshold carries almost no weight with n=20. The r values and 95% CIs are what matter.*
 
 *Two further limitations on these correlations: (a) accuracy and completion rate are bounded at 0–100% and already show ceiling effects for high-AI users, so Pearson r is a brittle summary even as a descriptive measure; (b) each session contributes equally to the correlation regardless of how many challenges were attempted – a 1-challenge session carries the same weight as a 12-challenge session.*
 
@@ -496,23 +494,11 @@ Speed is the one thing worth keeping an eye on for now. High-AI users are slower
 
 ## Pre-registration and Deviations
 
-This study is pre-registered on AsPredicted – the full protocol is [on GitHub](https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md). Pre-registration means we committed our hypotheses, analysis plan, and exclusion rules to a timestamped public record *before* collecting data, so there is no ambiguity about what was predicted in advance versus what was noticed after the fact. **This blog post is not the pre-registered analysis.** It is an exploratory cross-sectional snapshot run at 20 sessions to establish a baseline and demonstrate the study's data pipeline. The pre-registered primary analysis – a within-person longitudinal mixed model – will run when at least 100 participants have completed three or more sessions.
-
-Here's exactly how this post's analysis differs from the pre-registered plan:
-
-| Aspect | Pre-registered | This post |
-|---|---|---|
-| Study design | Longitudinal within-person | Cross-sectional, one timepoint per person |
-| Unit of analysis | Challenge attempt | Session average |
-| Primary predictor | Previous-session AI%, person-mean centred (lagged) | Current-session AI%, uncentred |
-| Accuracy measure | Binary pass/fail per challenge | Mean tests_passed ÷ tests_total % |
-| Speed measure | log(active completion time) | Raw wall-clock seconds |
-| Statistical method | Mixed models – `lme4`, participant × session × challenge random effects | Pearson r |
-| Outlier/exclusion rules | Completion time >3 h removed; <10 s excluded in sensitivity analyses only; no further removal | Not applied – session-level averages are not subject to per-attempt time rules |
-| Minimum sample | 100 participants × ≥3 sessions | 20 sessions, 19 participants |
+This study is pre-registered on AsPredicted – the full protocol is [on GitHub](https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md). Pre-registration means we committed our hypotheses, analysis plan, and exclusion rules to a timestamped public record *before* collecting data, so there is no ambiguity about what was predicted in advance versus what was noticed after the fact. **[This blog post is not the pre-registered analysis.](https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md)** It is an exploratory cross-sectional snapshot run at 20 sessions to establish a baseline and demonstrate the study's data pipeline. The pre-registered primary analysis – a within-person longitudinal mixed model – will run when at least 100 participants have completed three or more sessions.
 
 Two sessions are flagged in red (0% accuracy and efficiency ratio ≈ 2.1). Neither is excluded – the pre-registration only removes sessions on timing grounds, and both are fine on that score. The red dots are just there so you know we've seen them.
 
+**One potential future deviation under consideration:** we may want to exclude participants who pass zero challenges across all sessions – essentially a failed engagement screen, not a true study observation. The [pre-registered exclusion rules](https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md) don't cover this case. If we decide to apply it, it will be logged here as a formal deviation before any primary analysis runs.
 **One potential future deviation under consideration:** we may want to exclude participants who pass zero challenges across all sessions – essentially a failed engagement screen, not a true study observation. The [pre-registered exclusion rules](https://github.com/andytwoods/agenticbrainrot/blob/master/preregistration/aspredicted.md) don't cover this case. If we decide to apply it, it will be logged here as a formal deviation before any primary analysis runs.
 
 ---
