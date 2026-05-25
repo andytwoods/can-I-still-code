@@ -1,42 +1,210 @@
 {
   "generated_at": "2026-05-24",
   "source": "production DB via config.settings.remote_on_local",
-  "n_sessions": 20,
-  "n_sessions_excluded": 0,
+  "n_sessions": 19,
+  "n_sessions_excluded": 1,
   "ai_usage_questions": {
     "post_session_id": 43,
     "profile_fallback_id": 46
   },
   "correlations": {
-    "ai_pct_vs_accuracy_r": 0.477,
-    "ai_pct_vs_accuracy_n": 20,
-    "ai_pct_vs_completion_rate_r": 0.322,
-    "ai_pct_vs_completion_rate_n": 20,
-    "ai_pct_vs_speed_r": 0.305,
-    "ai_pct_vs_speed_n": 20,
+    "ai_pct_vs_accuracy_r": 0.389,
+    "ai_pct_vs_accuracy_n": 19,
+    "ai_pct_vs_completion_rate_r": 0.134,
+    "ai_pct_vs_completion_rate_n": 19,
+    "ai_pct_vs_speed_r": 0.232,
+    "ai_pct_vs_speed_n": 19,
     "ai_pct_vs_efficiency_ratio_r": -0.097,
     "ai_pct_vs_efficiency_ratio_n": 19
   },
+  "experience_correlations": {
+    "prog_years_vs_ai_pct_r": -0.207,
+    "prog_years_vs_ai_pct_n": 32,
+    "python_years_vs_ai_pct_r": 0.246,
+    "python_years_vs_ai_pct_n": 32
+  },
+  "participants": [
+    {
+      "ai_pct": 91.0,
+      "prog_years": 7.0,
+      "python_years": 7.0
+    },
+    {
+      "ai_pct": 40.0,
+      "prog_years": 10.0,
+      "python_years": 6.0
+    },
+    {
+      "ai_pct": 9.0,
+      "prog_years": 10.0,
+      "python_years": 1.0
+    },
+    {
+      "ai_pct": 90.0,
+      "prog_years": 28.0,
+      "python_years": 12.0
+    },
+    {
+      "ai_pct": 0.0,
+      "prog_years": 30.0,
+      "python_years": 5.0
+    },
+    {
+      "ai_pct": 0.0,
+      "prog_years": 15.0,
+      "python_years": 14.0
+    },
+    {
+      "ai_pct": 95.0,
+      "prog_years": 13.0,
+      "python_years": 13.0
+    },
+    {
+      "ai_pct": 0.0,
+      "prog_years": 5.0,
+      "python_years": 5.0
+    },
+    {
+      "ai_pct": 50.0,
+      "prog_years": 20.0,
+      "python_years": 14.0
+    },
+    {
+      "ai_pct": 90.0,
+      "prog_years": 16.0,
+      "python_years": 16.0
+    },
+    {
+      "ai_pct": 50.0,
+      "prog_years": 16.0,
+      "python_years": 16.0
+    },
+    {
+      "ai_pct": 90.0,
+      "prog_years": 5.0,
+      "python_years": 9.0
+    },
+    {
+      "ai_pct": 99.0,
+      "prog_years": 17.0,
+      "python_years": 15.0
+    },
+    {
+      "ai_pct": 95.0,
+      "prog_years": 4.0,
+      "python_years": 4.0
+    },
+    {
+      "ai_pct": 80.0,
+      "prog_years": 4.0,
+      "python_years": 3.0
+    },
+    {
+      "ai_pct": 0.0,
+      "prog_years": 12.0,
+      "python_years": 9.0
+    },
+    {
+      "ai_pct": 90.0,
+      "prog_years": 10.0,
+      "python_years": 10.0
+    },
+    {
+      "ai_pct": 50.0,
+      "prog_years": 6.0,
+      "python_years": 6.0
+    },
+    {
+      "ai_pct": 25.0,
+      "prog_years": 20.0,
+      "python_years": 10.0
+    },
+    {
+      "ai_pct": 75.0,
+      "prog_years": 16.0,
+      "python_years": 14.0
+    },
+    {
+      "ai_pct": 50.0,
+      "prog_years": 4.0,
+      "python_years": 4.0
+    },
+    {
+      "ai_pct": 1.0,
+      "prog_years": 35.0,
+      "python_years": 13.0
+    },
+    {
+      "ai_pct": 0.0,
+      "prog_years": 30.0,
+      "python_years": 10.0
+    },
+    {
+      "ai_pct": 33.0,
+      "prog_years": 10.0,
+      "python_years": 10.0
+    },
+    {
+      "ai_pct": 29.0,
+      "prog_years": 2.0,
+      "python_years": 1.0
+    },
+    {
+      "ai_pct": 80.0,
+      "prog_years": 4.0,
+      "python_years": 3.0
+    },
+    {
+      "ai_pct": 30.0,
+      "prog_years": 20.0,
+      "python_years": 4.0
+    },
+    {
+      "ai_pct": 80.0,
+      "prog_years": 40.0,
+      "python_years": 25.0
+    },
+    {
+      "ai_pct": 70.0,
+      "prog_years": 7.0,
+      "python_years": 7.0
+    },
+    {
+      "ai_pct": 30.0,
+      "prog_years": 8.0,
+      "python_years": 8.0
+    },
+    {
+      "ai_pct": 30.0,
+      "prog_years": 10.0,
+      "python_years": 6.0
+    },
+    {
+      "ai_pct": 75.0,
+      "prog_years": 10.0,
+      "python_years": 10.0
+    }
+  ],
   "groups": {
     "low_lte25": {
-      "n": 4,
-      "avg_accuracy": 61.9,
-      "avg_completion_rate": 54.4,
-      "avg_time_s": 112.3,
+      "n": 3,
+      "avg_accuracy": 82.5,
+      "avg_completion_rate": 72.5,
+      "avg_time_s": 119.6,
       "avg_efficiency_ratio": 1.368
     },
     "mid_26_75": {
       "n": 10,
       "avg_accuracy": 94.8,
       "avg_completion_rate": 86.6,
-      "avg_time_s": 134.7,
+      "avg_time_s": 126.7,
       "avg_efficiency_ratio": 0.976
     },
     "high_gt75": {
       "n": 6,
       "avg_accuracy": 99.5,
       "avg_completion_rate": 97.2,
-      "avg_time_s": 183.1,
+      "avg_time_s": 168.5,
       "avg_efficiency_ratio": 1.133
     }
   },
@@ -56,7 +224,7 @@
       "ai_pct": 0.0,
       "ai_source": "post_session",
       "avg_accuracy": 96.4,
-      "avg_time_s": 202.5,
+      "avg_time_s": 198.5,
       "completion_rate": 90.9,
       "n_attempts": 11,
       "avg_efficiency_ratio": 2.055,
@@ -67,7 +235,7 @@
       "ai_pct": 95.0,
       "ai_source": "post_session",
       "avg_accuracy": 96.7,
-      "avg_time_s": 223.8,
+      "avg_time_s": 149.2,
       "completion_rate": 83.3,
       "n_attempts": 12,
       "avg_efficiency_ratio": 1.332,
@@ -100,7 +268,7 @@
       "ai_pct": 95.0,
       "ai_source": "post_session",
       "avg_accuracy": 100.0,
-      "avg_time_s": 369.0,
+      "avg_time_s": 393.0,
       "completion_rate": 100.0,
       "n_attempts": 1,
       "avg_efficiency_ratio": 0.84,
@@ -111,7 +279,7 @@
       "ai_pct": 50.0,
       "ai_source": "post_session",
       "avg_accuracy": 75.0,
-      "avg_time_s": 37.5,
+      "avg_time_s": 37.0,
       "completion_rate": 75.0,
       "n_attempts": 4,
       "avg_efficiency_ratio": 0.665,
@@ -122,7 +290,7 @@
       "ai_pct": 90.0,
       "ai_source": "post_session",
       "avg_accuracy": 100.0,
-      "avg_time_s": 238.1,
+      "avg_time_s": 201.3,
       "completion_rate": 100.0,
       "n_attempts": 10,
       "avg_efficiency_ratio": 1.346,
@@ -133,7 +301,7 @@
       "ai_pct": 0.0,
       "ai_source": "post_session",
       "avg_accuracy": 77.8,
-      "avg_time_s": 77.5,
+      "avg_time_s": 72.0,
       "completion_rate": 66.7,
       "n_attempts": 6,
       "avg_efficiency_ratio": 1.028,
@@ -144,7 +312,7 @@
       "ai_pct": 50.0,
       "ai_source": "post_session",
       "avg_accuracy": 100.0,
-      "avg_time_s": 63.6,
+      "avg_time_s": 60.7,
       "completion_rate": 100.0,
       "n_attempts": 7,
       "avg_efficiency_ratio": 0.941,
@@ -155,7 +323,7 @@
       "ai_pct": 50.0,
       "ai_source": "post_session",
       "avg_accuracy": 100.0,
-      "avg_time_s": 292.0,
+      "avg_time_s": 193.3,
       "completion_rate": 100.0,
       "n_attempts": 3,
       "avg_efficiency_ratio": 1.033,
@@ -185,37 +353,26 @@
       "row": 13
     },
     {
-      "ai_pct": 0.0,
-      "ai_source": "post_session",
-      "avg_accuracy": 0.0,
-      "avg_time_s": 81.0,
-      "completion_rate": 0.0,
-      "n_attempts": 1,
-      "avg_efficiency_ratio": null,
-      "efficiency_n": 0,
-      "row": 14
-    },
-    {
       "ai_pct": 33.0,
       "ai_source": "post_session",
       "avg_accuracy": 100.0,
-      "avg_time_s": 103.8,
+      "avg_time_s": 103.0,
       "completion_rate": 100.0,
       "n_attempts": 4,
       "avg_efficiency_ratio": 0.938,
       "efficiency_n": 4,
-      "row": 15
+      "row": 14
     },
     {
       "ai_pct": 50.0,
       "ai_source": "post_session",
       "avg_accuracy": 98.2,
-      "avg_time_s": 230.6,
+      "avg_time_s": 254.5,
       "completion_rate": 90.9,
       "n_attempts": 11,
       "avg_efficiency_ratio": 1.018,
       "efficiency_n": 11,
-      "row": 16
+      "row": 15
     },
     {
       "ai_pct": 85.0,
@@ -226,7 +383,7 @@
       "n_attempts": 1,
       "avg_efficiency_ratio": 1.27,
       "efficiency_n": 1,
-      "row": 17
+      "row": 16
     },
     {
       "ai_pct": 30.0,
@@ -237,18 +394,18 @@
       "n_attempts": 1,
       "avg_efficiency_ratio": 1.0,
       "efficiency_n": 1,
-      "row": 18
+      "row": 17
     },
     {
       "ai_pct": 30.0,
       "ai_source": "post_session",
       "avg_accuracy": 100.0,
-      "avg_time_s": 124.4,
+      "avg_time_s": 123.8,
       "completion_rate": 100.0,
       "n_attempts": 5,
       "avg_efficiency_ratio": 0.802,
       "efficiency_n": 5,
-      "row": 19
+      "row": 18
     },
     {
       "ai_pct": 75.0,
@@ -259,7 +416,7 @@
       "n_attempts": 1,
       "avg_efficiency_ratio": 1.01,
       "efficiency_n": 1,
-      "row": 20
+      "row": 19
     }
   ]
 }

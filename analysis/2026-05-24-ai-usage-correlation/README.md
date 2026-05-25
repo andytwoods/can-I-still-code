@@ -13,7 +13,7 @@ Cross-sectional correlation between self-reported AI usage (% of code AI-generat
 
 - **Accuracy** — average `tests_passed / tests_total` per non-skipped challenge (%)
 - **Completion rate** — % of non-skipped attempts where all tests passed
-- **Speed** — average `time_taken_seconds` per non-skipped challenge
+- **Speed** — average `active_time_seconds` per non-skipped challenge (seconds where keystrokes occurred, not raw wall-clock)
 
 ## Filters Applied
 
@@ -84,7 +84,7 @@ for sess in CodeSession.objects.filter(is_mock=False, status='completed'):
 |---|---|---|
 | Accuracy | +0.477 | 20 |
 | Completion rate | +0.322 | 20 |
-| Speed (time/challenge) | +0.305 | 20 |
+| Active time/challenge | +0.269 | 20 |
 
 Note: with n=20, 95% CI on r=0.477 is approximately [0.05, 0.74]. These estimates carry substantial uncertainty.
 
@@ -92,13 +92,23 @@ Note: with n=20, 95% CI on r=0.477 is approximately [0.05, 0.74]. These estimate
 
 | Group | AI% range | n sessions | Avg accuracy | Avg completion rate | Avg time (s) |
 |---|---|---|---|---|---|
-| Low | ≤25% | 4 | 61.9% | 54.4% | 112.3 |
-| Mid | 26–75% | 10 | 94.8% | 86.6% | 134.7 |
-| High | >75% | 6 | 99.5% | 97.2% | 183.1 |
+| Low | ≤25% | 4 | 61.9% | 54.4% | 110.0 |
+| Mid | 26–75% | 10 | 94.8% | 86.6% | 126.7 |
+| High | >75% | 6 | 99.5% | 97.2% | 168.5 |
 
 ### Raw Session Data
 
-See `data.json` for full per-session values. Sessions are identified by an anonymous row number (1–20) ordered by internal session ID; no database identifiers are included in the public file.
+See `data.json` for full per-session values and anonymous participant-level data (programming years, Python years, AI usage %). Sessions are identified by an anonymous row number (1–20) ordered by internal session ID; no database identifiers are included in the public file.
+
+## Reproducing the Analysis
+
+All statistics in the blog post can be reproduced from `data.json` alone using the bundled script (standard library only, no dependencies):
+
+```bash
+python analyse.py
+```
+
+The script fetches `data.json` from GitHub automatically if not found locally.
 
 ## Key Caveats
 

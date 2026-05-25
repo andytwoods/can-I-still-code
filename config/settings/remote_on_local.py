@@ -4,6 +4,11 @@ from .base import INSTALLED_APPS
 from .base import MIDDLEWARE
 from .base import env
 
+MIDDLEWARE = [m for m in MIDDLEWARE if m != "whitenoise.middleware.WhiteNoiseMiddleware"]
+
+# Disable browser caching of static files in development
+STATICFILES_HEADERS = [("Cache-Control", "no-cache, no-store, must-revalidate")]
+
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug

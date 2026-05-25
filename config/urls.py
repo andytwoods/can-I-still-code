@@ -1,9 +1,15 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.urls import include
 from django.urls import path
 from django.views import defaults as default_views
+from django.views.generic import TemplateView
+
+from agenticbrainrot.blog.feeds import BlogFeed
+from agenticbrainrot.blog.sitemaps import BlogPostSitemap
+from agenticbrainrot.pages.sitemaps import StaticViewSitemap
 
 from agenticbrainrot.pages.api import report_client_metric
 from agenticbrainrot.pages.api import stats_accuracy_by_vibe_coding
@@ -20,7 +26,15 @@ from agenticbrainrot.pages.views import TermsView
 from agenticbrainrot.pages.views import waitlist_signup
 from agenticbrainrot.pages.views import waitlist_unsubscribe
 
+_sitemaps = {
+    "static": StaticViewSitemap,
+    "blog": BlogPostSitemap,
+}
+
 urlpatterns = [
+    path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain"), name="robots_txt"),
+    path("sitemap.xml", sitemap, {"sitemaps": _sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
+    path("blog/feed/", BlogFeed(), name="blog_feed"),
     path("", HomeView.as_view(), name="home"),
     path("dashboard/", LoggedInHomeView.as_view(), name="logged_in_home"),
     path("about/", AboutView.as_view(), name="about"),

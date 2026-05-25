@@ -23,6 +23,8 @@ ANALYSIS_DIR = (
 
 POST_SESSION_Q = 43
 PROFILE_FALLBACK_Q = 46
+PROG_YEARS_Q = 5
+PYTHON_YEARS_Q = 34
 
 
 def _pearson(xs, ys):
@@ -86,13 +88,18 @@ class Command(BaseCommand):
             )
             agg = attempts.aggregate(
                 avg_acc=Avg(F("tests_passed") * 100.0 / F("tests_total")),
-                avg_time=Avg("time_taken_seconds"),
+                avg_time=Avg("active_time_seconds"),
                 n=Count("id"),
                 passed=Count("id", filter=Q(tests_passed=F("tests_total"))),
                 avg_efficiency=Avg("efficiency_ratio"),
             )
 
             if agg["n"] == 0:
+                excluded += 1
+                continue
+
+            # Exclude sessions where every attempt scored 0% — failed engagement, not a study observation.
+            if agg["avg_acc"] is not None and agg["avg_acc"] == 0.0:
                 excluded += 1
                 continue
 
@@ -141,6 +148,51 @@ class Command(BaseCommand):
                 ),
             }
 
+        # ── Participant-level: experience vs AI usage ─────────────────────────
+        # One row per participant. AI usage = profile Q46 (most recent answer).
+        # Experience = Q5 (programming years), Q37 (Python years).
+        def _latest_numeric(question_id):
+            """Return {participant_id: float} for the most recent response to a question."""
+            result = {}
+            for r in SurveyResponse.objects.filter(
+                question_id=question_id
+            ).order_by("participant_id", "answered_at"):
+                try:
+                    result[r.participant_id] = float(r.value)
+                except (ValueError, TypeError):
+                    pass
+            return result
+
+        ai_pct_profile = _latest_numeric(PROFILE_FALLBACK_Q)
+        prog_years = _latest_numeric(PROG_YEARS_Q)
+        python_years = _latest_numeric(PYTHON_YEARS_Q)
+
+        # Build participant rows with all three values present
+        participant_ids = set(ai_pct_profile) & set(prog_years)
+        participant_rows = [
+            {
+                "participant_id": pid,
+                "ai_pct": ai_pct_profile[pid],
+                "prog_years": prog_years[pid],
+                "python_years": python_years.get(pid),
+            }
+            for pid in participant_ids
+        ]
+
+        def _corr(rows, field):
+            pairs = [(r["ai_pct"], r[field]) for r in rows if r[field] is not None]
+            return _pearson([p[0] for p in pairs], [p[1] for p in pairs]), len(pairs)
+
+        r_exp_ai, n_exp_ai = _corr(participant_rows, "prog_years")
+        r_py_ai, n_py_ai = _corr(participant_rows, "python_years")
+
+        experience_correlations = {
+            "prog_years_vs_ai_pct_r": r_exp_ai,
+            "prog_years_vs_ai_pct_n": n_exp_ai,
+            "python_years_vs_ai_pct_r": r_py_ai,
+            "python_years_vs_ai_pct_n": n_py_ai,
+        }
+
         data = {
             "generated_at": date_tag,
             "source": "production DB via config.settings.remote_on_local",
@@ -160,6 +212,11 @@ class Command(BaseCommand):
                 "ai_pct_vs_efficiency_ratio_r": r_eff,
                 "ai_pct_vs_efficiency_ratio_n": n_eff,
             },
+            "experience_correlations": experience_correlations,
+            "participants": [
+                {"ai_pct": r["ai_pct"], "prog_years": r["prog_years"], "python_years": r["python_years"]}
+                for r in participant_rows
+            ],
             "groups": {
                 "low_lte25": group_stats(lambda x: x <= 25),
                 "mid_26_75": group_stats(lambda x: 26 <= x <= 75),
@@ -174,11 +231,14 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS(f"Written: {out_path}"))
         self.stdout.write(f"\nSessions included: {len(sessions_data)}  excluded: {excluded}")
-        self.stdout.write(f"\nCorrelations:")
+        self.stdout.write(f"\nCorrelations (session-level, AI usage vs outcomes):")
         self.stdout.write(f"  Accuracy        r={r_acc}  (n={n_acc})")
         self.stdout.write(f"  Completion rate r={r_comp}  (n={n_comp})")
         self.stdout.write(f"  Speed           r={r_speed}  (n={n_speed})")
         self.stdout.write(f"  Efficiency ratio r={r_eff}  (n={n_eff})")
+        self.stdout.write(f"\nExperience vs AI usage (participant-level, n={n_exp_ai}):")
+        self.stdout.write(f"  Prog years vs AI usage  r={r_exp_ai}")
+        self.stdout.write(f"  Python years vs AI usage r={r_py_ai}  (n={n_py_ai})")
 
         # Coverage summary for efficiency
         total_attempts = sum(s["n_attempts"] for s in sessions_data)

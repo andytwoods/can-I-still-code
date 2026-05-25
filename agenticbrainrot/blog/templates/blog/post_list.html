@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 
 {% block title %}Blog – Can I Still Code{% endblock title %}
+{% block meta_description %}Research notes, data updates, and methodology from the Can I Still Code citizen-science study on AI coding tools and Python developer skills.{% endblock meta_description %}
+{% block og_title %}Blog – Can I Still Code{% endblock og_title %}
+{% block og_description %}Research notes, data updates, and methodology from the Can I Still Code citizen-science study on AI coding tools and Python developer skills.{% endblock og_description %}
+{% block twitter_title %}Blog – Can I Still Code{% endblock twitter_title %}
+{% block twitter_description %}Research notes, data updates, and methodology from the Can I Still Code citizen-science study on AI coding tools and Python developer skills.{% endblock twitter_description %}
+
+{% block extra_head %}
+  <link rel="alternate" type="application/rss+xml" title="Can I Still Code – Blog" href="{% url 'blog_feed' %}" />
+{% endblock extra_head %}
 
 {% block content %}
   <div class="columns is-centered">
