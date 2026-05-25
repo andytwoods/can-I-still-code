@@ -452,11 +452,15 @@
         var refEl = document.getElementById("reference-solution-data");
         var referenceSolution = refEl ? JSON.parse(refEl.textContent) : "";
 
+        var funcNameEl = document.getElementById("function-name-data");
+        var functionName = funcNameEl ? JSON.parse(funcNameEl.textContent) : "";
+
         worker.postMessage({
             type: "run",
             code: editor.getValue(),
             testCases: testCases,
             referenceSolution: referenceSolution || "",
+            functionName: functionName || "",
         });
     }
 

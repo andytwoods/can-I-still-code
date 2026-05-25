@@ -5,53 +5,28 @@
   "skeleton_code": "FIX = \"\"\"\nAdd more test cases.\n\"\"\"\n\ndef vowels_count(s):\n    \"\"\"\n    pass\n",
   "test_cases": [
     {
-      "input": [
-        "abcde"
-      ],
-      "expected": [
-        2,
-        "Test 1"
-      ],
+      "input": ["abcde"],
+      "expected": 2,
       "description": "Test 1"
     },
     {
-      "input": [
-        "Alone"
-      ],
-      "expected": [
-        3,
-        "Test 2"
-      ],
+      "input": ["Alone"],
+      "expected": 3,
       "description": "Test 2"
     },
     {
-      "input": [
-        "key"
-      ],
-      "expected": [
-        2,
-        "Test 3"
-      ],
+      "input": ["key"],
+      "expected": 2,
       "description": "Test 3"
     },
     {
-      "input": [
-        "bye"
-      ],
-      "expected": [
-        1,
-        "Test 4"
-      ],
+      "input": ["bye"],
+      "expected": 1,
       "description": "Test 4"
     },
     {
-      "input": [
-        "keY"
-      ],
-      "expected": [
-        2,
-        "Test 5"
-      ],
+      "input": ["keY"],
+      "expected": 2,
       "description": "Test 5"
     }
   ],

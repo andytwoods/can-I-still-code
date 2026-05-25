@@ -212,9 +212,8 @@ def measure_median_us(fn, inputs_list, samples=15, window_s=0.05, timeout_s=2.0)
                         const args = tc.input || [];
                         const argsRepr = args.map(a => JSON.stringify(a)).join(", ");
 
-                        // Detect the function name from the code
-                        const funcMatch = msg.code.match(/^(?:def|class)\s+(\w+)/m);
-                        const funcName = funcMatch ? funcMatch[1] : "solution";
+                        // Use explicit function name from fixture metadata; fall back to first def/class in code
+                        const funcName = msg.functionName || (msg.code.match(/^(?:def|class)\s+(\w+)/m) || [])[1] || "solution";
 
                         const pyCode = `
 import json
@@ -271,8 +270,7 @@ json.dumps(_result) if not isinstance(_result, (int, float, bool, type(None))) e
             let efficiencyRatio = null;
             if (msg.referenceSolution) {
                 try {
-                    const funcMatch = msg.code.match(/^(?:def|class)\s+(\w+)/m);
-                    const funcName = funcMatch ? funcMatch[1] : "solution";
+                    const funcName = msg.functionName || (msg.code.match(/^(?:def|class)\s+(\w+)/m) || [])[1] || "solution";
 
                     // Only time standard function calls; skip class/operations-based tests
                     const timingInputs = msg.testCases.filter(tc => Array.isArray(tc.input)).map(tc => tc.input);

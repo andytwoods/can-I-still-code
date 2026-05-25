@@ -5,15 +5,8 @@
   "skeleton_code": "def triangle_area(a, b, c):\n    '''\n    Given the lengths of the three sides of a triangle. Return the area of\n    the triangle rounded to 2 decimal points if the three sides form a valid triangle. \n    Otherwise return -1\n    Three sides make a valid triangle when the sum of any two sides is greater \n    than the third side.\n    Example:\n    triangle_area(3, 4, 5) == 6.00\n    triangle_area(1, 2, 10) == -1\n    '''\n    pass\n",
   "test_cases": [
     {
-      "input": [
-        3,
-        4,
-        5
-      ],
-      "expected": [
-        6.0,
-        "This prints if this assert fails 1 (good for debugging!)"
-      ],
+      "input": [3, 4, 5],
+      "expected": 6.0,
       "description": "Test 1"
     },
     {

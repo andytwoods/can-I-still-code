@@ -60,6 +60,7 @@
             border-bottom-right-radius: 4px"></div>
 {{ challenge.skeleton_code|json_script:"skeleton-code-data" }}
 {{ challenge.reference_solution|json_script:"reference-solution-data" }}
+{{ challenge.source_metadata.function_name|default:""|json_script:"function-name-data" }}
 <div class="buttons mt-3">
   <button id="run-btn" class="button is-info" type="button" disabled>Run Code</button>
   <button id="submit-btn" class="button is-primary" type="button" disabled>Submit</button>

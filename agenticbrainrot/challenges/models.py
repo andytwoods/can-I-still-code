@@ -173,6 +173,15 @@ class ChallengeAttempt(models.Model):
         blank=True,
         help_text="Participant solution time / reference solution time. 1.0 = matched reference; >1 = slower.",
     )
+    data_quality_flag = models.CharField(
+        max_length=50,
+        blank=True,
+        default="",
+        help_text=(
+            "Non-empty when this attempt's accuracy data is unreliable and should be excluded from analysis. "
+            "Value is a DEV-xxx deviation log ID (see fixtures/DEVIATIONS.md)."
+        ),
+    )
 
     class Meta:
         unique_together = [("session", "challenge")]
