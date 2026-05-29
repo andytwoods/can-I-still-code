@@ -1,0 +1,32 @@
+{% if rollbar_client_token %}
+<script src="https://cdn.rollbar.com/rollbarjs/refs/tags/v3.1.0/rollbar.min.js"></script>
+<script>
+  if (typeof rollbar !== "undefined") {
+    window.Rollbar = new rollbar({
+      accessToken: "{{ rollbar_client_token }}",
+      captureUncaught: true,
+      captureUnhandledRejections: true,
+      maxItems: 10,
+      itemsPerMinute: 5,
+      ignoredMessages: [
+        "ResizeObserver loop limit exceeded",
+        "ResizeObserver loop completed with undelivered notifications",
+        "Non-Error promise rejection captured",
+        "Load failed",
+        "NetworkError when attempting to fetch resource"
+      ],
+      checkIgnore: function (_isUncaught, _args, payload) {
+        var frames = (payload && payload.body && payload.body.trace && payload.body.trace.frames) || [];
+        return frames.some(function (f) {
+          return /^(chrome|moz|safari)-extension:\/\//.test(f.filename || "");
+        });
+      },
+      scrubFields: ["password", "secret", "api_key", "authorization", "credit_card"],
+      scrubTelemetryInputs: true,
+      payload: {
+        environment: "{{ rollbar_environment }}"
+      }
+    });
+  }
+</script>
+{% endif %}

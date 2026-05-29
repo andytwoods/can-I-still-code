@@ -7,3 +7,11 @@ def allauth_settings(request):
         "ACCOUNT_ALLOW_REGISTRATION": settings.ACCOUNT_ALLOW_REGISTRATION,
         "DOMAIN": settings.DOMAIN,
     }
+
+
+def rollbar(request):
+    rollbar_settings = getattr(settings, "ROLLBAR", {})
+    return {
+        "rollbar_client_token": getattr(settings, "ROLLBAR_CLIENT_TOKEN", ""),
+        "rollbar_environment": rollbar_settings.get("environment", "development"),
+    }

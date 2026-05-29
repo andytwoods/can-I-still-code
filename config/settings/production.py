@@ -111,6 +111,7 @@ ADMIN_URL = env("DJANGO_ADMIN_URL", default="admin/")
 # ROLLBAR
 # ------------------------------------------------------------------------------
 ROLLBAR_ENABLED = env.bool("ROLLBAR_ENABLED", default=False)
+ROLLBAR_CLIENT_TOKEN = env("ROLLBAR_CLIENT_TOKEN", default="")
 if ROLLBAR_ENABLED:
     ROLLBAR = {
         "access_token": env("ROLLBAR_ACCESS_TOKEN"),
@@ -136,6 +137,7 @@ if ROLLBAR_ENABLED:
         "exception_level_filters": [
             ("django.http.Http404", "ignored"),
             ("django.core.exceptions.PermissionDenied", "ignored"),
+            ("django.core.exceptions.SuspiciousOperation", "warning"),
         ],
         "locals": {
             "enabled": True,
@@ -201,7 +203,7 @@ if "CONTENT_SECURITY_POLICY" not in locals():
     CONTENT_SECURITY_POLICY = {
         "DIRECTIVES": {
             "default-src": ["'self'"],
-            "script-src": ["'self'", "https://unpkg.com", "https://cdn.jsdelivr.net"],
+            "script-src": ["'self'", "https://unpkg.com", "https://cdn.jsdelivr.net", "https://cdn.rollbar.com"],
             "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
             "img-src": ["'self'", "data:"],
             "font-src": ["'self'", "https://cdn.jsdelivr.net"],
@@ -211,3 +213,4 @@ if "CONTENT_SECURITY_POLICY" not in locals():
     }
 
 CONTENT_SECURITY_POLICY["DIRECTIVES"]["connect-src"].append("https://canistillcode.org")
+CONTENT_SECURITY_POLICY["DIRECTIVES"]["connect-src"].append("https://api.rollbar.com")

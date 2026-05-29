@@ -123,6 +123,7 @@
       <script defer src="https://unpkg.com/htmx.org@2.0.4"></script>
       <script defer src="{% static 'js/project.js' %}"></script>
     {% endblock javascript %}
+    {% include "pages/partials/_rollbar.html" %}
   </head>
   <body class="{% block bodyclass %}{% endblock bodyclass %}"
         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
