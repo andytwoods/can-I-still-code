@@ -12,6 +12,12 @@ ALLOWED_HOSTS = env.list(
     default=["canistillcode.org", "www.canistillcode.org", "127.0.0.1", "localhost", 'agenticbrainrot.applikuapp.com', '0.0.0.0',],
 )
 
+# CANONICAL HOST REDIRECT
+# ------------------------------------------------------------------------------
+CANONICAL_HOST = "canistillcode.org"
+CANONICAL_REDIRECT_HOSTS = [
+    "www.canistillcode.org",
+]
 
 CSRF_TRUSTED_ORIGINS = env.list(
     "CSRF_TRUSTED_ORIGINS",
