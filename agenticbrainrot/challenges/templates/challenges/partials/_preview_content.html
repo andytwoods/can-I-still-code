@@ -125,6 +125,16 @@
               class="button is-primary"
               type="button"
               disabled>Test Tests</button>
+      {% if request.user.is_staff %}
+        <button id="benchmark-btn"
+                class="button is-warning"
+                type="button"
+                disabled
+                title="Load the reference solution and benchmark its efficiency">
+          <span class="icon"><i class="fas fa-stopwatch"></i></span>
+          <span>Benchmark Reference</span>
+        </button>
+      {% endif %}
     </div>
     <div id="output"
          class="box mt-3"
@@ -139,6 +149,7 @@
 <!-- Test cases data for JS -->
 {# djlint:off #}
 <script id="test-cases-data" type="application/json">{{ test_cases_json|safe }}</script>
+{% if request.user.is_staff %}{{ challenge.reference_solution|json_script:"reference-solution-raw-data" }}{% endif %}
 {# djlint:on #}
 <input type="hidden" id="pyodide-load-ms" value="" />
 <input type="hidden" id="editor-ready" value="" />

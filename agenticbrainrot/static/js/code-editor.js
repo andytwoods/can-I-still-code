@@ -33,6 +33,8 @@
     var runCount = 0;
     var lastComplexity = null;
     var lastEfficiencyRatio = null;
+    var lastParticipantUs = null;
+    var lastRefUs = null;
 
     var THEMES = {
         "default": "default",
@@ -311,6 +313,12 @@
                     if (msg.efficiencyRatio !== null && msg.efficiencyRatio !== undefined) {
                         lastEfficiencyRatio = msg.efficiencyRatio;
                     }
+                    if (msg.participantUs !== null && msg.participantUs !== undefined) {
+                        lastParticipantUs = msg.participantUs;
+                    }
+                    if (msg.refUs !== null && msg.refUs !== undefined) {
+                        lastRefUs = msg.refUs;
+                    }
                     displayTestResults(msg.results);
                     enableButtons();
                     break;
@@ -420,12 +428,23 @@
         var summary = document.createElement("div");
         summary.id = "test-results-summary";
         summary.className = "notification " + (passed === total ? "is-success" : "is-warning") + " mt-3";
-        summary.innerHTML = "<strong>" + passed + " / " + total + " tests passed</strong>";
-        summary.dataset.testsPassed = passed;
-        summary.dataset.testsTotal = total;
+        var summaryHtml = "<strong>" + passed + " / " + total + " tests passed</strong>";
         if (lastEfficiencyRatio !== null && lastEfficiencyRatio !== undefined) {
             summary.dataset.efficiencyRatio = lastEfficiencyRatio;
+            // Only surface timing detail on the staff preview page (benchmark-btn is present)
+            if (document.getElementById("benchmark-btn")) {
+                var usDisplay = "";
+                if (lastParticipantUs !== null) {
+                    usDisplay = lastParticipantUs < 1000
+                        ? " (" + lastParticipantUs.toFixed(1) + " μs/call)"
+                        : " (" + (lastParticipantUs / 1000).toFixed(2) + " ms/call)";
+                }
+                summaryHtml += " &ndash; Efficiency: <strong>" + lastEfficiencyRatio + "&times;</strong> vs reference" + usDisplay;
+            }
         }
+        summary.innerHTML = summaryHtml;
+        summary.dataset.testsPassed = passed;
+        summary.dataset.testsTotal = total;
         if (lastComplexity) {
             summary.dataset.complexityComputed = "true";
         }
@@ -461,6 +480,8 @@
     function runCode() {
         if (!editor || !worker || !pyodideReady) return;
         runCount++;
+        lastParticipantUs = null;
+        lastRefUs = null;
         clearOutput();
         var runBtn = document.getElementById("run-btn");
         var submitBtn = document.getElementById("submit-btn");

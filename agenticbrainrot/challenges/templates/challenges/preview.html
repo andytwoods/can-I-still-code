@@ -51,6 +51,44 @@
           if (runBtn) runBtn.click();
         };
       }
+
+      // Wire "Benchmark Reference" button (staff only)
+      var benchmarkBtn = document.getElementById('benchmark-btn');
+      if (benchmarkBtn) {
+        // Keep enabled/disabled in sync with run-btn (proxy for Pyodide ready)
+        var runBtn = document.getElementById('run-btn');
+        if (runBtn) {
+          new MutationObserver(function() {
+            benchmarkBtn.disabled = runBtn.disabled;
+          }).observe(runBtn, { attributes: true, attributeFilter: ['disabled'] });
+          benchmarkBtn.disabled = runBtn.disabled;
+        }
+
+        benchmarkBtn.onclick = function() {
+          var refDataEl = document.getElementById('reference-solution-raw-data');
+          if (!refDataEl) return;
+          var refCode = JSON.parse(refDataEl.textContent);
+
+          // Load reference solution into the CodeMirror editor
+          var wrapper = document.querySelector('#code-editor .CodeMirror');
+          if (wrapper && wrapper.CodeMirror) {
+            wrapper.CodeMirror.setValue(refCode);
+          }
+
+          // Inject reference-solution-data so the worker computes efficiency ratio
+          var effEl = document.getElementById('reference-solution-data');
+          if (!effEl) {
+            effEl = document.createElement('script');
+            effEl.id = 'reference-solution-data';
+            effEl.type = 'application/json';
+            document.body.appendChild(effEl);
+          }
+          effEl.textContent = JSON.stringify(refCode);
+
+          document.getElementById('run-btn').click();
+        };
+      }
+
       // Wire dropdown to navigate via HTMX
       var sel = document.getElementById('challenge-select');
       if (sel) {

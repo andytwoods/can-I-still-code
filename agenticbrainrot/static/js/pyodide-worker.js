@@ -268,6 +268,8 @@ json.dumps(_result) if not isinstance(_result, (int, float, bool, type(None))) e
 
             // Efficiency ratio: participant time / reference time (both timed in same Pyodide run)
             let efficiencyRatio = null;
+            let participantUs = null;
+            let refUs = null;
             if (msg.referenceSolution) {
                 try {
                     const funcName = msg.functionName || (msg.code.match(/^(?:def|class)\s+(\w+)/m) || [])[1] || "solution";
@@ -284,7 +286,7 @@ json.dumps(_result) if not isinstance(_result, (int, float, bool, type(None))) e
                         const ptRaw = pyodide.runPython(
                             `import json; _ti = json.loads(${inputsJson}); json.dumps(measure_median_us(globals().get(${JSON.stringify(funcName)}), _ti))`
                         );
-                        const participantUs = JSON.parse(ptRaw);
+                        participantUs = JSON.parse(ptRaw);
                         console.log("[efficiency] participantUs:", participantUs);
 
                         // Exec reference solution -- overwrites participant function, tests already ran
@@ -293,7 +295,7 @@ json.dumps(_result) if not isinstance(_result, (int, float, bool, type(None))) e
                         const rtRaw = pyodide.runPython(
                             `import json; json.dumps(measure_median_us(globals().get(${JSON.stringify(funcName)}), _ti))`
                         );
-                        const refUs = JSON.parse(rtRaw);
+                        refUs = JSON.parse(rtRaw);
                         console.log("[efficiency] refUs:", refUs);
 
                         if (participantUs !== null && refUs !== null) {
@@ -309,7 +311,7 @@ json.dumps(_result) if not isinstance(_result, (int, float, bool, type(None))) e
                 }
             }
 
-            self.postMessage({ type: "result", results, complexity, efficiencyRatio });
+            self.postMessage({ type: "result", results, complexity, efficiencyRatio, participantUs, refUs });
         } catch (err) {
             self.postMessage({ type: "error", error: err.message });
         }
