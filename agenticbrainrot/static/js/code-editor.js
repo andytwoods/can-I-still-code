@@ -395,8 +395,17 @@
 
         // Summary
         var summary = document.createElement("div");
+        summary.id = "test-results-summary";
         summary.className = "notification " + (passed === total ? "is-success" : "is-warning") + " mt-3";
         summary.innerHTML = "<strong>" + passed + " / " + total + " tests passed</strong>";
+        summary.dataset.testsPassed = passed;
+        summary.dataset.testsTotal = total;
+        if (lastEfficiencyRatio !== null && lastEfficiencyRatio !== undefined) {
+            summary.dataset.efficiencyRatio = lastEfficiencyRatio;
+        }
+        if (lastComplexity) {
+            summary.dataset.complexityComputed = "true";
+        }
         testResultsEl.appendChild(summary);
 
         // Store results for submission

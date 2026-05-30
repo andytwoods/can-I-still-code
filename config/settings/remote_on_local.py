@@ -4,6 +4,8 @@ from .base import INSTALLED_APPS
 from .base import MIDDLEWARE
 from .base import env
 
+env.read_env(str(BASE_DIR / ".env"))
+
 MIDDLEWARE = [m for m in MIDDLEWARE if m != "whitenoise.middleware.WhiteNoiseMiddleware"]
 
 # Disable browser caching of static files in development

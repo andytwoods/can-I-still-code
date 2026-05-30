@@ -66,6 +66,11 @@ def preview_challenge(request, challenge_id=None):
     return render(request, template, context)
 
 
+def preview_challenge_by_external_id(request, external_id):
+    challenge = get_object_or_404(Challenge, external_id=external_id, is_active=True)
+    return preview_challenge(request, challenge_id=challenge.pk)
+
+
 @require_http_methods(["GET", "POST"])
 def report_challenge(request, challenge_id):
     """Render or handle a participant report about a challenge problem."""
