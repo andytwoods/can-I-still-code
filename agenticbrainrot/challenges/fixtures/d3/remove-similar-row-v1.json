@@ -139,5 +139,5 @@
     "num_test_cases": 2,
     "function_name": "remove_similar_row"
   },
-  "reference_solution": "def remove_similar_row(test_list):\n  res = set(sorted([tuple(sorted(set(sub))) for sub in test_list]))\n  return (res) "
+  "reference_solution": "def remove_similar_row(test_list):\n    seen = set()\n    result = []\n    for sub in test_list:\n        key = frozenset(map(tuple, sub))\n        if key not in seen:\n            seen.add(key)\n            result.append(sorted(sub))\n    return sorted(result)\n"
 }

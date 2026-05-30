@@ -9,15 +9,7 @@
         2,
         10
       ],
-      "expected": [
-        [
-          2,
-          4,
-          6,
-          8
-        ],
-        "Test 1"
-      ],
+      "expected": [2, 4, 6, 8],
       "description": "Test 1"
     },
     {
@@ -25,15 +17,7 @@
         10,
         2
       ],
-      "expected": [
-        [
-          2,
-          4,
-          6,
-          8
-        ],
-        "Test 2"
-      ],
+      "expected": [2, 4, 6, 8],
       "description": "Test 2"
     },
     {
@@ -41,15 +25,7 @@
         132,
         2
       ],
-      "expected": [
-        [
-          2,
-          4,
-          6,
-          8
-        ],
-        "Test 3"
-      ],
+      "expected": [2, 4, 6, 8],
       "description": "Test 3"
     },
     {
@@ -57,10 +33,7 @@
         17,
         89
       ],
-      "expected": [
-        [],
-        "Test 4"
-      ],
+      "expected": [],
       "description": "Test 4"
     }
   ],

@@ -22,7 +22,10 @@ RUN_RESULT_TIMEOUT = 60_000      # ms – per-challenge execution + efficiency t
 
 
 def _load_challenge_params():
-    params = []
+    # Use a dict so that when multiple fixture files share an external_id,
+    # the last one (highest tier directory, sorted) wins — matching the
+    # behaviour of sync_fixture_test_cases which also processes in sorted order.
+    by_eid: dict = {}
     for path in sorted(FIXTURE_ROOT.rglob("*.json")):
         if path.name == "clarifications.json":
             continue
@@ -33,11 +36,11 @@ def _load_challenge_params():
         eid = data.get("external_id")
         ref = data.get("reference_solution", "").strip()
         test_cases = data.get("test_cases", [])
+        if not data.get("is_active", True):
+            continue
         if eid and ref and test_cases:
-            params.append(
-                pytest.param(eid, ref, len(test_cases), id=eid)
-            )
-    return params
+            by_eid[eid] = (eid, ref, len(test_cases))
+    return [pytest.param(*v, id=v[0]) for v in by_eid.values()]
 
 
 CHALLENGE_PARAMS = _load_challenge_params()

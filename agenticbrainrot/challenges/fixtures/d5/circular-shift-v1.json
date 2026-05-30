@@ -33,10 +33,7 @@
         12,
         1
       ],
-      "expected": [
-        "21",
-        "This prints if this assert fails 1 (good for debugging!)"
-      ],
+      "expected": "21",
       "description": "Test 4"
     },
     {
@@ -44,10 +41,7 @@
         11,
         101
       ],
-      "expected": [
-        "11",
-        "This prints if this assert fails 2 (also good for debugging!)"
-      ],
+      "expected": "11",
       "description": "Test 5"
     }
   ],
