@@ -28,87 +28,81 @@
     {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
   {% endif %}
 
-  {# ── Email / password (secondary, collapsed) ──────────────────────────── #}
+  {# ── Email / password ─────────────────────────────────────────────────── #}
   {% if not SOCIALACCOUNT_ONLY %}
-    <details class="mt-4">
-      <summary class="has-text-grey is-size-7" style="cursor:pointer;list-style:none;">
-        <span class="icon-text">
-          <span class="icon"><i class="fas fa-chevron-right fa-xs"></i></span>
-          <span>{% trans "Sign in with email and password instead" %}</span>
-        </span>
-      </summary>
-      <div class="box mt-3">
-        {% url 'account_login' as login_url %}
-        <form method="post" action="{{ login_url }}">
-          {% csrf_token %}
-          {{ redirect_field }}
+    <hr class="mt-5">
+    <p class="has-text-grey is-size-5 has-text-centered mb-3">{% trans "Or sign in with email" %}</p>
+    <div class="box">
+      {% url 'account_login' as login_url %}
+      <form method="post" action="{{ login_url }}">
+        {% csrf_token %}
+        {{ redirect_field }}
+        <div class="field">
+          <label class="label" for="{{ form.login.id_for_label }}">{% trans "Email" %}</label>
+          <div class="control has-icons-left">
+            <input id="{{ form.login.id_for_label }}"
+                   name="{{ form.login.html_name }}"
+                   type="email"
+                   class="input{% if form.login.errors %} is-danger{% endif %}"
+                   placeholder="{% trans 'you@example.com' %}"
+                   autocomplete="username webauthn"
+                   value="{{ form.login.value|default:'' }}"
+                   required />
+            <span class="icon is-left"><i class="fas fa-envelope"></i></span>
+          </div>
+          {% for error in form.login.errors %}
+            <p class="help is-danger">{{ error }}</p>
+          {% endfor %}
+        </div>
+        <div class="field">
+          <label class="label" for="{{ form.password.id_for_label }}">{% trans "Password" %}</label>
+          <div class="control has-icons-left">
+            <input id="{{ form.password.id_for_label }}"
+                   name="{{ form.password.html_name }}"
+                   type="password"
+                   class="input{% if form.password.errors %} is-danger{% endif %}"
+                   placeholder="{% trans 'Password' %}"
+                   autocomplete="current-password"
+                   required />
+            <span class="icon is-left"><i class="fas fa-lock"></i></span>
+          </div>
+          {% for error in form.password.errors %}
+            <p class="help is-danger">{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% if form.remember %}
           <div class="field">
-            <label class="label" for="{{ form.login.id_for_label }}">{% trans "Email" %}</label>
-            <div class="control has-icons-left">
-              <input id="{{ form.login.id_for_label }}"
-                     name="{{ form.login.html_name }}"
-                     type="email"
-                     class="input{% if form.login.errors %} is-danger{% endif %}"
-                     placeholder="{% trans 'you@example.com' %}"
-                     autocomplete="username webauthn"
-                     value="{{ form.login.value|default:'' }}"
-                     required />
-              <span class="icon is-left"><i class="fas fa-envelope"></i></span>
-            </div>
-            {% for error in form.login.errors %}
-              <p class="help is-danger">{{ error }}</p>
+            <label class="checkbox">
+              <input type="checkbox"
+                     name="{{ form.remember.html_name }}"
+                     {% if form.remember.value %}checked{% endif %} />
+              {% trans "Remember me" %}
+            </label>
+          </div>
+        {% endif %}
+        {% if form.non_field_errors %}
+          <div class="notification is-danger is-light">
+            {% for error in form.non_field_errors %}
+              <p>{{ error }}</p>
             {% endfor %}
           </div>
-          <div class="field">
-            <label class="label" for="{{ form.password.id_for_label }}">{% trans "Password" %}</label>
-            <div class="control has-icons-left">
-              <input id="{{ form.password.id_for_label }}"
-                     name="{{ form.password.html_name }}"
-                     type="password"
-                     class="input{% if form.password.errors %} is-danger{% endif %}"
-                     placeholder="{% trans 'Password' %}"
-                     autocomplete="current-password"
-                     required />
-              <span class="icon is-left"><i class="fas fa-lock"></i></span>
-            </div>
-            {% for error in form.password.errors %}
-              <p class="help is-danger">{{ error }}</p>
-            {% endfor %}
+        {% endif %}
+        <div class="field">
+          <div class="control">
+            <button type="submit" class="button is-primary is-fullwidth">
+              {% trans "Sign In" %}
+            </button>
           </div>
-          {% if form.remember %}
-            <div class="field">
-              <label class="checkbox">
-                <input type="checkbox"
-                       name="{{ form.remember.html_name }}"
-                       {% if form.remember.value %}checked{% endif %} />
-                {% trans "Remember me" %}
-              </label>
-            </div>
-          {% endif %}
-          {% if form.non_field_errors %}
-            <div class="notification is-danger is-light">
-              {% for error in form.non_field_errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-          <div class="field">
-            <div class="control">
-              <button type="submit" class="button is-primary is-fullwidth">
-                {% trans "Sign In" %}
-              </button>
-            </div>
+        </div>
+        <div class="level is-mobile mt-2">
+          <div class="level-left">
+            <a class="level-item is-size-7" href="{% url 'account_reset_password' %}">
+              {% trans "Forgot password?" %}
+            </a>
           </div>
-          <div class="level is-mobile mt-2">
-            <div class="level-left">
-              <a class="level-item is-size-7" href="{% url 'account_reset_password' %}">
-                {% trans "Forgot password?" %}
-              </a>
-            </div>
-          </div>
-        </form>
-      </div>
-    </details>
+        </div>
+      </form>
+    </div>
   {% endif %}
 {% endblock content %}
 

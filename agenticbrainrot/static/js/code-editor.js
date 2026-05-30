@@ -286,8 +286,22 @@
 
                 case "timing_start": {
                     var timingBtn = document.getElementById("run-btn");
-                    if (timingBtn) timingBtn.textContent = "Benchmarking…";
-                    appendOutput("Benchmarking performance – this takes a few seconds…", "info");
+                    if (timingBtn) {
+                        timingBtn.innerHTML =
+                            '<span class="icon"><i class="fas fa-spinner fa-spin"></i></span>' +
+                            '<span>Benchmarking…</span>';
+                    }
+                    var outputEl = document.getElementById("output");
+                    if (outputEl) {
+                        var infoLine = document.createElement("p");
+                        infoLine.id = "benchmarking-notice";
+                        infoLine.className = "has-text-info";
+                        infoLine.innerHTML =
+                            '<span class="icon"><i class="fas fa-spinner fa-spin"></i></span>' +
+                            '<span>Benchmarking performance – measuring how fast your solution runs&hellip;</span>';
+                        outputEl.appendChild(infoLine);
+                        outputEl.scrollTop = outputEl.scrollHeight;
+                    }
                     break;
                 }
 
@@ -450,7 +464,12 @@
         clearOutput();
         var runBtn = document.getElementById("run-btn");
         var submitBtn = document.getElementById("submit-btn");
-        if (runBtn) { runBtn.disabled = true; runBtn.textContent = "Analysing…"; }
+        if (runBtn) {
+            runBtn.disabled = true;
+            runBtn.innerHTML =
+                '<span class="icon"><i class="fas fa-spinner fa-spin"></i></span>' +
+                '<span>Analysing…</span>';
+        }
         if (submitBtn) submitBtn.disabled = true;
 
         var testCasesEl = document.getElementById("test-cases-data");
