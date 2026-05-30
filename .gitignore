@@ -331,3 +331,4 @@ agenticbrainrot/media/
 /.idea/deployment.xml
 /.claude/settings.local.json
 /.env
+e2e_results*.txt

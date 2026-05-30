@@ -10,6 +10,7 @@ Parallel (faster):
 """
 
 import json
+import time
 from pathlib import Path
 
 import pytest
@@ -19,6 +20,7 @@ FIXTURE_ROOT = Path(__file__).parent.parent.parent / "agenticbrainrot/challenges
 
 PYODIDE_READY_TIMEOUT = 120_000  # ms – generous for first WASM download
 RUN_RESULT_TIMEOUT = 60_000      # ms – per-challenge execution + efficiency timing
+RUN_TIME_LIMIT_S = 8             # seconds – wall-clock limit for run + efficiency timing
 
 
 def _load_challenge_params():
@@ -90,12 +92,18 @@ def test_reference_solution_passes(page, base_url, external_id, reference_soluti
         const tr = document.getElementById('test-results-summary');
         if (tr) tr.remove();
     }""")
+    t0 = time.time()
     run_btn.click()
 
     # Wait until results land (tests-passed hidden input is populated)
     page.wait_for_function(
         "() => { const el = document.getElementById('tests-passed'); return el && el.value !== ''; }",
         timeout=RUN_RESULT_TIMEOUT,
+    )
+    elapsed = time.time() - t0
+    assert elapsed < RUN_TIME_LIMIT_S, (
+        f"{external_id}: run took {elapsed:.1f}s (limit {RUN_TIME_LIMIT_S}s) – "
+        "consider reducing measure_median_us samples or timeout_s"
     )
 
     passed = int(page.locator("#tests-passed").input_value())

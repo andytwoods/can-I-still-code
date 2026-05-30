@@ -26,5 +26,6 @@
     "function_name": "absolute_values",
     "type": "screening"
   },
+  "clarification": "numbers is a list of integers, e.g. absolute_values([-1, 2, -3]) → [1, 2, 3].",
   "reference_solution": "def absolute_values(numbers):\n    return [abs(x) for x in numbers]\n"
 }

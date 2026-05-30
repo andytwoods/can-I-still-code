@@ -45,5 +45,6 @@
     "function_name": "word_count",
     "type": "screening"
   },
+  "clarification": "Multiple consecutive spaces count as a single separator, and leading or trailing spaces are ignored. Example: word_count('  hello   world  ') → 2.",
   "reference_solution": "def word_count(sentence):\n    return len(sentence.split())\n"
 }

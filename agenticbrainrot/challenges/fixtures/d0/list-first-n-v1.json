@@ -26,5 +26,6 @@
     "function_name": "list_first_n",
     "type": "screening"
   },
+  "clarification": "If n is greater than the length of the list, return the entire list. Example: list_first_n([1, 2, 3], 5) → [1, 2, 3].",
   "reference_solution": "def list_first_n(lst, n):\n    return lst[:n]\n"
 }

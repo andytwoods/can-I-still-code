@@ -284,6 +284,13 @@
                     }
                     break;
 
+                case "timing_start": {
+                    var timingBtn = document.getElementById("run-btn");
+                    if (timingBtn) timingBtn.textContent = "Benchmarking…";
+                    appendOutput("Benchmarking performance – this takes a few seconds…", "info");
+                    break;
+                }
+
                 case "result":
                     clearRunTimeout();
                     if (msg.complexity) lastComplexity = msg.complexity;
@@ -349,10 +356,12 @@
         var outputEl = document.getElementById("output");
         if (!outputEl) return;
         var line = document.createElement("pre");
-        line.className = stream === "stderr" ? "has-text-danger" : "";
+        if (stream === "stderr") line.className = "has-text-danger";
+        else if (stream === "info") line.className = "has-text-info";
         line.textContent = text;
         outputEl.appendChild(line);
         outputEl.scrollTop = outputEl.scrollHeight;
+        return line;
     }
 
     function clearOutput() {

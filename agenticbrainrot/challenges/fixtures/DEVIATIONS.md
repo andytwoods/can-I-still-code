@@ -138,3 +138,16 @@ def remove_similar_row(test_list):
 The corrected solution uses `frozenset(map(tuple, sub))` to build a hashable key from each
 row, deduplicates while preserving the canonical sorted form of each surviving row, and
 returns a sorted list-of-lists matching the expected output type.
+
+---
+
+## Screening fixture clarifications
+
+Additive changes only — no test cases or reference solutions modified. Screening fixtures
+may be edited freely (CLAUDE.md), but changes are logged here for traceability.
+
+| Date | Fixture | Field | Change |
+|---|---|---|---|
+| 2026-05-30 | `d0/absolute-values-v1.json` | `clarification` added | Stated that `numbers` is a list of integers; added example call |
+| 2026-05-30 | `d0/list-first-n-v1.json` | `clarification` added | Stated that n > len(lst) returns the full list; added example |
+| 2026-05-30 | `d0/word-count-v1.json` | `clarification` added | Stated that multiple/leading/trailing spaces are collapsed (matches `str.split()` behaviour); added example |

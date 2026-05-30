@@ -277,6 +277,7 @@ json.dumps(_result) if not isinstance(_result, (int, float, bool, type(None))) e
 
                     console.log("[efficiency] funcName:", funcName, "timingInputs:", timingInputs.length);
                     if (timingInputs.length > 0) {
+                        self.postMessage({ type: "timing_start" });
                         const inputsJson = JSON.stringify(JSON.stringify(timingInputs));
 
                         // Time participant's function (already defined in Pyodide namespace)
