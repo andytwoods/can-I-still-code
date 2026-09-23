@@ -16,6 +16,8 @@
         "NetworkError when attempting to fetch resource"
       ],
       checkIgnore: function (_isUncaught, _args, payload) {
+        // Crawlers often block third-party CDNs, producing noise like "Chart is not defined".
+        if (/bot|spider|crawl|slurp|headless/i.test(navigator.userAgent || "")) return true;
         var frames = (payload && payload.body && payload.body.trace && payload.body.trace.frames) || [];
         return frames.some(function (f) {
           return /^(chrome|moz|safari)-extension:\/\//.test(f.filename || "");

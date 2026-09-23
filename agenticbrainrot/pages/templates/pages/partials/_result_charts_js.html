@@ -32,6 +32,8 @@
     };
 
     function makeChart(id, data, colour, colourBg, yMax) {
+      // Chart.js comes from a CDN; if it failed to load, skip the chart but keep the summaries.
+      if (typeof Chart === "undefined") return;
       var opts = {
         responsive: true,
         scales: {
