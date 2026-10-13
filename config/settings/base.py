@@ -82,6 +82,7 @@ LOCAL_APPS = [
     "agenticbrainrot.coding_sessions",
     "agenticbrainrot.dashboard",
     "agenticbrainrot.blog",
+    "agenticbrainrot.tutorial",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

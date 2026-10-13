@@ -17,6 +17,7 @@ class ConsentGateMiddleware:
         "accounts:withdraw",
         "accounts:request_deletion",
         "accounts:reminder_unsubscribe",
+        "tutorial:index",
     }
 
     EXEMPT_URL_PREFIXES = (

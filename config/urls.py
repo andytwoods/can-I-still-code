@@ -75,6 +75,8 @@ urlpatterns = [
         "blog/",
         include("agenticbrainrot.blog.urls", namespace="blog"),
     ),
+    # Browser-only Python tutorial (no backend calls after page load)
+    path("tutorial/", include("agenticbrainrot.tutorial.urls", namespace="tutorial")),
     # API
     path("api/stats/summary/", stats_summary, name="api_stats_summary"),
     path(
