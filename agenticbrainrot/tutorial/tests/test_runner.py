@@ -161,3 +161,10 @@ class TestGenerate:
     def test_rejects_tuples(self, runner):
         with pytest.raises(TypeError):
             runner.generate("def generate(rng):\n    return {'p': (1, 2)}", 1)
+
+
+def test_runner_is_valid_python_312():
+    """Pyodide 0.27.4 runs Python 3.12: no newer syntax (e.g. unbracketed except lists)."""
+    import ast  # noqa: PLC0415
+
+    ast.parse(RUNNER.read_text(), feature_version=(3, 12))

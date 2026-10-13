@@ -171,11 +171,10 @@ def _last_line(exc: BaseException) -> str:
 
 def caret_lines(code: str) -> list[int]:
     """Lines where ``^`` is used as an operator (not inside strings or comments)."""
-    lines = []
+    lines: list[int] = []
     try:
-        for tok in tokenize.generate_tokens(io.StringIO(code).readline):
-            if tok.type == tokenize.OP and tok.string in ("^", "^="):
-                lines.append(tok.start[0])
+        tokens = tokenize.generate_tokens(io.StringIO(code).readline)
+        lines.extend(tok.start[0] for tok in tokens if tok.type == tokenize.OP and tok.string in ("^", "^="))
     except (tokenize.TokenError, IndentationError, SyntaxError):
         pass
     return lines
@@ -226,7 +225,10 @@ def explain(exc: BaseException, code: str = "") -> str:
     if isinstance(exc, TypeError) and "^" in text:
         return "^ is not 'to the power of' in Python; use ** (so 3 squared is 3 ** 2)."
     if isinstance(exc, TypeError) and "NoneType" in text:
-        return "Something here is None (no value). Did a function forget to return, or did you store the result of .append()?"
+        return (
+            "Something here is None (no value). "
+            "Did a function forget to return, or did you store the result of .append()?"
+        )
     if isinstance(exc, IndexError):
         return "That position isn't in the list. Lists count from 0, so the last item of 5 is at position 4."
     if isinstance(exc, ZeroDivisionError):
@@ -269,7 +271,12 @@ class _PlotCapture:
 
         self.plt = plt
         self._orig_show = plt.show
-        plt.show = self._show
+        capture = self._show
+
+        def show(*args, **kwargs):  # a plain function: matplotlib sets attributes on plt.show
+            capture(*args, **kwargs)
+
+        plt.show = show
         return self
 
     def _show(self, *_args, **_kwargs):
@@ -319,7 +326,7 @@ def evaluate(code: str, params: dict, inject_params: bool, checks: list, seed: i
         with plots:
             try:
                 exec(compile(code, LEARNER_FILENAME, "exec"), ns, ns)  # noqa: S102 - the point of the tool
-            except BaseException as exc:  # noqa: BLE001 - learner code may raise anything, incl. SystemExit
+            except BaseException as exc:
                 if isinstance(exc, KeyboardInterrupt):
                     raise
                 result["error"] = describe_error(exc, code)
@@ -336,7 +343,7 @@ def evaluate(code: str, params: dict, inject_params: bool, checks: list, seed: i
                             continue
                         try:
                             outcomes.append(("ok", fn(*args)))
-                        except BaseException as exc:  # noqa: BLE001
+                        except BaseException as exc:
                             if isinstance(exc, KeyboardInterrupt):
                                 raise
                             outcomes.append(("error", describe_error(exc, code)))
@@ -515,9 +522,7 @@ def run_task(
     notes = []
     lines = caret_lines(code)
     if lines:
-        notes.append(
-            f"Line {lines[0]} uses ^. In Python ^ is not 'to the power of' (3 ^ 2 is 1); use ** instead."
-        )
+        notes.append(f"Line {lines[0]} uses ^. In Python ^ is not 'to the power of' (3 ^ 2 is 1); use ** instead.")
     return {
         "learner": {
             "stdout": learner["stdout"],

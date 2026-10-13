@@ -46,10 +46,9 @@ async function init(msg) {
         if (!resp.ok) throw new Error("Could not fetch the task runner (" + resp.status + ")");
         pyodide.FS.writeFile("/home/pyodide/tutorial_runner.py", await resp.text());
         pyodide.runPython("import sys\nif '/home/pyodide' not in sys.path: sys.path.insert(0, '/home/pyodide')\nimport tutorial_runner");
-        const mod = pyodide.pyimport("tutorial_runner");
-        generateFn = mod.generate_json;
-        runFn = mod.run_task_json;
-        mod.destroy();
+        // These two proxies live as long as the worker; every call returns a plain JS string.
+        generateFn = pyodide.globals.get("tutorial_runner").generate_json;
+        runFn = pyodide.globals.get("tutorial_runner").run_task_json;
         reply({ type: "ready" });
     } catch (err) {
         reply({ type: "init_error", error: String(err && err.message || err) });

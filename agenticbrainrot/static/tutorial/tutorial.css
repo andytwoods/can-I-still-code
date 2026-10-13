@@ -1,0 +1,81 @@
+/* Browser Python tutorial – only what Bulma lacks. */
+
+.tutorial-section { padding-top: 1.5rem; }
+
+.tutorial-tick {
+  display: inline-block;
+  width: 1.2em;
+  color: var(--bulma-success);
+  font-weight: 700;
+}
+
+.tutorial-explanation { max-width: 46rem; }
+
+.tutorial-task { border-top-left-radius: 0; }
+
+.tutorial-editor-wrap .CodeMirror {
+  height: auto;
+  min-height: 9rem;
+  border: 1px solid var(--bulma-border);
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+.tutorial-editor-wrap textarea#editor {
+  width: 100%;
+  min-height: 9rem;
+  font-family: monospace;
+}
+
+.tutorial-editor-wrap .CodeMirror-focused {
+  outline: 3px solid var(--bulma-link);
+  outline-offset: 1px;
+}
+
+/* Make real tab characters visible: they look like spaces but Python treats them differently. */
+.cm-tab {
+  background: rgba(255, 140, 0, 0.28);
+  border-bottom: 2px dotted #c66a00;
+}
+
+.tutorial-error-line { background: rgba(255, 56, 96, 0.14); }
+
+.tutorial-output,
+.tutorial-solution,
+.tutorial-error,
+.tutorial-diff pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.85em;
+  padding: 0.5rem 0.75rem;
+  max-height: 20rem;
+  overflow: auto;
+}
+
+.tutorial-diff {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.tutorial-diff dt { font-weight: 600; align-self: center; }
+.tutorial-diff dd { margin: 0; }
+
+.tutorial-plot {
+  display: block;
+  max-width: 100%;
+  margin-top: 0.75rem;
+  background: #fff;
+  border: 1px solid var(--bulma-border);
+  border-radius: 4px;
+}
+
+#rating .button.is-link { font-weight: 700; }
+
+#tutorial-app :focus-visible {
+  outline: 3px solid var(--bulma-link);
+  outline-offset: 2px;
+}
+
+html[data-a11y-motion="reduced"] #tutorial-app .fa-spin { animation: none; }

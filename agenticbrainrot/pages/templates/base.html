@@ -28,7 +28,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {# ── Webmaster verification ───────────────────────────────────────────── #}
     {% block webmaster_verification %}
-      <meta name="google-site-verification" content="fA8FLZulHUkZkGdonbBfsmR2XpfKktMiHU_vuxs8v70" />
+      <meta name="google-site-verification"
+            content="fA8FLZulHUkZkGdonbBfsmR2XpfKktMiHU_vuxs8v70" />
     {% endblock webmaster_verification %}
     {# ── Primary SEO ─────────────────────────────────────────────────────── #}
     <title>
@@ -40,7 +41,8 @@
           content="{% block meta_description %}A longitudinal citizen-science study measuring whether AI-assisted vibe coding leads to Python skill degradation over time. Join, complete challenges monthly, and contribute to open science.{% endblock meta_description %}" />
     <link rel="canonical"
           href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}" />
-    <meta name="robots" content="{% block meta_robots %}index, follow{% endblock meta_robots %}" />
+    <meta name="robots"
+          content="{% block meta_robots %}index, follow{% endblock meta_robots %}" />
     <meta name="author" content="Andy T Woods" />
     <meta property="og:locale" content="en_GB" />
     {# ── Open Graph (Facebook, LinkedIn, Slack, Discord, …) ─────────────── #}

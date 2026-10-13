@@ -6,6 +6,7 @@ Output:  agenticbrainrot/static/tutorial/bank.bundle.json (generated; never edit
     uv run python scripts/build_tutorial_bank.py            # full mode, write the bundle
     uv run python scripts/build_tutorial_bank.py --sample   # skip completeness checks
     uv run python scripts/build_tutorial_bank.py --check    # validate; fail if the bundle is stale
+    uv run python scripts/build_tutorial_bank.py --block 3  # validate one block only; writes nothing
 
 Every template is run for 30 seeds with the same runner the browser uses
 (agenticbrainrot/static/tutorial/tutorial_runner.py). See docs/tutorial/README.md.
@@ -260,9 +261,10 @@ def validate_template(t: dict, rep: Report):
         except runner.PlaceholderError as exc:
             rep.error(tag, f"placeholder @@{exc.args[0]}@@ is not returned by the generator")
             return
-        for token in runner.PLACEHOLDER.findall(t["prompt_md"]):
+        texts = [t["prompt_md"], *t["hints"], t.get("solution_md") or ""]
+        for token in runner.PLACEHOLDER.findall("\n".join(texts)):
             if token not in params:
-                rep.error(tag, f"prompt placeholder @@{token}@@ is not returned by the generator")
+                rep.error(tag, f"placeholder @@{token}@@ in the prompt/hints is not returned by the generator")
                 return
         try:
             ref = _run(t, runner.substitute_code(t["reference"], params), params, seed)
@@ -283,7 +285,9 @@ def validate_template(t: dict, rep: Report):
         if len(rep.errors) > 50:  # noqa: PLR2004
             return
     if t.get("generator") and len(seen) < MIN_DISTINCT_PARAMS:
-        rep.error(where, f"only {len(seen)} distinct parameter sets across {len(SEEDS)} seeds (need {MIN_DISTINCT_PARAMS})")
+        rep.error(
+            where, f"only {len(seen)} distinct parameter sets across {len(SEEDS)} seeds (need {MIN_DISTINCT_PARAMS})"
+        )
 
 
 # ── bank level ──────────────────────────────────────────────────────────────
@@ -336,12 +340,14 @@ def build_bundle(blocks: list[dict]) -> dict:
     for b in sorted(blocks, key=lambda b: b["block"]):
         order = {"check": 0, "core": 1, "practice": 2, "fix": 2}
         templates = sorted(b["templates"], key=lambda t: (order[t["kind"]], t.get("level") or 0))
-        out_blocks.append({
-            "block": b["block"],
-            "title": b["title"],
-            "explanation_html": render_md(b["explanation_md"]),
-            "task_ids": [t["id"] for t in templates],
-        })
+        out_blocks.append(
+            {
+                "block": b["block"],
+                "title": b["title"],
+                "explanation_html": render_md(b["explanation_md"]),
+                "task_ids": [t["id"] for t in templates],
+            }
+        )
         for t in templates:
             entry = dict(t)
             entry["prompt_html"] = render_md(t["prompt_md"])
@@ -362,9 +368,25 @@ def build_bundle(blocks: list[dict]) -> dict:
     return body
 
 
-def build(*, sample: bool = False, check: bool = False, write: bool = True, quiet: bool = False) -> Report:
+def _warm_up_matplotlib():
+    """The first import builds a font cache (~10 s); keep it out of the timed runs."""
+    try:
+        import matplotlib  # noqa: PLC0415
+
+        matplotlib.use("Agg")
+        import matplotlib.pyplot  # noqa: PLC0415
+    except ImportError:
+        pass
+
+
+def build(
+    *, sample: bool = False, check: bool = False, write: bool = True, quiet: bool = False, block: int | None = None
+) -> Report:
     rep = Report()
     blocks = load_sources(rep)
+    if block is not None:
+        blocks = [b for b in blocks if b.get("block") == block]
+        sample, write = True, False
     if rep.errors:
         return rep
     seen_ids = set()
@@ -379,6 +401,8 @@ def build(*, sample: bool = False, check: bool = False, write: bool = True, quie
         return rep
     if not sample:
         check_completeness(blocks, rep)
+    if any(t.get("allow_plot") for b in blocks for t in b["templates"]):
+        _warm_up_matplotlib()
     for b in blocks:
         for t in b["templates"]:
             if not quiet:
@@ -401,8 +425,9 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--sample", action="store_true", help="skip completeness checks (development)")
     parser.add_argument("--check", action="store_true", help="validate only; fail if the bundle is stale")
+    parser.add_argument("--block", type=int, help="validate one block only (writes nothing)")
     args = parser.parse_args(argv)
-    rep = build(sample=args.sample, check=args.check)
+    rep = build(sample=args.sample, check=args.check, block=args.block)
     for w in rep.warnings:
         print(f"warning: {w}")
     for e in rep.errors:
@@ -410,7 +435,10 @@ def main(argv=None) -> int:
     if rep.errors:
         print(f"{len(rep.errors)} error(s)")
         return 1
-    print("bank OK" + (" (bundle up to date)" if args.check else f" – wrote {BUNDLE.relative_to(ROOT)}"))
+    if args.block is not None:
+        print(f"block {args.block} OK (nothing written)")
+    else:
+        print("bank OK" + (" (bundle up to date)" if args.check else f" – wrote {BUNDLE.relative_to(ROOT)}"))
     return 0
 
 

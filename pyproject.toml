@@ -58,6 +58,8 @@ indent_size = 2
 
 [tool.ruff]
 line-length = 120
+# The tutorial runner also runs in Pyodide 0.27.4 (Python 3.12): keep its syntax 3.12-compatible.
+per-file-target-version = { "agenticbrainrot/static/tutorial/*.py" = "py312" }
 # Exclude a variety of commonly ignored directories.
 extend-exclude = [
     "*/migrations/*.py",
@@ -139,6 +141,13 @@ force-single-line = true
 
 [tool.ruff.lint.per-file-ignores]
 "**/tests/**" = ["S106", "PLR2004"]
+# Tutorial runner: one flat dispatcher per concern (error explanations, check comparison) reads
+# better than many tiny helpers; it is plain code fetched by the Pyodide worker, not a package.
+"agenticbrainrot/static/tutorial/tutorial_runner.py" = [
+    "INP001", "C901", "PLR0911", "PLR0912", "PLR0913", "PLR0915", "FBT001", "S311", "ICN001",
+]
+"scripts/*_tutorial_*.py" = ["INP001", "T201", "C901", "PLR0912", "PLR0915", "ICN001"]
+"agenticbrainrot/tutorial/tests/**" = ["S105", "S106", "PLR2004", "PLR0913", "FBT001", "FBT002", "FBT003"]
 
 [dependency-groups]
 dev = [

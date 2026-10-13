@@ -16,5 +16,17 @@ def _builder():
 
 
 def test_bank_is_valid_and_bundle_is_up_to_date():
-    rep = _builder().build(sample=True, check=True, quiet=True)
+    rep = _builder().build(check=True, quiet=True)
     assert rep.errors == []
+
+
+def test_fallback_notebook_is_up_to_date():
+    import json  # noqa: PLC0415
+
+    spec = importlib.util.spec_from_file_location(
+        "export_tutorial_colab", ROOT / "scripts" / "export_tutorial_colab.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    expected = json.dumps(module.build_notebook(), indent=1, ensure_ascii=False) + "\n"
+    assert module.OUT.read_text(encoding="utf-8") == expected, "run scripts/export_tutorial_colab.py"
