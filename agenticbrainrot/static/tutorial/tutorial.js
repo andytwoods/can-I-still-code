@@ -379,11 +379,10 @@
       var li = document.createElement("li");
       var a = document.createElement("a");
       a.href = "#";
-      a.setAttribute("role", "tab");
       var passed = it.id !== "__practice__" && state.tasks[it.id] && state.tasks[it.id].everPassed;
       a.textContent = (passed ? "✓ " : "") + it.label;
       var active = cur && it.match(cur);
-      if (active) { li.classList.add("is-active"); a.setAttribute("aria-selected", "true"); }
+      if (active) { li.classList.add("is-active"); a.setAttribute("aria-current", "true"); }
       a.addEventListener("click", function (e) {
         e.preventDefault();
         if (it.id === "__practice__") openPractice(); else openTask(it.id);
@@ -441,7 +440,8 @@
   }
 
   function renderTaskHeader(t) {
-    $("task-title").textContent = t.title;
+    var display = variant && variant.taskId === t.id ? variant.display : {};
+    $("task-title").innerHTML = fillHtml(escapeHtml(t.title), display);
     $("task-kind").textContent = KIND_LABELS[t.kind];
     var lv = $("task-level");
     if (isPractice(t)) { lv.textContent = "Level " + t.level + " of 5"; lv.classList.remove("is-hidden"); }
@@ -451,7 +451,7 @@
   function showPromptPlaceholder(t) {
     $("task-prompt").innerHTML = py.failed
       ? "<p><em>Python is not running. Use “Try again” below.</em></p>"
-      : '<p class="has-text-grey"><span class="icon"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i></span> Preparing the task&hellip;</p>';
+      : '<p class="tutorial-muted"><span class="icon"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i></span> Preparing the task&hellip;</p>';
     renderTaskHeader(t);
   }
 
@@ -540,7 +540,7 @@
     var code = currentCode();
     ts.code = code;
     clearFeedback();
-    $("results").innerHTML = '<p class="has-text-grey">Running&hellip;</p>';
+    $("results").innerHTML = '<p class="tutorial-muted">Running&hellip;</p>';
     var seed = variant.seed;
     var params = variant.params;
     var timedOut = false;
@@ -553,7 +553,7 @@
       return pr;
     };
     var start = t.allow_plot ? py.ensurePackages(["matplotlib"]) : Promise.resolve();
-    if (t.allow_plot && py.busy()) $("results").innerHTML = '<p class="has-text-grey">Loading the plotting library (first time only, up to a minute)&hellip;</p>';
+    if (t.allow_plot && py.busy()) $("results").innerHTML = '<p class="tutorial-muted">Loading the plotting library (first time only, up to a minute)&hellip;</p>';
     setButtons();
     $("run-btn").disabled = true;
     var stillHere = function () { return state.current.taskId === t.id && variant && variant.seed === seed; };
@@ -626,6 +626,9 @@
       }
     }
     (learner.notes || []).forEach(function (n) { appendNotice("is-warning", "Note: " + n); });
+    if (!passed && /\bimport random\b/.test(t.reference)) {
+      appendNotice("is-info", "This task checks random numbers. Make exactly the random calls the task describes, in that order: an extra call (even inside a print) changes every number after it.");
+    }
     msg.checks.forEach(function (c) {
       var div = document.createElement("div");
       div.className = "notification is-light py-2 px-3 mb-2 tutorial-check " + (c.passed ? "is-success" : "is-danger");

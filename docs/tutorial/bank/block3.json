@@ -2,7 +2,7 @@
  "schema_version": 1,
  "block": 3,
  "title": "Loops, decisions, and pattern 1",
- "explanation_md": "In Python, **the indent decides** what is inside a loop or an `if`. A line ending in a colon (`:`) must be followed by at least one indented line, and every indented line belongs to it.\n\n```python\ntotal = 0\nfor day in week:\n    total += day      # indented: runs every time round the loop\nprint(total)          # not indented: runs once, after the loop\n```\n\nMove that `print` in by four spaces and it runs every time instead. You get a different answer and **no error**, which is why indentation matters so much.\n\n- One indent is **4 spaces**. The Tab key types 4 spaces here, and in Colab.\n- A real tab character looks just like spaces, but Python treats it differently. Mixing them gives `IndentationError` or `TabError`, usually after pasting code from an email or a PDF. The fix: delete the indent and press Tab again. In this editor, tab characters are highlighted.\n\n**Loops.** `for day in week:` goes through each item. `for i in range(5):` counts 0, 1, 2, 3, 4: `range(5)` stops *before* 5. `range(1, 6)` counts 1 to 5. To add up as you go, start with `total = 0` *before* the loop, then `total += amount` inside it (short for `total = total + amount`).\n\n**Decisions.** `if amount > 300:` … `elif amount > 200:` … `else:`. Python writes `elif`, not `else if`. `==` compares, `=` stores: `if total == 5:` is a question. `and`, `or` and `not` are written as words.\n\n**Step and record.** Each time round a loop, update a value, then `history.append(value)`. Plotting `history` shows how it changed: the same shape as the mortgage section of the Colab notebook.",
+ "explanation_md": "In Python, **the indent decides** what is inside a loop or an `if`. A line ending in a colon (`:`) must be followed by at least one indented line, and every indented line belongs to it.\n\n```python\ntotal = 0\nfor day in week:\n    total += day      # indented: runs every time round the loop\nprint(total)          # not indented: runs once, after the loop\n```\n\nMove that `print` in by four spaces and it runs every time instead. You get a different answer and **no error**, which is why indentation matters so much.\n\n- One indent is **4 spaces**. The Tab key types 4 spaces here. Colab may use 2 spaces instead. Both work, as long as every line in one block matches.\n- A real tab character looks just like spaces, but Python treats it differently. Mixing the two gives `IndentationError` or `TabError`, usually after pasting code from an email or a PDF. The fix: delete the indent and press Tab again. In this editor, tab characters are highlighted.\n\n**Loops.** `for day in week:` goes through each item. `for i in range(5):` counts 0, 1, 2, 3, 4: `range(5)` stops *before* 5. `range(1, 6)` counts 1 to 5. To add up as you go, start with `total = 0` *before* the loop, then `total += amount` inside it (short for `total = total + amount`).\n\n**Decisions.** `if amount > 300:` … `elif amount > 200:` … `else:`. Python writes `elif`, not `else if`. `==` compares, `=` stores: `if total == 5:` is a question. `and`, `or` and `not` are written as words.\n\n**Step and record.** Each time round a loop, update a value, then `history.append(value)`. Plotting `history` shows how it changed: the same shape as the mortgage section of the Colab notebook.",
  "templates": [
   {
    "schema_version": 1,
@@ -146,7 +146,7 @@
    "id": "b3-count-L1",
    "kind": "practice",
    "level": 1,
-   "title": "Count to @@n@@",
+   "title": "Count from 1 to n",
    "prompt_md": "Print the numbers **1 to @@n@@**, one per line, using a `for` loop and `range`.\n\nRemember: `range` stops *before* the number you give it.",
    "starter_code": "n = @@n@@\n# print 1 to n here\n",
    "generator": "def generate(rng):\n    return {'n': rng.randint(3, 25)}",
@@ -224,7 +224,7 @@
     }
    ],
    "hints": [
-    "Click at the start of `items += 1`, delete everything before it, then press Tab once. The tool types 4 spaces, matching the line above."
+    "Click just before `items += 1` and delete the gap in front of it, so the line starts at the left edge. Then press Tab once. The tool types 4 spaces, matching the line above."
    ],
    "wrong_examples": [
     "prices = @@prices@@\ntotal = 0\nitems = 0\nfor p in prices:\n    total += p\nitems += 1\nprint(total, items)\n"
@@ -232,7 +232,7 @@
    "alternative_solutions": [
     "prices = @@prices@@\ntotal = 0\nitems = 0\nfor p in prices:\n    total = total + p\n    items = items + 1\n"
    ],
-   "solution_md": "Both lines in the loop now start with exactly 4 spaces. A tab and 4 spaces look the same on screen, but Python sees them as different indents, so it can't tell which block the line belongs to."
+   "solution_md": "Both lines in the loop now start with exactly 4 spaces. A tab and 4 spaces look the same on screen, but Python does not treat a tab as 4 spaces. It will not guess which block the line belongs to, so it stops with a `TabError`."
   },
   {
    "schema_version": 1,
@@ -300,7 +300,7 @@
    "id": "b3-fix-indent-L4",
    "kind": "fix",
    "level": 4,
-   "title": "Fix it: only one point on the plot",
+   "title": "Fix it: only one value recorded",
    "prompt_md": "This code should record the balance after **every** year for @@years@@ years, but `history` ends up with only one value. It runs without an error: one line is at the wrong indent level.\n\nFind it and fix it, so `history` has @@years@@ values.",
    "starter_code": "balance = @@start@@\nhistory = []\nfor year in range(@@years@@):\n    balance = balance * @@factor@@\nhistory.append(balance)\nprint(len(history))\n",
    "generator": "def generate(rng):\n    pct = rng.randint(2, 8)\n    return {'start': rng.randint(5, 50) * 100, 'factor': 1 + pct / 100, 'years': rng.randint(4, 15)}",
@@ -330,7 +330,7 @@
    "kind": "practice",
    "level": 5,
    "title": "Stop recording at the target",
-   "prompt_md": "You start with £@@start@@ and save £@@deposit@@ every month, for up to @@months@@ months. You are saving for £@@target@@.\n\nEach month, **while the balance is still below the target**, add the deposit and record the new balance in `history`. Once the balance reaches the target, stop adding and stop recording.\n\nSo the last value in `history` is £@@target@@: the first balance that reached the target.",
+   "prompt_md": "You start with £@@start@@ and save £@@deposit@@ every month, for up to @@months@@ months. You are saving for £@@target@@.\n\nEach month, **if the balance is still below the target**, add the deposit and record the new balance in `history`. Once the balance reaches the target, stop adding and stop recording.\n\nSo the last value in `history` is £@@target@@: the first balance that reached the target.",
    "starter_code": "balance = @@start@@\ndeposit = @@deposit@@\ntarget = @@target@@\nhistory = []\nfor month in range(@@months@@):\n    # your code here\n    pass\n",
    "generator": "def generate(rng):\n    deposit = rng.randint(2, 10) * 25\n    start = rng.randint(0, 8) * 25\n    steps = rng.randint(4, 10)\n    target = start + deposit * steps\n    return {'start': start, 'deposit': deposit, 'target': target, 'months': steps + rng.randint(3, 8)}",
    "reference": "balance = @@start@@\ndeposit = @@deposit@@\ntarget = @@target@@\nhistory = []\nfor month in range(@@months@@):\n    if balance < target:\n        balance += deposit\n        history.append(balance)\n",

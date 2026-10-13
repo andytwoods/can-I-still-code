@@ -37,7 +37,7 @@
    "kind": "core",
    "fixed_seed": 1,
    "title": "Say hello",
-   "prompt_md": "Type `print(\"hello\")` in the box and press **Run** (or Ctrl+Enter). You should see `hello` underneath.",
+   "prompt_md": "Type `print(\"hello\")` in the box and press **Run** (or Ctrl+Enter; ⌘+Enter on a Mac). You should see `hello` underneath.",
    "starter_code": "# Type your code below this line\n",
    "reference": "print(\"hello\")\n",
    "checks": [

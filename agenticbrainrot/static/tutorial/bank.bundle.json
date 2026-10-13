@@ -1,5 +1,5 @@
 {
- "bank_version": "9f0512b5b625",
+ "bank_version": "4ab9c6d0e6b4",
  "blocks": [
   {
    "block": 1,
@@ -19,7 +19,7 @@
   },
   {
    "block": 2,
-   "explanation_html": "<p>A <strong>variable</strong> stores a value under a name: <code>takings = 250</code>. Use the name later and Python fills in the value.</p>\n<p><strong>Arithmetic:</strong> <code>+</code>, <code>-</code>, <code>*</code> and <code>/</code> work as you would expect. Powers use <code>**</code>, so <code>3 ** 2</code> is <code>9</code>.</p>\n<ul>\n<li><strong>Watch out:</strong> <code>^</code> is <em>not</em> a power in Python. <code>3 ^ 2</code> gives <code>1</code>, and there is no error to warn you.</li>\n<li><code>/</code> always gives a decimal: <code>7 / 2</code> is <code>3.5</code>. <code>//</code> drops the remainder: <code>7 // 2</code> is <code>3</code>.</li>\n</ul>\n<p><strong>f-strings</strong> put values inside text: <code>print(f\"Takings: {takings}\")</code>. The <code>f</code> before the quote lets you use <code>{ }</code>.</p>\n<p>Names are <strong>case-sensitive</strong>: <code>Total</code> and <code>total</code> are two different variables. <code>True</code>, <code>False</code> and <code>None</code> need capital letters.</p>\n<p>A <strong>list</strong> holds several values in order: <code>week = [250, 310, 180, 400, 520]</code>.</p>\n<ul>\n<li>Lists <strong>count from 0</strong>. <code>week[0]</code> is Monday and <code>week[4]</code> is Friday, so <code>week[1]</code> is the <em>second</em> item.</li>\n<li><code>len(week)</code> counts the items. <code>sum(week)</code>, <code>min(week)</code> and <code>max(week)</code> do what they say.</li>\n<li>The average is <code>sum(week) / len(week)</code>.</li>\n<li><code>week.append(610)</code> adds a value to the end. The dot means \"do this to the list\"; the list itself changes.</li>\n<li><strong>Watch out:</strong> do not write <code>week = week.append(610)</code>. <code>append</code> gives back <code>None</code>, so <code>week</code> would be lost.</li>\n<li><code>week.index(max(week))</code> finds the position of the best day, counted from 0.</li>\n</ul>",
+   "explanation_html": "<p>A <strong>variable</strong> stores a value under a name: <code>takings = 250</code>. Use the name later and Python fills in the value.</p>\n<p><strong>Arithmetic:</strong> <code>+</code>, <code>-</code>, <code>*</code> and <code>/</code> work as you would expect. Powers use <code>**</code>, so <code>3 ** 2</code> is <code>9</code>.</p>\n<ul>\n<li><strong>Watch out:</strong> <code>^</code> is <em>not</em> a power in Python. <code>3 ^ 2</code> gives <code>1</code>, and there is no error to warn you.</li>\n<li><code>/</code> always gives a decimal: <code>7 / 2</code> is <code>3.5</code>. <code>//</code> drops the remainder: <code>7 // 2</code> is <code>3</code>.</li>\n</ul>\n<p><strong>f-strings</strong> put values inside text: <code>print(f\"Takings: {takings}\")</code>. The <code>f</code> before the quote lets you use <code>{ }</code>.</p>\n<p>Names are <strong>case-sensitive</strong>: <code>Total</code> and <code>total</code> are two different variables. <code>True</code>, <code>False</code> and <code>None</code> need capital letters.</p>\n<p>A <strong>list</strong> holds several values in order: <code>week = [250, 310, 180, 400, 520]</code>.</p>\n<ul>\n<li>Lists <strong>count from 0</strong>. <code>week[0]</code> is Monday and <code>week[4]</code> is Friday, so <code>week[1]</code> is the <em>second</em> item.</li>\n<li><code>len(week)</code> counts the items. <code>sum(week)</code>, <code>min(week)</code> and <code>max(week)</code> do what they say.</li>\n<li>The average is <code>sum(week) / len(week)</code>.</li>\n<li><code>week.append(610)</code> adds a value to the end. The dot means \"do this to the list\"; the list itself changes.</li>\n<li><strong>Watch out:</strong> do not write <code>week = week.append(610)</code>. <code>append</code> gives back <code>None</code>, so <code>week</code> would become <code>None</code> and your list would be lost.</li>\n<li><code>week.index(max(week))</code> finds the position of the best day, counted from 0.</li>\n</ul>",
    "task_ids": [
     "b2-check",
     "b2-core-values",
@@ -35,7 +35,7 @@
   },
   {
    "block": 3,
-   "explanation_html": "<p>In Python, <strong>the indent decides</strong> what is inside a loop or an <code>if</code>. A line ending in a colon (<code>:</code>) must be followed by at least one indented line, and every indented line belongs to it.</p>\n<pre><code class=\"language-python\">total = 0\nfor day in week:\n    total += day      # indented: runs every time round the loop\nprint(total)          # not indented: runs once, after the loop\n</code></pre>\n<p>Move that <code>print</code> in by four spaces and it runs every time instead. You get a different answer and <strong>no error</strong>, which is why indentation matters so much.</p>\n<ul>\n<li>One indent is <strong>4 spaces</strong>. The Tab key types 4 spaces here, and in Colab.</li>\n<li>A real tab character looks just like spaces, but Python treats it differently. Mixing them gives <code>IndentationError</code> or <code>TabError</code>, usually after pasting code from an email or a PDF. The fix: delete the indent and press Tab again. In this editor, tab characters are highlighted.</li>\n</ul>\n<p><strong>Loops.</strong> <code>for day in week:</code> goes through each item. <code>for i in range(5):</code> counts 0, 1, 2, 3, 4: <code>range(5)</code> stops <em>before</em> 5. <code>range(1, 6)</code> counts 1 to 5. To add up as you go, start with <code>total = 0</code> <em>before</em> the loop, then <code>total += amount</code> inside it (short for <code>total = total + amount</code>).</p>\n<p><strong>Decisions.</strong> <code>if amount &gt; 300:</code> … <code>elif amount &gt; 200:</code> … <code>else:</code>. Python writes <code>elif</code>, not <code>else if</code>. <code>==</code> compares, <code>=</code> stores: <code>if total == 5:</code> is a question. <code>and</code>, <code>or</code> and <code>not</code> are written as words.</p>\n<p><strong>Step and record.</strong> Each time round a loop, update a value, then <code>history.append(value)</code>. Plotting <code>history</code> shows how it changed: the same shape as the mortgage section of the Colab notebook.</p>",
+   "explanation_html": "<p>In Python, <strong>the indent decides</strong> what is inside a loop or an <code>if</code>. A line ending in a colon (<code>:</code>) must be followed by at least one indented line, and every indented line belongs to it.</p>\n<pre><code class=\"language-python\">total = 0\nfor day in week:\n    total += day      # indented: runs every time round the loop\nprint(total)          # not indented: runs once, after the loop\n</code></pre>\n<p>Move that <code>print</code> in by four spaces and it runs every time instead. You get a different answer and <strong>no error</strong>, which is why indentation matters so much.</p>\n<ul>\n<li>One indent is <strong>4 spaces</strong>. The Tab key types 4 spaces here. Colab may use 2 spaces instead. Both work, as long as every line in one block matches.</li>\n<li>A real tab character looks just like spaces, but Python treats it differently. Mixing the two gives <code>IndentationError</code> or <code>TabError</code>, usually after pasting code from an email or a PDF. The fix: delete the indent and press Tab again. In this editor, tab characters are highlighted.</li>\n</ul>\n<p><strong>Loops.</strong> <code>for day in week:</code> goes through each item. <code>for i in range(5):</code> counts 0, 1, 2, 3, 4: <code>range(5)</code> stops <em>before</em> 5. <code>range(1, 6)</code> counts 1 to 5. To add up as you go, start with <code>total = 0</code> <em>before</em> the loop, then <code>total += amount</code> inside it (short for <code>total = total + amount</code>).</p>\n<p><strong>Decisions.</strong> <code>if amount &gt; 300:</code> … <code>elif amount &gt; 200:</code> … <code>else:</code>. Python writes <code>elif</code>, not <code>else if</code>. <code>==</code> compares, <code>=</code> stores: <code>if total == 5:</code> is a question. <code>and</code>, <code>or</code> and <code>not</code> are written as words.</p>\n<p><strong>Step and record.</strong> Each time round a loop, update a value, then <code>history.append(value)</code>. Plotting <code>history</code> shows how it changed: the same shape as the mortgage section of the Colab notebook.</p>",
    "task_ids": [
     "b3-check",
     "b3-total-core",
@@ -53,7 +53,7 @@
   },
   {
    "block": 4,
-   "explanation_html": "<p>A <strong>function</strong> is a named recipe. You write it once and use it as often as you like.</p>\n<pre><code class=\"language-python\">def add_interest(balance, rate):\n    return balance * (1 + rate)\n</code></pre>\n<p>The line starts with <code>def</code>, then the function's name, then its <strong>arguments</strong> in brackets, then a colon. The body underneath is indented by 4 spaces. Defining a function does nothing on its own: it only runs when you <strong>call</strong> it, for example <code>add_interest(1000, 0.005)</code>.</p>\n<p>An argument can have a <strong>default value</strong>: <code>def add_interest(balance, rate=0.005):</code>. Now <code>add_interest(1000)</code> works too, and uses 0.005.</p>\n<p><strong><code>print</code> versus <code>return</code>.</strong> <code>return</code> hands a value back, so you can store it: <code>new = add_interest(1000, 0.005)</code>. <code>print</code> only shows a value on the screen. A function without <code>return</code> gives back <code>None</code>, so <code>x = f(5)</code> leaves <code>x</code> empty. This is the most common mistake in this block.</p>\n<p>A function can read a variable defined outside it. If that variable changes later, the function's answer changes silently. It is safer to pass the value in as an argument.</p>\n<p><strong>Randomness.</strong> Start with <code>import random</code>.</p>\n<ul>\n<li><code>random.random()</code> gives a decimal between 0 and 1.</li>\n<li><code>random.randint(1, 6)</code> rolls a dice. <strong>Both ends are included</strong>, unlike <code>range(1, 6)</code>, which stops at 5.</li>\n<li><code>random.choice(week)</code> picks one item from a list.</li>\n<li><code>random.seed(1)</code> gives the same \"random\" numbers every run, so results can be checked. The tutorial does this for you when it checks your code.</li>\n</ul>\n<p><strong>Wrap and repeat:</strong> put one run of a simulation in a function, call it many times in a loop, and count how often something happens. That share is a probability, estimated by simulation.</p>",
+   "explanation_html": "<p>A <strong>function</strong> is a named recipe. You write it once and use it as often as you like.</p>\n<pre><code class=\"language-python\">def add_interest(balance, rate):\n    return balance * (1 + rate)\n</code></pre>\n<p>The line starts with <code>def</code>, then the function's name, then its <strong>arguments</strong> in brackets, then a colon. The body underneath is indented by 4 spaces. Defining a function does nothing on its own: it only runs when you <strong>call</strong> it, for example <code>add_interest(1000, 0.005)</code>.</p>\n<p>An argument can have a <strong>default value</strong>: <code>def add_interest(balance, rate=0.005):</code>. Now <code>add_interest(1000)</code> works too, and uses 0.005.</p>\n<p><strong><code>print</code> versus <code>return</code>.</strong> <code>return</code> hands a value back, so you can store it: <code>new = add_interest(1000, 0.005)</code>. <code>print</code> only shows a value on the screen. A function without <code>return</code> gives back <code>None</code>, so after <code>x = f(5)</code>, <code>x</code> is <code>None</code>. This is the most common mistake in this block.</p>\n<p>A function can read a variable defined outside it. If that variable changes later, the function's answer changes silently. It is safer to pass the value in as an argument.</p>\n<p><strong>Randomness.</strong> Start with <code>import random</code>.</p>\n<ul>\n<li><code>random.random()</code> gives a decimal between 0 and 1 (it can be 0, but never 1).</li>\n<li><code>random.randint(1, 6)</code> rolls a dice. <strong>Both ends are included</strong>, unlike <code>range(1, 6)</code>, which stops at 5.</li>\n<li><code>random.choice(week)</code> picks one item from a list.</li>\n<li><code>random.seed(1)</code> gives the same \"random\" numbers every run, so results can be checked. The tutorial does this for you when it checks your code.</li>\n</ul>\n<p><strong>Wrap and repeat:</strong> put one run of a simulation in a function, call it many times in a loop, and count how often something happens. That share is a probability, estimated by simulation.</p>",
    "task_ids": [
     "b4-check",
     "b4-interest-core",
@@ -206,7 +206,7 @@
    "inject_params": false,
    "kind": "core",
    "level": null,
-   "prompt_html": "<p>Type <code>print(\"hello\")</code> in the box and press <strong>Run</strong> (or Ctrl+Enter). You should see <code>hello</code> underneath.</p>",
+   "prompt_html": "<p>Type <code>print(\"hello\")</code> in the box and press <strong>Run</strong> (or Ctrl+Enter; ⌘+Enter on a Mac). You should see <code>hello</code> underneath.</p>",
    "reference": "print(\"hello\")\n",
    "schema_version": 1,
    "starter_code": "# Type your code below this line\n",
@@ -660,7 +660,7 @@
    "reference": "n = @@n@@\nfor i in range(1, n + 1):\n    print(i)\n",
    "schema_version": 1,
    "starter_code": "n = @@n@@\n# print 1 to n here\n",
-   "title": "Count to @@n@@"
+   "title": "Count from 1 to n"
   },
   "b3-elif-core": {
    "allow_plot": false,
@@ -722,7 +722,7 @@
    "schema_version": 1,
    "solution_html": "<p><code>history.append(balance)</code> was not indented, so it ran once, after the loop finished. Indented by 4 spaces, it runs every year. Python gave no error: the code was valid, just not what we meant.</p>",
    "starter_code": "balance = @@start@@\nhistory = []\nfor year in range(@@years@@):\n    balance = balance * @@factor@@\nhistory.append(balance)\nprint(len(history))\n",
-   "title": "Fix it: only one point on the plot"
+   "title": "Fix it: only one value recorded"
   },
   "b3-fix-tab-L2": {
    "allow_plot": false,
@@ -742,7 +742,7 @@
    "fixed_seed": null,
    "generator": "def generate(rng):\n    return {'prices': [rng.randint(1, 40) for _ in range(rng.randint(3, 7))]}",
    "hints_html": [
-    "<p>Click at the start of <code>items += 1</code>, delete everything before it, then press Tab once. The tool types 4 spaces, matching the line above.</p>"
+    "<p>Click just before <code>items += 1</code> and delete the gap in front of it, so the line starts at the left edge. Then press Tab once. The tool types 4 spaces, matching the line above.</p>"
    ],
    "id": "b3-fix-tab-L2",
    "inject_params": false,
@@ -751,7 +751,7 @@
    "prompt_html": "<p>This code should add up <code>prices</code> and count how many there are, but Python refuses to run it. One line inside the loop was indented with a <strong>tab character</strong> (it is highlighted in the editor), while the line above uses spaces.</p>\n<p>Delete that line's indent and press Tab again so both lines use 4 spaces. Then run it.</p>",
    "reference": "prices = @@prices@@\ntotal = 0\nitems = 0\nfor p in prices:\n    total += p\n    items += 1\nprint(total, items)\n",
    "schema_version": 1,
-   "solution_html": "<p>Both lines in the loop now start with exactly 4 spaces. A tab and 4 spaces look the same on screen, but Python sees them as different indents, so it can't tell which block the line belongs to.</p>",
+   "solution_html": "<p>Both lines in the loop now start with exactly 4 spaces. A tab and 4 spaces look the same on screen, but Python does not treat a tab as 4 spaces. It will not guess which block the line belongs to, so it stops with a <code>TabError</code>.</p>",
    "starter_code": "prices = @@prices@@\ntotal = 0\nitems = 0\nfor p in prices:\n    total += p\n\titems += 1\nprint(total, items)\n",
    "title": "Fix it: a hidden tab"
   },
@@ -855,7 +855,7 @@
    "inject_params": false,
    "kind": "practice",
    "level": 5,
-   "prompt_html": "<p>You start with £@@start@@ and save £@@deposit@@ every month, for up to @@months@@ months. You are saving for £@@target@@.</p>\n<p>Each month, <strong>while the balance is still below the target</strong>, add the deposit and record the new balance in <code>history</code>. Once the balance reaches the target, stop adding and stop recording.</p>\n<p>So the last value in <code>history</code> is £@@target@@: the first balance that reached the target.</p>",
+   "prompt_html": "<p>You start with £@@start@@ and save £@@deposit@@ every month, for up to @@months@@ months. You are saving for £@@target@@.</p>\n<p>Each month, <strong>if the balance is still below the target</strong>, add the deposit and record the new balance in <code>history</code>. Once the balance reaches the target, stop adding and stop recording.</p>\n<p>So the last value in <code>history</code> is £@@target@@: the first balance that reached the target.</p>",
    "reference": "balance = @@start@@\ndeposit = @@deposit@@\ntarget = @@target@@\nhistory = []\nfor month in range(@@months@@):\n    if balance < target:\n        balance += deposit\n        history.append(balance)\n",
    "schema_version": 1,
    "solution_html": "<p>The <code>if</code> is checked every month. Once <code>balance</code> reaches the target, the condition is false, so the indented lines under it are skipped for the rest of the loop.</p>",
@@ -1170,7 +1170,7 @@
    "inject_params": false,
    "kind": "core",
    "level": null,
-   "prompt_html": "<p>Write a function <code>add_interest(balance, rate)</code> that <strong>returns</strong> the balance after one month's interest: <code>balance * (1 + rate)</code>.</p>\n<p>Then call it for a balance of £@@balance@@ at a monthly rate of @@rate@@, and store the answer in <code>new_balance</code>.</p>",
+   "prompt_html": "<p>Write a function <code>add_interest(balance, rate)</code> that <strong>returns</strong> the balance after one month's interest: <code>balance * (1 + rate)</code>.</p>\n<p>The last two lines already call it for a balance of £@@balance@@ at a monthly rate of @@rate@@, and store the answer in <code>new_balance</code>. Leave them as they are.</p>",
    "reference": "def add_interest(balance, rate):\n    return balance * (1 + rate)\n\nnew_balance = add_interest(@@balance@@, @@rate@@)\nprint(new_balance)\n",
    "schema_version": 1,
    "solution_html": "<p><code>def</code>, the name, the arguments in brackets, a colon, then an indented body. <code>return</code> hands the new balance back, so the last line can store it.</p>",
@@ -1265,7 +1265,7 @@
    "inject_params": false,
    "kind": "core",
    "level": null,
-   "prompt_html": "<p>This function <strong>prints</strong> the price of @@n@@ coffees at £@@price@@ each, but then <code>cost</code> is <code>None</code>, because the function hands nothing back.</p>\n<p>Run it first and look at <code>cost</code>. Then change the function so it <strong>returns</strong> the total instead of printing it.</p>",
+   "prompt_html": "<p>This function <strong>prints</strong> the price of @@n@@ coffees at £@@price@@ each, but then <code>cost</code> is <code>None</code>, because the function hands nothing back.</p>\n<p>Run it first and look at what it prints for <code>cost</code>. Then change the function so it <strong>returns</strong> the total instead of printing it.</p>",
    "reference": "def order_total(n, price):\n    return n * price\n\ncost = order_total(@@n@@, @@price@@)\nprint(\"cost is\", cost)\n",
    "schema_version": 1,
    "solution_html": "<p><code>print</code> only shows a value on the screen. <code>return</code> hands it back, so <code>cost = order_total(...)</code> can store it. Without <code>return</code>, a function gives back <code>None</code>.</p>",
@@ -1285,13 +1285,13 @@
    "fixed_seed": 11,
    "generator": null,
    "hints_html": [
-    "<p><code>for run in range(1000):</code> then <code>if flip_coins(10) &gt;= 7:</code> add one to <code>count</code>. After the loop (not indented), <code>share = count / 1000</code>.</p>"
+    "<p><code>for run in range(1000):</code> then <code>if flip_coins(10) &gt;= 7:</code> add one to <code>count</code>. After the loop (not indented), change <code>share = 0</code> to <code>share = count / 1000</code>.</p>"
    ],
    "id": "b4-share-core",
    "inject_params": false,
    "kind": "core",
    "level": null,
-   "prompt_html": "<p><code>flip_coins</code> is written for you. Call <code>flip_coins(10)</code> <strong>1,000 times</strong> in a loop (one call per time round). Count how many runs gave <strong>7 or more</strong> heads.</p>\n<p>Store the share of runs, <code>count / 1000</code>, in <code>share</code>. That share is a probability, estimated by simulation.</p>",
+   "prompt_html": "<p><code>flip_coins</code> is written for you. Call <code>flip_coins(10)</code> <strong>1,000 times</strong> in a loop (one call per time round). Count how many runs gave <strong>7 or more</strong> heads.</p>\n<p>Then change <code>share = 0</code> so it stores the share of runs, <code>count / 1000</code>. That share is a probability, estimated by simulation.</p>",
    "reference": "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        if random.randint(0, 1) == 1:\n            heads += 1\n    return heads\n\ncount = 0\nfor run in range(1000):\n    if flip_coins(10) >= 7:\n        count += 1\n\nshare = count / 1000\nprint(share)\n",
    "schema_version": 1,
    "solution_html": "<p>The true answer is about 0.17. <code>&gt;= 7</code> means \"7 or more\"; <code>&gt; 7</code> would leave out exactly 7. One run of 10 flips tells you little; the share across 1,000 runs is the finding.</p>",
@@ -1421,7 +1421,7 @@
      "type": "variable"
     }
    ],
-   "fixed_seed": 8,
+   "fixed_seed": 21,
    "generator": null,
    "hints_html": [
     "<p>Change only the line <code>cost = 1</code> so it reads <code>cost = 2</code>, then run.</p>"
@@ -1456,7 +1456,7 @@
    "inject_params": false,
    "kind": "practice",
    "level": 1,
-   "prompt_html": "<p><code>savings(rate)</code> says how much £@@start@@ grows to after @@years@@ years at a given interest rate.</p>\n<p>For each rate in <code>rates</code>, in order, print <code>savings(rate)</code>: one number per line.</p>",
+   "prompt_html": "<p><code>savings(rate)</code> says how much £@@start@@ grows to after @@years@@ years at a given yearly interest rate.</p>\n<p>For each rate in <code>rates</code>, in order, print <code>savings(rate)</code>: one number per line.</p>",
    "reference": "def savings(rate):\n    return round(@@start@@ * (1 + rate) ** @@years@@, 2)\n\nrates = @@rates@@\nfor rate in rates:\n    print(savings(rate))\n",
    "schema_version": 1,
    "starter_code": "def savings(rate):\n    return round(@@start@@ * (1 + rate) ** @@years@@, 2)\n\nrates = @@rates@@\n# your code here\n",
@@ -1512,7 +1512,7 @@
    "inject_params": false,
    "kind": "practice",
    "level": 4,
-   "prompt_html": "<p>To plot results against settings you need two lists of the same length.</p>\n<ol>\n<li>Make <code>settings</code>: the numbers from @@lo@@ <strong>up to and including</strong> @@hi@@, going up in steps of @@step@@.</li>\n<li>Make <code>results</code>: <code>crop(n)</code> for each <code>n</code> in <code>settings</code>, in order.</li>\n</ol>\n<p>Then <code>plt.plot(settings, results)</code> would draw the curve (plotting is switched off in practice tasks).</p>",
+   "prompt_html": "<p>To plot results against settings you need two lists of the same length.</p>\n<ol>\n<li>Make <code>settings</code>: a <strong>list</strong> of the numbers from @@lo@@ <strong>up to and including</strong> @@hi@@, going up in steps of @@step@@.</li>\n<li>Make <code>results</code>: <code>crop(n)</code> for each <code>n</code> in <code>settings</code>, in order.</li>\n</ol>\n<p>Then <code>plt.plot(settings, results)</code> would draw the curve. Plotting is switched off in practice tasks, so leave that line as a comment.</p>",
    "reference": "def crop(n):\n    return n * (@@a@@ - n)\n\nsettings = list(range(@@lo@@, @@hi@@ + 1, @@step@@))\nresults = []\nfor n in settings:\n    results.append(crop(n))\n",
    "schema_version": 1,
    "solution_html": "<p><code>range(a, b, step)</code> stops <em>before</em> <code>b</code> – the same quirk as in Block 3 – so add 1 to the end to include it.</p>",

@@ -152,6 +152,16 @@ uv run pytest agenticbrainrot/tutorial                 # views, runner, bank val
 uv run pytest tests/e2e/test_tutorial.py -m e2e --base-url http://localhost:8000   # needs a dev server
 ```
 
+Run the e2e server **without** the debug toolbar (it makes its own requests and fails the
+no-backend test):
+
+```bash
+DJANGO_SETTINGS_MODULE=config.settings.test DJANGO_DEBUG=True uv run python manage.py runserver 8000
+```
+
+Accessibility: an axe-core audit of the page (light and dark themes, with a failing run on
+screen) reported no violations on 14 Oct 2026.
+
 The e2e suite covers: Pyodide ready; solve a task and reload (progress and code restored);
 New example changes the numbers; `while True: pass` → timeout → restart → next run works;
 tab/space mix → friendly message; a core plot shows an image; a sample of references pass in
@@ -192,3 +202,9 @@ validator then allows the missing levels.)
    Currently unlisted.
 2. Keep `noindex` after the workshop? Currently noindex.
 3. Confirm the review window: Sat 17 – Sun 18 Oct.
+4. Some prompts can show long decimals to beginners (e.g. `b4-check`'s example average
+   `10.333333333333334`, `b4-passrate-L4`). Correct, but you may prefer rounder numbers.
+5. "a dice" (Block 4 explanation) versus "each die" (`b4-dice-L5`): pick one.
+6. Randomness tasks fail if a learner adds an extra random call (e.g. `print(flip_coins(5))`
+   to test). After a failed run of such a task the page now says so; check you are happy with
+   that wording.

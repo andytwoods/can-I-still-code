@@ -11,7 +11,23 @@
 
 .tutorial-explanation { max-width: 46rem; }
 
-.tutorial-task { border-top-left-radius: 0; }
+#tutorial-app .tutorial-task {
+  border-top-left-radius: 0;
+  /* The site's box colour gives body text under 4.5:1 contrast; use the main scheme colour. */
+  background: var(--bulma-scheme-main);
+  color: var(--bulma-text-strong);
+}
+
+.tutorial-muted { color: var(--bulma-text-strong); opacity: 0.85; }
+
+#task-kind { color: var(--bulma-text-strong); }
+
+#tutorial-app .notification.is-light { color: var(--bulma-text-strong); }
+
+/* Links must not rely on colour alone. */
+#tutorial-app p a:not(.button),
+#tutorial-app .content a:not(.button),
+#tutorial-app li a.inline { text-decoration: underline; }
 
 .tutorial-editor-wrap .CodeMirror {
   height: auto;
@@ -79,3 +95,11 @@
 }
 
 html[data-a11y-motion="reduced"] #tutorial-app .fa-spin { animation: none; }
+
+/* Dark theme: the site's tab and link colours are too dim on the dark background. */
+html[data-theme="dark"] #task-tabs li:not(.is-active) a { color: #c8d0d0; }
+html[data-theme="dark"] #tutorial-app a:not(.button):not(.is-active) { color: #9db4ff; }
+
+/* Code blocks in explanations: the site's pre colours are just under 4.5:1. */
+#tutorial-app .content pre,
+#tutorial-app .content pre code { color: var(--bulma-text-strong); }
