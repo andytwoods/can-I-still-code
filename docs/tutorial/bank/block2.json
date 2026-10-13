@@ -1,0 +1,24 @@
+{
+ "schema_version": 1,
+ "block": 2,
+ "title": "Values and lists",
+ "explanation_md": "TODO",
+ "templates": [
+  {
+   "schema_version": 1,
+   "id": "b2-avg-L4",
+   "block": 2,
+   "kind": "practice",
+   "level": 4,
+   "title": "Average takings",
+   "prompt_md": "The list `week` holds @@n@@ days of café takings, in pounds. Work out the average takings per day and store it in a variable called `average`.",
+   "starter_code": "week = @@week@@\n# your code here\n",
+   "generator": "def generate(rng):\n    n = rng.randint(4, 7)\n    return {'n': n, 'week': [rng.randint(100, 600) for _ in range(n)]}",
+   "reference": "week = @@week@@\naverage = sum(week) / len(week)\n",
+   "checks": [{"id": "avg", "type": "variable", "name": "average"}],
+   "hints": ["Add the list up with `sum(week)`, then divide by how many items there are: `len(week)`."],
+   "wrong_examples": ["week = @@week@@\naverage = sum(week)\n", "week = @@week@@\naverage = sum(week) / (len(week) - 1)\n"],
+   "alternative_solutions": ["week = @@week@@\ntotal = 0\nfor day in week:\n    total += day\naverage = total / len(week)\n"]
+  }
+ ]
+}

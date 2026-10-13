@@ -150,6 +150,7 @@ dev = [
     "djlint==1.36.4",
     "factory-boy==3.3.3",
     "ipdb==0.13.13",
+    "matplotlib>=3.9",
     "mypy==1.20.1",
     "pre-commit==4.6.0",
     "psycopg[binary]==3.3.4",

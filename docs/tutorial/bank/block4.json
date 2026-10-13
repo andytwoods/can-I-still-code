@@ -1,0 +1,42 @@
+{
+ "schema_version": 1,
+ "block": 4,
+ "title": "Functions and randomness",
+ "explanation_md": "TODO",
+ "templates": [
+  {
+   "schema_version": 1,
+   "id": "b4-check",
+   "block": 4,
+   "kind": "check",
+   "title": "A function that returns an average",
+   "prompt_md": "Write a function called `average_of` that takes a list of numbers and **returns** their average. For example, `average_of(@@example@@)` should give back `@@example_avg@@`.",
+   "starter_code": "def average_of(numbers):\n    # your code here\n    pass\n",
+   "generator": "def generate(rng):\n    n = rng.randint(3, 6)\n    example = [rng.randint(1, 20) for _ in range(n)]\n    other = [rng.randint(10, 90) for _ in range(rng.randint(2, 7))]\n    return {'example': example, 'example_avg': sum(example) / n, 'other': other}",
+   "reference": "def average_of(numbers):\n    return sum(numbers) / len(numbers)\n",
+   "checks": [{"id": "fn", "type": "function", "name": "average_of", "calls": [["@@example@@"], ["@@other@@"], [[5]]]}],
+   "hints": ["Inside the function, `return sum(numbers) / len(numbers)`. Remember: `return` hands the answer back; `print` only shows it."],
+   "wrong_examples": ["def average_of(numbers):\n    print(sum(numbers) / len(numbers))\n", "def average_of(numbers):\n    return sum(numbers)\n"],
+   "alternative_solutions": ["def average_of(numbers):\n    total = 0\n    for x in numbers:\n        total += x\n    return total / len(numbers)\n"]
+  },
+  {
+   "schema_version": 1,
+   "id": "b4-flips-core",
+   "block": 4,
+   "kind": "core",
+   "fixed_seed": 7,
+   "title": "Wrap and repeat: flipping coins",
+   "prompt_md": "Write a function `flip_coins(n)` that flips `n` coins and **returns** how many came up heads.\n\nFor each coin, call `random.randint(0, 1)` once, in a loop; count a `1` as heads.\n\nThen call `flip_coins(@@n@@)` and store the result in `heads`.",
+   "starter_code": "import random\n\ndef flip_coins(n):\n    heads = 0\n    # flip n coins here\n    return heads\n\nheads = flip_coins(@@n@@)\nprint(heads)\n",
+   "generator": "def generate(rng):\n    return {'n': rng.randint(8, 30)}",
+   "reference": "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        if random.randint(0, 1) == 1:\n            heads += 1\n    return heads\n\nheads = flip_coins(@@n@@)\nprint(heads)\n",
+   "checks": [
+    {"id": "heads", "type": "variable", "name": "heads"},
+    {"id": "fn", "type": "function", "name": "flip_coins", "calls": [[10], [25], ["@@n@@"]]}
+   ],
+   "hints": ["Inside the function: `for i in range(n):` then `if random.randint(0, 1) == 1:` add one to `heads`."],
+   "wrong_examples": ["import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        heads = random.randint(0, 1)\n    return heads\n\nheads = flip_coins(@@n@@)\n"],
+   "alternative_solutions": ["import random\n\ndef flip_coins(n):\n    heads = 0\n    for _ in range(n):\n        heads += random.randint(0, 1)\n    return heads\n\nheads = flip_coins(@@n@@)\n"]
+  }
+ ]
+}

@@ -1,0 +1,129 @@
+{
+ "bank_version": "c578e3bcc6e3",
+ "blocks": [
+  {
+   "block": 2,
+   "explanation_html": "<p>TODO</p>",
+   "task_ids": [
+    "b2-avg-L4"
+   ],
+   "title": "Values and lists"
+  },
+  {
+   "block": 4,
+   "explanation_html": "<p>TODO</p>",
+   "task_ids": [
+    "b4-check",
+    "b4-flips-core"
+   ],
+   "title": "Functions and randomness"
+  }
+ ],
+ "schema_version": 1,
+ "tasks": {
+  "b2-avg-L4": {
+   "allow_plot": false,
+   "block": 2,
+   "checks": [
+    {
+     "id": "avg",
+     "name": "average",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    n = rng.randint(4, 7)\n    return {'n': n, 'week': [rng.randint(100, 600) for _ in range(n)]}",
+   "hints_html": [
+    "<p>Add the list up with <code>sum(week)</code>, then divide by how many items there are: <code>len(week)</code>.</p>"
+   ],
+   "id": "b2-avg-L4",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 4,
+   "prompt_html": "<p>The list <code>week</code> holds @@n@@ days of café takings, in pounds. Work out the average takings per day and store it in a variable called <code>average</code>.</p>",
+   "reference": "week = @@week@@\naverage = sum(week) / len(week)\n",
+   "schema_version": 1,
+   "starter_code": "week = @@week@@\n# your code here\n",
+   "title": "Average takings"
+  },
+  "b4-check": {
+   "allow_plot": false,
+   "block": 4,
+   "checks": [
+    {
+     "calls": [
+      [
+       "@@example@@"
+      ],
+      [
+       "@@other@@"
+      ],
+      [
+       [
+        5
+       ]
+      ]
+     ],
+     "id": "fn",
+     "name": "average_of",
+     "type": "function"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    n = rng.randint(3, 6)\n    example = [rng.randint(1, 20) for _ in range(n)]\n    other = [rng.randint(10, 90) for _ in range(rng.randint(2, 7))]\n    return {'example': example, 'example_avg': sum(example) / n, 'other': other}",
+   "hints_html": [
+    "<p>Inside the function, <code>return sum(numbers) / len(numbers)</code>. Remember: <code>return</code> hands the answer back; <code>print</code> only shows it.</p>"
+   ],
+   "id": "b4-check",
+   "inject_params": false,
+   "kind": "check",
+   "level": null,
+   "prompt_html": "<p>Write a function called <code>average_of</code> that takes a list of numbers and <strong>returns</strong> their average. For example, <code>average_of(@@example@@)</code> should give back <code>@@example_avg@@</code>.</p>",
+   "reference": "def average_of(numbers):\n    return sum(numbers) / len(numbers)\n",
+   "schema_version": 1,
+   "starter_code": "def average_of(numbers):\n    # your code here\n    pass\n",
+   "title": "A function that returns an average"
+  },
+  "b4-flips-core": {
+   "allow_plot": false,
+   "block": 4,
+   "checks": [
+    {
+     "id": "heads",
+     "name": "heads",
+     "type": "variable"
+    },
+    {
+     "calls": [
+      [
+       10
+      ],
+      [
+       25
+      ],
+      [
+       "@@n@@"
+      ]
+     ],
+     "id": "fn",
+     "name": "flip_coins",
+     "type": "function"
+    }
+   ],
+   "fixed_seed": 7,
+   "generator": "def generate(rng):\n    return {'n': rng.randint(8, 30)}",
+   "hints_html": [
+    "<p>Inside the function: <code>for i in range(n):</code> then <code>if random.randint(0, 1) == 1:</code> add one to <code>heads</code>.</p>"
+   ],
+   "id": "b4-flips-core",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p>Write a function <code>flip_coins(n)</code> that flips <code>n</code> coins and <strong>returns</strong> how many came up heads.</p>\n<p>For each coin, call <code>random.randint(0, 1)</code> once, in a loop; count a <code>1</code> as heads.</p>\n<p>Then call <code>flip_coins(@@n@@)</code> and store the result in <code>heads</code>.</p>",
+   "reference": "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        if random.randint(0, 1) == 1:\n            heads += 1\n    return heads\n\nheads = flip_coins(@@n@@)\nprint(heads)\n",
+   "schema_version": 1,
+   "starter_code": "import random\n\ndef flip_coins(n):\n    heads = 0\n    # flip n coins here\n    return heads\n\nheads = flip_coins(@@n@@)\nprint(heads)\n",
+   "title": "Wrap and repeat: flipping coins"
+  }
+ }
+}
