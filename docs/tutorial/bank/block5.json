@@ -1,0 +1,261 @@
+{
+ "schema_version": 1,
+ "block": 5,
+ "title": "Pattern 3: sweep and compare",
+ "explanation_md": "So far you have run a function once. Real questions need more than one run. **Which setting works best?** To answer that, you *sweep*: run the same function for several settings and compare the results.\n\nThe pattern has three steps:\n\n1. **Make a list of settings**, for example `orders = [20, 30, 40, 50, 60]`.\n2. **Run the function for each setting** in a `for` loop, and store each answer with `results.append(...)`. Start with an empty list, `results = []`, *before* the loop.\n3. **Pick the best.** `max(results)` gives the best *value*. To find the *setting* that gave it, use its position: `orders[results.index(max(results))]`.\n\nA plot makes the comparison easy to see: `plt.plot(orders, results)` puts the settings along the bottom and the results up the side.\n\nTwo things to notice when you look at the curve:\n\n- **The top is often flat.** Several settings give almost the same result, so being roughly right is usually enough. Don't agonise over the exact peak.\n- **One run is not a finding.** When a function uses random numbers, each run gives a slightly different answer. Average over many days, or many runs, before you trust a difference. The spread across runs matters as much as any single number.\n\nThis is the same shape as the fish-and-chip shop section in the organiser's notebook: a model, a list of settings, a loop, and a plot.",
+ "templates": [
+  {
+   "schema_version": 1,
+   "block": 5,
+   "id": "b5-check",
+   "kind": "check",
+   "title": "Which setting is best?",
+   "prompt_md": "The function `harvest(x)` says how many apples a tree gives if you use `x` kilos of fertiliser.\n\nTry each of the three settings in `settings`. Store the **setting** (not the harvest) that gives the highest harvest in a variable called `best`, and print it.",
+   "starter_code": "def harvest(x):\n    return @@a@@ * x - x * x\n\nsettings = @@settings@@\n# try each setting; store the one with the highest harvest in best\n",
+   "generator": "def generate(rng):\n    while True:\n        a = rng.randint(10, 30)\n        settings = rng.sample(range(1, 30), 3)\n        scores = [a * x - x * x for x in settings]\n        best = settings[scores.index(max(scores))]\n        if len(set(scores)) == 3 and max(scores) not in settings and best != max(settings):\n            return {'a': a, 'settings': settings}",
+   "reference": "def harvest(x):\n    return @@a@@ * x - x * x\n\nsettings = @@settings@@\nbest = settings[0]\nfor s in settings:\n    if harvest(s) > harvest(best):\n        best = s\nprint(best)\n",
+   "checks": [
+    {
+     "id": "best",
+     "type": "variable",
+     "name": "best"
+    }
+   ],
+   "hints": [
+    "Loop over `settings`. Keep track of the best setting so far, and replace it when `harvest(s)` is bigger than `harvest(best)`. Or: build a list of harvests, then use `settings[harvests.index(max(harvests))]`."
+   ],
+   "wrong_examples": [
+    "def harvest(x):\n    return @@a@@ * x - x * x\n\nsettings = @@settings@@\nbest = max(harvest(s) for s in settings)\nprint(best)\n",
+    "def harvest(x):\n    return @@a@@ * x - x * x\n\nsettings = @@settings@@\nbest = max(settings)\nprint(best)\n"
+   ],
+   "alternative_solutions": [
+    "def harvest(x):\n    return @@a@@ * x - x * x\n\nsettings = @@settings@@\nharvests = []\nfor s in settings:\n    harvests.append(harvest(s))\nbest = settings[harvests.index(max(harvests))]\nprint(best)\n",
+    "def harvest(x):\n    return @@a@@ * x - x * x\n\nsettings = @@settings@@\nbest = max(settings, key=harvest)\nprint(best)\n"
+   ],
+   "solution_md": "`max(harvests)` is the best *harvest*; `harvests.index(...)` finds its position, and `settings[...]` turns that position back into the setting."
+  },
+  {
+   "schema_version": 1,
+   "block": 5,
+   "id": "b5-bakery-core",
+   "kind": "core",
+   "fixed_seed": 21,
+   "allow_plot": true,
+   "title": "Sweep and compare: the bakery",
+   "prompt_md": "A bakery orders loaves each morning. Each loaf costs £1 and sells for £3. Demand is random; unsold loaves are wasted.\n\n`profit(order)` simulates 200 days. Each day it calls `random.randint(20, 60)` **once** for that day's demand, and it returns the average daily profit.\n\n1. Make an empty list `profits`.\n2. For each `order` in `orders`, **in order**, call `profit(order)` **once** and append the answer to `profits`.\n3. Store the order that gave the highest profit in `best_order`.\n4. Plot `profits` against `orders`, with axis labels, and `plt.show()`.\n\nLook at the top of the curve: is it sharp or flat?",
+   "starter_code": "import random\n\nprice = 3\ncost = 1\n\ndef profit(order):\n    total = 0\n    for day in range(200):\n        demand = random.randint(20, 60)\n        sold = min(order, demand)\n        total += sold * price - order * cost\n    return total / 200\n\norders = [20, 30, 40, 50, 60]\n# 1. make an empty list called profits\n# 2. loop over orders and append profit(order)\n# 3. best_order = ...\n\nimport matplotlib.pyplot as plt\n# 4. plt.plot(orders, profits) and so on\n",
+   "reference": "import random\n\nprice = 3\ncost = 1\n\ndef profit(order):\n    total = 0\n    for day in range(200):\n        demand = random.randint(20, 60)\n        sold = min(order, demand)\n        total += sold * price - order * cost\n    return total / 200\n\norders = [20, 30, 40, 50, 60]\nprofits = []\nfor order in orders:\n    profits.append(profit(order))\n\nbest_order = orders[profits.index(max(profits))]\nprint(best_order)\n\nimport matplotlib.pyplot as plt\nplt.plot(orders, profits)\nplt.xlabel(\"Loaves ordered\")\nplt.ylabel(\"Average daily profit (£)\")\nplt.show()\n",
+   "checks": [
+    {
+     "id": "profits",
+     "type": "variable",
+     "name": "profits"
+    },
+    {
+     "id": "best",
+     "type": "variable",
+     "name": "best_order"
+    }
+   ],
+   "hints": [
+    "Inside the loop: `profits.append(profit(order))`. After the loop: `best_order = orders[profits.index(max(profits))]`."
+   ],
+   "wrong_examples": [
+    "import random\n\nprice = 3\ncost = 1\n\ndef profit(order):\n    total = 0\n    for day in range(200):\n        demand = random.randint(20, 60)\n        sold = min(order, demand)\n        total += sold * price - order * cost\n    return total / 200\n\norders = [20, 30, 40, 50, 60]\nprofits = []\nfor order in orders:\n    profits.append(profit(order))\n\nbest_order = max(profits)\nprint(best_order)\n\nimport matplotlib.pyplot as plt\nplt.plot(orders, profits)\nplt.xlabel(\"Loaves ordered\")\nplt.ylabel(\"Average daily profit (£)\")\nplt.show()\n",
+    "import random\n\nprice = 3\ncost = 1\n\ndef profit(order):\n    total = 0\n    for day in range(200):\n        demand = random.randint(20, 60)\n        sold = min(order, demand)\n        total += sold * price - order * cost\n    return total / 200\n\norders = [20, 30, 40, 50, 60]\nprofits = []\nfor order in orders:\n    profits = [profit(order)]\n\nbest_order = orders[profits.index(max(profits))]\nprint(best_order)\n\nimport matplotlib.pyplot as plt\nplt.plot(orders, profits)\nplt.xlabel(\"Loaves ordered\")\nplt.ylabel(\"Average daily profit (£)\")\nplt.show()\n"
+   ],
+   "alternative_solutions": [
+    "import random\n\nprice = 3\ncost = 1\n\ndef profit(order):\n    total = 0\n    for day in range(200):\n        demand = random.randint(20, 60)\n        sold = min(order, demand)\n        total += sold * price - order * cost\n    return total / 200\n\norders = list(range(20, 61, 10))\nprofits = [profit(o) for o in orders]\nbest_order = orders[0]\nfor i in range(len(orders)):\n    if profits[i] > profits[orders.index(best_order)]:\n        best_order = orders[i]\n\nimport matplotlib.pyplot as plt\nplt.plot(orders, profits)\nplt.show()\n"
+   ],
+   "solution_md": "The curve rises, flattens near the top, then falls. Orders near the peak give almost the same profit, so being roughly right is enough."
+  },
+  {
+   "schema_version": 1,
+   "block": 5,
+   "id": "b5-cost-core",
+   "kind": "core",
+   "fixed_seed": 8,
+   "allow_plot": true,
+   "title": "Predict, then change the cost",
+   "prompt_md": "The flour price has gone up: each loaf now costs the bakery **£2** instead of £1. It still sells for £3.\n\n**Predict first:** will the best order go up or down? Write your guess as a comment on the first line.\n\nThen change `cost = 1` to `cost = 2` and run the code. Was your prediction right? Why might that be?",
+   "starter_code": "# My prediction: \nimport random\n\nprice = 3\ncost = 1\n\ndef profit(order):\n    total = 0\n    for day in range(200):\n        demand = random.randint(20, 60)\n        sold = min(order, demand)\n        total += sold * price - order * cost\n    return total / 200\n\norders = [20, 30, 40, 50, 60]\nprofits = []\nfor order in orders:\n    profits.append(profit(order))\n\nbest_order = orders[profits.index(max(profits))]\nprint(\"Best order:\", best_order)\n\nimport matplotlib.pyplot as plt\nplt.plot(orders, profits)\nplt.xlabel(\"Loaves ordered\")\nplt.ylabel(\"Average daily profit (£)\")\nplt.show()\n",
+   "reference": "import random\n\nprice = 3\ncost = 2\n\ndef profit(order):\n    total = 0\n    for day in range(200):\n        demand = random.randint(20, 60)\n        sold = min(order, demand)\n        total += sold * price - order * cost\n    return total / 200\n\norders = [20, 30, 40, 50, 60]\nprofits = []\nfor order in orders:\n    profits.append(profit(order))\n\nbest_order = orders[profits.index(max(profits))]\nprint(\"Best order:\", best_order)\n\nimport matplotlib.pyplot as plt\nplt.plot(orders, profits)\nplt.xlabel(\"Loaves ordered\")\nplt.ylabel(\"Average daily profit (£)\")\nplt.show()\n",
+   "checks": [
+    {
+     "id": "cost",
+     "type": "variable",
+     "name": "cost"
+    },
+    {
+     "id": "best",
+     "type": "variable",
+     "name": "best_order"
+    }
+   ],
+   "hints": [
+    "Change only the line `cost = 1` so it reads `cost = 2`, then run."
+   ],
+   "wrong_examples": [
+    "import random\n\nprice = 3\ncost = 1.5\n\ndef profit(order):\n    total = 0\n    for day in range(200):\n        demand = random.randint(20, 60)\n        sold = min(order, demand)\n        total += sold * price - order * cost\n    return total / 200\n\norders = [20, 30, 40, 50, 60]\nprofits = []\nfor order in orders:\n    profits.append(profit(order))\n\nbest_order = orders[profits.index(max(profits))]\nprint(\"Best order:\", best_order)\n\nimport matplotlib.pyplot as plt\nplt.plot(orders, profits)\nplt.xlabel(\"Loaves ordered\")\nplt.ylabel(\"Average daily profit (£)\")\nplt.show()\n"
+   ],
+   "alternative_solutions": [
+    "# My prediction: down\nimport random\n\nprice = 3\ncost = 2\n\ndef profit(order):\n    total = 0\n    for day in range(200):\n        demand = random.randint(20, 60)\n        sold = min(order, demand)\n        total += sold * price - order * cost\n    return total / 200\n\norders = [20, 30, 40, 50, 60]\nprofits = []\nfor order in orders:\n    profits.append(profit(order))\n\nbest_order = orders[profits.index(max(profits))]\nprint(\"Best order:\", best_order)\n\nimport matplotlib.pyplot as plt\nplt.plot(orders, profits)\nplt.xlabel(\"Loaves ordered\")\nplt.ylabel(\"Average daily profit (£)\")\nplt.show()\n"
+   ],
+   "solution_md": "With dearer loaves, an unsold loaf wastes more money, so it pays to order fewer. The best order goes **down**."
+  },
+  {
+   "schema_version": 1,
+   "block": 5,
+   "id": "b5-run-L1",
+   "kind": "practice",
+   "level": 1,
+   "title": "Run a function for each setting",
+   "prompt_md": "`savings(rate)` says how much £@@start@@ grows to after @@years@@ years at a given interest rate.\n\nFor each rate in `rates`, in order, print `savings(rate)`: one number per line.",
+   "starter_code": "def savings(rate):\n    return round(@@start@@ * (1 + rate) ** @@years@@, 2)\n\nrates = @@rates@@\n# your code here\n",
+   "generator": "def generate(rng):\n    rates = rng.sample([0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.08, 0.1], rng.randint(3, 4))\n    return {'start': rng.choice([100, 500, 1000, 2000]), 'years': rng.randint(2, 10), 'rates': rates}",
+   "reference": "def savings(rate):\n    return round(@@start@@ * (1 + rate) ** @@years@@, 2)\n\nrates = @@rates@@\nfor rate in rates:\n    print(savings(rate))\n",
+   "checks": [
+    {
+     "id": "out",
+     "type": "stdout",
+     "normalise": "strip"
+    }
+   ],
+   "hints": [
+    "`for rate in rates:` then, indented, `print(savings(rate))`."
+   ],
+   "wrong_examples": [
+    "def savings(rate):\n    return round(@@start@@ * (1 + rate) ** @@years@@, 2)\n\nrates = @@rates@@\nfor rate in rates:\n    result = savings(rate)\nprint(result)\n",
+    "def savings(rate):\n    return round(@@start@@ * (1 + rate) ** @@years@@, 2)\n\nrates = @@rates@@\nfor rate in rates:\n    print(rate)\n"
+   ],
+   "alternative_solutions": [
+    "def savings(rate):\n    return round(@@start@@ * (1 + rate) ** @@years@@, 2)\n\nrates = @@rates@@\nfor i in range(len(rates)):\n    print(savings(rates[i]))\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 5,
+   "id": "b5-store-L2",
+   "kind": "practice",
+   "level": 2,
+   "title": "Store the results in a list",
+   "prompt_md": "`visitors(price)` estimates how many people visit a museum each day at a given ticket price.\n\nMake a list called `results` holding `visitors(price)` for each price in `prices`, in the same order.",
+   "starter_code": "def visitors(price):\n    return @@base@@ - @@slope@@ * price\n\nprices = @@prices@@\n# your code here\n",
+   "generator": "def generate(rng):\n    prices = sorted(rng.sample(range(2, 21), rng.randint(4, 6)))\n    return {'base': rng.randint(300, 600), 'slope': rng.randint(5, 14), 'prices': prices}",
+   "reference": "def visitors(price):\n    return @@base@@ - @@slope@@ * price\n\nprices = @@prices@@\nresults = []\nfor price in prices:\n    results.append(visitors(price))\n",
+   "checks": [
+    {
+     "id": "results",
+     "type": "variable",
+     "name": "results"
+    }
+   ],
+   "hints": [
+    "Start with `results = []` **before** the loop, then `results.append(visitors(price))` inside it."
+   ],
+   "wrong_examples": [
+    "def visitors(price):\n    return @@base@@ - @@slope@@ * price\n\nprices = @@prices@@\nfor price in prices:\n    results = visitors(price)\n",
+    "def visitors(price):\n    return @@base@@ - @@slope@@ * price\n\nprices = @@prices@@\nfor price in prices:\n    results = []\n    results.append(visitors(price))\n"
+   ],
+   "alternative_solutions": [
+    "def visitors(price):\n    return @@base@@ - @@slope@@ * price\n\nprices = @@prices@@\nresults = [visitors(p) for p in prices]\n"
+   ],
+   "solution_md": "If `results = []` is inside the loop, the list is emptied every time round, and only the last answer survives."
+  },
+  {
+   "schema_version": 1,
+   "block": 5,
+   "id": "b5-best-L3",
+   "kind": "practice",
+   "level": 3,
+   "title": "Find the best setting",
+   "prompt_md": "`takings(price)` gives a market stall's daily takings, in pounds, at a given price per item.\n\nTry every price in `prices`. Store the **price** that gives the highest takings in `best_price`. (Not the takings themselves – the price.)",
+   "starter_code": "def takings(price):\n    return price * (@@a@@ - @@b@@ * price)\n\nprices = @@prices@@\n# your code here\n",
+   "generator": "def generate(rng):\n    while True:\n        a = rng.randint(40, 120)\n        b = rng.randint(2, 6)\n        prices = sorted(rng.sample(range(1, 25), rng.randint(5, 7)))\n        t = [p * (a - b * p) for p in prices]\n        if t.count(max(t)) == 1:\n            return {'a': a, 'b': b, 'prices': prices}",
+   "reference": "def takings(price):\n    return price * (@@a@@ - @@b@@ * price)\n\nprices = @@prices@@\nresults = []\nfor price in prices:\n    results.append(takings(price))\nbest_price = prices[results.index(max(results))]\n",
+   "checks": [
+    {
+     "id": "best",
+     "type": "variable",
+     "name": "best_price"
+    }
+   ],
+   "hints": [
+    "Build a list of takings first. `max(results)` is the best takings; `results.index(max(results))` is its position; `prices[...]` at that position is the price."
+   ],
+   "wrong_examples": [
+    "def takings(price):\n    return price * (@@a@@ - @@b@@ * price)\n\nprices = @@prices@@\nresults = [takings(p) for p in prices]\nbest_price = max(results)\n",
+    "def takings(price):\n    return price * (@@a@@ - @@b@@ * price)\n\nprices = @@prices@@\nresults = [takings(p) for p in prices]\nbest_price = results.index(max(results))\n"
+   ],
+   "alternative_solutions": [
+    "def takings(price):\n    return price * (@@a@@ - @@b@@ * price)\n\nprices = @@prices@@\nbest_price = prices[0]\nfor p in prices:\n    if takings(p) > takings(best_price):\n        best_price = p\n",
+    "def takings(price):\n    return price * (@@a@@ - @@b@@ * price)\n\nprices = @@prices@@\nbest_price = max(prices, key=takings)\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 5,
+   "id": "b5-xy-L4",
+   "kind": "practice",
+   "level": 4,
+   "title": "Build the lists for a plot",
+   "prompt_md": "To plot results against settings you need two lists of the same length.\n\n1. Make `settings`: the numbers from @@lo@@ **up to and including** @@hi@@, going up in steps of @@step@@.\n2. Make `results`: `crop(n)` for each `n` in `settings`, in order.\n\nThen `plt.plot(settings, results)` would draw the curve (plotting is switched off in practice tasks).",
+   "starter_code": "def crop(n):\n    return n * (@@a@@ - n)\n\n# settings = ...\n# results = ...\n\n# plt.plot(settings, results)\n",
+   "generator": "def generate(rng):\n    step = rng.choice([2, 5, 10])\n    lo = rng.randint(0, 4) * step\n    hi = lo + step * rng.randint(4, 7)\n    return {'lo': lo, 'hi': hi, 'step': step, 'a': rng.randint(hi // 2 + 5, hi + 20)}",
+   "reference": "def crop(n):\n    return n * (@@a@@ - n)\n\nsettings = list(range(@@lo@@, @@hi@@ + 1, @@step@@))\nresults = []\nfor n in settings:\n    results.append(crop(n))\n",
+   "checks": [
+    {
+     "id": "settings",
+     "type": "variable",
+     "name": "settings"
+    },
+    {
+     "id": "results",
+     "type": "variable",
+     "name": "results"
+    }
+   ],
+   "hints": [
+    "`range` stops *before* its end number, so use `range(@@lo@@, @@hi@@ + 1, @@step@@)` and wrap it in `list(...)`."
+   ],
+   "wrong_examples": [
+    "def crop(n):\n    return n * (@@a@@ - n)\n\nsettings = list(range(@@lo@@, @@hi@@, @@step@@))\nresults = [crop(n) for n in settings]\n",
+    "def crop(n):\n    return n * (@@a@@ - n)\n\nsettings = range(@@lo@@, @@hi@@ + 1, @@step@@)\nresults = [crop(n) for n in settings]\n"
+   ],
+   "alternative_solutions": [
+    "def crop(n):\n    return n * (@@a@@ - n)\n\nsettings = []\nn = @@lo@@\nwhile n <= @@hi@@:\n    settings.append(n)\n    n += @@step@@\nresults = [crop(n) for n in settings]\n"
+   ],
+   "solution_md": "`range(a, b, step)` stops *before* `b` – the same quirk as in Block 3 – so add 1 to the end to include it."
+  },
+  {
+   "schema_version": 1,
+   "block": 5,
+   "id": "b5-compare-L5",
+   "kind": "practice",
+   "level": 5,
+   "title": "Compare two versions of a model",
+   "prompt_md": "Two phone plans charge differently for `minutes` of calls a month: `plan_a(minutes)` and `plan_b(minutes)` give the cost in pence.\n\nFor each number of minutes in `usage`, in order, find the **cheaper** plan. Store the answers in a list called `cheaper`, using the text `\"A\"` or `\"B\"`. (There are no ties.)",
+   "starter_code": "def plan_a(minutes):\n    return @@fa@@ + @@ra@@ * minutes\n\ndef plan_b(minutes):\n    return @@fb@@ + @@rb@@ * minutes\n\nusage = @@usage@@\n# your code here\n",
+   "generator": "def generate(rng):\n    while True:\n        fa, ra = rng.randint(0, 300), rng.randint(6, 12)\n        fb, rb = rng.randint(800, 1500), rng.randint(1, 4)\n        usage = sorted(rng.sample(range(10, 400, 10), rng.randint(4, 6)))\n        a = [fa + ra * m for m in usage]\n        b = [fb + rb * m for m in usage]\n        res = ['A' if x < y else 'B' for x, y in zip(a, b)]\n        if all(x != y for x, y in zip(a, b)) and 'A' in res and 'B' in res:\n            return {'fa': fa, 'ra': ra, 'fb': fb, 'rb': rb, 'usage': usage}",
+   "reference": "def plan_a(minutes):\n    return @@fa@@ + @@ra@@ * minutes\n\ndef plan_b(minutes):\n    return @@fb@@ + @@rb@@ * minutes\n\nusage = @@usage@@\ncheaper = []\nfor m in usage:\n    if plan_a(m) < plan_b(m):\n        cheaper.append(\"A\")\n    else:\n        cheaper.append(\"B\")\n",
+   "checks": [
+    {
+     "id": "cheaper",
+     "type": "variable",
+     "name": "cheaper"
+    }
+   ],
+   "hints": [
+    "Start with `cheaper = []`. In the loop, compare `plan_a(m) < plan_b(m)` and append `\"A\"` or `\"B\"`. Cheaper means the *smaller* cost."
+   ],
+   "wrong_examples": [
+    "def plan_a(minutes):\n    return @@fa@@ + @@ra@@ * minutes\n\ndef plan_b(minutes):\n    return @@fb@@ + @@rb@@ * minutes\n\nusage = @@usage@@\ncheaper = []\nfor m in usage:\n    if plan_a(m) > plan_b(m):\n        cheaper.append(\"A\")\n    else:\n        cheaper.append(\"B\")\n",
+    "def plan_a(minutes):\n    return @@fa@@ + @@ra@@ * minutes\n\ndef plan_b(minutes):\n    return @@fb@@ + @@rb@@ * minutes\n\nusage = @@usage@@\nfor m in usage:\n    if plan_a(m) < plan_b(m):\n        cheaper = \"A\"\n    else:\n        cheaper = \"B\"\n"
+   ],
+   "alternative_solutions": [
+    "def plan_a(minutes):\n    return @@fa@@ + @@ra@@ * minutes\n\ndef plan_b(minutes):\n    return @@fb@@ + @@rb@@ * minutes\n\nusage = @@usage@@\ncheaper = [\"A\" if plan_a(m) < plan_b(m) else \"B\" for m in usage]\n"
+   ],
+   "solution_md": "Neither plan is best everywhere: A wins for light users, B for heavy users. Comparing across settings shows where the answer changes."
+  }
+ ]
+}

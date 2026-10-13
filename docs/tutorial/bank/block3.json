@@ -1,0 +1,363 @@
+{
+ "schema_version": 1,
+ "block": 3,
+ "title": "Loops, decisions, and pattern 1",
+ "explanation_md": "In Python, **the indent decides** what is inside a loop or an `if`. A line ending in a colon (`:`) must be followed by at least one indented line, and every indented line belongs to it.\n\n```python\ntotal = 0\nfor day in week:\n    total += day      # indented: runs every time round the loop\nprint(total)          # not indented: runs once, after the loop\n```\n\nMove that `print` in by four spaces and it runs every time instead. You get a different answer and **no error**, which is why indentation matters so much.\n\n- One indent is **4 spaces**. The Tab key types 4 spaces here, and in Colab.\n- A real tab character looks just like spaces, but Python treats it differently. Mixing them gives `IndentationError` or `TabError`, usually after pasting code from an email or a PDF. The fix: delete the indent and press Tab again. In this editor, tab characters are highlighted.\n\n**Loops.** `for day in week:` goes through each item. `for i in range(5):` counts 0, 1, 2, 3, 4: `range(5)` stops *before* 5. `range(1, 6)` counts 1 to 5. To add up as you go, start with `total = 0` *before* the loop, then `total += amount` inside it (short for `total = total + amount`).\n\n**Decisions.** `if amount > 300:` … `elif amount > 200:` … `else:`. Python writes `elif`, not `else if`. `==` compares, `=` stores: `if total == 5:` is a question. `and`, `or` and `not` are written as words.\n\n**Step and record.** Each time round a loop, update a value, then `history.append(value)`. Plotting `history` shows how it changed: the same shape as the mortgage section of the Colab notebook.",
+ "templates": [
+  {
+   "schema_version": 1,
+   "block": 3,
+   "id": "b3-check",
+   "kind": "check",
+   "title": "Busy days",
+   "prompt_md": "The list `week` holds a week of café takings, in pounds. Count how many days took **more than £300** and store the answer in a variable called `busy`.\n\nA day that took exactly £300 does not count.",
+   "starter_code": "week = @@week@@\nbusy = 0\n# your code here\n",
+   "generator": "def generate(rng):\n    above = [rng.randint(301, 650) for _ in range(rng.randint(2, 4))]\n    rest = [rng.randint(90, 299) for _ in range(6 - len(above))]\n    week = above + rest + [300]\n    rng.shuffle(week)\n    return {'week': week}",
+   "reference": "week = @@week@@\nbusy = 0\nfor day in week:\n    if day > 300:\n        busy += 1\n",
+   "checks": [
+    {
+     "id": "busy",
+     "type": "variable",
+     "name": "busy"
+    }
+   ],
+   "hints": [
+    "Loop through the list with `for day in week:`. Inside the loop, `if day > 300:` then add one: `busy += 1`. Both inner lines need indenting."
+   ],
+   "wrong_examples": [
+    "week = @@week@@\nbusy = 0\nfor day in week:\n    if day >= 300:\n        busy += 1\n",
+    "week = @@week@@\nfor day in week:\n    busy = 0\n    if day > 300:\n        busy += 1\n",
+    "week = @@week@@\nbusy = 0\nfor day in week:\n    if day > 300:\n        busy = 1\n"
+   ],
+   "alternative_solutions": [
+    "week = @@week@@\nbusy = len([day for day in week if day > 300])\n"
+   ],
+   "solution_md": "`busy = 0` goes **before** the loop, so it starts at zero once. The `if` is indented inside the loop, and `busy += 1` is indented again, inside the `if`."
+  },
+  {
+   "schema_version": 1,
+   "block": 3,
+   "id": "b3-total-core",
+   "kind": "core",
+   "fixed_seed": 3,
+   "title": "Add up the week with a loop",
+   "prompt_md": "Use a `for` loop to add up the takings in `week`. Store the answer in `total`, then print it.\n\nStart with `total = 0` **before** the loop, and add each day inside the loop with `total += day`.",
+   "starter_code": "week = @@week@@\ntotal = 0\n# loop through week here\n\nprint(total)\n",
+   "generator": "def generate(rng):\n    return {'week': [rng.randint(120, 600) for _ in range(5)]}",
+   "reference": "week = @@week@@\ntotal = 0\nfor day in week:\n    total += day\n\nprint(total)\n",
+   "checks": [
+    {
+     "id": "total",
+     "type": "variable",
+     "name": "total"
+    },
+    {
+     "id": "out",
+     "type": "stdout",
+     "normalise": "strip"
+    }
+   ],
+   "hints": [
+    "`for day in week:` then, on the next line, indented by 4 spaces: `total += day`. Leave `print(total)` un-indented so it runs once, after the loop."
+   ],
+   "wrong_examples": [
+    "week = @@week@@\nfor day in week:\n    total = 0\n    total += day\n\nprint(total)\n",
+    "week = @@week@@\ntotal = 0\nfor day in week:\n    total = day\n\nprint(total)\n"
+   ],
+   "alternative_solutions": [
+    "week = @@week@@\ntotal = 0\nfor day in week:\n    total = total + day\nprint(total)\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 3,
+   "id": "b3-elif-core",
+   "kind": "core",
+   "fixed_seed": 5,
+   "title": "Busy, steady or quiet?",
+   "prompt_md": "Go through `week` and sort each day into one of three groups:\n\n- more than £300: **busy**\n- otherwise, more than £200: **steady**\n- otherwise: **quiet**\n\nCount each group in the variables `busy`, `steady` and `quiet`. Use `if`, `elif` and `else` so each day is counted once.",
+   "starter_code": "week = @@week@@\nbusy = 0\nsteady = 0\nquiet = 0\nfor day in week:\n    # your if / elif / else here\n    pass\n",
+   "generator": "def generate(rng):\n    week = [rng.randint(301, 600), rng.randint(301, 600), rng.randint(201, 300), rng.randint(80, 200)]\n    week += [rng.randint(80, 600) for _ in range(3)]\n    rng.shuffle(week)\n    return {'week': week}",
+   "reference": "week = @@week@@\nbusy = 0\nsteady = 0\nquiet = 0\nfor day in week:\n    if day > 300:\n        busy += 1\n    elif day > 200:\n        steady += 1\n    else:\n        quiet += 1\n",
+   "checks": [
+    {
+     "id": "busy",
+     "type": "variable",
+     "name": "busy"
+    },
+    {
+     "id": "steady",
+     "type": "variable",
+     "name": "steady"
+    },
+    {
+     "id": "quiet",
+     "type": "variable",
+     "name": "quiet"
+    }
+   ],
+   "hints": [
+    "Inside the loop: `if day > 300:` then `busy += 1`; `elif day > 200:` then `steady += 1`; `else:` then `quiet += 1`. Each `+= 1` line is indented one step further than its `if`/`elif`/`else`."
+   ],
+   "wrong_examples": [
+    "week = @@week@@\nbusy = 0\nsteady = 0\nquiet = 0\nfor day in week:\n    if day > 300:\n        busy += 1\n    if day > 200:\n        steady += 1\n    else:\n        quiet += 1\n",
+    "week = @@week@@\nbusy = 0\nsteady = 0\nquiet = 0\nfor day in week:\n    if day > 200:\n        steady += 1\n    elif day > 300:\n        busy += 1\n    else:\n        quiet += 1\n"
+   ],
+   "alternative_solutions": [
+    "week = @@week@@\nbusy = 0\nsteady = 0\nquiet = 0\nfor day in week:\n    if day > 300:\n        busy = busy + 1\n    elif day > 200 and day <= 300:\n        steady = steady + 1\n    else:\n        quiet = quiet + 1\n"
+   ],
+   "solution_md": "`elif` is only checked when the `if` above it was false, so a £450 day counts as busy and not also as steady. With two separate `if`s, it would be counted twice."
+  },
+  {
+   "schema_version": 1,
+   "block": 3,
+   "id": "b3-savings-core",
+   "kind": "core",
+   "fixed_seed": 1,
+   "allow_plot": true,
+   "title": "Step and record: savings",
+   "prompt_md": "£1,000 earns **0.5% interest a month**. Each month for **24 months**:\n\n1. add the interest: `balance = balance * (1 + rate)`\n2. record the new balance: `history.append(balance)`\n\nThen plot `history`. Both lines go **inside** the loop, so `history` ends up with 24 values.",
+   "starter_code": "import matplotlib.pyplot as plt\n\nbalance = 1000\nrate = 0.005\nhistory = []\n\nfor month in range(24):\n    # add interest, then record the balance\n    pass\n\nplt.plot(history)\nplt.xlabel(\"Month\")\nplt.ylabel(\"Balance (£)\")\nplt.show()\n",
+   "generator": null,
+   "reference": "import matplotlib.pyplot as plt\n\nbalance = 1000\nrate = 0.005\nhistory = []\n\nfor month in range(24):\n    balance = balance * (1 + rate)\n    history.append(balance)\n\nplt.plot(history)\nplt.xlabel(\"Month\")\nplt.ylabel(\"Balance (£)\")\nplt.show()\n",
+   "checks": [
+    {
+     "id": "history",
+     "type": "variable",
+     "name": "history"
+    }
+   ],
+   "hints": [
+    "Replace `pass` with two lines, each indented by 4 spaces: `balance = balance * (1 + rate)` and then `history.append(balance)`."
+   ],
+   "wrong_examples": [
+    "import matplotlib.pyplot as plt\n\nbalance = 1000\nrate = 0.005\nhistory = []\n\nfor month in range(24):\n    balance = balance * (1 + rate)\nhistory.append(balance)\n\nplt.plot(history)\nplt.show()\n",
+    "import matplotlib.pyplot as plt\n\nbalance = 1000\nrate = 0.005\nhistory = []\n\nfor month in range(24):\n    history.append(balance)\n    balance = balance * (1 + rate)\n\nplt.plot(history)\nplt.show()\n",
+    "import matplotlib.pyplot as plt\n\nbalance = 1000\nrate = 0.005\nhistory = []\n\nfor month in range(24):\n    balance = balance * rate\n    history.append(balance)\n\nplt.plot(history)\nplt.show()\n"
+   ],
+   "alternative_solutions": [
+    "import matplotlib.pyplot as plt\n\nbalance = 1000\nrate = 0.005\nhistory = []\n\nfor month in range(24):\n    balance += balance * rate\n    history.append(balance)\n\nplt.plot(history)\nplt.show()\n"
+   ],
+   "solution_md": "If `history.append(balance)` is not indented, it runs once, after the loop, and the plot shows a single point. Indented, it runs every month."
+  },
+  {
+   "schema_version": 1,
+   "block": 3,
+   "id": "b3-count-L1",
+   "kind": "practice",
+   "level": 1,
+   "title": "Count to @@n@@",
+   "prompt_md": "Print the numbers **1 to @@n@@**, one per line, using a `for` loop and `range`.\n\nRemember: `range` stops *before* the number you give it.",
+   "starter_code": "n = @@n@@\n# print 1 to n here\n",
+   "generator": "def generate(rng):\n    return {'n': rng.randint(3, 25)}",
+   "reference": "n = @@n@@\nfor i in range(1, n + 1):\n    print(i)\n",
+   "checks": [
+    {
+     "id": "out",
+     "type": "stdout",
+     "normalise": "strip"
+    }
+   ],
+   "hints": [
+    "`range(1, n + 1)` counts from 1 up to and including `n`. Put `print(i)` on the next line, indented."
+   ],
+   "wrong_examples": [
+    "n = @@n@@\nfor i in range(n):\n    print(i)\n",
+    "n = @@n@@\nfor i in range(1, n):\n    print(i)\n",
+    "n = @@n@@\nfor i in range(1, n + 1):\n    pass\nprint(i)\n"
+   ],
+   "alternative_solutions": [
+    "n = @@n@@\nfor i in range(n):\n    print(i + 1)\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 3,
+   "id": "b3-sum-L2",
+   "kind": "practice",
+   "level": 2,
+   "title": "Total savings deposits",
+   "prompt_md": "The list `deposits` holds @@n@@ payments into a savings account. Use a `for` loop to add them up and store the answer in `total`.",
+   "starter_code": "deposits = @@deposits@@\n# your code here\n",
+   "generator": "def generate(rng):\n    n = rng.randint(4, 8)\n    return {'n': n, 'deposits': [rng.randint(5, 50) * 5 for _ in range(n)]}",
+   "reference": "deposits = @@deposits@@\ntotal = 0\nfor d in deposits:\n    total += d\n",
+   "checks": [
+    {
+     "id": "total",
+     "type": "variable",
+     "name": "total"
+    }
+   ],
+   "hints": [
+    "Start with `total = 0` before the loop. Inside the loop, `total += d`."
+   ],
+   "wrong_examples": [
+    "deposits = @@deposits@@\nfor d in deposits:\n    total = 0\n    total += d\n",
+    "deposits = @@deposits@@\ntotal = 0\nfor d in deposits:\n    total = d\n",
+    "deposits = @@deposits@@\ntotal = 0\nfor i in range(len(deposits) - 1):\n    total += deposits[i]\n"
+   ],
+   "alternative_solutions": [
+    "deposits = @@deposits@@\ntotal = sum(deposits)\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 3,
+   "id": "b3-fix-tab-L2",
+   "kind": "fix",
+   "level": 2,
+   "title": "Fix it: a hidden tab",
+   "prompt_md": "This code should add up `prices` and count how many there are, but Python refuses to run it. One line inside the loop was indented with a **tab character** (it is highlighted in the editor), while the line above uses spaces.\n\nDelete that line's indent and press Tab again so both lines use 4 spaces. Then run it.",
+   "starter_code": "prices = @@prices@@\ntotal = 0\nitems = 0\nfor p in prices:\n    total += p\n\titems += 1\nprint(total, items)\n",
+   "generator": "def generate(rng):\n    return {'prices': [rng.randint(1, 40) for _ in range(rng.randint(3, 7))]}",
+   "reference": "prices = @@prices@@\ntotal = 0\nitems = 0\nfor p in prices:\n    total += p\n    items += 1\nprint(total, items)\n",
+   "checks": [
+    {
+     "id": "total",
+     "type": "variable",
+     "name": "total"
+    },
+    {
+     "id": "items",
+     "type": "variable",
+     "name": "items"
+    }
+   ],
+   "hints": [
+    "Click at the start of `items += 1`, delete everything before it, then press Tab once. The tool types 4 spaces, matching the line above."
+   ],
+   "wrong_examples": [
+    "prices = @@prices@@\ntotal = 0\nitems = 0\nfor p in prices:\n    total += p\nitems += 1\nprint(total, items)\n"
+   ],
+   "alternative_solutions": [
+    "prices = @@prices@@\ntotal = 0\nitems = 0\nfor p in prices:\n    total = total + p\n    items = items + 1\n"
+   ],
+   "solution_md": "Both lines in the loop now start with exactly 4 spaces. A tab and 4 spaces look the same on screen, but Python sees them as different indents, so it can't tell which block the line belongs to."
+  },
+  {
+   "schema_version": 1,
+   "block": 3,
+   "id": "b3-above-L3",
+   "kind": "practice",
+   "level": 3,
+   "title": "Scores above the pass mark",
+   "prompt_md": "The list `scores` holds test scores. Count how many are **above** the pass mark of @@mark@@ and store the answer in `passes`. A score exactly equal to @@mark@@ does not count.",
+   "starter_code": "scores = @@scores@@\nmark = @@mark@@\n# your code here\n",
+   "generator": "def generate(rng):\n    mark = rng.randint(4, 7) * 10\n    above = [rng.randint(mark + 1, 100) for _ in range(rng.randint(3, 5))]\n    below = [rng.randint(10, mark - 1) for _ in range(rng.randint(1, 2))]\n    scores = above + below + [mark]\n    rng.shuffle(scores)\n    return {'scores': scores, 'mark': mark}",
+   "reference": "scores = @@scores@@\nmark = @@mark@@\npasses = 0\nfor s in scores:\n    if s > mark:\n        passes += 1\n",
+   "checks": [
+    {
+     "id": "passes",
+     "type": "variable",
+     "name": "passes"
+    }
+   ],
+   "hints": [
+    "`passes = 0` before the loop; inside, `if s > mark:` and then, indented once more, `passes += 1`."
+   ],
+   "wrong_examples": [
+    "scores = @@scores@@\nmark = @@mark@@\npasses = 0\nfor s in scores:\n    if s >= mark:\n        passes += 1\n",
+    "scores = @@scores@@\nmark = @@mark@@\nfor s in scores:\n    passes = 0\n    if s > mark:\n        passes += 1\n",
+    "scores = @@scores@@\nmark = @@mark@@\npasses = 0\nfor s in scores:\n    if s < mark:\n        passes += 1\n"
+   ],
+   "alternative_solutions": [
+    "scores = @@scores@@\nmark = @@mark@@\npasses = 0\nfor s in scores:\n    if not s <= mark:\n        passes = passes + 1\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 3,
+   "id": "b3-growth-L4",
+   "kind": "practice",
+   "level": 4,
+   "title": "Step and record: a growing population",
+   "prompt_md": "A town has @@start@@ people and grows by @@pct@@% a year. For each of **@@years@@ years**:\n\n1. grow the population: `people = people * @@factor@@`\n2. record it: `history.append(people)`\n\nAt the end, `history` should hold @@years@@ values: the population after each year.",
+   "starter_code": "people = @@start@@\nhistory = []\n# your loop here\n",
+   "generator": "def generate(rng):\n    pct = rng.randint(2, 9)\n    return {'start': rng.randint(10, 90) * 100, 'pct': pct, 'factor': 1 + pct / 100, 'years': rng.randint(5, 12)}",
+   "reference": "people = @@start@@\nhistory = []\nfor year in range(@@years@@):\n    people = people * @@factor@@\n    history.append(people)\n",
+   "checks": [
+    {
+     "id": "history",
+     "type": "variable",
+     "name": "history"
+    }
+   ],
+   "hints": [
+    "`for year in range(@@years@@):` then two indented lines: first update `people`, then `history.append(people)`."
+   ],
+   "wrong_examples": [
+    "people = @@start@@\nhistory = []\nfor year in range(@@years@@):\n    history.append(people)\n    people = people * @@factor@@\n",
+    "people = @@start@@\nhistory = []\nfor year in range(@@years@@):\n    people = people * @@factor@@\nhistory.append(people)\n",
+    "people = @@start@@\nhistory = []\nfor year in range(@@years@@ - 1):\n    people = people * @@factor@@\n    history.append(people)\n"
+   ],
+   "alternative_solutions": [
+    "people = @@start@@\nhistory = []\nfor year in range(1, @@years@@ + 1):\n    people *= @@factor@@\n    history.append(people)\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 3,
+   "id": "b3-fix-indent-L4",
+   "kind": "fix",
+   "level": 4,
+   "title": "Fix it: only one point on the plot",
+   "prompt_md": "This code should record the balance after **every** year for @@years@@ years, but `history` ends up with only one value. It runs without an error: one line is at the wrong indent level.\n\nFind it and fix it, so `history` has @@years@@ values.",
+   "starter_code": "balance = @@start@@\nhistory = []\nfor year in range(@@years@@):\n    balance = balance * @@factor@@\nhistory.append(balance)\nprint(len(history))\n",
+   "generator": "def generate(rng):\n    pct = rng.randint(2, 8)\n    return {'start': rng.randint(5, 50) * 100, 'factor': 1 + pct / 100, 'years': rng.randint(4, 15)}",
+   "reference": "balance = @@start@@\nhistory = []\nfor year in range(@@years@@):\n    balance = balance * @@factor@@\n    history.append(balance)\nprint(len(history))\n",
+   "checks": [
+    {
+     "id": "history",
+     "type": "variable",
+     "name": "history"
+    }
+   ],
+   "hints": [
+    "Which line should run every time round the loop? Lines inside the loop are indented by 4 spaces."
+   ],
+   "wrong_examples": [
+    "balance = @@start@@\nhistory = []\nfor year in range(@@years@@):\n    history.append(balance)\n    balance = balance * @@factor@@\n"
+   ],
+   "alternative_solutions": [
+    "balance = @@start@@\nhistory = []\nfor year in range(@@years@@):\n    balance *= @@factor@@\n    history.append(balance)\n"
+   ],
+   "solution_md": "`history.append(balance)` was not indented, so it ran once, after the loop finished. Indented by 4 spaces, it runs every year. Python gave no error: the code was valid, just not what we meant."
+  },
+  {
+   "schema_version": 1,
+   "block": 3,
+   "id": "b3-target-L5",
+   "kind": "practice",
+   "level": 5,
+   "title": "Stop recording at the target",
+   "prompt_md": "You start with £@@start@@ and save £@@deposit@@ every month, for up to @@months@@ months. You are saving for £@@target@@.\n\nEach month, **while the balance is still below the target**, add the deposit and record the new balance in `history`. Once the balance reaches the target, stop adding and stop recording.\n\nSo the last value in `history` is £@@target@@: the first balance that reached the target.",
+   "starter_code": "balance = @@start@@\ndeposit = @@deposit@@\ntarget = @@target@@\nhistory = []\nfor month in range(@@months@@):\n    # your code here\n    pass\n",
+   "generator": "def generate(rng):\n    deposit = rng.randint(2, 10) * 25\n    start = rng.randint(0, 8) * 25\n    steps = rng.randint(4, 10)\n    target = start + deposit * steps\n    return {'start': start, 'deposit': deposit, 'target': target, 'months': steps + rng.randint(3, 8)}",
+   "reference": "balance = @@start@@\ndeposit = @@deposit@@\ntarget = @@target@@\nhistory = []\nfor month in range(@@months@@):\n    if balance < target:\n        balance += deposit\n        history.append(balance)\n",
+   "checks": [
+    {
+     "id": "history",
+     "type": "variable",
+     "name": "history"
+    },
+    {
+     "id": "balance",
+     "type": "variable",
+     "name": "balance"
+    }
+   ],
+   "hints": [
+    "Inside the loop, use `if balance < target:` and put both the `balance += deposit` and the `history.append(balance)` lines inside that `if` (indented 8 spaces)."
+   ],
+   "wrong_examples": [
+    "balance = @@start@@\ndeposit = @@deposit@@\ntarget = @@target@@\nhistory = []\nfor month in range(@@months@@):\n    balance += deposit\n    history.append(balance)\n",
+    "balance = @@start@@\ndeposit = @@deposit@@\ntarget = @@target@@\nhistory = []\nfor month in range(@@months@@):\n    if balance < target:\n        balance += deposit\n    history.append(balance)\n",
+    "balance = @@start@@\ndeposit = @@deposit@@\ntarget = @@target@@\nhistory = []\nfor month in range(@@months@@):\n    if balance <= target:\n        balance += deposit\n        history.append(balance)\n"
+   ],
+   "alternative_solutions": [
+    "balance = @@start@@\ndeposit = @@deposit@@\ntarget = @@target@@\nhistory = []\nfor month in range(@@months@@):\n    if not balance >= target:\n        balance = balance + deposit\n        history.append(balance)\n"
+   ],
+   "solution_md": "The `if` is checked every month. Once `balance` reaches the target, the condition is false, so the indented lines under it are skipped for the rest of the loop."
+  }
+ ]
+}

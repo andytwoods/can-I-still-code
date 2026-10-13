@@ -1,0 +1,237 @@
+{
+ "schema_version": 1,
+ "block": 1,
+ "title": "Getting going",
+ "explanation_md": "Welcome! In this tutorial you write Python in the box and press **Run**. Python runs in your browser, so the first load takes a few seconds.\n\nTry this line:\n\n```python\nprint(\"hello\")\n```\n\n`print` shows whatever is inside the brackets. The quote marks tell Python that `hello` is text. The output appears underneath the box. Run again and the old output is replaced.\n\n**Mistakes are normal.** When something is wrong, Python stops and shows an error. Read the **last line** of the error first: it names the problem, such as `SyntaxError` or `NameError`. The message also gives a **line number**. The mistake is on that line, or just before it.\n\nCommon slips:\n\n- a missing bracket: `print(\"hello\"`\n- a missing quote mark: `print(\"hello)`\n- a misspelt name: `pritn(\"hello\")`\n\nFix the one character that is wrong. There is no need to retype everything.\n\nA `#` starts a **comment**. Python ignores the rest of that line, so comments are notes for people:\n\n```python\n# This line is a note\nprint(\"hello\")  # so is this part\n```\n\nEach task below is checked for you. You get a hint after one try and a worked solution after two. **New example** gives you fresh text to practise with, as often as you like.",
+ "templates": [
+  {
+   "schema_version": 1,
+   "block": 1,
+   "id": "b1-check",
+   "kind": "check",
+   "title": "Fix the broken line",
+   "prompt_md": "This code should print two lines:\n\n```\nWelcome to the café\nTable @@table@@ is ready\n```\n\nOne line is broken. Fix it so the code prints exactly that.",
+   "starter_code": "print(\"Welcome to the café\")\nprint(\"Table @@table@@ is ready\"\n",
+   "generator": "def generate(rng):\n    return {'table': rng.randint(1, 40)}",
+   "reference": "print(\"Welcome to the café\")\nprint(\"Table @@table@@ is ready\")\n",
+   "checks": [
+    {
+     "id": "printed",
+     "type": "stdout",
+     "normalise": "strip"
+    }
+   ],
+   "hints": [
+    "The second line is missing its closing bracket `)` at the end."
+   ],
+   "wrong_examples": [
+    "print(\"Welcome to the café\")\nprint(\"Table is ready\")\n",
+    "print(\"Table @@table@@ is ready\")\n"
+   ],
+   "solution_md": "Add `)` at the end of the second line, so every `(` has a matching `)`."
+  },
+  {
+   "schema_version": 1,
+   "block": 1,
+   "id": "b1-hello-core",
+   "kind": "core",
+   "fixed_seed": 1,
+   "title": "Say hello",
+   "prompt_md": "Type `print(\"hello\")` in the box and press **Run** (or Ctrl+Enter). You should see `hello` underneath.",
+   "starter_code": "# Type your code below this line\n",
+   "reference": "print(\"hello\")\n",
+   "checks": [
+    {
+     "id": "printed",
+     "type": "stdout",
+     "normalise": "strip"
+    }
+   ],
+   "hints": [
+    "Type exactly: `print(\"hello\")`, with the brackets and the quote marks."
+   ],
+   "wrong_examples": [
+    "print(\"Hello\")\n",
+    "print(hello)\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 1,
+   "id": "b1-change-core",
+   "kind": "core",
+   "fixed_seed": 1,
+   "title": "Change the message",
+   "prompt_md": "Change the text inside the quote marks so the code prints:\n\n```\nHello from the café\n```\n\nRun it again; the new output replaces the old.",
+   "starter_code": "print(\"hello\")\n",
+   "reference": "print(\"Hello from the café\")\n",
+   "checks": [
+    {
+     "id": "printed",
+     "type": "stdout",
+     "normalise": "strip"
+    }
+   ],
+   "hints": [
+    "Only change the words between the quote marks. Keep the brackets and quotes."
+   ],
+   "wrong_examples": [
+    "print(\"hello\")\nprint(\"Hello from the café\")\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 1,
+   "id": "b1-bracket-core",
+   "kind": "core",
+   "fixed_seed": 1,
+   "title": "Break it, then fix it",
+   "prompt_md": "This line has a mistake: the closing bracket is missing. Press **Run** first and read the **last line** of the error. Then fix it so it prints `hello`.",
+   "starter_code": "print(\"hello\"\n",
+   "reference": "print(\"hello\")\n",
+   "checks": [
+    {
+     "id": "printed",
+     "type": "stdout",
+     "normalise": "strip"
+    }
+   ],
+   "hints": [
+    "Every `(` needs a matching `)`. Add one at the end of the line."
+   ],
+   "wrong_examples": [
+    "print(\"hello\"))\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 1,
+   "id": "b1-text-L1",
+   "kind": "practice",
+   "level": 1,
+   "title": "Change the text",
+   "prompt_md": "Change this code so it prints exactly:\n\n```\n@@msg@@\n```",
+   "starter_code": "print(\"Good morning\")\n",
+   "generator": "def generate(rng):\n    return {'msg': rng.choice(['Latte please', 'One flat white', 'Tea for two', 'Cake of the day', 'Open at 8am', 'Closed on Sundays', 'Free refills today', 'Two scones, please', 'Hot chocolate time', 'Table for four', 'Oat milk available', 'Last orders at 5pm'])}",
+   "reference": "print(@@msg@@)\n",
+   "checks": [
+    {
+     "id": "printed",
+     "type": "stdout",
+     "normalise": "strip"
+    }
+   ],
+   "hints": [
+    "Replace `Good morning` with the new text, keeping the quote marks: `print(\"@@msg@@\")`."
+   ],
+   "wrong_examples": [
+    "print(\"Good morning\")\nprint(@@msg@@)\n",
+    "print(\"@@msg@@\")\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 1,
+   "id": "b1-twolines-L2",
+   "kind": "practice",
+   "level": 2,
+   "title": "Print two lines",
+   "prompt_md": "Add a second `print` so the code prints these two lines:\n\n```\n@@line1@@\n@@line2@@\n```",
+   "starter_code": "print(@@line1@@)\n# add a second line here\n",
+   "generator": "def generate(rng):\n    item = rng.choice(['Latte', 'Flat white', 'Tea', 'Scone', 'Muffin', 'Toastie', 'Mocha', 'Brownie'])\n    pence = rng.randint(150, 450)\n    price = f'{pence // 100}.{pence % 100:02d}'\n    return {'line1': f'Order: {item}', 'line2': f'Price: £{price}'}",
+   "reference": "print(@@line1@@)\nprint(@@line2@@)\n",
+   "checks": [
+    {
+     "id": "printed",
+     "type": "stdout",
+     "normalise": "strip"
+    }
+   ],
+   "hints": [
+    "Each `print` makes its own line. Add `print(\"@@line2@@\")` on a new line underneath."
+   ],
+   "wrong_examples": [
+    "print(@@line1@@, @@line2@@)\n",
+    "print(@@line2@@)\nprint(@@line1@@)\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 1,
+   "id": "b1-bracket-L3",
+   "kind": "practice",
+   "level": 3,
+   "title": "Fix a missing bracket",
+   "prompt_md": "This code should print:\n\n```\nTable @@table@@ is ready\nEnjoy your @@drink@@\n```\n\nRun it, read the last line of the error, and fix the broken line.",
+   "starter_code": "print(\"Table @@table@@ is ready\"\nprint(@@enjoy@@)\n",
+   "generator": "def generate(rng):\n    drink = rng.choice(['tea', 'latte', 'cocoa', 'mocha', 'espresso', 'cappuccino'])\n    return {'table': rng.randint(1, 30), 'drink': drink, 'enjoy': 'Enjoy your ' + drink}",
+   "reference": "print(\"Table @@table@@ is ready\")\nprint(@@enjoy@@)\n",
+   "checks": [
+    {
+     "id": "printed",
+     "type": "stdout",
+     "normalise": "strip"
+    }
+   ],
+   "hints": [
+    "The error points at line 1 or just after it. The first line needs a `)` at the end."
+   ],
+   "wrong_examples": [
+    "print(\"Table @@table@@ is ready\"))\nprint(@@enjoy@@)\n",
+    "print(\"Table @@table@@ is ready\")\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 1,
+   "id": "b1-quote-L4",
+   "kind": "practice",
+   "level": 4,
+   "title": "Fix a missing quote mark",
+   "prompt_md": "This code should print:\n\n```\nTable @@table@@ wants @@cups@@ cups of tea\n```\n\nOne quote mark is missing. Find it and fix it.",
+   "starter_code": "print(\"Table @@table@@ wants @@cups@@ cups of tea)\n",
+   "generator": "def generate(rng):\n    return {'table': rng.randint(1, 30), 'cups': rng.randint(2, 6)}",
+   "reference": "print(\"Table @@table@@ wants @@cups@@ cups of tea\")\n",
+   "checks": [
+    {
+     "id": "printed",
+     "type": "stdout",
+     "normalise": "strip"
+    }
+   ],
+   "hints": [
+    "Text needs a quote mark at **both** ends. Add `\"` just before the closing bracket."
+   ],
+   "wrong_examples": [
+    "print(\"Table @@table@@ wants @@cups@@ cups of tea)\")\n",
+    "print(\"Table @@table@@ wants @@cups@@ cups\")\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 1,
+   "id": "b1-pritn-L5",
+   "kind": "practice",
+   "level": 5,
+   "title": "Fix a misspelt name",
+   "prompt_md": "This code should print:\n\n```\nOrder @@order@@ is ready\nThank you!\n```\n\nRun it, read the last line of the error (it names the problem), and fix it.",
+   "starter_code": "pritn(\"Order @@order@@ is ready\")\nprint(\"Thank you!\")\n",
+   "generator": "def generate(rng):\n    return {'order': rng.randint(10, 99)}",
+   "reference": "print(\"Order @@order@@ is ready\")\nprint(\"Thank you!\")\n",
+   "checks": [
+    {
+     "id": "printed",
+     "type": "stdout",
+     "normalise": "strip"
+    }
+   ],
+   "hints": [
+    "`NameError` means Python doesn't know a name. Look at the spelling of `print` on line 1."
+   ],
+   "wrong_examples": [
+    "Print(\"Order @@order@@ is ready\")\nprint(\"Thank you!\")\n",
+    "print(\"Order @@order@@ is ready\")\n"
+   ]
+  }
+ ]
+}

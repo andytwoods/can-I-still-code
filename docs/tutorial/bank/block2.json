@@ -2,8 +2,256 @@
  "schema_version": 1,
  "block": 2,
  "title": "Values and lists",
- "explanation_md": "TODO",
+ "explanation_md": "A **variable** stores a value under a name: `takings = 250`. Use the name later and Python fills in the value.\n\n**Arithmetic:** `+`, `-`, `*` and `/` work as you would expect. Powers use `**`, so `3 ** 2` is `9`.\n\n- **Watch out:** `^` is *not* a power in Python. `3 ^ 2` gives `1`, and there is no error to warn you.\n- `/` always gives a decimal: `7 / 2` is `3.5`. `//` drops the remainder: `7 // 2` is `3`.\n\n**f-strings** put values inside text: `print(f\"Takings: {takings}\")`. The `f` before the quote lets you use `{ }`.\n\nNames are **case-sensitive**: `Total` and `total` are two different variables. `True`, `False` and `None` need capital letters.\n\nA **list** holds several values in order: `week = [250, 310, 180, 400, 520]`.\n\n- Lists **count from 0**. `week[0]` is Monday and `week[4]` is Friday, so `week[1]` is the *second* item.\n- `len(week)` counts the items. `sum(week)`, `min(week)` and `max(week)` do what they say.\n- The average is `sum(week) / len(week)`.\n- `week.append(610)` adds a value to the end. The dot means \"do this to the list\"; the list itself changes.\n- **Watch out:** do not write `week = week.append(610)`. `append` gives back `None`, so `week` would be lost.\n- `week.index(max(week))` finds the position of the best day, counted from 0.\n",
  "templates": [
+  {
+   "schema_version": 1,
+   "block": 2,
+   "id": "b2-check",
+   "kind": "check",
+   "title": "Total and average takings",
+   "prompt_md": "The list `week` holds a week of café takings, in pounds, one number per day.\n\nStore the **total** takings in a variable called `total` and the **average** per day in a variable called `average`. Then print them both.",
+   "starter_code": "week = @@week@@\n# your code here\n",
+   "generator": "def generate(rng):\n    n = rng.randint(5, 7)\n    return {'week': [rng.randint(120, 650) for _ in range(n)]}",
+   "reference": "week = @@week@@\ntotal = sum(week)\naverage = total / len(week)\nprint(total)\nprint(average)\n",
+   "checks": [
+    {
+     "id": "total",
+     "type": "variable",
+     "name": "total"
+    },
+    {
+     "id": "average",
+     "type": "variable",
+     "name": "average"
+    }
+   ],
+   "hints": [
+    "`sum(week)` gives the total. Divide it by `len(week)`, the number of days, to get the average."
+   ],
+   "wrong_examples": [
+    "week = @@week@@\ntotal = sum(week)\naverage = sum(week)\n",
+    "week = @@week@@\ntotal = len(week)\naverage = sum(week) / len(week)\n",
+    "week = @@week@@\nTotal = sum(week)\naverage = Total / len(week)\n"
+   ],
+   "alternative_solutions": [
+    "week = @@week@@\ntotal = 0\nfor day in week:\n    total = total + day\naverage = total / len(week)\nprint(f\"Total: {total}, average: {average}\")\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 2,
+   "id": "b2-core-values",
+   "kind": "core",
+   "fixed_seed": 1,
+   "title": "Café sums",
+   "prompt_md": "The café sold `cups` cups of coffee at `price` pounds each. Lids come in boxes of 6.\n\n1. Store the money taken in `takings`.\n2. Store how many **full** boxes of lids were used in `full_boxes` (a whole number: use `//`).\n3. The terrace is a square, `side` metres wide. Store its area in `area`. In Python, \"to the power of\" is `**`.",
+   "starter_code": "cups = @@cups@@\nprice = @@price@@\nside = @@side@@\n\n# your code here\n",
+   "generator": "def generate(rng):\n    return {'cups': rng.randint(40, 200), 'price': rng.choice([2.5, 2.8, 3.0, 3.2, 3.5]), 'side': rng.randint(3, 12)}",
+   "reference": "cups = @@cups@@\nprice = @@price@@\nside = @@side@@\n\ntakings = cups * price\nfull_boxes = cups // 6\narea = side ** 2\n",
+   "checks": [
+    {
+     "id": "takings",
+     "type": "variable",
+     "name": "takings"
+    },
+    {
+     "id": "boxes",
+     "type": "variable",
+     "name": "full_boxes"
+    },
+    {
+     "id": "area",
+     "type": "variable",
+     "name": "area"
+    }
+   ],
+   "hints": [
+    "`takings = cups * price`. For full boxes, `cups // 6` drops the leftover lids. For the area, `side ** 2` (not `side ^ 2`)."
+   ],
+   "wrong_examples": [
+    "cups = @@cups@@\nprice = @@price@@\nside = @@side@@\n\ntakings = cups * price\nfull_boxes = cups // 6\narea = side ^ 2\n",
+    "cups = @@cups@@\nprice = @@price@@\nside = @@side@@\n\ntakings = cups * price\nfull_boxes = cups / 6 + 0.001\narea = side ** 2\n",
+    "cups = @@cups@@\nprice = @@price@@\nside = @@side@@\n\nTakings = cups * price\nfull_boxes = cups // 6\narea = side ** 2\n"
+   ],
+   "alternative_solutions": [
+    "cups = @@cups@@\nprice = @@price@@\nside = @@side@@\n\ntakings = price * cups\nfull_boxes = int(cups / 6)\narea = side * side\n"
+   ],
+   "solution_md": "`^` would run without an error but give the wrong answer, which is why `**` matters."
+  },
+  {
+   "schema_version": 1,
+   "block": 2,
+   "id": "b2-core-week",
+   "kind": "core",
+   "fixed_seed": 2,
+   "title": "A week of takings",
+   "prompt_md": "`week` holds the café's takings for Monday to Friday, and `days` holds the day names in the same order.\n\n1. Store the total in `total` and the average per day in `average`.\n2. Store the **position** of the best day in `best` (use `week.index(max(week))`; positions count from 0).\n3. Store the name of the best day in `best_day`, using `best` and `days`.",
+   "starter_code": "week = @@week@@\ndays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']\n\n# your code here\n",
+   "generator": "def generate(rng):\n    week = rng.sample(range(150, 700), 5)\n    return {'week': week}",
+   "reference": "week = @@week@@\ndays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']\n\ntotal = sum(week)\naverage = total / len(week)\nbest = week.index(max(week))\nbest_day = days[best]\n",
+   "checks": [
+    {
+     "id": "total",
+     "type": "variable",
+     "name": "total"
+    },
+    {
+     "id": "average",
+     "type": "variable",
+     "name": "average"
+    },
+    {
+     "id": "best",
+     "type": "variable",
+     "name": "best"
+    },
+    {
+     "id": "best_day",
+     "type": "variable",
+     "name": "best_day"
+    }
+   ],
+   "hints": [
+    "`best = week.index(max(week))` gives a position counted from 0. Then `days[best]` looks up the name at that position."
+   ],
+   "wrong_examples": [
+    "week = @@week@@\ndays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']\n\ntotal = sum(week)\naverage = total / len(week)\nbest = week.index(max(week)) + 1\nbest_day = days[best - 1]\n",
+    "week = @@week@@\ndays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']\n\ntotal = sum(week)\naverage = total / len(week)\nbest = max(week)\nbest_day = days[0]\n"
+   ],
+   "alternative_solutions": [
+    "week = @@week@@\ndays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']\n\ntotal = sum(week)\naverage = sum(week) / 5\nbest = week.index(max(week))\nbest_day = days[week.index(max(week))]\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 2,
+   "id": "b2-core-saturday",
+   "kind": "core",
+   "fixed_seed": 3,
+   "title": "Open on Saturday",
+   "prompt_md": "The café opened on Saturday too and took @@sat@@ pounds.\n\n1. Add Saturday's takings to the end of `week` with `.append()`.\n2. Store the number of days now in the list in `days_open`.\n3. Store the new total in `total`.\n\nCareful: write `week.append(...)` on its own line. `week = week.append(...)` would leave `week` as `None`.",
+   "starter_code": "week = @@week@@\n\n# your code here\n",
+   "generator": "def generate(rng):\n    return {'week': [rng.randint(150, 700) for _ in range(5)], 'sat': rng.randint(300, 900)}",
+   "reference": "week = @@week@@\n\nweek.append(@@sat@@)\ndays_open = len(week)\ntotal = sum(week)\n",
+   "checks": [
+    {
+     "id": "week",
+     "type": "variable",
+     "name": "week"
+    },
+    {
+     "id": "days_open",
+     "type": "variable",
+     "name": "days_open"
+    },
+    {
+     "id": "total",
+     "type": "variable",
+     "name": "total"
+    }
+   ],
+   "hints": [
+    "`week.append(@@sat@@)` changes the list itself. Then `len(week)` and `sum(week)` include Saturday."
+   ],
+   "wrong_examples": [
+    "week = @@week@@\n\nweek = week.append(@@sat@@)\ndays_open = 6\ntotal = 0\n",
+    "week = @@week@@\n\ndays_open = len(week) + 1\ntotal = sum(week) + @@sat@@\n"
+   ],
+   "alternative_solutions": [
+    "week = @@week@@\n\nweek = week + [@@sat@@]\ndays_open = len(week)\ntotal = sum(week)\n"
+   ]
+  },
+  {
+   "schema_version": 1,
+   "block": 2,
+   "id": "b2-read-L1",
+   "kind": "practice",
+   "level": 1,
+   "title": "Read one item",
+   "prompt_md": "`prices` is a list of cake prices. Store the **@@ordinal@@** price in the list in a variable called `item`.\n\nRemember: lists count from 0, so the first item is `prices[0]`.",
+   "starter_code": "prices = @@prices@@\n# your code here\n",
+   "generator": "def generate(rng):\n    n = rng.randint(4, 7)\n    prices = rng.sample([1.5, 1.8, 2.0, 2.2, 2.5, 2.75, 3.0, 3.25, 3.5, 4.0, 4.5], n)\n    k = rng.randint(2, n)\n    words = {2: 'second', 3: 'third', 4: 'fourth', 5: 'fifth', 6: 'sixth', 7: 'seventh'}\n    return {'prices': prices, 'k': k, 'ordinal': words[k]}",
+   "reference": "prices = @@prices@@\nitem = prices[@@k@@ - 1]\n",
+   "checks": [
+    {
+     "id": "item",
+     "type": "variable",
+     "name": "item"
+    }
+   ],
+   "hints": [
+    "The @@ordinal@@ item is at position @@k@@ minus 1, because counting starts at 0."
+   ],
+   "wrong_examples": [
+    "prices = @@prices@@\nitem = prices[@@k@@]\n",
+    "prices = @@prices@@\nitem = prices[0]\n"
+   ],
+   "alternative_solutions": []
+  },
+  {
+   "schema_version": 1,
+   "block": 2,
+   "id": "b2-change-L2",
+   "kind": "practice",
+   "level": 2,
+   "title": "Change one item",
+   "prompt_md": "`week` holds takings for Monday to Sunday (`week[0]` is Monday). @@day@@'s number was typed wrongly: it should be @@new@@.\n\nChange that one item in `week` so the list is correct. Leave the other days alone.",
+   "starter_code": "week = @@week@@\n# your code here\n",
+   "generator": "def generate(rng):\n    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']\n    i = rng.randint(1, 6)\n    return {'week': [rng.randint(150, 700) for _ in range(7)], 'i': i, 'day': days[i], 'new': rng.randint(701, 950)}",
+   "reference": "week = @@week@@\nweek[@@i@@] = @@new@@\n",
+   "checks": [
+    {
+     "id": "week",
+     "type": "variable",
+     "name": "week"
+    }
+   ],
+   "hints": [
+    "Monday is position 0, so @@day@@ is position @@i@@. Write `week[position] = new_value`."
+   ],
+   "wrong_examples": [
+    "week = @@week@@\nweek[@@i@@ - 1] = @@new@@\n",
+    "week = @@week@@\nweek = [@@new@@]\n",
+    "week = @@week@@\nweek.append(@@new@@)\n"
+   ],
+   "alternative_solutions": []
+  },
+  {
+   "schema_version": 1,
+   "block": 2,
+   "id": "b2-append-L3",
+   "kind": "practice",
+   "level": 3,
+   "title": "Add an order",
+   "prompt_md": "`orders` lists today's bakery orders (number of loaves). A new order for @@extra@@ loaves arrives.\n\nAdd it to the end of `orders`, then **print only** the new number of orders (the length of the list).",
+   "starter_code": "orders = @@orders@@\n# your code here\n",
+   "generator": "def generate(rng):\n    return {'orders': [rng.randint(1, 12) for _ in range(rng.randint(3, 8))], 'extra': rng.randint(1, 20)}",
+   "reference": "orders = @@orders@@\norders.append(@@extra@@)\nprint(len(orders))\n",
+   "checks": [
+    {
+     "id": "orders",
+     "type": "variable",
+     "name": "orders"
+    },
+    {
+     "id": "out",
+     "type": "stdout",
+     "normalise": "strip"
+    }
+   ],
+   "hints": [
+    "`orders.append(@@extra@@)` on its own line, then `print(len(orders))`. Don't write `orders = orders.append(...)`: append gives back `None`."
+   ],
+   "wrong_examples": [
+    "orders = @@orders@@\norders = orders.append(@@extra@@)\nprint(len(orders))\n",
+    "orders = @@orders@@\nprint(len(orders))\n",
+    "orders = @@orders@@\norders.append(@@extra@@)\nprint(orders)\n"
+   ],
+   "alternative_solutions": [
+    "orders = @@orders@@\norders = orders + [@@extra@@]\nnew_length = len(orders)\nprint(new_length)\n"
+   ]
+  },
   {
    "schema_version": 1,
    "id": "b2-avg-L4",
@@ -15,10 +263,55 @@
    "starter_code": "week = @@week@@\n# your code here\n",
    "generator": "def generate(rng):\n    n = rng.randint(4, 7)\n    return {'n': n, 'week': [rng.randint(100, 600) for _ in range(n)]}",
    "reference": "week = @@week@@\naverage = sum(week) / len(week)\n",
-   "checks": [{"id": "avg", "type": "variable", "name": "average"}],
-   "hints": ["Add the list up with `sum(week)`, then divide by how many items there are: `len(week)`."],
-   "wrong_examples": ["week = @@week@@\naverage = sum(week)\n", "week = @@week@@\naverage = sum(week) / (len(week) - 1)\n"],
-   "alternative_solutions": ["week = @@week@@\ntotal = 0\nfor day in week:\n    total += day\naverage = total / len(week)\n"]
+   "checks": [
+    {
+     "id": "avg",
+     "type": "variable",
+     "name": "average"
+    }
+   ],
+   "hints": [
+    "Add the list up with `sum(week)`, then divide by how many items there are: `len(week)`.",
+    "Use `/`, not `//`. `//` drops the remainder, so the average would lose its decimal part."
+   ],
+   "wrong_examples": [
+    "week = @@week@@\naverage = sum(week)\n",
+    "week = @@week@@\naverage = sum(week) / (len(week) - 1)\n"
+   ],
+   "alternative_solutions": [
+    "week = @@week@@\ntotal = 0\nfor day in week:\n    total += day\naverage = total / len(week)\n"
+   ],
+   "solution_md": "`sum(week)` adds every day; `len(week)` counts the days. Dividing one by the other gives the average."
+  },
+  {
+   "schema_version": 1,
+   "block": 2,
+   "id": "b2-maxpos-L5",
+   "kind": "practice",
+   "level": 5,
+   "title": "Position of the best day",
+   "prompt_md": "`sales` holds @@n@@ days of sales. Store the **position** of the largest value in `best` (counting from 0, as Python does).",
+   "starter_code": "sales = @@sales@@\n# your code here\n",
+   "generator": "def generate(rng):\n    n = rng.randint(5, 9)\n    return {'n': n, 'sales': rng.sample(range(50, 400), n)}",
+   "reference": "sales = @@sales@@\nbest = sales.index(max(sales))\n",
+   "checks": [
+    {
+     "id": "best",
+     "type": "variable",
+     "name": "best"
+    }
+   ],
+   "hints": [
+    "`max(sales)` finds the largest value; `sales.index(...)` finds where it is."
+   ],
+   "wrong_examples": [
+    "sales = @@sales@@\nbest = max(sales)\n",
+    "sales = @@sales@@\nbest = sales.index(max(sales)) + 1\n"
+   ],
+   "alternative_solutions": [
+    "sales = @@sales@@\nbest = 0\nfor i in range(len(sales)):\n    if sales[i] > sales[best]:\n        best = i\n"
+   ],
+   "solution_md": "`max` gives the value, not where it is. `index` turns the value into a position."
   }
  ]
 }

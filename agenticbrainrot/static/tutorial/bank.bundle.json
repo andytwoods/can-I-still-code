@@ -1,26 +1,347 @@
 {
- "bank_version": "c578e3bcc6e3",
+ "bank_version": "9f0512b5b625",
  "blocks": [
   {
-   "block": 2,
-   "explanation_html": "<p>TODO</p>",
+   "block": 1,
+   "explanation_html": "<p>Welcome! In this tutorial you write Python in the box and press <strong>Run</strong>. Python runs in your browser, so the first load takes a few seconds.</p>\n<p>Try this line:</p>\n<pre><code class=\"language-python\">print(&quot;hello&quot;)\n</code></pre>\n<p><code>print</code> shows whatever is inside the brackets. The quote marks tell Python that <code>hello</code> is text. The output appears underneath the box. Run again and the old output is replaced.</p>\n<p><strong>Mistakes are normal.</strong> When something is wrong, Python stops and shows an error. Read the <strong>last line</strong> of the error first: it names the problem, such as <code>SyntaxError</code> or <code>NameError</code>. The message also gives a <strong>line number</strong>. The mistake is on that line, or just before it.</p>\n<p>Common slips:</p>\n<ul>\n<li>a missing bracket: <code>print(\"hello\"</code></li>\n<li>a missing quote mark: <code>print(\"hello)</code></li>\n<li>a misspelt name: <code>pritn(\"hello\")</code></li>\n</ul>\n<p>Fix the one character that is wrong. There is no need to retype everything.</p>\n<p>A <code>#</code> starts a <strong>comment</strong>. Python ignores the rest of that line, so comments are notes for people:</p>\n<pre><code class=\"language-python\"># This line is a note\nprint(&quot;hello&quot;)  # so is this part\n</code></pre>\n<p>Each task below is checked for you. You get a hint after one try and a worked solution after two. <strong>New example</strong> gives you fresh text to practise with, as often as you like.</p>",
    "task_ids": [
-    "b2-avg-L4"
+    "b1-check",
+    "b1-hello-core",
+    "b1-change-core",
+    "b1-bracket-core",
+    "b1-text-L1",
+    "b1-twolines-L2",
+    "b1-bracket-L3",
+    "b1-quote-L4",
+    "b1-pritn-L5"
+   ],
+   "title": "Getting going"
+  },
+  {
+   "block": 2,
+   "explanation_html": "<p>A <strong>variable</strong> stores a value under a name: <code>takings = 250</code>. Use the name later and Python fills in the value.</p>\n<p><strong>Arithmetic:</strong> <code>+</code>, <code>-</code>, <code>*</code> and <code>/</code> work as you would expect. Powers use <code>**</code>, so <code>3 ** 2</code> is <code>9</code>.</p>\n<ul>\n<li><strong>Watch out:</strong> <code>^</code> is <em>not</em> a power in Python. <code>3 ^ 2</code> gives <code>1</code>, and there is no error to warn you.</li>\n<li><code>/</code> always gives a decimal: <code>7 / 2</code> is <code>3.5</code>. <code>//</code> drops the remainder: <code>7 // 2</code> is <code>3</code>.</li>\n</ul>\n<p><strong>f-strings</strong> put values inside text: <code>print(f\"Takings: {takings}\")</code>. The <code>f</code> before the quote lets you use <code>{ }</code>.</p>\n<p>Names are <strong>case-sensitive</strong>: <code>Total</code> and <code>total</code> are two different variables. <code>True</code>, <code>False</code> and <code>None</code> need capital letters.</p>\n<p>A <strong>list</strong> holds several values in order: <code>week = [250, 310, 180, 400, 520]</code>.</p>\n<ul>\n<li>Lists <strong>count from 0</strong>. <code>week[0]</code> is Monday and <code>week[4]</code> is Friday, so <code>week[1]</code> is the <em>second</em> item.</li>\n<li><code>len(week)</code> counts the items. <code>sum(week)</code>, <code>min(week)</code> and <code>max(week)</code> do what they say.</li>\n<li>The average is <code>sum(week) / len(week)</code>.</li>\n<li><code>week.append(610)</code> adds a value to the end. The dot means \"do this to the list\"; the list itself changes.</li>\n<li><strong>Watch out:</strong> do not write <code>week = week.append(610)</code>. <code>append</code> gives back <code>None</code>, so <code>week</code> would be lost.</li>\n<li><code>week.index(max(week))</code> finds the position of the best day, counted from 0.</li>\n</ul>",
+   "task_ids": [
+    "b2-check",
+    "b2-core-values",
+    "b2-core-week",
+    "b2-core-saturday",
+    "b2-read-L1",
+    "b2-change-L2",
+    "b2-append-L3",
+    "b2-avg-L4",
+    "b2-maxpos-L5"
    ],
    "title": "Values and lists"
   },
   {
+   "block": 3,
+   "explanation_html": "<p>In Python, <strong>the indent decides</strong> what is inside a loop or an <code>if</code>. A line ending in a colon (<code>:</code>) must be followed by at least one indented line, and every indented line belongs to it.</p>\n<pre><code class=\"language-python\">total = 0\nfor day in week:\n    total += day      # indented: runs every time round the loop\nprint(total)          # not indented: runs once, after the loop\n</code></pre>\n<p>Move that <code>print</code> in by four spaces and it runs every time instead. You get a different answer and <strong>no error</strong>, which is why indentation matters so much.</p>\n<ul>\n<li>One indent is <strong>4 spaces</strong>. The Tab key types 4 spaces here, and in Colab.</li>\n<li>A real tab character looks just like spaces, but Python treats it differently. Mixing them gives <code>IndentationError</code> or <code>TabError</code>, usually after pasting code from an email or a PDF. The fix: delete the indent and press Tab again. In this editor, tab characters are highlighted.</li>\n</ul>\n<p><strong>Loops.</strong> <code>for day in week:</code> goes through each item. <code>for i in range(5):</code> counts 0, 1, 2, 3, 4: <code>range(5)</code> stops <em>before</em> 5. <code>range(1, 6)</code> counts 1 to 5. To add up as you go, start with <code>total = 0</code> <em>before</em> the loop, then <code>total += amount</code> inside it (short for <code>total = total + amount</code>).</p>\n<p><strong>Decisions.</strong> <code>if amount &gt; 300:</code> … <code>elif amount &gt; 200:</code> … <code>else:</code>. Python writes <code>elif</code>, not <code>else if</code>. <code>==</code> compares, <code>=</code> stores: <code>if total == 5:</code> is a question. <code>and</code>, <code>or</code> and <code>not</code> are written as words.</p>\n<p><strong>Step and record.</strong> Each time round a loop, update a value, then <code>history.append(value)</code>. Plotting <code>history</code> shows how it changed: the same shape as the mortgage section of the Colab notebook.</p>",
+   "task_ids": [
+    "b3-check",
+    "b3-total-core",
+    "b3-elif-core",
+    "b3-savings-core",
+    "b3-count-L1",
+    "b3-sum-L2",
+    "b3-fix-tab-L2",
+    "b3-above-L3",
+    "b3-growth-L4",
+    "b3-fix-indent-L4",
+    "b3-target-L5"
+   ],
+   "title": "Loops, decisions, and pattern 1"
+  },
+  {
    "block": 4,
-   "explanation_html": "<p>TODO</p>",
+   "explanation_html": "<p>A <strong>function</strong> is a named recipe. You write it once and use it as often as you like.</p>\n<pre><code class=\"language-python\">def add_interest(balance, rate):\n    return balance * (1 + rate)\n</code></pre>\n<p>The line starts with <code>def</code>, then the function's name, then its <strong>arguments</strong> in brackets, then a colon. The body underneath is indented by 4 spaces. Defining a function does nothing on its own: it only runs when you <strong>call</strong> it, for example <code>add_interest(1000, 0.005)</code>.</p>\n<p>An argument can have a <strong>default value</strong>: <code>def add_interest(balance, rate=0.005):</code>. Now <code>add_interest(1000)</code> works too, and uses 0.005.</p>\n<p><strong><code>print</code> versus <code>return</code>.</strong> <code>return</code> hands a value back, so you can store it: <code>new = add_interest(1000, 0.005)</code>. <code>print</code> only shows a value on the screen. A function without <code>return</code> gives back <code>None</code>, so <code>x = f(5)</code> leaves <code>x</code> empty. This is the most common mistake in this block.</p>\n<p>A function can read a variable defined outside it. If that variable changes later, the function's answer changes silently. It is safer to pass the value in as an argument.</p>\n<p><strong>Randomness.</strong> Start with <code>import random</code>.</p>\n<ul>\n<li><code>random.random()</code> gives a decimal between 0 and 1.</li>\n<li><code>random.randint(1, 6)</code> rolls a dice. <strong>Both ends are included</strong>, unlike <code>range(1, 6)</code>, which stops at 5.</li>\n<li><code>random.choice(week)</code> picks one item from a list.</li>\n<li><code>random.seed(1)</code> gives the same \"random\" numbers every run, so results can be checked. The tutorial does this for you when it checks your code.</li>\n</ul>\n<p><strong>Wrap and repeat:</strong> put one run of a simulation in a function, call it many times in a loop, and count how often something happens. That share is a probability, estimated by simulation.</p>",
    "task_ids": [
     "b4-check",
-    "b4-flips-core"
+    "b4-interest-core",
+    "b4-return-core",
+    "b4-flips-core",
+    "b4-share-core",
+    "b4-call-L1",
+    "b4-default-L2",
+    "b4-argument-L3",
+    "b4-passrate-L4",
+    "b4-dice-L5"
    ],
    "title": "Functions and randomness"
+  },
+  {
+   "block": 5,
+   "explanation_html": "<p>So far you have run a function once. Real questions need more than one run. <strong>Which setting works best?</strong> To answer that, you <em>sweep</em>: run the same function for several settings and compare the results.</p>\n<p>The pattern has three steps:</p>\n<ol>\n<li><strong>Make a list of settings</strong>, for example <code>orders = [20, 30, 40, 50, 60]</code>.</li>\n<li><strong>Run the function for each setting</strong> in a <code>for</code> loop, and store each answer with <code>results.append(...)</code>. Start with an empty list, <code>results = []</code>, <em>before</em> the loop.</li>\n<li><strong>Pick the best.</strong> <code>max(results)</code> gives the best <em>value</em>. To find the <em>setting</em> that gave it, use its position: <code>orders[results.index(max(results))]</code>.</li>\n</ol>\n<p>A plot makes the comparison easy to see: <code>plt.plot(orders, results)</code> puts the settings along the bottom and the results up the side.</p>\n<p>Two things to notice when you look at the curve:</p>\n<ul>\n<li><strong>The top is often flat.</strong> Several settings give almost the same result, so being roughly right is usually enough. Don't agonise over the exact peak.</li>\n<li><strong>One run is not a finding.</strong> When a function uses random numbers, each run gives a slightly different answer. Average over many days, or many runs, before you trust a difference. The spread across runs matters as much as any single number.</li>\n</ul>\n<p>This is the same shape as the fish-and-chip shop section in the organiser's notebook: a model, a list of settings, a loop, and a plot.</p>",
+   "task_ids": [
+    "b5-check",
+    "b5-bakery-core",
+    "b5-cost-core",
+    "b5-run-L1",
+    "b5-store-L2",
+    "b5-best-L3",
+    "b5-xy-L4",
+    "b5-compare-L5"
+   ],
+   "title": "Pattern 3: sweep and compare"
   }
  ],
  "schema_version": 1,
  "tasks": {
+  "b1-bracket-L3": {
+   "allow_plot": false,
+   "block": 1,
+   "checks": [
+    {
+     "id": "printed",
+     "normalise": "strip",
+     "type": "stdout"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    drink = rng.choice(['tea', 'latte', 'cocoa', 'mocha', 'espresso', 'cappuccino'])\n    return {'table': rng.randint(1, 30), 'drink': drink, 'enjoy': 'Enjoy your ' + drink}",
+   "hints_html": [
+    "<p>The error points at line 1 or just after it. The first line needs a <code>)</code> at the end.</p>"
+   ],
+   "id": "b1-bracket-L3",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 3,
+   "prompt_html": "<p>This code should print:</p>\n<pre><code>Table @@table@@ is ready\nEnjoy your @@drink@@\n</code></pre>\n<p>Run it, read the last line of the error, and fix the broken line.</p>",
+   "reference": "print(\"Table @@table@@ is ready\")\nprint(@@enjoy@@)\n",
+   "schema_version": 1,
+   "starter_code": "print(\"Table @@table@@ is ready\"\nprint(@@enjoy@@)\n",
+   "title": "Fix a missing bracket"
+  },
+  "b1-bracket-core": {
+   "allow_plot": false,
+   "block": 1,
+   "checks": [
+    {
+     "id": "printed",
+     "normalise": "strip",
+     "type": "stdout"
+    }
+   ],
+   "fixed_seed": 1,
+   "generator": null,
+   "hints_html": [
+    "<p>Every <code>(</code> needs a matching <code>)</code>. Add one at the end of the line.</p>"
+   ],
+   "id": "b1-bracket-core",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p>This line has a mistake: the closing bracket is missing. Press <strong>Run</strong> first and read the <strong>last line</strong> of the error. Then fix it so it prints <code>hello</code>.</p>",
+   "reference": "print(\"hello\")\n",
+   "schema_version": 1,
+   "starter_code": "print(\"hello\"\n",
+   "title": "Break it, then fix it"
+  },
+  "b1-change-core": {
+   "allow_plot": false,
+   "block": 1,
+   "checks": [
+    {
+     "id": "printed",
+     "normalise": "strip",
+     "type": "stdout"
+    }
+   ],
+   "fixed_seed": 1,
+   "generator": null,
+   "hints_html": [
+    "<p>Only change the words between the quote marks. Keep the brackets and quotes.</p>"
+   ],
+   "id": "b1-change-core",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p>Change the text inside the quote marks so the code prints:</p>\n<pre><code>Hello from the café\n</code></pre>\n<p>Run it again; the new output replaces the old.</p>",
+   "reference": "print(\"Hello from the café\")\n",
+   "schema_version": 1,
+   "starter_code": "print(\"hello\")\n",
+   "title": "Change the message"
+  },
+  "b1-check": {
+   "allow_plot": false,
+   "block": 1,
+   "checks": [
+    {
+     "id": "printed",
+     "normalise": "strip",
+     "type": "stdout"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    return {'table': rng.randint(1, 40)}",
+   "hints_html": [
+    "<p>The second line is missing its closing bracket <code>)</code> at the end.</p>"
+   ],
+   "id": "b1-check",
+   "inject_params": false,
+   "kind": "check",
+   "level": null,
+   "prompt_html": "<p>This code should print two lines:</p>\n<pre><code>Welcome to the café\nTable @@table@@ is ready\n</code></pre>\n<p>One line is broken. Fix it so the code prints exactly that.</p>",
+   "reference": "print(\"Welcome to the café\")\nprint(\"Table @@table@@ is ready\")\n",
+   "schema_version": 1,
+   "solution_html": "<p>Add <code>)</code> at the end of the second line, so every <code>(</code> has a matching <code>)</code>.</p>",
+   "starter_code": "print(\"Welcome to the café\")\nprint(\"Table @@table@@ is ready\"\n",
+   "title": "Fix the broken line"
+  },
+  "b1-hello-core": {
+   "allow_plot": false,
+   "block": 1,
+   "checks": [
+    {
+     "id": "printed",
+     "normalise": "strip",
+     "type": "stdout"
+    }
+   ],
+   "fixed_seed": 1,
+   "generator": null,
+   "hints_html": [
+    "<p>Type exactly: <code>print(\"hello\")</code>, with the brackets and the quote marks.</p>"
+   ],
+   "id": "b1-hello-core",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p>Type <code>print(\"hello\")</code> in the box and press <strong>Run</strong> (or Ctrl+Enter). You should see <code>hello</code> underneath.</p>",
+   "reference": "print(\"hello\")\n",
+   "schema_version": 1,
+   "starter_code": "# Type your code below this line\n",
+   "title": "Say hello"
+  },
+  "b1-pritn-L5": {
+   "allow_plot": false,
+   "block": 1,
+   "checks": [
+    {
+     "id": "printed",
+     "normalise": "strip",
+     "type": "stdout"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    return {'order': rng.randint(10, 99)}",
+   "hints_html": [
+    "<p><code>NameError</code> means Python doesn't know a name. Look at the spelling of <code>print</code> on line 1.</p>"
+   ],
+   "id": "b1-pritn-L5",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 5,
+   "prompt_html": "<p>This code should print:</p>\n<pre><code>Order @@order@@ is ready\nThank you!\n</code></pre>\n<p>Run it, read the last line of the error (it names the problem), and fix it.</p>",
+   "reference": "print(\"Order @@order@@ is ready\")\nprint(\"Thank you!\")\n",
+   "schema_version": 1,
+   "starter_code": "pritn(\"Order @@order@@ is ready\")\nprint(\"Thank you!\")\n",
+   "title": "Fix a misspelt name"
+  },
+  "b1-quote-L4": {
+   "allow_plot": false,
+   "block": 1,
+   "checks": [
+    {
+     "id": "printed",
+     "normalise": "strip",
+     "type": "stdout"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    return {'table': rng.randint(1, 30), 'cups': rng.randint(2, 6)}",
+   "hints_html": [
+    "<p>Text needs a quote mark at <strong>both</strong> ends. Add <code>\"</code> just before the closing bracket.</p>"
+   ],
+   "id": "b1-quote-L4",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 4,
+   "prompt_html": "<p>This code should print:</p>\n<pre><code>Table @@table@@ wants @@cups@@ cups of tea\n</code></pre>\n<p>One quote mark is missing. Find it and fix it.</p>",
+   "reference": "print(\"Table @@table@@ wants @@cups@@ cups of tea\")\n",
+   "schema_version": 1,
+   "starter_code": "print(\"Table @@table@@ wants @@cups@@ cups of tea)\n",
+   "title": "Fix a missing quote mark"
+  },
+  "b1-text-L1": {
+   "allow_plot": false,
+   "block": 1,
+   "checks": [
+    {
+     "id": "printed",
+     "normalise": "strip",
+     "type": "stdout"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    return {'msg': rng.choice(['Latte please', 'One flat white', 'Tea for two', 'Cake of the day', 'Open at 8am', 'Closed on Sundays', 'Free refills today', 'Two scones, please', 'Hot chocolate time', 'Table for four', 'Oat milk available', 'Last orders at 5pm'])}",
+   "hints_html": [
+    "<p>Replace <code>Good morning</code> with the new text, keeping the quote marks: <code>print(\"@@msg@@\")</code>.</p>"
+   ],
+   "id": "b1-text-L1",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 1,
+   "prompt_html": "<p>Change this code so it prints exactly:</p>\n<pre><code>@@msg@@\n</code></pre>",
+   "reference": "print(@@msg@@)\n",
+   "schema_version": 1,
+   "starter_code": "print(\"Good morning\")\n",
+   "title": "Change the text"
+  },
+  "b1-twolines-L2": {
+   "allow_plot": false,
+   "block": 1,
+   "checks": [
+    {
+     "id": "printed",
+     "normalise": "strip",
+     "type": "stdout"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    item = rng.choice(['Latte', 'Flat white', 'Tea', 'Scone', 'Muffin', 'Toastie', 'Mocha', 'Brownie'])\n    pence = rng.randint(150, 450)\n    price = f'{pence // 100}.{pence % 100:02d}'\n    return {'line1': f'Order: {item}', 'line2': f'Price: £{price}'}",
+   "hints_html": [
+    "<p>Each <code>print</code> makes its own line. Add <code>print(\"@@line2@@\")</code> on a new line underneath.</p>"
+   ],
+   "id": "b1-twolines-L2",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 2,
+   "prompt_html": "<p>Add a second <code>print</code> so the code prints these two lines:</p>\n<pre><code>@@line1@@\n@@line2@@\n</code></pre>",
+   "reference": "print(@@line1@@)\nprint(@@line2@@)\n",
+   "schema_version": 1,
+   "starter_code": "print(@@line1@@)\n# add a second line here\n",
+   "title": "Print two lines"
+  },
+  "b2-append-L3": {
+   "allow_plot": false,
+   "block": 2,
+   "checks": [
+    {
+     "id": "orders",
+     "name": "orders",
+     "type": "variable"
+    },
+    {
+     "id": "out",
+     "normalise": "strip",
+     "type": "stdout"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    return {'orders': [rng.randint(1, 12) for _ in range(rng.randint(3, 8))], 'extra': rng.randint(1, 20)}",
+   "hints_html": [
+    "<p><code>orders.append(@@extra@@)</code> on its own line, then <code>print(len(orders))</code>. Don't write <code>orders = orders.append(...)</code>: append gives back <code>None</code>.</p>"
+   ],
+   "id": "b2-append-L3",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 3,
+   "prompt_html": "<p><code>orders</code> lists today's bakery orders (number of loaves). A new order for @@extra@@ loaves arrives.</p>\n<p>Add it to the end of <code>orders</code>, then <strong>print only</strong> the new number of orders (the length of the list).</p>",
+   "reference": "orders = @@orders@@\norders.append(@@extra@@)\nprint(len(orders))\n",
+   "schema_version": 1,
+   "starter_code": "orders = @@orders@@\n# your code here\n",
+   "title": "Add an order"
+  },
   "b2-avg-L4": {
    "allow_plot": false,
    "block": 2,
@@ -34,7 +355,8 @@
    "fixed_seed": null,
    "generator": "def generate(rng):\n    n = rng.randint(4, 7)\n    return {'n': n, 'week': [rng.randint(100, 600) for _ in range(n)]}",
    "hints_html": [
-    "<p>Add the list up with <code>sum(week)</code>, then divide by how many items there are: <code>len(week)</code>.</p>"
+    "<p>Add the list up with <code>sum(week)</code>, then divide by how many items there are: <code>len(week)</code>.</p>",
+    "<p>Use <code>/</code>, not <code>//</code>. <code>//</code> drops the remainder, so the average would lose its decimal part.</p>"
    ],
    "id": "b2-avg-L4",
    "inject_params": false,
@@ -43,8 +365,607 @@
    "prompt_html": "<p>The list <code>week</code> holds @@n@@ days of café takings, in pounds. Work out the average takings per day and store it in a variable called <code>average</code>.</p>",
    "reference": "week = @@week@@\naverage = sum(week) / len(week)\n",
    "schema_version": 1,
+   "solution_html": "<p><code>sum(week)</code> adds every day; <code>len(week)</code> counts the days. Dividing one by the other gives the average.</p>",
    "starter_code": "week = @@week@@\n# your code here\n",
    "title": "Average takings"
+  },
+  "b2-change-L2": {
+   "allow_plot": false,
+   "block": 2,
+   "checks": [
+    {
+     "id": "week",
+     "name": "week",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']\n    i = rng.randint(1, 6)\n    return {'week': [rng.randint(150, 700) for _ in range(7)], 'i': i, 'day': days[i], 'new': rng.randint(701, 950)}",
+   "hints_html": [
+    "<p>Monday is position 0, so @@day@@ is position @@i@@. Write <code>week[position] = new_value</code>.</p>"
+   ],
+   "id": "b2-change-L2",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 2,
+   "prompt_html": "<p><code>week</code> holds takings for Monday to Sunday (<code>week[0]</code> is Monday). @@day@@'s number was typed wrongly: it should be @@new@@.</p>\n<p>Change that one item in <code>week</code> so the list is correct. Leave the other days alone.</p>",
+   "reference": "week = @@week@@\nweek[@@i@@] = @@new@@\n",
+   "schema_version": 1,
+   "starter_code": "week = @@week@@\n# your code here\n",
+   "title": "Change one item"
+  },
+  "b2-check": {
+   "allow_plot": false,
+   "block": 2,
+   "checks": [
+    {
+     "id": "total",
+     "name": "total",
+     "type": "variable"
+    },
+    {
+     "id": "average",
+     "name": "average",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    n = rng.randint(5, 7)\n    return {'week': [rng.randint(120, 650) for _ in range(n)]}",
+   "hints_html": [
+    "<p><code>sum(week)</code> gives the total. Divide it by <code>len(week)</code>, the number of days, to get the average.</p>"
+   ],
+   "id": "b2-check",
+   "inject_params": false,
+   "kind": "check",
+   "level": null,
+   "prompt_html": "<p>The list <code>week</code> holds a week of café takings, in pounds, one number per day.</p>\n<p>Store the <strong>total</strong> takings in a variable called <code>total</code> and the <strong>average</strong> per day in a variable called <code>average</code>. Then print them both.</p>",
+   "reference": "week = @@week@@\ntotal = sum(week)\naverage = total / len(week)\nprint(total)\nprint(average)\n",
+   "schema_version": 1,
+   "starter_code": "week = @@week@@\n# your code here\n",
+   "title": "Total and average takings"
+  },
+  "b2-core-saturday": {
+   "allow_plot": false,
+   "block": 2,
+   "checks": [
+    {
+     "id": "week",
+     "name": "week",
+     "type": "variable"
+    },
+    {
+     "id": "days_open",
+     "name": "days_open",
+     "type": "variable"
+    },
+    {
+     "id": "total",
+     "name": "total",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": 3,
+   "generator": "def generate(rng):\n    return {'week': [rng.randint(150, 700) for _ in range(5)], 'sat': rng.randint(300, 900)}",
+   "hints_html": [
+    "<p><code>week.append(@@sat@@)</code> changes the list itself. Then <code>len(week)</code> and <code>sum(week)</code> include Saturday.</p>"
+   ],
+   "id": "b2-core-saturday",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p>The café opened on Saturday too and took @@sat@@ pounds.</p>\n<ol>\n<li>Add Saturday's takings to the end of <code>week</code> with <code>.append()</code>.</li>\n<li>Store the number of days now in the list in <code>days_open</code>.</li>\n<li>Store the new total in <code>total</code>.</li>\n</ol>\n<p>Careful: write <code>week.append(...)</code> on its own line. <code>week = week.append(...)</code> would leave <code>week</code> as <code>None</code>.</p>",
+   "reference": "week = @@week@@\n\nweek.append(@@sat@@)\ndays_open = len(week)\ntotal = sum(week)\n",
+   "schema_version": 1,
+   "starter_code": "week = @@week@@\n\n# your code here\n",
+   "title": "Open on Saturday"
+  },
+  "b2-core-values": {
+   "allow_plot": false,
+   "block": 2,
+   "checks": [
+    {
+     "id": "takings",
+     "name": "takings",
+     "type": "variable"
+    },
+    {
+     "id": "boxes",
+     "name": "full_boxes",
+     "type": "variable"
+    },
+    {
+     "id": "area",
+     "name": "area",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": 1,
+   "generator": "def generate(rng):\n    return {'cups': rng.randint(40, 200), 'price': rng.choice([2.5, 2.8, 3.0, 3.2, 3.5]), 'side': rng.randint(3, 12)}",
+   "hints_html": [
+    "<p><code>takings = cups * price</code>. For full boxes, <code>cups // 6</code> drops the leftover lids. For the area, <code>side ** 2</code> (not <code>side ^ 2</code>).</p>"
+   ],
+   "id": "b2-core-values",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p>The café sold <code>cups</code> cups of coffee at <code>price</code> pounds each. Lids come in boxes of 6.</p>\n<ol>\n<li>Store the money taken in <code>takings</code>.</li>\n<li>Store how many <strong>full</strong> boxes of lids were used in <code>full_boxes</code> (a whole number: use <code>//</code>).</li>\n<li>The terrace is a square, <code>side</code> metres wide. Store its area in <code>area</code>. In Python, \"to the power of\" is <code>**</code>.</li>\n</ol>",
+   "reference": "cups = @@cups@@\nprice = @@price@@\nside = @@side@@\n\ntakings = cups * price\nfull_boxes = cups // 6\narea = side ** 2\n",
+   "schema_version": 1,
+   "solution_html": "<p><code>^</code> would run without an error but give the wrong answer, which is why <code>**</code> matters.</p>",
+   "starter_code": "cups = @@cups@@\nprice = @@price@@\nside = @@side@@\n\n# your code here\n",
+   "title": "Café sums"
+  },
+  "b2-core-week": {
+   "allow_plot": false,
+   "block": 2,
+   "checks": [
+    {
+     "id": "total",
+     "name": "total",
+     "type": "variable"
+    },
+    {
+     "id": "average",
+     "name": "average",
+     "type": "variable"
+    },
+    {
+     "id": "best",
+     "name": "best",
+     "type": "variable"
+    },
+    {
+     "id": "best_day",
+     "name": "best_day",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": 2,
+   "generator": "def generate(rng):\n    week = rng.sample(range(150, 700), 5)\n    return {'week': week}",
+   "hints_html": [
+    "<p><code>best = week.index(max(week))</code> gives a position counted from 0. Then <code>days[best]</code> looks up the name at that position.</p>"
+   ],
+   "id": "b2-core-week",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p><code>week</code> holds the café's takings for Monday to Friday, and <code>days</code> holds the day names in the same order.</p>\n<ol>\n<li>Store the total in <code>total</code> and the average per day in <code>average</code>.</li>\n<li>Store the <strong>position</strong> of the best day in <code>best</code> (use <code>week.index(max(week))</code>; positions count from 0).</li>\n<li>Store the name of the best day in <code>best_day</code>, using <code>best</code> and <code>days</code>.</li>\n</ol>",
+   "reference": "week = @@week@@\ndays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']\n\ntotal = sum(week)\naverage = total / len(week)\nbest = week.index(max(week))\nbest_day = days[best]\n",
+   "schema_version": 1,
+   "starter_code": "week = @@week@@\ndays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']\n\n# your code here\n",
+   "title": "A week of takings"
+  },
+  "b2-maxpos-L5": {
+   "allow_plot": false,
+   "block": 2,
+   "checks": [
+    {
+     "id": "best",
+     "name": "best",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    n = rng.randint(5, 9)\n    return {'n': n, 'sales': rng.sample(range(50, 400), n)}",
+   "hints_html": [
+    "<p><code>max(sales)</code> finds the largest value; <code>sales.index(...)</code> finds where it is.</p>"
+   ],
+   "id": "b2-maxpos-L5",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 5,
+   "prompt_html": "<p><code>sales</code> holds @@n@@ days of sales. Store the <strong>position</strong> of the largest value in <code>best</code> (counting from 0, as Python does).</p>",
+   "reference": "sales = @@sales@@\nbest = sales.index(max(sales))\n",
+   "schema_version": 1,
+   "solution_html": "<p><code>max</code> gives the value, not where it is. <code>index</code> turns the value into a position.</p>",
+   "starter_code": "sales = @@sales@@\n# your code here\n",
+   "title": "Position of the best day"
+  },
+  "b2-read-L1": {
+   "allow_plot": false,
+   "block": 2,
+   "checks": [
+    {
+     "id": "item",
+     "name": "item",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    n = rng.randint(4, 7)\n    prices = rng.sample([1.5, 1.8, 2.0, 2.2, 2.5, 2.75, 3.0, 3.25, 3.5, 4.0, 4.5], n)\n    k = rng.randint(2, n)\n    words = {2: 'second', 3: 'third', 4: 'fourth', 5: 'fifth', 6: 'sixth', 7: 'seventh'}\n    return {'prices': prices, 'k': k, 'ordinal': words[k]}",
+   "hints_html": [
+    "<p>The @@ordinal@@ item is at position @@k@@ minus 1, because counting starts at 0.</p>"
+   ],
+   "id": "b2-read-L1",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 1,
+   "prompt_html": "<p><code>prices</code> is a list of cake prices. Store the <strong>@@ordinal@@</strong> price in the list in a variable called <code>item</code>.</p>\n<p>Remember: lists count from 0, so the first item is <code>prices[0]</code>.</p>",
+   "reference": "prices = @@prices@@\nitem = prices[@@k@@ - 1]\n",
+   "schema_version": 1,
+   "starter_code": "prices = @@prices@@\n# your code here\n",
+   "title": "Read one item"
+  },
+  "b3-above-L3": {
+   "allow_plot": false,
+   "block": 3,
+   "checks": [
+    {
+     "id": "passes",
+     "name": "passes",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    mark = rng.randint(4, 7) * 10\n    above = [rng.randint(mark + 1, 100) for _ in range(rng.randint(3, 5))]\n    below = [rng.randint(10, mark - 1) for _ in range(rng.randint(1, 2))]\n    scores = above + below + [mark]\n    rng.shuffle(scores)\n    return {'scores': scores, 'mark': mark}",
+   "hints_html": [
+    "<p><code>passes = 0</code> before the loop; inside, <code>if s &gt; mark:</code> and then, indented once more, <code>passes += 1</code>.</p>"
+   ],
+   "id": "b3-above-L3",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 3,
+   "prompt_html": "<p>The list <code>scores</code> holds test scores. Count how many are <strong>above</strong> the pass mark of @@mark@@ and store the answer in <code>passes</code>. A score exactly equal to @@mark@@ does not count.</p>",
+   "reference": "scores = @@scores@@\nmark = @@mark@@\npasses = 0\nfor s in scores:\n    if s > mark:\n        passes += 1\n",
+   "schema_version": 1,
+   "starter_code": "scores = @@scores@@\nmark = @@mark@@\n# your code here\n",
+   "title": "Scores above the pass mark"
+  },
+  "b3-check": {
+   "allow_plot": false,
+   "block": 3,
+   "checks": [
+    {
+     "id": "busy",
+     "name": "busy",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    above = [rng.randint(301, 650) for _ in range(rng.randint(2, 4))]\n    rest = [rng.randint(90, 299) for _ in range(6 - len(above))]\n    week = above + rest + [300]\n    rng.shuffle(week)\n    return {'week': week}",
+   "hints_html": [
+    "<p>Loop through the list with <code>for day in week:</code>. Inside the loop, <code>if day &gt; 300:</code> then add one: <code>busy += 1</code>. Both inner lines need indenting.</p>"
+   ],
+   "id": "b3-check",
+   "inject_params": false,
+   "kind": "check",
+   "level": null,
+   "prompt_html": "<p>The list <code>week</code> holds a week of café takings, in pounds. Count how many days took <strong>more than £300</strong> and store the answer in a variable called <code>busy</code>.</p>\n<p>A day that took exactly £300 does not count.</p>",
+   "reference": "week = @@week@@\nbusy = 0\nfor day in week:\n    if day > 300:\n        busy += 1\n",
+   "schema_version": 1,
+   "solution_html": "<p><code>busy = 0</code> goes <strong>before</strong> the loop, so it starts at zero once. The <code>if</code> is indented inside the loop, and <code>busy += 1</code> is indented again, inside the <code>if</code>.</p>",
+   "starter_code": "week = @@week@@\nbusy = 0\n# your code here\n",
+   "title": "Busy days"
+  },
+  "b3-count-L1": {
+   "allow_plot": false,
+   "block": 3,
+   "checks": [
+    {
+     "id": "out",
+     "normalise": "strip",
+     "type": "stdout"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    return {'n': rng.randint(3, 25)}",
+   "hints_html": [
+    "<p><code>range(1, n + 1)</code> counts from 1 up to and including <code>n</code>. Put <code>print(i)</code> on the next line, indented.</p>"
+   ],
+   "id": "b3-count-L1",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 1,
+   "prompt_html": "<p>Print the numbers <strong>1 to @@n@@</strong>, one per line, using a <code>for</code> loop and <code>range</code>.</p>\n<p>Remember: <code>range</code> stops <em>before</em> the number you give it.</p>",
+   "reference": "n = @@n@@\nfor i in range(1, n + 1):\n    print(i)\n",
+   "schema_version": 1,
+   "starter_code": "n = @@n@@\n# print 1 to n here\n",
+   "title": "Count to @@n@@"
+  },
+  "b3-elif-core": {
+   "allow_plot": false,
+   "block": 3,
+   "checks": [
+    {
+     "id": "busy",
+     "name": "busy",
+     "type": "variable"
+    },
+    {
+     "id": "steady",
+     "name": "steady",
+     "type": "variable"
+    },
+    {
+     "id": "quiet",
+     "name": "quiet",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": 5,
+   "generator": "def generate(rng):\n    week = [rng.randint(301, 600), rng.randint(301, 600), rng.randint(201, 300), rng.randint(80, 200)]\n    week += [rng.randint(80, 600) for _ in range(3)]\n    rng.shuffle(week)\n    return {'week': week}",
+   "hints_html": [
+    "<p>Inside the loop: <code>if day &gt; 300:</code> then <code>busy += 1</code>; <code>elif day &gt; 200:</code> then <code>steady += 1</code>; <code>else:</code> then <code>quiet += 1</code>. Each <code>+= 1</code> line is indented one step further than its <code>if</code>/<code>elif</code>/<code>else</code>.</p>"
+   ],
+   "id": "b3-elif-core",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p>Go through <code>week</code> and sort each day into one of three groups:</p>\n<ul>\n<li>more than £300: <strong>busy</strong></li>\n<li>otherwise, more than £200: <strong>steady</strong></li>\n<li>otherwise: <strong>quiet</strong></li>\n</ul>\n<p>Count each group in the variables <code>busy</code>, <code>steady</code> and <code>quiet</code>. Use <code>if</code>, <code>elif</code> and <code>else</code> so each day is counted once.</p>",
+   "reference": "week = @@week@@\nbusy = 0\nsteady = 0\nquiet = 0\nfor day in week:\n    if day > 300:\n        busy += 1\n    elif day > 200:\n        steady += 1\n    else:\n        quiet += 1\n",
+   "schema_version": 1,
+   "solution_html": "<p><code>elif</code> is only checked when the <code>if</code> above it was false, so a £450 day counts as busy and not also as steady. With two separate <code>if</code>s, it would be counted twice.</p>",
+   "starter_code": "week = @@week@@\nbusy = 0\nsteady = 0\nquiet = 0\nfor day in week:\n    # your if / elif / else here\n    pass\n",
+   "title": "Busy, steady or quiet?"
+  },
+  "b3-fix-indent-L4": {
+   "allow_plot": false,
+   "block": 3,
+   "checks": [
+    {
+     "id": "history",
+     "name": "history",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    pct = rng.randint(2, 8)\n    return {'start': rng.randint(5, 50) * 100, 'factor': 1 + pct / 100, 'years': rng.randint(4, 15)}",
+   "hints_html": [
+    "<p>Which line should run every time round the loop? Lines inside the loop are indented by 4 spaces.</p>"
+   ],
+   "id": "b3-fix-indent-L4",
+   "inject_params": false,
+   "kind": "fix",
+   "level": 4,
+   "prompt_html": "<p>This code should record the balance after <strong>every</strong> year for @@years@@ years, but <code>history</code> ends up with only one value. It runs without an error: one line is at the wrong indent level.</p>\n<p>Find it and fix it, so <code>history</code> has @@years@@ values.</p>",
+   "reference": "balance = @@start@@\nhistory = []\nfor year in range(@@years@@):\n    balance = balance * @@factor@@\n    history.append(balance)\nprint(len(history))\n",
+   "schema_version": 1,
+   "solution_html": "<p><code>history.append(balance)</code> was not indented, so it ran once, after the loop finished. Indented by 4 spaces, it runs every year. Python gave no error: the code was valid, just not what we meant.</p>",
+   "starter_code": "balance = @@start@@\nhistory = []\nfor year in range(@@years@@):\n    balance = balance * @@factor@@\nhistory.append(balance)\nprint(len(history))\n",
+   "title": "Fix it: only one point on the plot"
+  },
+  "b3-fix-tab-L2": {
+   "allow_plot": false,
+   "block": 3,
+   "checks": [
+    {
+     "id": "total",
+     "name": "total",
+     "type": "variable"
+    },
+    {
+     "id": "items",
+     "name": "items",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    return {'prices': [rng.randint(1, 40) for _ in range(rng.randint(3, 7))]}",
+   "hints_html": [
+    "<p>Click at the start of <code>items += 1</code>, delete everything before it, then press Tab once. The tool types 4 spaces, matching the line above.</p>"
+   ],
+   "id": "b3-fix-tab-L2",
+   "inject_params": false,
+   "kind": "fix",
+   "level": 2,
+   "prompt_html": "<p>This code should add up <code>prices</code> and count how many there are, but Python refuses to run it. One line inside the loop was indented with a <strong>tab character</strong> (it is highlighted in the editor), while the line above uses spaces.</p>\n<p>Delete that line's indent and press Tab again so both lines use 4 spaces. Then run it.</p>",
+   "reference": "prices = @@prices@@\ntotal = 0\nitems = 0\nfor p in prices:\n    total += p\n    items += 1\nprint(total, items)\n",
+   "schema_version": 1,
+   "solution_html": "<p>Both lines in the loop now start with exactly 4 spaces. A tab and 4 spaces look the same on screen, but Python sees them as different indents, so it can't tell which block the line belongs to.</p>",
+   "starter_code": "prices = @@prices@@\ntotal = 0\nitems = 0\nfor p in prices:\n    total += p\n\titems += 1\nprint(total, items)\n",
+   "title": "Fix it: a hidden tab"
+  },
+  "b3-growth-L4": {
+   "allow_plot": false,
+   "block": 3,
+   "checks": [
+    {
+     "id": "history",
+     "name": "history",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    pct = rng.randint(2, 9)\n    return {'start': rng.randint(10, 90) * 100, 'pct': pct, 'factor': 1 + pct / 100, 'years': rng.randint(5, 12)}",
+   "hints_html": [
+    "<p><code>for year in range(@@years@@):</code> then two indented lines: first update <code>people</code>, then <code>history.append(people)</code>.</p>"
+   ],
+   "id": "b3-growth-L4",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 4,
+   "prompt_html": "<p>A town has @@start@@ people and grows by @@pct@@% a year. For each of <strong>@@years@@ years</strong>:</p>\n<ol>\n<li>grow the population: <code>people = people * @@factor@@</code></li>\n<li>record it: <code>history.append(people)</code></li>\n</ol>\n<p>At the end, <code>history</code> should hold @@years@@ values: the population after each year.</p>",
+   "reference": "people = @@start@@\nhistory = []\nfor year in range(@@years@@):\n    people = people * @@factor@@\n    history.append(people)\n",
+   "schema_version": 1,
+   "starter_code": "people = @@start@@\nhistory = []\n# your loop here\n",
+   "title": "Step and record: a growing population"
+  },
+  "b3-savings-core": {
+   "allow_plot": true,
+   "block": 3,
+   "checks": [
+    {
+     "id": "history",
+     "name": "history",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": 1,
+   "generator": null,
+   "hints_html": [
+    "<p>Replace <code>pass</code> with two lines, each indented by 4 spaces: <code>balance = balance * (1 + rate)</code> and then <code>history.append(balance)</code>.</p>"
+   ],
+   "id": "b3-savings-core",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p>£1,000 earns <strong>0.5% interest a month</strong>. Each month for <strong>24 months</strong>:</p>\n<ol>\n<li>add the interest: <code>balance = balance * (1 + rate)</code></li>\n<li>record the new balance: <code>history.append(balance)</code></li>\n</ol>\n<p>Then plot <code>history</code>. Both lines go <strong>inside</strong> the loop, so <code>history</code> ends up with 24 values.</p>",
+   "reference": "import matplotlib.pyplot as plt\n\nbalance = 1000\nrate = 0.005\nhistory = []\n\nfor month in range(24):\n    balance = balance * (1 + rate)\n    history.append(balance)\n\nplt.plot(history)\nplt.xlabel(\"Month\")\nplt.ylabel(\"Balance (£)\")\nplt.show()\n",
+   "schema_version": 1,
+   "solution_html": "<p>If <code>history.append(balance)</code> is not indented, it runs once, after the loop, and the plot shows a single point. Indented, it runs every month.</p>",
+   "starter_code": "import matplotlib.pyplot as plt\n\nbalance = 1000\nrate = 0.005\nhistory = []\n\nfor month in range(24):\n    # add interest, then record the balance\n    pass\n\nplt.plot(history)\nplt.xlabel(\"Month\")\nplt.ylabel(\"Balance (£)\")\nplt.show()\n",
+   "title": "Step and record: savings"
+  },
+  "b3-sum-L2": {
+   "allow_plot": false,
+   "block": 3,
+   "checks": [
+    {
+     "id": "total",
+     "name": "total",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    n = rng.randint(4, 8)\n    return {'n': n, 'deposits': [rng.randint(5, 50) * 5 for _ in range(n)]}",
+   "hints_html": [
+    "<p>Start with <code>total = 0</code> before the loop. Inside the loop, <code>total += d</code>.</p>"
+   ],
+   "id": "b3-sum-L2",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 2,
+   "prompt_html": "<p>The list <code>deposits</code> holds @@n@@ payments into a savings account. Use a <code>for</code> loop to add them up and store the answer in <code>total</code>.</p>",
+   "reference": "deposits = @@deposits@@\ntotal = 0\nfor d in deposits:\n    total += d\n",
+   "schema_version": 1,
+   "starter_code": "deposits = @@deposits@@\n# your code here\n",
+   "title": "Total savings deposits"
+  },
+  "b3-target-L5": {
+   "allow_plot": false,
+   "block": 3,
+   "checks": [
+    {
+     "id": "history",
+     "name": "history",
+     "type": "variable"
+    },
+    {
+     "id": "balance",
+     "name": "balance",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    deposit = rng.randint(2, 10) * 25\n    start = rng.randint(0, 8) * 25\n    steps = rng.randint(4, 10)\n    target = start + deposit * steps\n    return {'start': start, 'deposit': deposit, 'target': target, 'months': steps + rng.randint(3, 8)}",
+   "hints_html": [
+    "<p>Inside the loop, use <code>if balance &lt; target:</code> and put both the <code>balance += deposit</code> and the <code>history.append(balance)</code> lines inside that <code>if</code> (indented 8 spaces).</p>"
+   ],
+   "id": "b3-target-L5",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 5,
+   "prompt_html": "<p>You start with £@@start@@ and save £@@deposit@@ every month, for up to @@months@@ months. You are saving for £@@target@@.</p>\n<p>Each month, <strong>while the balance is still below the target</strong>, add the deposit and record the new balance in <code>history</code>. Once the balance reaches the target, stop adding and stop recording.</p>\n<p>So the last value in <code>history</code> is £@@target@@: the first balance that reached the target.</p>",
+   "reference": "balance = @@start@@\ndeposit = @@deposit@@\ntarget = @@target@@\nhistory = []\nfor month in range(@@months@@):\n    if balance < target:\n        balance += deposit\n        history.append(balance)\n",
+   "schema_version": 1,
+   "solution_html": "<p>The <code>if</code> is checked every month. Once <code>balance</code> reaches the target, the condition is false, so the indented lines under it are skipped for the rest of the loop.</p>",
+   "starter_code": "balance = @@start@@\ndeposit = @@deposit@@\ntarget = @@target@@\nhistory = []\nfor month in range(@@months@@):\n    # your code here\n    pass\n",
+   "title": "Stop recording at the target"
+  },
+  "b3-total-core": {
+   "allow_plot": false,
+   "block": 3,
+   "checks": [
+    {
+     "id": "total",
+     "name": "total",
+     "type": "variable"
+    },
+    {
+     "id": "out",
+     "normalise": "strip",
+     "type": "stdout"
+    }
+   ],
+   "fixed_seed": 3,
+   "generator": "def generate(rng):\n    return {'week': [rng.randint(120, 600) for _ in range(5)]}",
+   "hints_html": [
+    "<p><code>for day in week:</code> then, on the next line, indented by 4 spaces: <code>total += day</code>. Leave <code>print(total)</code> un-indented so it runs once, after the loop.</p>"
+   ],
+   "id": "b3-total-core",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p>Use a <code>for</code> loop to add up the takings in <code>week</code>. Store the answer in <code>total</code>, then print it.</p>\n<p>Start with <code>total = 0</code> <strong>before</strong> the loop, and add each day inside the loop with <code>total += day</code>.</p>",
+   "reference": "week = @@week@@\ntotal = 0\nfor day in week:\n    total += day\n\nprint(total)\n",
+   "schema_version": 1,
+   "starter_code": "week = @@week@@\ntotal = 0\n# loop through week here\n\nprint(total)\n",
+   "title": "Add up the week with a loop"
+  },
+  "b4-argument-L3": {
+   "allow_plot": false,
+   "block": 4,
+   "checks": [
+    {
+     "calls": [
+      [
+       "@@months@@",
+       "@@rate@@"
+      ],
+      [
+       12,
+       0.01
+      ],
+      [
+       3,
+       0.1
+      ],
+      [
+       0,
+       0.05
+      ]
+     ],
+     "id": "fn",
+     "name": "savings_after",
+     "type": "function"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    return {'start': rng.choice([500, 1000, 2000, 5000]), 'months': rng.choice([6, 12, 18, 24, 36]), 'rate': rng.choice([0.002, 0.004, 0.008, 0.01, 0.02])}",
+   "hints_html": [
+    "<p>Two changes: add <code>, rate</code> inside the brackets on the <code>def</code> line, and use <code>rate</code> instead of <code>0.005</code> in the body.</p>"
+   ],
+   "id": "b4-argument-L3",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 3,
+   "prompt_html": "<p><code>savings_after(months)</code> grows £@@start@@ by a fixed rate of 0.005 a month. Give it a second argument, <code>rate</code>, so that <code>savings_after(@@months@@, @@rate@@)</code> uses the rate it is given.</p>\n<p>This is just like the organiser's Exercise 1 in the Colab notebook.</p>",
+   "reference": "def savings_after(months, rate):\n    balance = @@start@@\n    for month in range(months):\n        balance = balance * (1 + rate)\n    return balance\n",
+   "schema_version": 1,
+   "solution_html": "<p>Adding the argument isn't enough on its own: the body must <em>use</em> it. Otherwise the function quietly keeps the old fixed rate.</p>",
+   "starter_code": "def savings_after(months):\n    balance = @@start@@\n    for month in range(months):\n        balance = balance * (1 + 0.005)\n    return balance\n",
+   "title": "Add an argument to an existing function"
+  },
+  "b4-call-L1": {
+   "allow_plot": false,
+   "block": 4,
+   "checks": [
+    {
+     "id": "a",
+     "name": "change_a",
+     "type": "variable"
+    },
+    {
+     "id": "b",
+     "name": "change_b",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    p1 = rng.choice([1.2, 1.8, 2.4, 2.9, 3.5, 4.1, 6.3, 7.7])\n    p2 = rng.choice([2.2, 3.6, 4.5, 5.25, 8.4, 9.1, 12.6])\n    return {'price1': p1, 'paid1': rng.choice([5, 10]), 'price2': p2, 'paid2': rng.choice([10, 20])}",
+   "hints_html": [
+    "<p><code>change_a = change_due(@@paid1@@, @@price1@@)</code>: the amount paid goes first, because <code>paid</code> comes first in the <code>def</code> line.</p>"
+   ],
+   "id": "b4-call-L1",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 1,
+   "prompt_html": "<p>The function <code>change_due(paid, price)</code> is written for you. It works out the change for a customer.</p>\n<ul>\n<li>A customer pays £@@paid1@@ for something costing £@@price1@@. Store the change in <code>change_a</code>.</li>\n<li>Another pays £@@paid2@@ for something costing £@@price2@@. Store the change in <code>change_b</code>.</li>\n</ul>\n<p>Call the function both times; don't work the numbers out yourself. Keep the arguments in the same order as the <code>def</code> line.</p>",
+   "reference": "def change_due(paid, price):\n    return paid - price\n\nchange_a = change_due(@@paid1@@, @@price1@@)\nchange_b = change_due(@@paid2@@, @@price2@@)\n",
+   "schema_version": 1,
+   "solution_html": "<p>Arguments are matched by position: the first value goes to <code>paid</code>, the second to <code>price</code>. You can also name them, <code>change_due(paid=10, price=3.5)</code>, and then the order doesn't matter.</p>",
+   "starter_code": "def change_due(paid, price):\n    return paid - price\n\nchange_a = 0\nchange_b = 0\n",
+   "title": "Call a function with different arguments"
   },
   "b4-check": {
    "allow_plot": false,
@@ -78,11 +999,96 @@
    "inject_params": false,
    "kind": "check",
    "level": null,
-   "prompt_html": "<p>Write a function called <code>average_of</code> that takes a list of numbers and <strong>returns</strong> their average. For example, <code>average_of(@@example@@)</code> should give back <code>@@example_avg@@</code>.</p>",
+   "prompt_html": "<p>Write a function called <code>average_of</code> that takes a list of numbers and <strong>returns</strong> their average.</p>\n<p>For example, <code>average_of(@@example@@)</code> should give back <code>@@example_avg@@</code>.</p>",
    "reference": "def average_of(numbers):\n    return sum(numbers) / len(numbers)\n",
    "schema_version": 1,
+   "solution_html": "<p><code>sum</code> adds the list up and <code>len</code> counts the items. <code>return</code> hands the result back to whoever called the function.</p>",
    "starter_code": "def average_of(numbers):\n    # your code here\n    pass\n",
    "title": "A function that returns an average"
+  },
+  "b4-default-L2": {
+   "allow_plot": false,
+   "block": 4,
+   "checks": [
+    {
+     "calls": [
+      [
+       "@@b1@@"
+      ],
+      [
+       1000
+      ],
+      [
+       100,
+       0.1
+      ]
+     ],
+     "id": "fn",
+     "name": "add_interest",
+     "type": "function"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    return {'new_rate': rng.choice([0.001, 0.002, 0.003, 0.004, 0.006, 0.007, 0.008, 0.009, 0.01, 0.012, 0.015, 0.02]), 'b1': rng.choice([200, 500, 1000, 1500, 3000])}",
+   "hints_html": [
+    "<p>Only the <code>def</code> line changes: <code>rate=0.005</code> becomes <code>rate=@@new_rate@@</code>.</p>"
+   ],
+   "id": "b4-default-L2",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 2,
+   "prompt_html": "<p><code>add_interest</code> uses a monthly rate of 0.005 unless you give it one. The bank has changed its rate.</p>\n<p>Change the <strong>default</strong> so that <code>add_interest(balance)</code> uses a rate of <strong>@@new_rate@@</strong>. Calling it with a rate, like <code>add_interest(100, 0.1)</code>, must still use the rate given.</p>",
+   "reference": "def add_interest(balance, rate=@@new_rate@@):\n    return balance * (1 + rate)\n",
+   "schema_version": 1,
+   "solution_html": "<p>A default is only used when the caller leaves that argument out. Writing the new rate into the body instead would ignore any rate the caller gives.</p>",
+   "starter_code": "def add_interest(balance, rate=0.005):\n    return balance * (1 + rate)\n",
+   "title": "Change a default value"
+  },
+  "b4-dice-L5": {
+   "allow_plot": false,
+   "block": 4,
+   "checks": [
+    {
+     "id": "share",
+     "name": "share",
+     "type": "variable"
+    },
+    {
+     "calls": [
+      [
+       1
+      ],
+      [
+       2
+      ],
+      [
+       6
+      ],
+      [
+       "@@n_dice@@"
+      ]
+     ],
+     "id": "fn",
+     "name": "roll_total",
+     "type": "function"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    n = rng.randint(2, 5)\n    return {'n_dice': n, 'runs': rng.choice([200, 300, 400, 500]), 'target': rng.randint(3 * n, 4 * n + 1)}",
+   "hints_html": [
+    "<p>A dice roll is <code>random.randint(1, 6)</code>: both 1 and 6 can come up. In the function, <code>for i in range(n_dice):</code> add a roll to <code>total</code>.</p>",
+    "<p>Outside the function: <code>for run in range(@@runs@@):</code> then <code>if roll_total(@@n_dice@@) &gt;= @@target@@:</code> add one to <code>count</code>.</p>"
+   ],
+   "id": "b4-dice-L5",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 5,
+   "prompt_html": "<ol>\n<li>Write a function <code>roll_total(n_dice)</code> that rolls <code>n_dice</code> dice and <strong>returns</strong> the total. For each die, call <code>random.randint(1, 6)</code> once, in a loop.</li>\n<li>Then call <code>roll_total(@@n_dice@@)</code> <strong>@@runs@@ times</strong> in a loop, and count how many runs gave a total of <strong>@@target@@ or more</strong>.</li>\n<li>Store <code>count / @@runs@@</code> in <code>share</code>.</li>\n</ol>",
+   "reference": "import random\n\ndef roll_total(n_dice):\n    total = 0\n    for i in range(n_dice):\n        total += random.randint(1, 6)\n    return total\n\ncount = 0\nfor run in range(@@runs@@):\n    if roll_total(@@n_dice@@) >= @@target@@:\n        count += 1\n\nshare = count / @@runs@@\n",
+   "schema_version": 1,
+   "solution_html": "<p>This is the wrap-and-repeat pattern: one run in a function, many calls in a loop, then a share. <code>randint(1, 6)</code> includes 6; <code>randint(1, 5)</code> would never roll a six.</p>",
+   "starter_code": "import random\n\ndef roll_total(n_dice):\n    total = 0\n    # roll the dice here\n    return total\n\ncount = 0\n# repeat here\n\nshare = 0\n",
+   "title": "Wrap a simulation and repeat it"
   },
   "b4-flips-core": {
    "allow_plot": false,
@@ -122,8 +1128,396 @@
    "prompt_html": "<p>Write a function <code>flip_coins(n)</code> that flips <code>n</code> coins and <strong>returns</strong> how many came up heads.</p>\n<p>For each coin, call <code>random.randint(0, 1)</code> once, in a loop; count a <code>1</code> as heads.</p>\n<p>Then call <code>flip_coins(@@n@@)</code> and store the result in <code>heads</code>.</p>",
    "reference": "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        if random.randint(0, 1) == 1:\n            heads += 1\n    return heads\n\nheads = flip_coins(@@n@@)\nprint(heads)\n",
    "schema_version": 1,
+   "solution_html": "<p><code>randint(0, 1)</code> gives 0 or 1 (both ends included). The loop runs <code>n</code> times, and <code>return</code> sits <em>after</em> the loop, at the same indent as <code>heads = 0</code>, so all <code>n</code> coins are flipped first.</p>",
    "starter_code": "import random\n\ndef flip_coins(n):\n    heads = 0\n    # flip n coins here\n    return heads\n\nheads = flip_coins(@@n@@)\nprint(heads)\n",
    "title": "Wrap and repeat: flipping coins"
+  },
+  "b4-interest-core": {
+   "allow_plot": false,
+   "block": 4,
+   "checks": [
+    {
+     "calls": [
+      [
+       1000,
+       0.005
+      ],
+      [
+       250,
+       0.1
+      ],
+      [
+       "@@balance@@",
+       "@@rate@@"
+      ]
+     ],
+     "id": "fn",
+     "name": "add_interest",
+     "type": "function"
+    },
+    {
+     "id": "nb",
+     "name": "new_balance",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": 3,
+   "generator": "def generate(rng):\n    return {'balance': rng.choice([500, 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000]), 'rate': rng.choice([0.002, 0.003, 0.004, 0.005, 0.006, 0.008, 0.01, 0.012])}",
+   "hints_html": [
+    "<p>The body is one indented line: <code>return balance * (1 + rate)</code>. Replace <code>pass</code> with it.</p>"
+   ],
+   "id": "b4-interest-core",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p>Write a function <code>add_interest(balance, rate)</code> that <strong>returns</strong> the balance after one month's interest: <code>balance * (1 + rate)</code>.</p>\n<p>Then call it for a balance of £@@balance@@ at a monthly rate of @@rate@@, and store the answer in <code>new_balance</code>.</p>",
+   "reference": "def add_interest(balance, rate):\n    return balance * (1 + rate)\n\nnew_balance = add_interest(@@balance@@, @@rate@@)\nprint(new_balance)\n",
+   "schema_version": 1,
+   "solution_html": "<p><code>def</code>, the name, the arguments in brackets, a colon, then an indented body. <code>return</code> hands the new balance back, so the last line can store it.</p>",
+   "starter_code": "def add_interest(balance, rate):\n    # your code here\n    pass\n\nnew_balance = add_interest(@@balance@@, @@rate@@)\nprint(new_balance)\n",
+   "title": "Your first function: add_interest"
+  },
+  "b4-passrate-L4": {
+   "allow_plot": false,
+   "block": 4,
+   "checks": [
+    {
+     "calls": [
+      [
+       "@@scores@@",
+       "@@mark@@"
+      ],
+      [
+       "@@other@@",
+       "@@mark@@"
+      ],
+      [
+       [
+        50,
+        60,
+        70
+       ],
+       60
+      ],
+      [
+       [
+        10
+       ],
+       50
+      ]
+     ],
+     "id": "fn",
+     "name": "pass_rate",
+     "type": "function"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    mark = rng.choice([40, 50, 60, 70])\n    scores = [rng.randint(25, 95) for _ in range(rng.randint(5, 9))]\n    scores[0] = mark\n    rng.shuffle(scores)\n    answer = sum(1 for s in scores if s >= mark) / len(scores)\n    return {'mark': mark, 'scores': scores, 'answer': answer, 'other': [rng.randint(30, 90) for _ in range(6)] + [mark]}",
+   "hints_html": [
+    "<p>Count the passes in a loop with <code>if s &gt;= pass_mark:</code>, then <code>return passed / len(scores)</code> after the loop.</p>"
+   ],
+   "id": "b4-passrate-L4",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 4,
+   "prompt_html": "<p>Write a function <code>pass_rate(scores, pass_mark)</code> that <strong>returns</strong> the share of scores that are <strong>at or above</strong> the pass mark, as a decimal between 0 and 1.</p>\n<p>For example, with scores <code>@@scores@@</code> and a pass mark of @@mark@@, it should give back <code>@@answer@@</code>.</p>",
+   "reference": "def pass_rate(scores, pass_mark):\n    passed = 0\n    for s in scores:\n        if s >= pass_mark:\n            passed += 1\n    return passed / len(scores)\n",
+   "schema_version": 1,
+   "solution_html": "<p>\"At or above\" is <code>&gt;=</code>. <code>&gt;</code> would leave out anyone who scored exactly the pass mark. The <code>return</code> goes after the loop, so every score is counted first.</p>",
+   "starter_code": "def pass_rate(scores, pass_mark):\n    # your code here\n    pass\n",
+   "title": "Write a function with return"
+  },
+  "b4-return-core": {
+   "allow_plot": false,
+   "block": 4,
+   "checks": [
+    {
+     "calls": [
+      [
+       "@@n@@",
+       "@@price@@"
+      ],
+      [
+       3,
+       2.0
+      ],
+      [
+       1,
+       4.5
+      ]
+     ],
+     "id": "fn",
+     "name": "order_total",
+     "type": "function"
+    },
+    {
+     "id": "cost",
+     "name": "cost",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": 5,
+   "generator": "def generate(rng):\n    return {'n': rng.randint(2, 12), 'price': rng.choice([2.5, 2.8, 3.0, 3.2, 3.5, 4.0])}",
+   "hints_html": [
+    "<p>Swap <code>print(</code> for <code>return</code> inside the function, and remove the closing bracket.</p>"
+   ],
+   "id": "b4-return-core",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p>This function <strong>prints</strong> the price of @@n@@ coffees at £@@price@@ each, but then <code>cost</code> is <code>None</code>, because the function hands nothing back.</p>\n<p>Run it first and look at <code>cost</code>. Then change the function so it <strong>returns</strong> the total instead of printing it.</p>",
+   "reference": "def order_total(n, price):\n    return n * price\n\ncost = order_total(@@n@@, @@price@@)\nprint(\"cost is\", cost)\n",
+   "schema_version": 1,
+   "solution_html": "<p><code>print</code> only shows a value on the screen. <code>return</code> hands it back, so <code>cost = order_total(...)</code> can store it. Without <code>return</code>, a function gives back <code>None</code>.</p>",
+   "starter_code": "def order_total(n, price):\n    print(n * price)\n\ncost = order_total(@@n@@, @@price@@)\nprint(\"cost is\", cost)\n",
+   "title": "print versus return"
+  },
+  "b4-share-core": {
+   "allow_plot": false,
+   "block": 4,
+   "checks": [
+    {
+     "id": "share",
+     "name": "share",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": 11,
+   "generator": null,
+   "hints_html": [
+    "<p><code>for run in range(1000):</code> then <code>if flip_coins(10) &gt;= 7:</code> add one to <code>count</code>. After the loop (not indented), <code>share = count / 1000</code>.</p>"
+   ],
+   "id": "b4-share-core",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p><code>flip_coins</code> is written for you. Call <code>flip_coins(10)</code> <strong>1,000 times</strong> in a loop (one call per time round). Count how many runs gave <strong>7 or more</strong> heads.</p>\n<p>Store the share of runs, <code>count / 1000</code>, in <code>share</code>. That share is a probability, estimated by simulation.</p>",
+   "reference": "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        if random.randint(0, 1) == 1:\n            heads += 1\n    return heads\n\ncount = 0\nfor run in range(1000):\n    if flip_coins(10) >= 7:\n        count += 1\n\nshare = count / 1000\nprint(share)\n",
+   "schema_version": 1,
+   "solution_html": "<p>The true answer is about 0.17. <code>&gt;= 7</code> means \"7 or more\"; <code>&gt; 7</code> would leave out exactly 7. One run of 10 flips tells you little; the share across 1,000 runs is the finding.</p>",
+   "starter_code": "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        if random.randint(0, 1) == 1:\n            heads += 1\n    return heads\n\ncount = 0\n# call flip_coins(10) 1000 times here\n\nshare = 0\nprint(share)\n",
+   "title": "Wrap and repeat: how likely is 7 or more heads?"
+  },
+  "b5-bakery-core": {
+   "allow_plot": true,
+   "block": 5,
+   "checks": [
+    {
+     "id": "profits",
+     "name": "profits",
+     "type": "variable"
+    },
+    {
+     "id": "best",
+     "name": "best_order",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": 21,
+   "generator": null,
+   "hints_html": [
+    "<p>Inside the loop: <code>profits.append(profit(order))</code>. After the loop: <code>best_order = orders[profits.index(max(profits))]</code>.</p>"
+   ],
+   "id": "b5-bakery-core",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p>A bakery orders loaves each morning. Each loaf costs £1 and sells for £3. Demand is random; unsold loaves are wasted.</p>\n<p><code>profit(order)</code> simulates 200 days. Each day it calls <code>random.randint(20, 60)</code> <strong>once</strong> for that day's demand, and it returns the average daily profit.</p>\n<ol>\n<li>Make an empty list <code>profits</code>.</li>\n<li>For each <code>order</code> in <code>orders</code>, <strong>in order</strong>, call <code>profit(order)</code> <strong>once</strong> and append the answer to <code>profits</code>.</li>\n<li>Store the order that gave the highest profit in <code>best_order</code>.</li>\n<li>Plot <code>profits</code> against <code>orders</code>, with axis labels, and <code>plt.show()</code>.</li>\n</ol>\n<p>Look at the top of the curve: is it sharp or flat?</p>",
+   "reference": "import random\n\nprice = 3\ncost = 1\n\ndef profit(order):\n    total = 0\n    for day in range(200):\n        demand = random.randint(20, 60)\n        sold = min(order, demand)\n        total += sold * price - order * cost\n    return total / 200\n\norders = [20, 30, 40, 50, 60]\nprofits = []\nfor order in orders:\n    profits.append(profit(order))\n\nbest_order = orders[profits.index(max(profits))]\nprint(best_order)\n\nimport matplotlib.pyplot as plt\nplt.plot(orders, profits)\nplt.xlabel(\"Loaves ordered\")\nplt.ylabel(\"Average daily profit (£)\")\nplt.show()\n",
+   "schema_version": 1,
+   "solution_html": "<p>The curve rises, flattens near the top, then falls. Orders near the peak give almost the same profit, so being roughly right is enough.</p>",
+   "starter_code": "import random\n\nprice = 3\ncost = 1\n\ndef profit(order):\n    total = 0\n    for day in range(200):\n        demand = random.randint(20, 60)\n        sold = min(order, demand)\n        total += sold * price - order * cost\n    return total / 200\n\norders = [20, 30, 40, 50, 60]\n# 1. make an empty list called profits\n# 2. loop over orders and append profit(order)\n# 3. best_order = ...\n\nimport matplotlib.pyplot as plt\n# 4. plt.plot(orders, profits) and so on\n",
+   "title": "Sweep and compare: the bakery"
+  },
+  "b5-best-L3": {
+   "allow_plot": false,
+   "block": 5,
+   "checks": [
+    {
+     "id": "best",
+     "name": "best_price",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    while True:\n        a = rng.randint(40, 120)\n        b = rng.randint(2, 6)\n        prices = sorted(rng.sample(range(1, 25), rng.randint(5, 7)))\n        t = [p * (a - b * p) for p in prices]\n        if t.count(max(t)) == 1:\n            return {'a': a, 'b': b, 'prices': prices}",
+   "hints_html": [
+    "<p>Build a list of takings first. <code>max(results)</code> is the best takings; <code>results.index(max(results))</code> is its position; <code>prices[...]</code> at that position is the price.</p>"
+   ],
+   "id": "b5-best-L3",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 3,
+   "prompt_html": "<p><code>takings(price)</code> gives a market stall's daily takings, in pounds, at a given price per item.</p>\n<p>Try every price in <code>prices</code>. Store the <strong>price</strong> that gives the highest takings in <code>best_price</code>. (Not the takings themselves – the price.)</p>",
+   "reference": "def takings(price):\n    return price * (@@a@@ - @@b@@ * price)\n\nprices = @@prices@@\nresults = []\nfor price in prices:\n    results.append(takings(price))\nbest_price = prices[results.index(max(results))]\n",
+   "schema_version": 1,
+   "starter_code": "def takings(price):\n    return price * (@@a@@ - @@b@@ * price)\n\nprices = @@prices@@\n# your code here\n",
+   "title": "Find the best setting"
+  },
+  "b5-check": {
+   "allow_plot": false,
+   "block": 5,
+   "checks": [
+    {
+     "id": "best",
+     "name": "best",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    while True:\n        a = rng.randint(10, 30)\n        settings = rng.sample(range(1, 30), 3)\n        scores = [a * x - x * x for x in settings]\n        best = settings[scores.index(max(scores))]\n        if len(set(scores)) == 3 and max(scores) not in settings and best != max(settings):\n            return {'a': a, 'settings': settings}",
+   "hints_html": [
+    "<p>Loop over <code>settings</code>. Keep track of the best setting so far, and replace it when <code>harvest(s)</code> is bigger than <code>harvest(best)</code>. Or: build a list of harvests, then use <code>settings[harvests.index(max(harvests))]</code>.</p>"
+   ],
+   "id": "b5-check",
+   "inject_params": false,
+   "kind": "check",
+   "level": null,
+   "prompt_html": "<p>The function <code>harvest(x)</code> says how many apples a tree gives if you use <code>x</code> kilos of fertiliser.</p>\n<p>Try each of the three settings in <code>settings</code>. Store the <strong>setting</strong> (not the harvest) that gives the highest harvest in a variable called <code>best</code>, and print it.</p>",
+   "reference": "def harvest(x):\n    return @@a@@ * x - x * x\n\nsettings = @@settings@@\nbest = settings[0]\nfor s in settings:\n    if harvest(s) > harvest(best):\n        best = s\nprint(best)\n",
+   "schema_version": 1,
+   "solution_html": "<p><code>max(harvests)</code> is the best <em>harvest</em>; <code>harvests.index(...)</code> finds its position, and <code>settings[...]</code> turns that position back into the setting.</p>",
+   "starter_code": "def harvest(x):\n    return @@a@@ * x - x * x\n\nsettings = @@settings@@\n# try each setting; store the one with the highest harvest in best\n",
+   "title": "Which setting is best?"
+  },
+  "b5-compare-L5": {
+   "allow_plot": false,
+   "block": 5,
+   "checks": [
+    {
+     "id": "cheaper",
+     "name": "cheaper",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    while True:\n        fa, ra = rng.randint(0, 300), rng.randint(6, 12)\n        fb, rb = rng.randint(800, 1500), rng.randint(1, 4)\n        usage = sorted(rng.sample(range(10, 400, 10), rng.randint(4, 6)))\n        a = [fa + ra * m for m in usage]\n        b = [fb + rb * m for m in usage]\n        res = ['A' if x < y else 'B' for x, y in zip(a, b)]\n        if all(x != y for x, y in zip(a, b)) and 'A' in res and 'B' in res:\n            return {'fa': fa, 'ra': ra, 'fb': fb, 'rb': rb, 'usage': usage}",
+   "hints_html": [
+    "<p>Start with <code>cheaper = []</code>. In the loop, compare <code>plan_a(m) &lt; plan_b(m)</code> and append <code>\"A\"</code> or <code>\"B\"</code>. Cheaper means the <em>smaller</em> cost.</p>"
+   ],
+   "id": "b5-compare-L5",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 5,
+   "prompt_html": "<p>Two phone plans charge differently for <code>minutes</code> of calls a month: <code>plan_a(minutes)</code> and <code>plan_b(minutes)</code> give the cost in pence.</p>\n<p>For each number of minutes in <code>usage</code>, in order, find the <strong>cheaper</strong> plan. Store the answers in a list called <code>cheaper</code>, using the text <code>\"A\"</code> or <code>\"B\"</code>. (There are no ties.)</p>",
+   "reference": "def plan_a(minutes):\n    return @@fa@@ + @@ra@@ * minutes\n\ndef plan_b(minutes):\n    return @@fb@@ + @@rb@@ * minutes\n\nusage = @@usage@@\ncheaper = []\nfor m in usage:\n    if plan_a(m) < plan_b(m):\n        cheaper.append(\"A\")\n    else:\n        cheaper.append(\"B\")\n",
+   "schema_version": 1,
+   "solution_html": "<p>Neither plan is best everywhere: A wins for light users, B for heavy users. Comparing across settings shows where the answer changes.</p>",
+   "starter_code": "def plan_a(minutes):\n    return @@fa@@ + @@ra@@ * minutes\n\ndef plan_b(minutes):\n    return @@fb@@ + @@rb@@ * minutes\n\nusage = @@usage@@\n# your code here\n",
+   "title": "Compare two versions of a model"
+  },
+  "b5-cost-core": {
+   "allow_plot": true,
+   "block": 5,
+   "checks": [
+    {
+     "id": "cost",
+     "name": "cost",
+     "type": "variable"
+    },
+    {
+     "id": "best",
+     "name": "best_order",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": 8,
+   "generator": null,
+   "hints_html": [
+    "<p>Change only the line <code>cost = 1</code> so it reads <code>cost = 2</code>, then run.</p>"
+   ],
+   "id": "b5-cost-core",
+   "inject_params": false,
+   "kind": "core",
+   "level": null,
+   "prompt_html": "<p>The flour price has gone up: each loaf now costs the bakery <strong>£2</strong> instead of £1. It still sells for £3.</p>\n<p><strong>Predict first:</strong> will the best order go up or down? Write your guess as a comment on the first line.</p>\n<p>Then change <code>cost = 1</code> to <code>cost = 2</code> and run the code. Was your prediction right? Why might that be?</p>",
+   "reference": "import random\n\nprice = 3\ncost = 2\n\ndef profit(order):\n    total = 0\n    for day in range(200):\n        demand = random.randint(20, 60)\n        sold = min(order, demand)\n        total += sold * price - order * cost\n    return total / 200\n\norders = [20, 30, 40, 50, 60]\nprofits = []\nfor order in orders:\n    profits.append(profit(order))\n\nbest_order = orders[profits.index(max(profits))]\nprint(\"Best order:\", best_order)\n\nimport matplotlib.pyplot as plt\nplt.plot(orders, profits)\nplt.xlabel(\"Loaves ordered\")\nplt.ylabel(\"Average daily profit (£)\")\nplt.show()\n",
+   "schema_version": 1,
+   "solution_html": "<p>With dearer loaves, an unsold loaf wastes more money, so it pays to order fewer. The best order goes <strong>down</strong>.</p>",
+   "starter_code": "# My prediction: \nimport random\n\nprice = 3\ncost = 1\n\ndef profit(order):\n    total = 0\n    for day in range(200):\n        demand = random.randint(20, 60)\n        sold = min(order, demand)\n        total += sold * price - order * cost\n    return total / 200\n\norders = [20, 30, 40, 50, 60]\nprofits = []\nfor order in orders:\n    profits.append(profit(order))\n\nbest_order = orders[profits.index(max(profits))]\nprint(\"Best order:\", best_order)\n\nimport matplotlib.pyplot as plt\nplt.plot(orders, profits)\nplt.xlabel(\"Loaves ordered\")\nplt.ylabel(\"Average daily profit (£)\")\nplt.show()\n",
+   "title": "Predict, then change the cost"
+  },
+  "b5-run-L1": {
+   "allow_plot": false,
+   "block": 5,
+   "checks": [
+    {
+     "id": "out",
+     "normalise": "strip",
+     "type": "stdout"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    rates = rng.sample([0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.08, 0.1], rng.randint(3, 4))\n    return {'start': rng.choice([100, 500, 1000, 2000]), 'years': rng.randint(2, 10), 'rates': rates}",
+   "hints_html": [
+    "<p><code>for rate in rates:</code> then, indented, <code>print(savings(rate))</code>.</p>"
+   ],
+   "id": "b5-run-L1",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 1,
+   "prompt_html": "<p><code>savings(rate)</code> says how much £@@start@@ grows to after @@years@@ years at a given interest rate.</p>\n<p>For each rate in <code>rates</code>, in order, print <code>savings(rate)</code>: one number per line.</p>",
+   "reference": "def savings(rate):\n    return round(@@start@@ * (1 + rate) ** @@years@@, 2)\n\nrates = @@rates@@\nfor rate in rates:\n    print(savings(rate))\n",
+   "schema_version": 1,
+   "starter_code": "def savings(rate):\n    return round(@@start@@ * (1 + rate) ** @@years@@, 2)\n\nrates = @@rates@@\n# your code here\n",
+   "title": "Run a function for each setting"
+  },
+  "b5-store-L2": {
+   "allow_plot": false,
+   "block": 5,
+   "checks": [
+    {
+     "id": "results",
+     "name": "results",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    prices = sorted(rng.sample(range(2, 21), rng.randint(4, 6)))\n    return {'base': rng.randint(300, 600), 'slope': rng.randint(5, 14), 'prices': prices}",
+   "hints_html": [
+    "<p>Start with <code>results = []</code> <strong>before</strong> the loop, then <code>results.append(visitors(price))</code> inside it.</p>"
+   ],
+   "id": "b5-store-L2",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 2,
+   "prompt_html": "<p><code>visitors(price)</code> estimates how many people visit a museum each day at a given ticket price.</p>\n<p>Make a list called <code>results</code> holding <code>visitors(price)</code> for each price in <code>prices</code>, in the same order.</p>",
+   "reference": "def visitors(price):\n    return @@base@@ - @@slope@@ * price\n\nprices = @@prices@@\nresults = []\nfor price in prices:\n    results.append(visitors(price))\n",
+   "schema_version": 1,
+   "solution_html": "<p>If <code>results = []</code> is inside the loop, the list is emptied every time round, and only the last answer survives.</p>",
+   "starter_code": "def visitors(price):\n    return @@base@@ - @@slope@@ * price\n\nprices = @@prices@@\n# your code here\n",
+   "title": "Store the results in a list"
+  },
+  "b5-xy-L4": {
+   "allow_plot": false,
+   "block": 5,
+   "checks": [
+    {
+     "id": "settings",
+     "name": "settings",
+     "type": "variable"
+    },
+    {
+     "id": "results",
+     "name": "results",
+     "type": "variable"
+    }
+   ],
+   "fixed_seed": null,
+   "generator": "def generate(rng):\n    step = rng.choice([2, 5, 10])\n    lo = rng.randint(0, 4) * step\n    hi = lo + step * rng.randint(4, 7)\n    return {'lo': lo, 'hi': hi, 'step': step, 'a': rng.randint(hi // 2 + 5, hi + 20)}",
+   "hints_html": [
+    "<p><code>range</code> stops <em>before</em> its end number, so use <code>range(@@lo@@, @@hi@@ + 1, @@step@@)</code> and wrap it in <code>list(...)</code>.</p>"
+   ],
+   "id": "b5-xy-L4",
+   "inject_params": false,
+   "kind": "practice",
+   "level": 4,
+   "prompt_html": "<p>To plot results against settings you need two lists of the same length.</p>\n<ol>\n<li>Make <code>settings</code>: the numbers from @@lo@@ <strong>up to and including</strong> @@hi@@, going up in steps of @@step@@.</li>\n<li>Make <code>results</code>: <code>crop(n)</code> for each <code>n</code> in <code>settings</code>, in order.</li>\n</ol>\n<p>Then <code>plt.plot(settings, results)</code> would draw the curve (plotting is switched off in practice tasks).</p>",
+   "reference": "def crop(n):\n    return n * (@@a@@ - n)\n\nsettings = list(range(@@lo@@, @@hi@@ + 1, @@step@@))\nresults = []\nfor n in settings:\n    results.append(crop(n))\n",
+   "schema_version": 1,
+   "solution_html": "<p><code>range(a, b, step)</code> stops <em>before</em> <code>b</code> – the same quirk as in Block 3 – so add 1 to the end to include it.</p>",
+   "starter_code": "def crop(n):\n    return n * (@@a@@ - n)\n\n# settings = ...\n# results = ...\n\n# plt.plot(settings, results)\n",
+   "title": "Build the lists for a plot"
   }
  }
 }

@@ -2,27 +2,151 @@
  "schema_version": 1,
  "block": 4,
  "title": "Functions and randomness",
- "explanation_md": "TODO",
+ "explanation_md": "A **function** is a named recipe. You write it once and use it as often as you like.\n\n```python\ndef add_interest(balance, rate):\n    return balance * (1 + rate)\n```\n\nThe line starts with `def`, then the function's name, then its **arguments** in brackets, then a colon. The body underneath is indented by 4 spaces. Defining a function does nothing on its own: it only runs when you **call** it, for example `add_interest(1000, 0.005)`.\n\nAn argument can have a **default value**: `def add_interest(balance, rate=0.005):`. Now `add_interest(1000)` works too, and uses 0.005.\n\n**`print` versus `return`.** `return` hands a value back, so you can store it: `new = add_interest(1000, 0.005)`. `print` only shows a value on the screen. A function without `return` gives back `None`, so `x = f(5)` leaves `x` empty. This is the most common mistake in this block.\n\nA function can read a variable defined outside it. If that variable changes later, the function's answer changes silently. It is safer to pass the value in as an argument.\n\n**Randomness.** Start with `import random`.\n\n- `random.random()` gives a decimal between 0 and 1.\n- `random.randint(1, 6)` rolls a dice. **Both ends are included**, unlike `range(1, 6)`, which stops at 5.\n- `random.choice(week)` picks one item from a list.\n- `random.seed(1)` gives the same \"random\" numbers every run, so results can be checked. The tutorial does this for you when it checks your code.\n\n**Wrap and repeat:** put one run of a simulation in a function, call it many times in a loop, and count how often something happens. That share is a probability, estimated by simulation.\n",
  "templates": [
   {
    "schema_version": 1,
-   "id": "b4-check",
    "block": 4,
+   "id": "b4-check",
    "kind": "check",
    "title": "A function that returns an average",
-   "prompt_md": "Write a function called `average_of` that takes a list of numbers and **returns** their average. For example, `average_of(@@example@@)` should give back `@@example_avg@@`.",
+   "prompt_md": "Write a function called `average_of` that takes a list of numbers and **returns** their average.\n\nFor example, `average_of(@@example@@)` should give back `@@example_avg@@`.",
    "starter_code": "def average_of(numbers):\n    # your code here\n    pass\n",
    "generator": "def generate(rng):\n    n = rng.randint(3, 6)\n    example = [rng.randint(1, 20) for _ in range(n)]\n    other = [rng.randint(10, 90) for _ in range(rng.randint(2, 7))]\n    return {'example': example, 'example_avg': sum(example) / n, 'other': other}",
    "reference": "def average_of(numbers):\n    return sum(numbers) / len(numbers)\n",
-   "checks": [{"id": "fn", "type": "function", "name": "average_of", "calls": [["@@example@@"], ["@@other@@"], [[5]]]}],
-   "hints": ["Inside the function, `return sum(numbers) / len(numbers)`. Remember: `return` hands the answer back; `print` only shows it."],
-   "wrong_examples": ["def average_of(numbers):\n    print(sum(numbers) / len(numbers))\n", "def average_of(numbers):\n    return sum(numbers)\n"],
-   "alternative_solutions": ["def average_of(numbers):\n    total = 0\n    for x in numbers:\n        total += x\n    return total / len(numbers)\n"]
+   "checks": [
+    {
+     "id": "fn",
+     "type": "function",
+     "name": "average_of",
+     "calls": [
+      [
+       "@@example@@"
+      ],
+      [
+       "@@other@@"
+      ],
+      [
+       [
+        5
+       ]
+      ]
+     ]
+    }
+   ],
+   "hints": [
+    "Inside the function, `return sum(numbers) / len(numbers)`. Remember: `return` hands the answer back; `print` only shows it."
+   ],
+   "wrong_examples": [
+    "def average_of(numbers):\n    print(sum(numbers) / len(numbers))\n",
+    "def average_of(numbers):\n    return sum(numbers)\n"
+   ],
+   "alternative_solutions": [
+    "def average_of(numbers):\n    total = 0\n    for x in numbers:\n        total += x\n    return total / len(numbers)\n"
+   ],
+   "solution_md": "`sum` adds the list up and `len` counts the items. `return` hands the result back to whoever called the function."
   },
   {
    "schema_version": 1,
-   "id": "b4-flips-core",
    "block": 4,
+   "id": "b4-interest-core",
+   "kind": "core",
+   "fixed_seed": 3,
+   "title": "Your first function: add_interest",
+   "prompt_md": "Write a function `add_interest(balance, rate)` that **returns** the balance after one month's interest: `balance * (1 + rate)`.\n\nThen call it for a balance of £@@balance@@ at a monthly rate of @@rate@@, and store the answer in `new_balance`.",
+   "starter_code": "def add_interest(balance, rate):\n    # your code here\n    pass\n\nnew_balance = add_interest(@@balance@@, @@rate@@)\nprint(new_balance)\n",
+   "generator": "def generate(rng):\n    return {'balance': rng.choice([500, 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000]), 'rate': rng.choice([0.002, 0.003, 0.004, 0.005, 0.006, 0.008, 0.01, 0.012])}",
+   "reference": "def add_interest(balance, rate):\n    return balance * (1 + rate)\n\nnew_balance = add_interest(@@balance@@, @@rate@@)\nprint(new_balance)\n",
+   "checks": [
+    {
+     "id": "fn",
+     "type": "function",
+     "name": "add_interest",
+     "calls": [
+      [
+       1000,
+       0.005
+      ],
+      [
+       250,
+       0.1
+      ],
+      [
+       "@@balance@@",
+       "@@rate@@"
+      ]
+     ]
+    },
+    {
+     "id": "nb",
+     "type": "variable",
+     "name": "new_balance"
+    }
+   ],
+   "hints": [
+    "The body is one indented line: `return balance * (1 + rate)`. Replace `pass` with it."
+   ],
+   "wrong_examples": [
+    "def add_interest(balance, rate):\n    print(balance * (1 + rate))\n\nnew_balance = add_interest(@@balance@@, @@rate@@)\n",
+    "def add_interest(balance, rate):\n    return balance * rate\n\nnew_balance = add_interest(@@balance@@, @@rate@@)\n"
+   ],
+   "alternative_solutions": [
+    "def add_interest(balance, rate):\n    interest = balance * rate\n    return balance + interest\n\nnew_balance = add_interest(@@balance@@, @@rate@@)\n"
+   ],
+   "solution_md": "`def`, the name, the arguments in brackets, a colon, then an indented body. `return` hands the new balance back, so the last line can store it."
+  },
+  {
+   "schema_version": 1,
+   "block": 4,
+   "id": "b4-return-core",
+   "kind": "core",
+   "fixed_seed": 5,
+   "title": "print versus return",
+   "prompt_md": "This function **prints** the price of @@n@@ coffees at £@@price@@ each, but then `cost` is `None`, because the function hands nothing back.\n\nRun it first and look at `cost`. Then change the function so it **returns** the total instead of printing it.",
+   "starter_code": "def order_total(n, price):\n    print(n * price)\n\ncost = order_total(@@n@@, @@price@@)\nprint(\"cost is\", cost)\n",
+   "generator": "def generate(rng):\n    return {'n': rng.randint(2, 12), 'price': rng.choice([2.5, 2.8, 3.0, 3.2, 3.5, 4.0])}",
+   "reference": "def order_total(n, price):\n    return n * price\n\ncost = order_total(@@n@@, @@price@@)\nprint(\"cost is\", cost)\n",
+   "checks": [
+    {
+     "id": "fn",
+     "type": "function",
+     "name": "order_total",
+     "calls": [
+      [
+       "@@n@@",
+       "@@price@@"
+      ],
+      [
+       3,
+       2.0
+      ],
+      [
+       1,
+       4.5
+      ]
+     ]
+    },
+    {
+     "id": "cost",
+     "type": "variable",
+     "name": "cost"
+    }
+   ],
+   "hints": [
+    "Swap `print(` for `return ` inside the function, and remove the closing bracket."
+   ],
+   "wrong_examples": [
+    "def order_total(n, price):\n    print(n * price)\n    return None\n\ncost = order_total(@@n@@, @@price@@)\n"
+   ],
+   "alternative_solutions": [
+    "def order_total(n, price):\n    total = n * price\n    return total\n\ncost = order_total(@@n@@, @@price@@)\n"
+   ],
+   "solution_md": "`print` only shows a value on the screen. `return` hands it back, so `cost = order_total(...)` can store it. Without `return`, a function gives back `None`."
+  },
+  {
+   "schema_version": 1,
+   "block": 4,
+   "id": "b4-flips-core",
    "kind": "core",
    "fixed_seed": 7,
    "title": "Wrap and repeat: flipping coins",
@@ -31,12 +155,297 @@
    "generator": "def generate(rng):\n    return {'n': rng.randint(8, 30)}",
    "reference": "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        if random.randint(0, 1) == 1:\n            heads += 1\n    return heads\n\nheads = flip_coins(@@n@@)\nprint(heads)\n",
    "checks": [
-    {"id": "heads", "type": "variable", "name": "heads"},
-    {"id": "fn", "type": "function", "name": "flip_coins", "calls": [[10], [25], ["@@n@@"]]}
+    {
+     "id": "heads",
+     "type": "variable",
+     "name": "heads"
+    },
+    {
+     "id": "fn",
+     "type": "function",
+     "name": "flip_coins",
+     "calls": [
+      [
+       10
+      ],
+      [
+       25
+      ],
+      [
+       "@@n@@"
+      ]
+     ]
+    }
    ],
-   "hints": ["Inside the function: `for i in range(n):` then `if random.randint(0, 1) == 1:` add one to `heads`."],
-   "wrong_examples": ["import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        heads = random.randint(0, 1)\n    return heads\n\nheads = flip_coins(@@n@@)\n"],
-   "alternative_solutions": ["import random\n\ndef flip_coins(n):\n    heads = 0\n    for _ in range(n):\n        heads += random.randint(0, 1)\n    return heads\n\nheads = flip_coins(@@n@@)\n"]
+   "hints": [
+    "Inside the function: `for i in range(n):` then `if random.randint(0, 1) == 1:` add one to `heads`."
+   ],
+   "wrong_examples": [
+    "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        heads = random.randint(0, 1)\n    return heads\n\nheads = flip_coins(@@n@@)\n",
+    "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        if random.randint(0, 1) == 1:\n            heads += 1\n        return heads\n\nheads = flip_coins(@@n@@)\n"
+   ],
+   "alternative_solutions": [
+    "import random\n\ndef flip_coins(n):\n    heads = 0\n    for _ in range(n):\n        heads += random.randint(0, 1)\n    return heads\n\nheads = flip_coins(@@n@@)\n"
+   ],
+   "solution_md": "`randint(0, 1)` gives 0 or 1 (both ends included). The loop runs `n` times, and `return` sits *after* the loop, at the same indent as `heads = 0`, so all `n` coins are flipped first."
+  },
+  {
+   "schema_version": 1,
+   "block": 4,
+   "id": "b4-share-core",
+   "kind": "core",
+   "fixed_seed": 11,
+   "title": "Wrap and repeat: how likely is 7 or more heads?",
+   "prompt_md": "`flip_coins` is written for you. Call `flip_coins(10)` **1,000 times** in a loop (one call per time round). Count how many runs gave **7 or more** heads.\n\nStore the share of runs, `count / 1000`, in `share`. That share is a probability, estimated by simulation.",
+   "starter_code": "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        if random.randint(0, 1) == 1:\n            heads += 1\n    return heads\n\ncount = 0\n# call flip_coins(10) 1000 times here\n\nshare = 0\nprint(share)\n",
+   "generator": null,
+   "reference": "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        if random.randint(0, 1) == 1:\n            heads += 1\n    return heads\n\ncount = 0\nfor run in range(1000):\n    if flip_coins(10) >= 7:\n        count += 1\n\nshare = count / 1000\nprint(share)\n",
+   "checks": [
+    {
+     "id": "share",
+     "type": "variable",
+     "name": "share"
+    }
+   ],
+   "hints": [
+    "`for run in range(1000):` then `if flip_coins(10) >= 7:` add one to `count`. After the loop (not indented), `share = count / 1000`."
+   ],
+   "wrong_examples": [
+    "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        if random.randint(0, 1) == 1:\n            heads += 1\n    return heads\n\ncount = 0\nfor run in range(1000):\n    if flip_coins(10) > 7:\n        count += 1\nshare = count / 1000\n",
+    "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        if random.randint(0, 1) == 1:\n            heads += 1\n    return heads\n\ncount = 0\nfor run in range(1000):\n    if flip_coins(10) >= 7:\n        count += 1\n    share = count / 1000\nshare = count\n"
+   ],
+   "alternative_solutions": [
+    "import random\n\ndef flip_coins(n):\n    heads = 0\n    for i in range(n):\n        if random.randint(0, 1) == 1:\n            heads += 1\n    return heads\n\nresults = []\nfor run in range(1000):\n    results.append(flip_coins(10))\ncount = 0\nfor h in results:\n    if h >= 7:\n        count += 1\nshare = count / 1000\n"
+   ],
+   "solution_md": "The true answer is about 0.17. `>= 7` means \"7 or more\"; `> 7` would leave out exactly 7. One run of 10 flips tells you little; the share across 1,000 runs is the finding."
+  },
+  {
+   "schema_version": 1,
+   "block": 4,
+   "id": "b4-call-L1",
+   "kind": "practice",
+   "level": 1,
+   "title": "Call a function with different arguments",
+   "prompt_md": "The function `change_due(paid, price)` is written for you. It works out the change for a customer.\n\n- A customer pays £@@paid1@@ for something costing £@@price1@@. Store the change in `change_a`.\n- Another pays £@@paid2@@ for something costing £@@price2@@. Store the change in `change_b`.\n\nCall the function both times; don't work the numbers out yourself. Keep the arguments in the same order as the `def` line.",
+   "starter_code": "def change_due(paid, price):\n    return paid - price\n\nchange_a = 0\nchange_b = 0\n",
+   "generator": "def generate(rng):\n    p1 = rng.choice([1.2, 1.8, 2.4, 2.9, 3.5, 4.1, 6.3, 7.7])\n    p2 = rng.choice([2.2, 3.6, 4.5, 5.25, 8.4, 9.1, 12.6])\n    return {'price1': p1, 'paid1': rng.choice([5, 10]), 'price2': p2, 'paid2': rng.choice([10, 20])}",
+   "reference": "def change_due(paid, price):\n    return paid - price\n\nchange_a = change_due(@@paid1@@, @@price1@@)\nchange_b = change_due(@@paid2@@, @@price2@@)\n",
+   "checks": [
+    {
+     "id": "a",
+     "type": "variable",
+     "name": "change_a"
+    },
+    {
+     "id": "b",
+     "type": "variable",
+     "name": "change_b"
+    }
+   ],
+   "hints": [
+    "`change_a = change_due(@@paid1@@, @@price1@@)`: the amount paid goes first, because `paid` comes first in the `def` line."
+   ],
+   "wrong_examples": [
+    "def change_due(paid, price):\n    return paid - price\n\nchange_a = change_due(@@price1@@, @@paid1@@)\nchange_b = change_due(@@price2@@, @@paid2@@)\n"
+   ],
+   "alternative_solutions": [
+    "def change_due(paid, price):\n    return paid - price\n\nchange_a = change_due(paid=@@paid1@@, price=@@price1@@)\nchange_b = change_due(price=@@price2@@, paid=@@paid2@@)\n"
+   ],
+   "solution_md": "Arguments are matched by position: the first value goes to `paid`, the second to `price`. You can also name them, `change_due(paid=10, price=3.5)`, and then the order doesn't matter."
+  },
+  {
+   "schema_version": 1,
+   "block": 4,
+   "id": "b4-default-L2",
+   "kind": "practice",
+   "level": 2,
+   "title": "Change a default value",
+   "prompt_md": "`add_interest` uses a monthly rate of 0.005 unless you give it one. The bank has changed its rate.\n\nChange the **default** so that `add_interest(balance)` uses a rate of **@@new_rate@@**. Calling it with a rate, like `add_interest(100, 0.1)`, must still use the rate given.",
+   "starter_code": "def add_interest(balance, rate=0.005):\n    return balance * (1 + rate)\n",
+   "generator": "def generate(rng):\n    return {'new_rate': rng.choice([0.001, 0.002, 0.003, 0.004, 0.006, 0.007, 0.008, 0.009, 0.01, 0.012, 0.015, 0.02]), 'b1': rng.choice([200, 500, 1000, 1500, 3000])}",
+   "reference": "def add_interest(balance, rate=@@new_rate@@):\n    return balance * (1 + rate)\n",
+   "checks": [
+    {
+     "id": "fn",
+     "type": "function",
+     "name": "add_interest",
+     "calls": [
+      [
+       "@@b1@@"
+      ],
+      [
+       1000
+      ],
+      [
+       100,
+       0.1
+      ]
+     ]
+    }
+   ],
+   "hints": [
+    "Only the `def` line changes: `rate=0.005` becomes `rate=@@new_rate@@`."
+   ],
+   "wrong_examples": [
+    "def add_interest(balance, rate=0.005):\n    return balance * (1 + @@new_rate@@)\n",
+    "def add_interest(balance, rate=@@new_rate@@):\n    print(balance * (1 + rate))\n"
+   ],
+   "alternative_solutions": [
+    "def add_interest(balance, rate=@@new_rate@@):\n    new_balance = balance * (1 + rate)\n    return new_balance\n"
+   ],
+   "solution_md": "A default is only used when the caller leaves that argument out. Writing the new rate into the body instead would ignore any rate the caller gives."
+  },
+  {
+   "schema_version": 1,
+   "block": 4,
+   "id": "b4-argument-L3",
+   "kind": "practice",
+   "level": 3,
+   "title": "Add an argument to an existing function",
+   "prompt_md": "`savings_after(months)` grows £@@start@@ by a fixed rate of 0.005 a month. Give it a second argument, `rate`, so that `savings_after(@@months@@, @@rate@@)` uses the rate it is given.\n\nThis is just like the organiser's Exercise 1 in the Colab notebook.",
+   "starter_code": "def savings_after(months):\n    balance = @@start@@\n    for month in range(months):\n        balance = balance * (1 + 0.005)\n    return balance\n",
+   "generator": "def generate(rng):\n    return {'start': rng.choice([500, 1000, 2000, 5000]), 'months': rng.choice([6, 12, 18, 24, 36]), 'rate': rng.choice([0.002, 0.004, 0.008, 0.01, 0.02])}",
+   "reference": "def savings_after(months, rate):\n    balance = @@start@@\n    for month in range(months):\n        balance = balance * (1 + rate)\n    return balance\n",
+   "checks": [
+    {
+     "id": "fn",
+     "type": "function",
+     "name": "savings_after",
+     "calls": [
+      [
+       "@@months@@",
+       "@@rate@@"
+      ],
+      [
+       12,
+       0.01
+      ],
+      [
+       3,
+       0.1
+      ],
+      [
+       0,
+       0.05
+      ]
+     ]
+    }
+   ],
+   "hints": [
+    "Two changes: add `, rate` inside the brackets on the `def` line, and use `rate` instead of `0.005` in the body."
+   ],
+   "wrong_examples": [
+    "def savings_after(months, rate):\n    balance = @@start@@\n    for month in range(months):\n        balance = balance * (1 + 0.005)\n    return balance\n",
+    "def savings_after(months, rate):\n    balance = @@start@@\n    for month in range(months):\n        balance = balance * (1 + rate)\n        return balance\n"
+   ],
+   "alternative_solutions": [
+    "def savings_after(months, rate=0.005):\n    balance = @@start@@\n    for month in range(months):\n        balance *= 1 + rate\n    return balance\n"
+   ],
+   "solution_md": "Adding the argument isn't enough on its own: the body must *use* it. Otherwise the function quietly keeps the old fixed rate."
+  },
+  {
+   "schema_version": 1,
+   "block": 4,
+   "id": "b4-passrate-L4",
+   "kind": "practice",
+   "level": 4,
+   "title": "Write a function with return",
+   "prompt_md": "Write a function `pass_rate(scores, pass_mark)` that **returns** the share of scores that are **at or above** the pass mark, as a decimal between 0 and 1.\n\nFor example, with scores `@@scores@@` and a pass mark of @@mark@@, it should give back `@@answer@@`.",
+   "starter_code": "def pass_rate(scores, pass_mark):\n    # your code here\n    pass\n",
+   "generator": "def generate(rng):\n    mark = rng.choice([40, 50, 60, 70])\n    scores = [rng.randint(25, 95) for _ in range(rng.randint(5, 9))]\n    scores[0] = mark\n    rng.shuffle(scores)\n    answer = sum(1 for s in scores if s >= mark) / len(scores)\n    return {'mark': mark, 'scores': scores, 'answer': answer, 'other': [rng.randint(30, 90) for _ in range(6)] + [mark]}",
+   "reference": "def pass_rate(scores, pass_mark):\n    passed = 0\n    for s in scores:\n        if s >= pass_mark:\n            passed += 1\n    return passed / len(scores)\n",
+   "checks": [
+    {
+     "id": "fn",
+     "type": "function",
+     "name": "pass_rate",
+     "calls": [
+      [
+       "@@scores@@",
+       "@@mark@@"
+      ],
+      [
+       "@@other@@",
+       "@@mark@@"
+      ],
+      [
+       [
+        50,
+        60,
+        70
+       ],
+       60
+      ],
+      [
+       [
+        10
+       ],
+       50
+      ]
+     ]
+    }
+   ],
+   "hints": [
+    "Count the passes in a loop with `if s >= pass_mark:`, then `return passed / len(scores)` after the loop."
+   ],
+   "wrong_examples": [
+    "def pass_rate(scores, pass_mark):\n    passed = 0\n    for s in scores:\n        if s > pass_mark:\n            passed += 1\n    return passed / len(scores)\n",
+    "def pass_rate(scores, pass_mark):\n    passed = 0\n    for s in scores:\n        if s >= pass_mark:\n            passed += 1\n    print(passed / len(scores))\n"
+   ],
+   "alternative_solutions": [
+    "def pass_rate(scores, pass_mark):\n    return len([s for s in scores if s >= pass_mark]) / len(scores)\n"
+   ],
+   "solution_md": "\"At or above\" is `>=`. `>` would leave out anyone who scored exactly the pass mark. The `return` goes after the loop, so every score is counted first."
+  },
+  {
+   "schema_version": 1,
+   "block": 4,
+   "id": "b4-dice-L5",
+   "kind": "practice",
+   "level": 5,
+   "title": "Wrap a simulation and repeat it",
+   "prompt_md": "1. Write a function `roll_total(n_dice)` that rolls `n_dice` dice and **returns** the total. For each die, call `random.randint(1, 6)` once, in a loop.\n2. Then call `roll_total(@@n_dice@@)` **@@runs@@ times** in a loop, and count how many runs gave a total of **@@target@@ or more**.\n3. Store `count / @@runs@@` in `share`.",
+   "starter_code": "import random\n\ndef roll_total(n_dice):\n    total = 0\n    # roll the dice here\n    return total\n\ncount = 0\n# repeat here\n\nshare = 0\n",
+   "generator": "def generate(rng):\n    n = rng.randint(2, 5)\n    return {'n_dice': n, 'runs': rng.choice([200, 300, 400, 500]), 'target': rng.randint(3 * n, 4 * n + 1)}",
+   "reference": "import random\n\ndef roll_total(n_dice):\n    total = 0\n    for i in range(n_dice):\n        total += random.randint(1, 6)\n    return total\n\ncount = 0\nfor run in range(@@runs@@):\n    if roll_total(@@n_dice@@) >= @@target@@:\n        count += 1\n\nshare = count / @@runs@@\n",
+   "checks": [
+    {
+     "id": "share",
+     "type": "variable",
+     "name": "share"
+    },
+    {
+     "id": "fn",
+     "type": "function",
+     "name": "roll_total",
+     "calls": [
+      [
+       1
+      ],
+      [
+       2
+      ],
+      [
+       6
+      ],
+      [
+       "@@n_dice@@"
+      ]
+     ]
+    }
+   ],
+   "hints": [
+    "A dice roll is `random.randint(1, 6)`: both 1 and 6 can come up. In the function, `for i in range(n_dice):` add a roll to `total`.",
+    "Outside the function: `for run in range(@@runs@@):` then `if roll_total(@@n_dice@@) >= @@target@@:` add one to `count`."
+   ],
+   "wrong_examples": [
+    "import random\n\ndef roll_total(n_dice):\n    total = 0\n    for i in range(n_dice):\n        total += random.randint(1, 5)\n    return total\n\ncount = 0\nfor run in range(@@runs@@):\n    if roll_total(@@n_dice@@) >= @@target@@:\n        count += 1\nshare = count / @@runs@@\n",
+    "import random\n\ndef roll_total(n_dice):\n    total = 0\n    for i in range(n_dice):\n        total += random.randint(1, 6)\n    print(total)\n\ncount = 0\nshare = 0\n"
+   ],
+   "alternative_solutions": [
+    "import random\n\ndef roll_total(n_dice):\n    return sum(random.randint(1, 6) for _ in range(n_dice))\n\nresults = []\nfor run in range(@@runs@@):\n    results.append(roll_total(@@n_dice@@))\ncount = 0\nfor r in results:\n    if r >= @@target@@:\n        count += 1\nshare = count / @@runs@@\n"
+   ],
+   "solution_md": "This is the wrap-and-repeat pattern: one run in a function, many calls in a loop, then a share. `randint(1, 6)` includes 6; `randint(1, 5)` would never roll a six."
   }
  ]
 }
